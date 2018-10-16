@@ -7,13 +7,14 @@ Massiva datamängder som samlas i enskilda företag eller myndigheter skapar mö
 ## Samhällsbygge och innovationskraft
 Vårt andra mål handlar om att möjliggöra innovationskraft för myndigheter. Att bättre kunna samverka att kunna utveckla lika potenta digitala tjänster som privata startups. Privat och offentligt ska kunna samverka både i utveckling och med gemensam digital infrastruktur/standarder för ökad samhällsnytta. Genom att möjliggöra en “digital byråkrati”, dvs spårbarhet och standardiserad kommunikation kan nya mer transparenta och effektiva former av styrning etableras. På vägen handlar detta om konkurrenskraft för Sverige och EU, men i grunden handlar det framför allt om ökad samhällsnytta för hela mänskligheten. Världen är idag global och strömmar från alla världens hörn. Open source är globalt.
 
-Främja arbetsmarknaden Förenkla och höja effektiviteten i karriärarbetet genom att katalysera ekosystemet kring jobtech. Nya och förbättrade tjänster för arbetssökande och arbetsgivare.
+Främja arbetsmarknaden. Förenkla och höja effektiviteten i karriärarbetet genom att katalysera ekosystemet kring jobtech. Nya och förbättrade tjänster för arbetssökande och arbetsgivare.
 
 ## Koden
 
-Genom att visualisera och praktiskt visa upp hur ägande av sin egen data skulle kunna fungera så blir det enklare för flera att ta ställning till konceptet.  Vår strävan att återanvända så mycket som möjligt för att inte återuppfinna hjulet och projektet är influerat av http://mydataorg.com
+Genom att visualisera och praktiskt visa upp hur ägande av sin egen data skulle kunna fungera så blir det enklare för flera att ta ställning till konceptet.  Vår strävan att återanvända så mycket som möjligt för att inte återuppfinna hjulet. Projektet är influerat av [mydata.org](http://mydata.org)
+
 Projektet är indelat i 4 delsystem:
-https://github.com/JobtechSwe/mydata-app : En app där användaren hanterar sin data
-https://github.com/JobtechSwe/mydata-operator : En teknisk operatör som givet ett godkännande från medborgaren hanterar kommunikationen mellan medborgaren, hens data och en extern tjänst
-https://github.com/JobtechSwe/mydata-cv : Exempel på en datamängd som medborgaren potentiellt vill dela till flertalet aktörer
-https://github.com/JobtechSwe/mydata-pds : En säker datalgring av datat som bara medborgaren har tillgång till
+- [mydata-app](https://github.com/JobtechSwe/mydata-app) : En app där individen hanterar sin data
+- [mydata-operator](https://github.com/JobtechSwe/mydata-operator) : En teknisk operatör som givet ett godkännande från individen hanterar kommunikationen mellan individen, hens data och en extern tjänst
+- [mydata-cv](https://github.com/JobtechSwe/mydata-cv) : En exempeltjänst som läser/skriver till individens mydata efter att ha fått behörighet att göra det (`Data Source` och `Data Sink`)
+- [mydata-pds](https://github.com/JobtechSwe/mydata-pds) : Säker datalgring av datat som bara individen har tillgång till. PDS står för Personal Data Storage.
