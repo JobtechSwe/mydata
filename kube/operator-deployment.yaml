@@ -1,0 +1,48 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.operator.yml
+    kompose.version: 1.16.0 (0c01309)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: operator
+  name: operator
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: operator
+    spec:
+      containers:
+      - env:
+        - name: APM_SERVER
+          value: http://apm-server:8200
+        - name: APP_NAME
+          value: mydata-operator
+        - name: DATABASE_URL
+          value: postgres://postgresuser:postgrespassword@postgres-operator:5432/mydata
+        - name: PGDATABASE
+          value: mydata
+        - name: PGHOST
+          value: postgres-operator
+        - name: PGPASSWORD
+          value: postgrespassword
+        - name: PGPORT
+          value: "5432"
+        - name: PGUSER
+          value: postgresuser
+        - name: PORT
+          value: "3000"
+        - name: REDIS
+          value: redis://:fubar@redis-operator:6379/
+        image: JobtechSwe/mydata-operator:latest
+        name: operator
+        ports:
+        - containerPort: 3000
+        resources: {}
+      restartPolicy: Always
+status: {}

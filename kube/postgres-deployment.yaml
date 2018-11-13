@@ -1,0 +1,34 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.16.0 (0c01309)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: postgres-operator
+  name: postgres-operator
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: postgres-operator
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_DB
+          value: mydata
+        - name: POSTGRES_PASSWORD
+          value: postgrespassword
+        - name: POSTGRES_USER
+          value: postgresuser
+        image: postgres:11-alpine
+        name: postgres-operator
+        ports:
+        - containerPort: 5432
+        resources: {}
+      restartPolicy: Always
+status: {}

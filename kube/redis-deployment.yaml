@@ -1,0 +1,34 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.16.0 (0c01309)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: redis-operator
+  name: redis-operator
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: redis-operator
+    spec:
+      containers:
+      - args:
+        - sh
+        - -c
+        - redis-server --requirepass ${REDIS_PASSWORD}
+        env:
+        - name: REDIS_PASSWORD
+          value: fubar
+        image: redis:4.0-alpine
+        name: redis-operator
+        ports:
+        - containerPort: 6379
+        resources: {}
+      restartPolicy: Always
+status: {}
