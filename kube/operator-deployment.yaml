@@ -39,7 +39,7 @@ spec:
           value: "3000"
         - name: REDIS
           value: redis://:fubar@redis-operator:6379/
-        image: JobtechSwe/mydata-operator:latest
+        image: jobtechswe/mydata-operator:latest
         name: operator
         ports:
         - containerPort: 3000
