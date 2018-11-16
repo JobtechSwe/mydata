@@ -1,0 +1,19 @@
+apiVersion: apps/v1beta1
+kind: Pod
+metadata:
+  name: writer
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - image: crccheck/hello-world
+        name: hello-world
+        ports:
+        - containerPort: 8000
+        resources: {}
+      restartPolicy: Always
+      volumes:
+        - name: hello-data
+          persistentVolumeClaim:
+            claimName: data-volume-claim

@@ -14,7 +14,7 @@ spec:
     spec:
       terminationGracePeriodSeconds: 300
       initContainers:
-        - name: fix-the-volume-premission
+        - name: fix-the-volume-permission
           image: busybox
           command:
           - sh
@@ -23,7 +23,7 @@ spec:
           securityContext:
             privileged: true
           volumeMounts:
-            - name: datadir
+            - name: elasticsearch-data
               mountPath: /usr/share/elasticsearch/data
         - name: increase-the-vm-max-map-count
           # NOTE:
@@ -50,7 +50,7 @@ spec:
         - name: elasticsearch
           image: docker.elastic.co/elasticsearch/elasticsearch:6.4.3
           volumeMounts:
-            - name: datadir
+            - name: elasticsearch-data
               mountPath: /usr/share/elasticsearch/data
           resources:
             requests:
@@ -76,14 +76,8 @@ spec:
               protocol: TCP
             - containerPort: 9300
               protocol: TCP
+      volumes:
+        - name: elasticsearch-data
+          persistentVolumeClaim:
+            claimName: data-volume-claim
       restartPolicy: Always
-  volumeClaimTemplates:
-    - metadata:
-        name: datadir
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        storageClassName: gp2
-        resources:
-          requests:
-            storage: "6Gi"

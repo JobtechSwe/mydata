@@ -1,0 +1,28 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: data-volume
+  labels:
+    name: data-volume
+spec:
+  capacity:
+    storage: 100Gi
+  storageClassName: standard
+  awsElasticBlockStore:
+    volumeID: vol-0d9d03199a3e86b7a
+    fsType: ext4
+  accessModes:
+    - ReadWriteOnce
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: data-volume-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 100Gi
+      
