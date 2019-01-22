@@ -134,6 +134,6 @@ spec:
     targetPort: 8200-tcp
   to:
     kind: Service
-    name: cv
+    name: apm-server
     weight: 100
   wildcardPolicy: None

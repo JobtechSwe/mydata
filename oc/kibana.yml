@@ -11,10 +11,10 @@ spec:
   tags:
     - annotations:
         openshift.io/generated-by: OpenShiftWebConsole
-        openshift.io/imported-from: 'docker.elastic.co/apm/kibana:6.4.3'
+        openshift.io/imported-from: 'docker.elastic.co/kibana/kibana:6.4.3'
       from:
         kind: DockerImage
-        name: 'docker.elastic.co/apm/kibana:6.4.3'
+        name: 'docker.elastic.co/kibana/kibana:6.4.3'
       importPolicy: {}
       name: 6.4.3
       referencePolicy:
@@ -120,6 +120,6 @@ spec:
     targetPort: 5601-tcp
   to:
     kind: Service
-    name: cv
+    name: kibana
     weight: 100
   wildcardPolicy: None
