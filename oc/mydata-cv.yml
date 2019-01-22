@@ -1,0 +1,134 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    app: mydata
+  name: cv
+  namespace: my-data
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - annotations:
+        openshift.io/generated-by: ilix
+        openshift.io/imported-from: 'ilix/mydata-cv:002'
+      from:
+        kind: DockerImage
+        name: 'ilix/mydata-cv:002'
+      importPolicy: {}
+      name: '002'
+      referencePolicy:
+        type: Source
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  # generation: 6
+  labels:
+    app: mydata
+    phase: test
+  name: cv
+  namespace: my-data
+spec:
+  replicas: 1
+  selector:
+    app: mydata
+    phase: test
+    deploymentconfig: cv
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      labels:
+        app: mydata
+        phase: test
+        deploymentconfig: cv
+    spec:
+      containers:
+        - env:
+            - name: PORT
+              value: '4000'
+            - name: APM_SERVER
+              value: 'http://apm-server:8200'
+            - name: APP_NAME
+              value: mydata-cv api
+          image: >-
+            ilix/mydata-cv@sha256:e0286ae236f91f405b1743f08cb90a0fd63167707822d49fd1396c53769917ae
+          imagePullPolicy: IfNotPresent
+          name: cv
+          ports:
+            - containerPort: 4000
+              name: http
+              protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+          - cv
+        from:
+          kind: ImageStreamTag
+          name: 'cv:002'
+          namespace: my-data
+        lastTriggeredImage: >-
+          ilix/mydata-cv@sha256:e0286ae236f91f405b1743f08cb90a0fd63167707822d49fd1396c53769917ae
+      type: ImageChange
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mydata
+    phase: test
+  name: cv
+  namespace: my-data
+spec:
+  # clusterIP: 172.30.118.79
+  ports:
+    - name: http
+      port: 4000
+      protocol: TCP
+      targetPort: 4000
+  selector:
+    app: mydata
+    phase: test
+    deploymentconfig: cv
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: mydata
+    phase: test
+  name: cv
+  namespace: my-data
+spec:
+  host: cv-my-data.dev.services.jtech.se
+  port:
+    targetPort: http
+  to:
+    kind: Service
+    name: cv
+    weight: 100
+  wildcardPolicy: None
