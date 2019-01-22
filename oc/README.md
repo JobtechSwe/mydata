@@ -2,7 +2,25 @@
 
 These instructions assume you have OpenShift CLI installed (oc version 3.x) and that you are authenticated towards your OpenShift cluster.
 
-## APM+ES+KIBANA
+## TODO
+
+- [ ] APM container won't work
+- [ ] Kibana won't talk to ES
+- [ ] Deploy redis with ephemereal storage
+- [ ] Deploy postgresql with ephemereal storage
+- [ ] Setup ES instance outside OpenShift @JoakimVerona
+- [ ] Use ES instance in AF's AWS
+
+### Nice-to-have
+
+- [ ] Deploy redis with storage
+- [ ] Deploy postgresql with storage
+- [ ] Setup backup routine for redis
+- [ ] Setup backup routine for postgresql
+
+## Environment scripts
+
+### APM+ES+KIBANA
 
 APM, ElasticSearch and Kibana.
 
@@ -11,7 +29,7 @@ oc apply -f apm.yml
 oc apply -f kibana.yml
 ```
 
-## CV
+### CV
 
 The file `cv.yml` defines an ImageStream, DeployConfiguration, Service and Route for `mydata-cv`.
 
