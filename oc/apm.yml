@@ -67,6 +67,8 @@ spec:
               value: 5m
             - name: RUM_SOURCE_MAPPING_INDEX_PATTERN
               value: '"apm-*-sourcemap*"'
+          command: ["apm-server"]
+          args: ["-e", "-E", "apm-server.rum.enabled=$${RUM_ENABLED}", "-E", "apm-server.rum.rate_limit=$${RUM_RATE_LIMIT}", "-E", "apm-server.rum.allow_origins=$${RUM_ALLOW_ORIGINS}", "-E", "apm-server.rum.library_pattern=$${RUM_LIBRARY_PATTERN}", "-E", "apm-server.rum.exclude_from_grouping=$${RUM_EXCLUDE_FROM_GROUPING}", "-E", "apm-server.rum.source_mapping.cache.expiration=$${RUM_SOURCE_MAPPING_CACHE_EXPIRATION}", "-E", "apm-server.rum.source_mapping.index_pattern=$${RUM_SOURCE_MAPPING_INDEX_PATTERN}"]
           image: >-
             docker.elastic.co/apm/apm-server@sha256:53c050e2ce5d74e6bb0bcb21541ca45499e00249c677312fbd8f9d59fa0edca5
           imagePullPolicy: IfNotPresent
