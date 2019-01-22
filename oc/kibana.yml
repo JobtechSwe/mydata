@@ -1,0 +1,125 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    app: kibana
+  name: kibana
+  namespace: my-data
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - annotations:
+        openshift.io/generated-by: OpenShiftWebConsole
+        openshift.io/imported-from: 'docker.elastic.co/apm/kibana:6.4.3'
+      from:
+        kind: DockerImage
+        name: 'docker.elastic.co/apm/kibana:6.4.3'
+      importPolicy: {}
+      name: 6.4.3
+      referencePolicy:
+        type: Source
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: mydata
+  name: kibana
+  namespace: my-data
+spec:
+  replicas: 1
+  selector:
+    app: mydata
+    deploymentconfig: kibana
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftWebConsole
+      creationTimestamp: null
+      labels:
+        app: mydata
+        deploymentconfig: kibana
+    spec:
+      containers:
+        - env:
+            - name: SERVER_NAME
+              value: 'kibana'
+            - name: ELASTICSEARCH_URL
+              value: 'https://search-mydata-utqr2omljkhjc5q4hpo3vcytsq.eu-north-1.es.amazonaws.com/'
+          image: >-
+            docker.elastic.co/kibana/kibana
+          imagePullPolicy: IfNotPresent
+          name: kibana
+          ports:
+            - containerPort: 5601
+              protocol: TCP
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+          - kibana
+        from:
+          kind: ImageStreamTag
+          name: 'kibana:6.4.3'
+          namespace: my-data
+      type: ImageChange
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: kibana
+  name: kibana
+  namespace: my-data
+spec:
+  ports:
+    - name: 5601-tcp
+      port: 5601
+      protocol: TCP
+      targetPort: 5601
+  selector:
+    deploymentconfig: kibana
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: mydata
+  name: kibana
+  namespace: my-data
+spec:
+  host: kibana-my-data.dev.services.jtech.se
+  port:
+    targetPort: 5601-tcp
+  to:
+    kind: Service
+    name: cv
+    weight: 100
+  wildcardPolicy: None

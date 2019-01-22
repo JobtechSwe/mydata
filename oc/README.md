@@ -2,12 +2,13 @@
 
 These instructions assume you have OpenShift CLI installed (oc version 3.x) and that you are authenticated towards your OpenShift cluster.
 
-## APM
+## APM+ES+KIBANA
 
-ElasticSearch APM.
+APM, ElasticSearch and Kibana.
 
 ```bash
 oc apply -f apm.yml
+oc apply -f kibana.yml
 ```
 
 ## CV
