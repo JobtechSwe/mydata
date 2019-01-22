@@ -36,3 +36,11 @@ The file `cv.yml` defines an ImageStream, DeployConfiguration, Service and Route
 ```bash
 oc apply -f cv.yml
 ```
+
+### OPERATOR
+
+The file `operator.yml` defines an ImageStream, DeployConfiguration, Service and Route for `mydata-operator`.
+
+```bash
+oc apply -f operator.yml
+```

@@ -1,0 +1,134 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    app: mydata
+  name: operator
+  namespace: my-data
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - from:
+        kind: DockerImage
+        name: 'ilix/mydata-operator'
+      importPolicy: {}
+      name: 'latest'
+      referencePolicy:
+        type: Source
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: mydata
+  name: operator
+  namespace: my-data
+spec:
+  replicas: 1
+  selector:
+    app: mydata
+    deploymentconfig: operator
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      labels:
+        app: mydata
+        deploymentconfig: operator
+    spec:
+      containers:
+        - env:
+            - name: PORT
+              value: '3000'
+            - name: PGHOST
+              value: postgres-operator
+            - name: PGPORT
+              value: '5432'
+            - name: PGUSER
+              value: postgresuser
+            - name: PGPASSWORD
+              value: postgrespassword
+            - name: PGDATABASE
+              value: mydata
+            - name: DATABASE_URL
+              value: >-
+                postgres://postgresuser:postgrespassword@postgres-operator:5432/mydata
+            - name: REDIS
+              value: 'redis://:fubar@redis-operator:6379/'
+            - name: APP_NAME
+              value: mydata-operator
+            - name: APM_SERVER
+              value: 'http://apm-server-my-data.dev.services.jtech.se:80'
+          image: >-
+            ilix/mydata-operator
+          imagePullPolicy: Always
+          name: operator
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+          - operator
+        from:
+          kind: ImageStreamTag
+          name: 'mydata-operator:latest'
+          namespace: my-data
+        lastTriggeredImage: >-
+          ilix/mydata-operator
+      type: ImageChange
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mydata
+  name: operator
+  namespace: my-data
+spec:
+  ports:
+    - name: http
+      port: 3000
+      protocol: TCP
+      targetPort: 3000
+  selector:
+    app: mydata
+    deploymentconfig: operator
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: mydata
+  name: operator
+  namespace: my-data
+spec:
+  host: operator-my-data.dev.services.jtech.se
+  port:
+    targetPort: http
+  to:
+    kind: Service
+    name: operator
+    weight: 100
+  wildcardPolicy: None
