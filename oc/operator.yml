@@ -50,7 +50,7 @@ spec:
             - name: PORT
               value: '3000'
             - name: PGHOST
-              value: postgres-operator
+              value: postgresql.my-data.svc
             - name: PGPORT
               value: '5432'
             - name: PGUSER
@@ -61,13 +61,13 @@ spec:
               value: mydata
             - name: DATABASE_URL
               value: >-
-                postgres://postgresuser:postgrespassword@postgres-operator:5432/mydata
+                postgres://postgresuser:postgrespassword@postgresql.my-data.svc:5432/mydata
             - name: REDIS
-              value: 'redis://:fubar@redis-operator:6379/'
+              value: 'redis://:fubar@redis.my-data.svc:6379/'
             - name: APP_NAME
               value: mydata-operator
             - name: APM_SERVER
-              value: 'http://apm-server-my-data.dev.services.jtech.se:80'
+              value: 'http://apm-server.my-data.svc:8200'
           image: >-
             ilix/mydata-operator
           imagePullPolicy: Always

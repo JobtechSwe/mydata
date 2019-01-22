@@ -9,14 +9,11 @@ spec:
   lookupPolicy:
     local: false
   tags:
-    - annotations:
-        openshift.io/generated-by: OpenShiftWebConsole
-        openshift.io/imported-from: 'docker.elastic.co/apm/apm-server:6.4.3'
-      from:
+    - from:
         kind: DockerImage
-        name: 'docker.elastic.co/apm/apm-server:6.4.3'
+        name: 'ilix/apm:7'
       importPolicy: {}
-      name: 6.4.3
+      name: apm
       referencePolicy:
         type: Source
 ---
@@ -52,25 +49,46 @@ spec:
         deploymentconfig: apm-server
     spec:
       containers:
-        - env:
-            - name: RUM_ENABLED
-              value: 'true'
-            - name: RUM_RATE_LIMIT
-              value: '10'
+        - args:
+            - /usr/share/apm-server/apm-server
+            - '-e'
+            - '-E'
+            - 'apm-server.rum.enabled=${RUM_ENABLED}'
+            - '-E'
+            - 'apm-server.rum.rate_limit=${RUM_RATE_LIMIT}'
+            - '-E'
+            - 'apm-server.rum.allow_origins=${RUM_ALLOW_ORIGINS}'
+            - '-E'
+            - 'apm-server.rum.library_pattern=${RUM_LIBRARY_PATTERN}'
+            - '-E'
+            - 'apm-server.rum.exclude_from_grouping=${RUM_EXCLUDE_FROM_GROUPING}'
+            - '-E'
+            - >-
+              apm-server.rum.source_mapping.cache.expiration=${RUM_SOURCE_MAPPING_CACHE_EXPIRATION}
+            - '-E'
+            - >-
+              apm-server.rum.source_mapping.index_pattern=${RUM_SOURCE_MAPPING_INDEX_PATTERN}
+            - '-E'
+            - 'output.elasticsearch.hosts=${OUTPUT_ELASTICSEARCH_HOSTS}'
+          env:
             - name: RUM_ALLOW_ORIGINS
               value: '[''*'']'
-            - name: RUM_LIBRARY_PATTERN
-              value: '"node_modules|bower_components|~"'
+            - name: RUM_ENABLED
+              value: 'true'
             - name: RUM_EXCLUDE_FROM_GROUPING
               value: '"^/webpack"'
+            - name: RUM_LIBRARY_PATTERN
+              value: '"node_modules|bower_components|~"'
+            - name: RUM_RATE_LIMIT
+              value: '10'
             - name: RUM_SOURCE_MAPPING_CACHE_EXPIRATION
               value: 5m
             - name: RUM_SOURCE_MAPPING_INDEX_PATTERN
               value: '"apm-*-sourcemap*"'
-          command: ["apm-server"]
-          args: ["-e", "-E", "apm-server.rum.enabled=$${RUM_ENABLED}", "-E", "apm-server.rum.rate_limit=$${RUM_RATE_LIMIT}", "-E", "apm-server.rum.allow_origins=$${RUM_ALLOW_ORIGINS}", "-E", "apm-server.rum.library_pattern=$${RUM_LIBRARY_PATTERN}", "-E", "apm-server.rum.exclude_from_grouping=$${RUM_EXCLUDE_FROM_GROUPING}", "-E", "apm-server.rum.source_mapping.cache.expiration=$${RUM_SOURCE_MAPPING_CACHE_EXPIRATION}", "-E", "apm-server.rum.source_mapping.index_pattern=$${RUM_SOURCE_MAPPING_INDEX_PATTERN}"]
-          image: >-
-            docker.elastic.co/apm/apm-server@sha256:53c050e2ce5d74e6bb0bcb21541ca45499e00249c677312fbd8f9d59fa0edca5
+            - name: OUTPUT_ELASTICSEARCH_HOSTS
+              value: >-
+                http://search-mydata2-ic3vrhdp5sevc2jshqxwi7gjmy.eu-north-1.es.amazonaws.com:80
+          image: ilix/apm:7
           imagePullPolicy: IfNotPresent
           name: apm-server
           ports:

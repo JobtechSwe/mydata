@@ -9,14 +9,11 @@ spec:
   lookupPolicy:
     local: false
   tags:
-    - annotations:
-        openshift.io/generated-by: ilix
-        openshift.io/imported-from: 'ilix/mydata-cv:002'
-      from:
+    - from:
         kind: DockerImage
-        name: 'ilix/mydata-cv:002'
+        name: 'ilix/mydata-cv:007'
       importPolicy: {}
-      name: '002'
+      name: 'mydata-cv'
       referencePolicy:
         type: Source
 ---
@@ -56,11 +53,12 @@ spec:
             - name: PORT
               value: '4000'
             - name: APM_SERVER
-              value: 'http://apm-server:8200'
+              value: 'http://apm-server.my-data.svc:8200'
             - name: APP_NAME
               value: mydata-cv api
-          image: >-
-            ilix/mydata-cv@sha256:e0286ae236f91f405b1743f08cb90a0fd63167707822d49fd1396c53769917ae
+            - name: NODE_ENV
+              value: oc
+          image: ilix/mydata-cv:007
           imagePullPolicy: IfNotPresent
           name: cv
           ports:
@@ -84,10 +82,8 @@ spec:
           - cv
         from:
           kind: ImageStreamTag
-          name: 'cv:002'
+          name: 'cv:007'
           namespace: my-data
-        lastTriggeredImage: >-
-          ilix/mydata-cv@sha256:e0286ae236f91f405b1743f08cb90a0fd63167707822d49fd1396c53769917ae
       type: ImageChange
 ---
 apiVersion: v1
