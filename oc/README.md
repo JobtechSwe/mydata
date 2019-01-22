@@ -6,8 +6,8 @@ These instructions assume you have OpenShift CLI installed (oc version 3.x) and 
 
 - [ ] APM container won't work
 - [ ] Kibana won't talk to ES
-- [ ] Deploy redis with ephemereal storage
-- [ ] Deploy postgresql with ephemereal storage
+- [ ] Deploy redis with ephemeral storage
+- [ ] Deploy postgresql with ephemeral storage
 - [ ] Setup ES instance outside OpenShift @JoakimVerona
 - [ ] Use ES instance in AF's AWS
 
