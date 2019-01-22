@@ -2,6 +2,14 @@
 
 These instructions assume you have OpenShift CLI installed (oc version 3.x) and that you are authenticated towards your OpenShift cluster.
 
+## APM
+
+ElasticSearch APM.
+
+```bash
+oc apply -f apm.yml
+```
+
 ## CV
 
 The file `cv.yml` defines an ImageStream, DeployConfiguration, Service and Route for `mydata-cv`.
