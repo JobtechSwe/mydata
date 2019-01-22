@@ -4,8 +4,8 @@ These instructions assume you have OpenShift CLI installed (oc version 3.x) and 
 
 ## CV
 
-The file `mydata-cv.yml` defines an ImageStream, DeployConfiguration, Service and Route for `mydata-cv`. 
+The file `cv.yml` defines an ImageStream, DeployConfiguration, Service and Route for `mydata-cv`.
 
-```
-oc apply -f mydata-cv.yml
+```bash
+oc apply -f cv.yml
 ```
