@@ -53,11 +53,13 @@ spec:
             - name: PORT
               value: '4000'
             - name: APM_SERVER
-              value: 'http://apm-server.my-data.svc:8200'
+              value: 'https://f7a3f8bb7ac7404eb669a8798e460701.apm.eu-west-1.aws.cloud.es.io/'
             - name: APP_NAME
               value: mydata-cv api
             - name: NODE_ENV
               value: oc
+            - name: OPERATOR_URL
+              value: 'http://operator.my-data.svc:3000'
           image: ilix/mydata-cv:007
           imagePullPolicy: IfNotPresent
           name: cv
@@ -82,7 +84,7 @@ spec:
           - cv
         from:
           kind: ImageStreamTag
-          name: 'cv:007'
+          name: 'cv:mydata-cv'
           namespace: my-data
       type: ImageChange
 ---
