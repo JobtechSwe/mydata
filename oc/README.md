@@ -49,3 +49,8 @@ The file `operator.yml` defines an ImageStream, DeployConfiguration, Service and
 ```bash
 oc apply -f operator.yml
 ```
+
+```bash
+# Get latest image from Docker Hub
+oc import-image operator
+```
