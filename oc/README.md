@@ -42,6 +42,11 @@ The file `cv.yml` defines an ImageStream, DeployConfiguration, Service and Route
 oc apply -f cv.yml
 ```
 
+```bash
+# Get latest image from Docker Hub
+oc import-image cv
+```
+
 ### OPERATOR
 
 The file `operator.yml` defines an ImageStream, DeployConfiguration, Service and Route for `mydata-operator`.
