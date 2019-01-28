@@ -6,14 +6,12 @@ metadata:
   name: operator
   namespace: my-data
 spec:
-  lookupPolicy:
-    local: false
   tags:
     - from:
         kind: DockerImage
         name: 'ilix/mydata-operator:2'
       importPolicy: {}
-      name: 'operator'
+      name: 'stream'
       referencePolicy:
         type: Source
 ---
@@ -31,7 +29,6 @@ spec:
     deploymentconfig: operator
   strategy:
     activeDeadlineSeconds: 21600
-    resources: {}
     rollingParams:
       intervalSeconds: 1
       maxSurge: 25%
@@ -47,38 +44,36 @@ spec:
     spec:
       containers:
         - env:
-            - name: PORT
-              value: '3000'
-            - name: PGHOST
-              value: postgresql-operator.my-data.svc
-            - name: PGPORT
-              value: '5432'
-            - name: PGUSER
-              value: postgresuser
-            - name: PGPASSWORD
-              value: postgrespassword
-            - name: PGDATABASE
-              value: mydata
-            - name: DATABASE_URL
-              value: postgres://postgresuser:postgrespassword@postgresql-operator.my-data.svc:5432/mydata
-            - name: REDIS
-              value: 'redis://:fubar@redis-operator.my-data.svc:6379/'
-            - name: APP_NAME
-              value: mydata-operator
-            - name: APM_SERVER
-              value: 'https://f7a3f8bb7ac7404eb669a8798e460701.apm.eu-west-1.aws.cloud.es.io'
-            - name: APM_TOKEN
-              value: ''
+          - name: PORT
+            value: '3000'
+          - name: PGHOST
+            value: postgresql-operator.my-data.svc
+          - name: PGPORT
+            value: '5432'
+          - name: PGUSER
+            value: postgresuser
+          - name: PGPASSWORD
+            value: postgrespassword
+          - name: PGDATABASE
+            value: mydata
+          - name: DATABASE_URL
+            value: postgres://postgresuser:postgrespassword@postgresql-operator.my-data.svc:5432/mydata
+          - name: REDIS
+            value: 'redis://:fubar@redis-operator.my-data.svc:6379/'
+          - name: APP_NAME
+            value: mydata-operator
+          - name: APM_SERVER
+            value: 'https://f7a3f8bb7ac7404eb669a8798e460701.apm.eu-west-1.aws.cloud.es.io'
+          - name: APM_TOKEN
+            value: ''
           image: ilix/mydata-operator:2
           imagePullPolicy: Always
           name: operator
-          resources: {}
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
-      securityContext: {}
       terminationGracePeriodSeconds: 30
   triggers:
     - type: ConfigChange
@@ -88,7 +83,7 @@ spec:
           - operator
         from:
           kind: ImageStreamTag
-          name: 'operator:operator'
+          name: 'operator:stream'
           namespace: my-data
       type: ImageChange
 ---
@@ -108,10 +103,7 @@ spec:
   selector:
     app: Test
     deploymentconfig: operator
-  sessionAffinity: None
   type: ClusterIP
-status:
-  loadBalancer: {}
 ---
 apiVersion: route.openshift.io/v1
 kind: Route
