@@ -14,6 +14,33 @@ spec:
       referencePolicy:
         type: Source
 ---
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: Test
+  name: cv
+  namespace: my-data
+spec:
+  runPolicy: Serial
+  triggers:
+    -
+      type: GitHub
+      github:
+        secret: meow123
+  source:
+    git:
+      uri: https://github.com/ilix/mydata-cv
+  strategy:
+    sourceStrategy:
+      from:
+        kind: DockerImage
+        name: node:alpine
+  output:
+    to:
+      kind: ImageStreamTag
+      name: cv:latest
+---
 apiVersion: apps.openshift.io/v1
 kind: DeploymentConfig
 metadata:
