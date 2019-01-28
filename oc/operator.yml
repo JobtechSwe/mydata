@@ -9,9 +9,8 @@ spec:
   tags:
     - from:
         kind: DockerImage
-        name: 'ilix/mydata-operator:2'
-      importPolicy: {}
-      name: 'stream'
+        name: 'jobtechswe/mydata-operator:openshift'
+      name: 'latest'
       referencePolicy:
         type: Source
 ---
@@ -66,7 +65,7 @@ spec:
             value: 'https://f7a3f8bb7ac7404eb669a8798e460701.apm.eu-west-1.aws.cloud.es.io'
           - name: APM_TOKEN
             value: ''
-          image: ilix/mydata-operator:2
+          image: jobtechswe/mydata-operator:openshift
           imagePullPolicy: Always
           name: operator
           terminationMessagePath: /dev/termination-log
@@ -83,7 +82,7 @@ spec:
           - operator
         from:
           kind: ImageStreamTag
-          name: 'operator:stream'
+          name: 'operator:latest'
           namespace: my-data
       type: ImageChange
 ---
