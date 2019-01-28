@@ -11,9 +11,9 @@ spec:
   tags:
     - from:
         kind: DockerImage
-        name: 'ilix/mydata-operator'
+        name: 'ilix/mydata-operator:1'
       importPolicy: {}
-      name: 'latest'
+      name: 'operator'
       referencePolicy:
         type: Source
 ---
@@ -68,8 +68,7 @@ spec:
               value: mydata-operator
             - name: APM_SERVER
               value: 'http://apm-server.my-data.svc:8200'
-          image: >-
-            ilix/mydata-operator
+          image: ilix/mydata-operator:1
           imagePullPolicy: Always
           name: operator
           resources: {}
@@ -80,7 +79,6 @@ spec:
       schedulerName: default-scheduler
       securityContext: {}
       terminationGracePeriodSeconds: 30
-  test: false
   triggers:
     - type: ConfigChange
     - imageChangeParams:
@@ -91,8 +89,6 @@ spec:
           kind: ImageStreamTag
           name: 'mydata-operator:latest'
           namespace: my-data
-        lastTriggeredImage: >-
-          ilix/mydata-operator
       type: ImageChange
 ---
 apiVersion: v1
