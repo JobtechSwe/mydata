@@ -48,7 +48,7 @@ spec:
           - name: APM_SERVER
             value: 'https://f7a3f8bb7ac7404eb669a8798e460701.apm.eu-west-1.aws.cloud.es.io:443'
           - name: APM_TOKEN
-            value: '3qE1xQ4unjG088EZ5e'
+            value: ''
           - name: APP_NAME
             value: mydata-cv api
           - name: NODE_ENV
