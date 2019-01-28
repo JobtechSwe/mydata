@@ -13,6 +13,7 @@ These instructions assume you have OpenShift CLI installed (oc version 3.x) and 
 - [ ] Ta cert från sök-api till routes
 - [ ] Undersök om det går att lagra ssl-cert i en secret eller dylikt
 - [ ] Fixa token till APM-referensen i cv
+- [ ] Store APM token in a secret
 
 ### Nice-to-have
 
