@@ -11,7 +11,7 @@ spec:
   tags:
     - from:
         kind: DockerImage
-        name: 'ilix/mydata-cv:007'
+        name: 'ilix/mydata-cv:009'
       importPolicy: {}
       name: 'mydata-cv'
       referencePolicy:
@@ -54,13 +54,15 @@ spec:
               value: '4000'
             - name: APM_SERVER
               value: 'https://f7a3f8bb7ac7404eb669a8798e460701.apm.eu-west-1.aws.cloud.es.io/'
+            - name: APM_TOKEN
+              value: ''
             - name: APP_NAME
               value: mydata-cv api
             - name: NODE_ENV
               value: oc
             - name: OPERATOR_URL
               value: 'http://operator.my-data.svc:3000'
-          image: ilix/mydata-cv:007
+          image: ilix/mydata-cv:009
           imagePullPolicy: IfNotPresent
           name: cv
           ports:

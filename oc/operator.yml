@@ -67,7 +67,9 @@ spec:
             - name: APP_NAME
               value: mydata-operator
             - name: APM_SERVER
-              value: 'http://apm-server.my-data.svc:8200'
+              value: 'https://f7a3f8bb7ac7404eb669a8798e460701.apm.eu-west-1.aws.cloud.es.io/'
+            - name: APM_TOKEN
+              value: ''
           image: ilix/mydata-operator:1
           imagePullPolicy: Always
           name: operator
