@@ -10,6 +10,9 @@ These instructions assume you have OpenShift CLI installed (oc version 3.x) and 
 - [x] Deploy postgresql with ephemeral storage
 - [ ] Setup ES instance outside OpenShift @JoakimVerona
 - [ ] Use ES instance in AF's AWS
+- [ ] Ta cert från sök-api till routes
+- [ ] Undersök om det går att lagra ssl-cert i en secret eller dylikt
+- [ ] Fixa token till APM-referensen i cv
 
 ### Nice-to-have
 
