@@ -2,7 +2,7 @@ apiVersion: image.openshift.io/v1
 kind: ImageStream
 metadata:
   labels:
-    app: mydata
+    app: Test
   name: operator
   namespace: my-data
 spec:
@@ -11,7 +11,7 @@ spec:
   tags:
     - from:
         kind: DockerImage
-        name: 'ilix/mydata-operator:1'
+        name: 'ilix/mydata-operator:2'
       importPolicy: {}
       name: 'operator'
       referencePolicy:
@@ -21,13 +21,13 @@ apiVersion: apps.openshift.io/v1
 kind: DeploymentConfig
 metadata:
   labels:
-    app: mydata
+    app: Test
   name: operator
   namespace: my-data
 spec:
   replicas: 1
   selector:
-    app: mydata
+    app: Test
     deploymentconfig: operator
   strategy:
     activeDeadlineSeconds: 21600
@@ -42,7 +42,7 @@ spec:
   template:
     metadata:
       labels:
-        app: mydata
+        app: Test
         deploymentconfig: operator
     spec:
       containers:
@@ -50,7 +50,7 @@ spec:
             - name: PORT
               value: '3000'
             - name: PGHOST
-              value: postgresql.my-data.svc
+              value: postgresql-operator.my-data.svc
             - name: PGPORT
               value: '5432'
             - name: PGUSER
@@ -60,17 +60,16 @@ spec:
             - name: PGDATABASE
               value: mydata
             - name: DATABASE_URL
-              value: >-
-                postgres://postgresuser:postgrespassword@postgresql.my-data.svc:5432/mydata
+              value: postgres://postgresuser:postgrespassword@postgresql-operator.my-data.svc:5432/mydata
             - name: REDIS
-              value: 'redis://:fubar@redis.my-data.svc:6379/'
+              value: 'redis://:fubar@redis-operator.my-data.svc:6379/'
             - name: APP_NAME
               value: mydata-operator
             - name: APM_SERVER
-              value: 'https://f7a3f8bb7ac7404eb669a8798e460701.apm.eu-west-1.aws.cloud.es.io/'
+              value: 'https://f7a3f8bb7ac7404eb669a8798e460701.apm.eu-west-1.aws.cloud.es.io'
             - name: APM_TOKEN
               value: ''
-          image: ilix/mydata-operator:1
+          image: ilix/mydata-operator:2
           imagePullPolicy: Always
           name: operator
           resources: {}
@@ -89,7 +88,7 @@ spec:
           - operator
         from:
           kind: ImageStreamTag
-          name: 'mydata-operator:latest'
+          name: 'operator:operator'
           namespace: my-data
       type: ImageChange
 ---
@@ -97,7 +96,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: mydata
+    app: Test
   name: operator
   namespace: my-data
 spec:
@@ -107,7 +106,7 @@ spec:
       protocol: TCP
       targetPort: 3000
   selector:
-    app: mydata
+    app: Test
     deploymentconfig: operator
   sessionAffinity: None
   type: ClusterIP
@@ -118,7 +117,7 @@ apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   labels:
-    app: mydata
+    app: Test
   name: operator
   namespace: my-data
 spec:
