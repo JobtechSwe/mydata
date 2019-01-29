@@ -30,10 +30,10 @@ These instructions assume you have OpenShift CLI installed (oc version 3.x) and 
 The file `cv.yml` defines all the kubernetes and openshift objects to get the CV application up and running. 
 
 ```bash
-# Deploy or update stack
+# Deploy/update
 oc apply -f cv.yml
 
-# Tear down stack
+# Tear down
 oc delete -f cv.yml
 
 # Get latest image from Docker Hub
@@ -50,19 +50,31 @@ https://github.com/JobtechSwe/mydata-cv
 
 #### Docker Hub
 
-https://hub.docker.com/r/jobtechswe/mydata-operator
+https://hub.docker.com/r/jobtechswe/mydata-cv
 
 ### OPERATOR
 
 The file `operator.yml` defines an ImageStream, DeployConfiguration, Service and Route for `mydata-operator`.
 
 ```bash
+# Deploy/update
 oc apply -f operator.yml
-```
 
-```bash
+# Tear down
+oc delete -f operator.yml
+
 # Get latest image from Docker Hub
 oc import-image operator
 ```
 
-GitHub webhook: `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/operator/webhooks/meow123/github`
+#### Build webhook
+
+`https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/operator/webhooks/meow123/github`
+
+#### GitHub
+
+https://github.com/JobtechSwe/mydata-operator
+
+#### Docker Hub
+
+https://hub.docker.com/r/jobtechswe/mydata-operator
