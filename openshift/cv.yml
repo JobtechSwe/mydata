@@ -41,6 +41,9 @@ spec:
     to:
       kind: ImageStreamTag
       name: cv:latest
+  resources:
+    limits:
+      memory: 1Gi
 ---
 apiVersion: apps.openshift.io/v1
 kind: DeploymentConfig
@@ -85,7 +88,7 @@ spec:
           - name: NODE_ENV
             value: oc
           - name: OPERATOR_URL
-            value: 'http://operator.my-data.svc:3000'
+            value: 'https://operator-my-data.dev.services.jtech.se'
           - name: POSTGRES_USER
             value: postgresuser
           - name: POSTGRES_PASSWORD
