@@ -1,0 +1,164 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    app: CV_TEST
+  name: cv
+  namespace: my-data
+spec:
+  tags:
+    - from:
+        kind: DockerImage
+        name: jobtechswe/mydata-cv:openshift
+      name: latest
+      referencePolicy:
+        type: Source
+---
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: CV_TEST
+  name: cv
+  namespace: my-data
+spec:
+  runPolicy: Serial
+  triggers:
+    -
+      type: GitHub
+      github:
+        secret: meow123
+  source:
+    git:
+      uri: https://github.com/ilix/mydata-cv
+  strategy:
+    dockerStrategy:
+      from:
+        kind: DockerImage
+        name: node:alpine
+  output:
+    to:
+      kind: ImageStreamTag
+      name: cv:latest
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: CV_TEST
+  name: cv
+  namespace: my-data
+spec:
+  replicas: 1
+  selector:
+    app: CV_TEST
+    deploymentconfig: cv
+  strategy:
+    activeDeadlineSeconds: 21600
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      labels:
+        app: CV_TEST
+        deploymentconfig: cv
+    spec:
+      containers:
+        - env:
+          - name: PORT
+            value: '4000'
+          - name: APM_SERVER
+            value: 'https://f7a3f8bb7ac7404eb669a8798e460701.apm.eu-west-1.aws.cloud.es.io:443'
+          - name: APM_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: apm
+                key: token
+          - name: APP_NAME
+            value: mydata-cv api
+          - name: NODE_ENV
+            value: oc
+          - name: OPERATOR_URL
+            value: 'http://operator.my-data.svc:3000'
+          - name: POSTGRES_USER
+            value: postgresuser
+          - name: POSTGRES_PASSWORD
+            value: postgrespassword
+          - name: POSTGRES_DB
+            value: cv
+          - name: DATABASE_URL
+            value: postgres://postgresuser:postgrespassword@postgresql-cv.my-data.svc:5432/cv
+          - name: REDIS
+            value: 'redis://:fubar@redis-cv.my-data.svc:6379/'
+          - name: CLIENT_ID
+            value: cv-my-data.dev.services.jtech.se
+          image: jobtechswe/mydata-cv:openshift
+          imagePullPolicy: Always
+          name: cv
+          ports:
+            - containerPort: 4000
+              name: http
+              protocol: TCP
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
+  triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+          - cv
+        from:
+          kind: ImageStreamTag
+          name: 'cv:latest'
+          namespace: my-data
+      type: ImageChange
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: CV_TEST
+  name: cv
+  namespace: my-data
+spec:
+  ports:
+    - name: http
+      port: 4000
+      protocol: TCP
+      targetPort: 4000
+  selector:
+    app: CV_TEST
+    deploymentconfig: cv
+  type: ClusterIP
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: CV_TEST
+  name: cv
+  namespace: my-data
+spec:
+  host: cv-my-data.dev.services.jtech.se
+  port:
+    targetPort: http
+  to:
+    kind: Service
+    name: cv
+    weight: 100
+  wildcardPolicy: None
+  tls:
+    valueFrom:
+      secretKeyRef:
+        key: jtech.se.crt
+        name: tls
+    termination: edge
