@@ -25,29 +25,27 @@ These instructions assume you have OpenShift CLI installed (oc version 3.x) and 
 
 ## Environment scripts
 
-### APM+ES+KIBANA
-
-APM, ElasticSearch and Kibana.
-
-```bash
-oc apply -f apm.yml
-oc apply -f kibana.yml
-```
-
 ### CV
 
-The file `cv.yml` defines an ImageStream, DeployConfiguration, Service and Route for `mydata-cv`.
+The file `cv.yml` defines all the kubernetes and openshift objects to get the CV application up and running. 
 
 ```bash
+# Deploy or update stack
 oc apply -f cv.yml
-```
 
-```bash
+# Tear down stack
+oc delete -f cv.yml
+
 # Get latest image from Docker Hub
 oc import-image cv
 ```
 
 GitHub webhook: `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/cv/webhooks/meow123/github`
+
+#### Resources
+
+**GitHub** https://github.com/JobtechSwe/mydata-cv
+**Docker Hub** https://hub.docker.com/r/jobtechswe/mydata-operator
 
 ### OPERATOR
 
