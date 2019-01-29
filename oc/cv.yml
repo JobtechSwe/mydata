@@ -92,6 +92,8 @@ spec:
             value: postgres://postgresuser:postgrespassword@postgresql-cv.my-data.svc:5432/cv
           - name: REDIS
             value: 'redis://:fubar@redis-cv.my-data.svc:6379/'
+          - name: CLIENT_ID
+            value: cv-my-data.dev.services.jtech.se
           image: jobtechswe/mydata-cv:openshift
           imagePullPolicy: Always
           name: cv
