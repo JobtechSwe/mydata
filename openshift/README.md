@@ -40,12 +40,17 @@ oc delete -f cv.yml
 oc import-image cv
 ```
 
-GitHub webhook: `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/cv/webhooks/meow123/github`
+#### Build webhook
 
-#### Resources
+`https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/cv/webhooks/meow123/github`
 
-**GitHub** https://github.com/JobtechSwe/mydata-cv
-**Docker Hub** https://hub.docker.com/r/jobtechswe/mydata-operator
+#### GitHub
+
+https://github.com/JobtechSwe/mydata-cv
+
+#### Docker Hub
+
+https://hub.docker.com/r/jobtechswe/mydata-operator
 
 ### OPERATOR
 
