@@ -6,6 +6,8 @@ These instructions assume you have OpenShift CLI installed (oc version 3.x) and 
 
 ### Secrets
 
+The values of these secrets need to match your specific environment.
+
 ```bash
 oc create secret generic apm --from-literal=token=meow
 oc create secret generic tls --from-file=~/Documents/jtech.se.crt
