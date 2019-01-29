@@ -61,3 +61,5 @@ oc apply -f operator.yml
 # Get latest image from Docker Hub
 oc import-image operator
 ```
+
+GitHub webhook: `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/operator/webhooks/meow123/github`
