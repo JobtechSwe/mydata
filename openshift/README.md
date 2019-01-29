@@ -25,6 +25,12 @@ These instructions assume you have OpenShift CLI installed (oc version 3.x) and 
 
 ## Environment scripts
 
+### TLS
+
+```bash
+oc create secret generic tls --from-file=~/Documents/jtech.se.crt
+```
+
 ### CV
 
 #### cv.yml
