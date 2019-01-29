@@ -2,17 +2,6 @@
 
 These instructions assume you have OpenShift CLI installed (oc version 3.x) and that you are authenticated towards your OpenShift cluster.
 
-## TODO
-
-- [ ] Store APM token in a secret
-
-### Nice-to-have
-
-- [ ] Deploy redis with storage
-- [ ] Deploy postgresql with storage
-- [ ] Setup backup routine for redis
-- [ ] Setup backup routine for postgresql
-
 ## Environment scripts
 
 ### Secrets
@@ -75,3 +64,14 @@ https://github.com/JobtechSwe/mydata-operator
 #### Docker Hub
 
 https://hub.docker.com/r/jobtechswe/mydata-operator
+
+## TODO
+
+- [ ] -
+
+### Nice-to-have
+
+- [ ] Deploy redis with storage
+- [ ] Deploy postgresql with storage
+- [ ] Setup backup routine for redis
+- [ ] Setup backup routine for postgresql
