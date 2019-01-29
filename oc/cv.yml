@@ -32,7 +32,7 @@ spec:
     git:
       uri: https://github.com/ilix/mydata-cv
   strategy:
-    sourceStrategy:
+    dockerStrategy:
       from:
         kind: DockerImage
         name: node:alpine
