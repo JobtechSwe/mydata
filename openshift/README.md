@@ -4,16 +4,6 @@ These instructions assume you have OpenShift CLI installed (oc version 3.x) and 
 
 ## TODO
 
-- [x] APM container won't work
-- [x] Kibana won't talk to ES
-- [x] Deploy redis with ephemeral storage
-- [x] Deploy postgresql with ephemeral storage
-- [x] Setup ES instance outside OpenShift @JoakimVerona
-- [x] Use ES instance in AF's AWS
-- [ ] Ta cert från sök-api till routes
-- [ ] Is it possible to store TLS certificate in a secret or similar?
-- [x] Add APM_TOKEN to cv
-- [x] Add APM_TOKEN to operator
 - [ ] Store APM token in a secret
 
 ### Nice-to-have
@@ -25,9 +15,10 @@ These instructions assume you have OpenShift CLI installed (oc version 3.x) and 
 
 ## Environment scripts
 
-### TLS
+### Secrets
 
 ```bash
+oc create secret generic apm --from-literal=token=meow
 oc create secret generic tls --from-file=~/Documents/jtech.se.crt
 ```
 
