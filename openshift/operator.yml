@@ -147,3 +147,9 @@ spec:
     name: operator
     weight: 100
   wildcardPolicy: None
+  tls:
+    valueFrom:
+      secretKeyRef:
+        key: ca.crt
+        name: tls
+    termination: edge
