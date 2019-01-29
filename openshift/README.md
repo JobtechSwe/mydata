@@ -25,41 +25,62 @@ These instructions assume you have OpenShift CLI installed (oc version 3.x) and 
 
 ## Environment scripts
 
-### APM+ES+KIBANA
-
-APM, ElasticSearch and Kibana.
+### TLS
 
 ```bash
-oc apply -f apm.yml
-oc apply -f kibana.yml
+oc create secret generic tls --from-file=~/Documents/jtech.se.crt
 ```
 
 ### CV
 
-The file `cv.yml` defines an ImageStream, DeployConfiguration, Service and Route for `mydata-cv`.
+#### cv.yml
 
 ```bash
+# Deploy/update
 oc apply -f cv.yml
-```
 
-```bash
+# Tear down
+oc delete -f cv.yml
+
 # Get latest image from Docker Hub
 oc import-image cv
 ```
 
-GitHub webhook: `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/cv/webhooks/meow123/github`
+#### Build webhook
+
+`https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/cv/webhooks/meow123/github`
+
+#### GitHub
+
+https://github.com/JobtechSwe/mydata-cv
+
+#### Docker Hub
+
+https://hub.docker.com/r/jobtechswe/mydata-cv
 
 ### OPERATOR
 
-The file `operator.yml` defines an ImageStream, DeployConfiguration, Service and Route for `mydata-operator`.
+#### operator.ym
 
 ```bash
+# Deploy/update
 oc apply -f operator.yml
-```
 
-```bash
+# Tear down
+oc delete -f operator.yml
+
 # Get latest image from Docker Hub
 oc import-image operator
 ```
 
-GitHub webhook: `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/operator/webhooks/meow123/github`
+#### Build webhook
+
+`https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/operator/webhooks/meow123/github`
+
+#### GitHub
+
+https://github.com/JobtechSwe/mydata-operator
+
+#### Docker Hub
+
+https://hub.docker.com/r/jobtechswe/mydata-operator
