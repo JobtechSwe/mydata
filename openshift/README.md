@@ -27,7 +27,7 @@ These instructions assume you have OpenShift CLI installed (oc version 3.x) and 
 
 ### CV
 
-The file `cv.yml` defines all the kubernetes and openshift objects to get the CV application up and running. 
+#### cv.yml
 
 ```bash
 # Deploy/update
@@ -54,7 +54,7 @@ https://hub.docker.com/r/jobtechswe/mydata-cv
 
 ### OPERATOR
 
-The file `operator.yml` defines an ImageStream, DeployConfiguration, Service and Route for `mydata-operator`.
+#### operator.ym
 
 ```bash
 # Deploy/update
