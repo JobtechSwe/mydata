@@ -47,6 +47,8 @@ oc apply -f cv.yml
 oc import-image cv
 ```
 
+GitHub webhook: `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/cv/webhooks/meow123/github`
+
 ### OPERATOR
 
 The file `operator.yml` defines an ImageStream, DeployConfiguration, Service and Route for `mydata-operator`.
