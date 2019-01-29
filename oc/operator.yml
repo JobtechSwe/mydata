@@ -14,6 +14,33 @@ spec:
       referencePolicy:
         type: Source
 ---
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: Operator_TEST
+  name: operator
+  namespace: my-data
+spec:
+  runPolicy: Serial
+  triggers:
+    -
+      type: GitHub
+      github:
+        secret: meow123
+  source:
+    git:
+      uri: https://github.com/ilix/mydata-operator
+  strategy:
+    dockerStrategy:
+      from:
+        kind: DockerImage
+        name: node:11
+  output:
+    to:
+      kind: ImageStreamTag
+      name: operator:latest
+---
 apiVersion: apps.openshift.io/v1
 kind: DeploymentConfig
 metadata:
