@@ -30,7 +30,8 @@ spec:
         secret: meow123
   source:
     git:
-      uri: https://github.com/ilix/mydata-operator
+      ref: openshift
+      uri: https://github.com/jobtechswe/mydata-operator
   strategy:
     dockerStrategy:
       from:
