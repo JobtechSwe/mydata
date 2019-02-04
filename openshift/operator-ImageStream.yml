@@ -19,3 +19,55 @@ spec:
         name: jobtechswe/mydata-operator:test
       referencePolicy:
         type: Source
+---
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  name: operator-ci
+  namespace: my-data
+spec:
+  runPolicy: Serial
+  triggers:
+    -
+      type: GitHub
+      github:
+        secret: meow123
+  source:
+    git:
+      ref: master
+      uri: https://github.com/jobtechswe/mydata-operator
+  strategy:
+    dockerStrategy:
+      from:
+        kind: DockerImage
+        name: node:11
+  output:
+    to:
+      kind: ImageStreamTag
+      name: operator:latest
+---
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  name: operator-test
+  namespace: my-data
+spec:
+  runPolicy: Serial
+  triggers:
+    -
+      type: GitHub
+      github:
+        secret: meow123
+  source:
+    git:
+      ref: test
+      uri: https://github.com/jobtechswe/mydata-operator
+  strategy:
+    dockerStrategy:
+      from:
+        kind: DockerImage
+        name: node:11
+  output:
+    to:
+      kind: ImageStreamTag
+      name: operator:test

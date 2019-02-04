@@ -83,9 +83,9 @@ https://hub.docker.com/r/jobtechswe/mydata-operator
 
 ## TODO
 
-- [ ] Move ImageStream to its own file
-- [ ] Create shared CV ImageStream
-- [ ] Create shared Operator ImageStream
+- [x] Move ImageStream to its own file
+- [x] Create shared CV ImageStream
+- [x] Create shared Operator ImageStream
 - [ ] Create yaml for ephemeral redis
 - [ ] Create yaml for ephemeral postgres
 - [ ] Deploy redis with storage
