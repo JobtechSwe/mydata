@@ -73,8 +73,8 @@ oc delete -f operator-TEST.yml
 - [x] Create shared Operator ImageStream
 - [x] Create yaml for ephemeral redis
 - [x] Create yaml for ephemeral postgres
-- [ ] Fix naming for stuff so that -ci and -test are in the end
-- [ ] Fix hostname for ci stuff (mydata-cv-ci. etc)
+- [x] Fix naming for stuff so that -ci and -test are in the end
+- [x] Fix hostname for ci stuff (mydata-cv-ci. etc)
 - [ ] Deploy redis with storage
 - [ ] Deploy postgresql with storage
 
