@@ -29,17 +29,24 @@ oc apply -f ci.yml
 oc apply -f cv-ImageStream.yml
 ```
 
-#### cv.yml
+#### CI
 
 ```bash
 # Deploy/update
-oc apply -f cv.yml
+oc apply -f cv-CI.yml
 
 # Tear down
-oc delete -f cv.yml
+oc delete -f cv-CI.yml
+```
 
-# Get latest image from Docker Hub
-oc import-image cv
+#### TEST
+
+```bash
+# Deploy/update
+oc apply -f cv-TEST.yml
+
+# Tear down
+oc delete -f cv-TEST.yml
 ```
 
 #### Build webhook
@@ -63,17 +70,24 @@ https://hub.docker.com/r/jobtechswe/mydata-cv
 oc apply -f operator-ImageStream.yml
 ```
 
-#### operator.ym
+#### CI
 
 ```bash
 # Deploy/update
-oc apply -f operator.yml
+oc apply -f operator-CI.yml
 
 # Tear down
-oc delete -f operator.yml
+oc delete -f operator-CI.yml
+```
 
-# Get latest image from Docker Hub
-oc import-image operator
+#### TEST
+
+```bash
+# Deploy/update
+oc apply -f operator-TEST.yml
+
+# Tear down
+oc delete -f operator-TEST.yml
 ```
 
 #### Build webhook
