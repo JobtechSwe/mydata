@@ -18,6 +18,7 @@ oc create secret generic tls --from-file=~/Documents/jtech.se.crt
 ```bash
 # Deploy ephemeral redis and postgres
 oc apply -f ci.yml
+oc apply -f test.yml
 ```
 
 ### ImageStreams

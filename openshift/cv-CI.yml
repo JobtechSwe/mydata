@@ -41,7 +41,7 @@ spec:
           - name: NODE_ENV
             value: oc
           - name: OPERATOR_URL
-            value: 'https://operator-my-data.dev.services.jtech.se'
+            value: 'http://mydata-operator-ci.my-data.svc:3000'
           - name: POSTGRES_USER
             value: postgresuser
           - name: POSTGRES_PASSWORD
@@ -49,11 +49,11 @@ spec:
           - name: POSTGRES_DB
             value: cv
           - name: DATABASE_URL
-            value: postgres://postgresuser:postgrespassword@ci-postgresql-cv.my-data.svc:5432/cv
+            value: postgres://postgresuser:postgrespassword@postgresql-cv-ci.my-data.svc:5432/cv
           - name: REDIS
-            value: 'redis://:fubar@ci-redis.my-data.svc:6379/'
+            value: 'redis://:fubar@redis-ci.my-data.svc:6379/'
           - name: CLIENT_ID
-            value: ci-cv-my-data.dev.services.jtech.se
+            value: mydata-cv-ci.dev.services.jtech.se
           image: jobtechswe/mydata-cv:openshift
           imagePullPolicy: Always
           name: mydata-cv-ci
@@ -105,7 +105,7 @@ metadata:
   name: mydata-cv-ci
   namespace: my-data
 spec:
-  host: ci-cv-my-data.dev.services.jtech.se
+  host: mydata-cv-ci.dev.services.jtech.se
   port:
     targetPort: http
   to:

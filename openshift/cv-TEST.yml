@@ -41,7 +41,7 @@ spec:
           - name: NODE_ENV
             value: oc
           - name: OPERATOR_URL
-            value: 'https://operator-my-data.dev.services.jtech.se'
+            value: 'http://mydata-operator-test.my-data.svc:3000'
           - name: POSTGRES_USER
             value: postgresuser
           - name: POSTGRES_PASSWORD

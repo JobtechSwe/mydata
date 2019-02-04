@@ -3,14 +3,14 @@ kind: DeploymentConfig
 metadata:
   annotations:
     template.alpha.openshift.io/wait-for-ready: 'true'
-  name: ci-postgresql-cv
+  name: postgresql-cv-ci
   namespace: my-data
   labels:
     app: CI
 spec:
   replicas: 1
   selector:
-    name: ci-postgresql-cv
+    name: postgresql-cv-ci
   strategy:
     activeDeadlineSeconds: 21600
     recreateParams:
@@ -20,7 +20,7 @@ spec:
   template:
     metadata:
       labels:
-        name: ci-postgresql-cv
+        name: postgresql-cv-ci
     spec:
       containers:
         - env:
@@ -42,7 +42,7 @@ spec:
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 10
-          name: ci-postgresql-cv
+          name: postgresql-cv-ci
           ports:
             - containerPort: 5432
               protocol: TCP
@@ -65,7 +65,7 @@ spec:
           terminationMessagePolicy: File
           volumeMounts:
             - mountPath: /var/lib/pgsql/data
-              name: ci-postgresql-cv-data
+              name: postgresql-cv-ci-data
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
@@ -73,14 +73,14 @@ spec:
       terminationGracePeriodSeconds: 30
       volumes:
         - emptyDir: {}
-          name: ci-postgresql-cv-data
+          name: postgresql-cv-ci-data
   triggers:
     - type: ConfigChange
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: ci-postgresql-cv
+  name: postgresql-cv-ci
   namespace: my-data
   labels:
     app: CI
@@ -91,7 +91,7 @@ spec:
       protocol: TCP
       targetPort: 5432
   selector:
-    name: ci-postgresql-cv
+    name: postgresql-cv-ci
   sessionAffinity: None
   type: ClusterIP
 ---
@@ -100,14 +100,14 @@ kind: DeploymentConfig
 metadata:
   annotations:
     template.alpha.openshift.io/wait-for-ready: 'true'
-  name: ci-postgresql-operator
+  name: postgresql-operator-ci
   namespace: my-data
   labels:
     app: CI
 spec:
   replicas: 1
   selector:
-    name: ci-postgresql-operator
+    name: postgresql-operator-ci
   strategy:
     activeDeadlineSeconds: 21600
     recreateParams:
@@ -117,7 +117,7 @@ spec:
   template:
     metadata:
       labels:
-        name: ci-postgresql-operator
+        name: postgresql-operator-ci
     spec:
       containers:
         - env:
@@ -139,7 +139,7 @@ spec:
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 10
-          name: ci-postgresql-operator
+          name: postgresql-operator-ci
           ports:
             - containerPort: 5432
               protocol: TCP
@@ -162,7 +162,7 @@ spec:
           terminationMessagePolicy: File
           volumeMounts:
             - mountPath: /var/lib/pgsql/data
-              name: ci-postgresql-operator-data
+              name: postgresql-operator-ci-data
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
@@ -170,14 +170,14 @@ spec:
       terminationGracePeriodSeconds: 30
       volumes:
         - emptyDir: {}
-          name: ci-postgresql-operator-data
+          name: postgresql-operator-ci-data
   triggers:
     - type: ConfigChange
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: ci-postgresql-operator
+  name: postgresql-operator-ci
   namespace: my-data
   labels:
     app: CI
@@ -188,7 +188,7 @@ spec:
       protocol: TCP
       targetPort: 5432
   selector:
-    name: ci-postgresql-operator
+    name: postgresql-operator-ci
   sessionAffinity: None
   type: ClusterIP
 ---
@@ -197,14 +197,14 @@ kind: DeploymentConfig
 metadata:
   annotations:
     template.alpha.openshift.io/wait-for-ready: 'true'
-  name: ci-redis
+  name: redis-ci
   namespace: my-data
   labels:
     app: CI
 spec:
   replicas: 1
   selector:
-    name: ci-redis
+    name: redis-ci
   strategy:
     activeDeadlineSeconds: 21600
     recreateParams:
@@ -215,7 +215,7 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        name: ci-redis
+        name: redis-ci
     spec:
       containers:
         - env:
@@ -259,14 +259,14 @@ spec:
           terminationMessagePolicy: File
           volumeMounts:
             - mountPath: /var/lib/redis/data
-              name: ci-redis-data
+              name: redis-ci-data
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
       terminationGracePeriodSeconds: 30
       volumes:
         - emptyDir: {}
-          name: ci-redis-data
+          name: redis-ci-data
   triggers:
     - type: ConfigChange
 ---
@@ -275,7 +275,7 @@ kind: Service
 metadata:
   labels:
     app: CI
-  name: ci-redis
+  name: redis-ci
   namespace: my-data
 spec:
   ports:
@@ -284,6 +284,6 @@ spec:
       protocol: TCP
       targetPort: 6379
   selector:
-    name: ci-redis
+    name: redis-ci
   sessionAffinity: None
   type: ClusterIP
