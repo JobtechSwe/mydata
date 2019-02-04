@@ -49,9 +49,9 @@ spec:
           - name: POSTGRES_DB
             value: cv
           - name: DATABASE_URL
-            value: postgres://postgresuser:postgrespassword@postgresql-cv.my-data.svc:5432/cv
+            value: postgres://postgresuser:postgrespassword@ci-postgresql.my-data.svc:5432/cv
           - name: REDIS
-            value: 'redis://:fubar@redis-cv.my-data.svc:6379/'
+            value: 'redis://:fubar@ci-redis.my-data.svc:6379/'
           - name: CLIENT_ID
             value: ci-cv-my-data.dev.services.jtech.se
           image: jobtechswe/mydata-cv:openshift
