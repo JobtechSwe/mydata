@@ -50,20 +50,20 @@ oc delete -f operator-TEST.yml
 
 #### Build webhooks
 
-`https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/cv-ci/webhooks/meow123/github`
-`https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/cv-test/webhooks/meow123/github`
-`https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/operator-ci/webhooks/meow123/github`
-`https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/operator-test/webhooks/meow123/github`
+- `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/cv-ci/webhooks/meow123/github`
+- `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/cv-test/webhooks/meow123/github`
+- `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/operator-ci/webhooks/meow123/github`
+- `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/operator-test/webhooks/meow123/github`
 
 ### Source
 
-MyData-CV: https://github.com/JobtechSwe/mydata-cv
-MyData-Operator: https://github.com/JobtechSwe/mydata-operator
+- MyData-CV: https://github.com/JobtechSwe/mydata-cv
+- MyData-Operator: https://github.com/JobtechSwe/mydata-operator
 
 #### Docker Hub
 
-https://hub.docker.com/r/jobtechswe/mydata-cv
-https://hub.docker.com/r/jobtechswe/mydata-operator
+- https://hub.docker.com/r/jobtechswe/mydata-cv
+- https://hub.docker.com/r/jobtechswe/mydata-operator
 
 ## TODO
 
