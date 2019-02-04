@@ -93,8 +93,10 @@ https://hub.docker.com/r/jobtechswe/mydata-operator
 - [x] Move ImageStream to its own file
 - [x] Create shared CV ImageStream
 - [x] Create shared Operator ImageStream
-- [ ] Create yaml for ephemeral redis
-- [ ] Create yaml for ephemeral postgres
+- [x] Create yaml for ephemeral redis
+- [x] Create yaml for ephemeral postgres
+- [ ] Fix naming for stuff so that -ci and -test are in the end
+- [ ] Fix hostname for ci stuff (mydata-cv-ci. etc)
 - [ ] Deploy redis with storage
 - [ ] Deploy postgresql with storage
 
