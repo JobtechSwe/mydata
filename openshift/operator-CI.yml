@@ -40,9 +40,9 @@ spec:
           - name: PGDATABASE
             value: mydata
           - name: DATABASE_URL
-            value: postgres://postgresuser:postgrespassword@postgresql-operator.my-data.svc:5432/mydata
+            value: postgres://postgresuser:postgrespassword@ci-postgresql-operator.my-data.svc:5432/mydata
           - name: REDIS
-            value: 'redis://:fubar@redis-operator.my-data.svc:6379/'
+            value: 'redis://:fubar@ci-redis.my-data.svc:6379/'
           - name: APP_NAME
             value: mydata-operator
           - name: APM_SERVER
@@ -99,7 +99,7 @@ metadata:
   name: mydata-operator-ci
   namespace: my-data
 spec:
-  host: operator-my-data.dev.services.jtech.se
+  host: ci-operator-my-data.dev.services.jtech.se
   port:
     targetPort: http
   to:
