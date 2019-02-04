@@ -1,24 +1,6 @@
-apiVersion: image.openshift.io/v1
-kind: ImageStream
-metadata:
-  labels:
-    app: CV_TEST
-  name: cv
-  namespace: my-data
-spec:
-  tags:
-    - from:
-        kind: DockerImage
-        name: jobtechswe/mydata-cv:openshift
-      name: latest
-      referencePolicy:
-        type: Source
----
 apiVersion: v1
 kind: BuildConfig
 metadata:
-  labels:
-    app: CV_TEST
   name: cv
   namespace: my-data
 spec:
@@ -101,7 +83,7 @@ spec:
             value: 'redis://:fubar@redis-cv.my-data.svc:6379/'
           - name: CLIENT_ID
             value: cv-my-data.dev.services.jtech.se
-          image: jobtechswe/mydata-cv:openshift
+          image: jobtechswe/mydata-cv:latest
           imagePullPolicy: Always
           name: cv
           ports:

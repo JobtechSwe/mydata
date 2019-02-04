@@ -15,6 +15,13 @@ oc create secret generic tls --from-file=~/Documents/jtech.se.crt
 
 ### CV
 
+#### ImageStream
+
+```bash
+# Deploy ImageStream for latest and test tags.
+oc apply -f cv-ImageStream.yml
+```
+
 #### cv.yml
 
 ```bash
@@ -41,6 +48,13 @@ https://github.com/JobtechSwe/mydata-cv
 https://hub.docker.com/r/jobtechswe/mydata-cv
 
 ### OPERATOR
+
+#### ImageStream
+
+```bash
+# Deploy ImageStream for latest and test tags.
+oc apply -f operator-ImageStream.yml
+```
 
 #### operator.ym
 
@@ -69,11 +83,15 @@ https://hub.docker.com/r/jobtechswe/mydata-operator
 
 ## TODO
 
-- [ ] -
+- [ ] Move ImageStream to its own file
+- [ ] Create shared CV ImageStream
+- [ ] Create shared Operator ImageStream
+- [ ] Create yaml for ephemeral redis
+- [ ] Create yaml for ephemeral postgres
+- [ ] Deploy redis with storage
+- [ ] Deploy postgresql with storage
 
 ### Nice-to-have
 
-- [ ] Deploy redis with storage
-- [ ] Deploy postgresql with storage
 - [ ] Setup backup routine for redis
 - [ ] Setup backup routine for postgresql

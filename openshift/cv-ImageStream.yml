@@ -1,0 +1,21 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: cv
+  namespace: my-data
+spec:
+  tags:
+    # Latest, for CI
+    - name: latest
+      from:
+        kind: DockerImage
+        name: jobtechswe/mydata-cv:latest
+      referencePolicy:
+        type: Source
+    # test tag
+    - name: test
+      from:
+        kind: DockerImage
+        name: jobtechswe/mydata-cv:test
+      referencePolicy:
+        type: Source
