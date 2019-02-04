@@ -6,17 +6,17 @@ metadata:
 spec:
   tags:
     # Latest, for CI
-    - name: latest
-      from:
+    - from:
         kind: DockerImage
-        name: jobtechswe/mydata-cv:latest
+        name: jobtechswe/mydata-cv:openshift
+      name: ci
       referencePolicy:
         type: Source
     # test tag
-    - name: test
-      from:
+    - from:
         kind: DockerImage
         name: jobtechswe/mydata-cv:test
+      name: test
       referencePolicy:
         type: Source
 ---
@@ -44,7 +44,7 @@ spec:
   output:
     to:
       kind: ImageStreamTag
-      name: cv:latest
+      name: cv:ci
   resources:
     limits:
       memory: 1Gi
