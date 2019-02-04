@@ -13,6 +13,13 @@ oc create secret generic apm --from-literal=token=meow
 oc create secret generic tls --from-file=~/Documents/jtech.se.crt
 ```
 
+### Shared stuff
+
+```bash
+# Deploy ephemeral redis and postgres
+oc apply -f ci.yml
+```
+
 ### CV
 
 #### ImageStream
