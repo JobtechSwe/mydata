@@ -108,3 +108,29 @@ Replace `AverySECRETtoken` in the URL's below.
 
 - [ ] Setup backup routine for redis
 - [ ] Setup backup routine for postgresql
+
+## MISC.
+
+```bash
+# TL;DR; just give me some copy-pasta
+
+# Run everything
+oc apply -f ci.yml
+oc apply -f test.yml
+oc apply -f cv-ImageStream.yml
+oc apply -f operator-ImageStream.yml
+oc apply -f cv-CI.yml
+oc apply -f operator-CI.yml
+oc apply -f cv-TEST.yml
+oc apply -f operator-TEST.yml
+
+# Destroy everything
+oc delete -f operator-TEST.yml
+oc delete -f operator-CI.yml
+oc delete -f cv-TEST.yml
+oc delete -f cv-CI.yml
+oc delete -f operator-ImageStream.yml
+oc delete -f cv-ImageStream.yml
+oc delete -f test.yml
+oc delete -f ci.yml
+```
