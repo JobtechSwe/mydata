@@ -1,23 +1,36 @@
 # How to do things
 
-These instructions assume you have OpenShift CLI installed (oc version 3.x) and that you are authenticated towards your OpenShift cluster.
+## Assumptions
+
+Before you begin, this guide assumes that...
+
+- ...you have the OpenShift CLI installed (oc) version 3.x
+- ...you have a functioning OpenShift cluster
+- ...you have created a project namespace
+- ...you have run `oc login` towards your OpenShift cluster
+
+Before you run these scripts, make sure you are working with the correct project namespace.
 
 ```bash
-oc project my-data # replace my-data with your actual project namespace
+oc project my-data # replace "my-data" with your actual project namespace
 ```
 
-## Environment scripts
+## Components
 
 ### Secrets
 
-The values of these secrets need to match your specific environment.
+First of all, let's create some secrets that will be used in your environment.
 
 ```bash
-oc create secret generic apm --from-literal=token=meow
-oc create secret generic tls --from-file=~/Documents/jtech.se.crt
+# Replace AverySECRETtoken with your APM token
+oc create secret generic apm --from-literal=token=AverySECRETtoken
+# Replace the path below with a path to your TLS certificate file
+oc create secret generic tls --from-file=/home/ilix/Documents/jtech.se.crt
 ```
 
 ### Shared resources
+
+Both `MyData-CV` and `MyData-Operator` use PostgreSQL and Redis. These following commands will deploy instances of these to be used by the CI and TEST environments.
 
 ```bash
 # Deploy ephemeral redis and postgres
@@ -25,7 +38,9 @@ oc apply -f ci.yml
 oc apply -f test.yml
 ```
 
-### ImageStreams
+### ImageStreams and automatic builds
+
+The ImageStream and BuildConfigs are setup using the following commands.
 
 ```bash
 # Deploy ImageStream for mydata-cv.
@@ -53,12 +68,16 @@ oc delete -f operator-CI.yml
 oc delete -f operator-TEST.yml
 ```
 
+### Other information
+
 #### Build webhooks
 
-- `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/cv-ci/webhooks/meow123/github`
-- `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/cv-test/webhooks/meow123/github`
-- `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/operator-ci/webhooks/meow123/github`
-- `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/operator-test/webhooks/meow123/github`
+Replace `AverySECRETtoken` in the URL's below.
+
+- `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/cv-ci/webhooks/AverySECRETtoken/github`
+- `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/cv-test/webhooks/AverySECRETtoken/github`
+- `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/operator-ci/webhooks/AverySECRETtoken/github`
+- `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/operator-test/webhooks/AverySECRETtoken/github`
 
 ### Source
 
@@ -88,6 +107,7 @@ oc delete -f operator-TEST.yml
 - [ ] Hur gör man en lokal deploy enklast?
 - [ ] Vilka storage-providers finns det stöd för? (endast dropbox?)
 - [ ] OpenShift-logins till Adam, Einar och Johan
+- [ ] Arbeta i develop-branch, release/test från master
 
 ### Nice-to-have
 
