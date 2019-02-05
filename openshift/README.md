@@ -83,6 +83,7 @@ oc delete -f operator-TEST.yml
 - [ ] Lokal test utan APM?
 - [ ] Hur gör man en lokal deploy enklast?
 - [ ] Vilka storage-providers finns det stöd för? (endast dropbox?)
+- [ ] OpenShift-logins till Adam, Einar och Johan
 
 ### Nice-to-have
 
