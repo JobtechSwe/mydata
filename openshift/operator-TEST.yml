@@ -4,7 +4,6 @@ metadata:
   labels:
     app: TEST
   name: mydata-operator-test
-  namespace: my-data
 spec:
   replicas: 1
   selector:
@@ -70,7 +69,7 @@ spec:
         from:
           kind: ImageStreamTag
           name: 'operator:test'
-          namespace: my-data
+      
       type: ImageChange
 ---
 apiVersion: v1
@@ -79,7 +78,6 @@ metadata:
   labels:
     app: TEST
   name: mydata-operator-test
-  namespace: my-data
 spec:
   ports:
     - name: http
@@ -97,7 +95,6 @@ metadata:
   labels:
     app: TEST
   name: mydata-operator-test
-  namespace: my-data
 spec:
   host: mydata-operator-test.dev.services.jtech.se
   port:

@@ -4,7 +4,6 @@ metadata:
   labels:
     app: CI
   name: mydata-cv-ci
-  namespace: my-data
 spec:
   replicas: 1
   selector:
@@ -76,7 +75,7 @@ spec:
         from:
           kind: ImageStreamTag
           name: 'cv:ci'
-          namespace: my-data
+      
       type: ImageChange
 ---
 apiVersion: v1
@@ -85,7 +84,6 @@ metadata:
   labels:
     app: CI
   name: mydata-cv-ci
-  namespace: my-data
 spec:
   ports:
     - name: http
@@ -103,7 +101,6 @@ metadata:
   labels:
     app: CI
   name: mydata-cv-ci
-  namespace: my-data
 spec:
   host: mydata-cv-ci.dev.services.jtech.se
   port:

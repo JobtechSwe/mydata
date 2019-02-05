@@ -4,7 +4,6 @@ metadata:
   annotations:
     template.alpha.openshift.io/wait-for-ready: 'true'
   name: postgresql-cv-test
-  namespace: my-data
   labels:
     app: TEST
 spec:
@@ -81,7 +80,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgresql-cv-test
-  namespace: my-data
   labels:
     app: TEST
 spec:
@@ -101,7 +99,6 @@ metadata:
   annotations:
     template.alpha.openshift.io/wait-for-ready: 'true'
   name: postgresql-operator-test
-  namespace: my-data
   labels:
     app: TEST
 spec:
@@ -178,7 +175,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgresql-operator-test
-  namespace: my-data
   labels:
     app: TEST
 spec:
@@ -198,7 +194,6 @@ metadata:
   annotations:
     template.alpha.openshift.io/wait-for-ready: 'true'
   name: redis-test
-  namespace: my-data
   labels:
     app: TEST
 spec:
@@ -276,7 +271,6 @@ metadata:
   labels:
     app: TEST
   name: redis-test
-  namespace: my-data
 spec:
   ports:
     - name: redis
