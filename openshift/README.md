@@ -6,14 +6,9 @@ Before you begin, this guide assumes that...
 
 - ...you have the OpenShift CLI installed (oc) version 3.x
 - ...you have a functioning OpenShift cluster
-- ...you have created a project namespace
+- ...you have created a project namespace (example: `my-data`)
 - ...you have run `oc login` towards your OpenShift cluster
-
-Before you run these scripts, make sure you are working with the correct project namespace.
-
-```bash
-oc project my-data # replace "my-data" with your actual project namespace
-```
+- ...you are set oc to use your project `oc project my-data`
 
 ## Components
 
