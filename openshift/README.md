@@ -77,6 +77,7 @@ oc delete -f operator-TEST.yml
 - [x] Fix hostname for ci stuff (mydata-cv-ci. etc)
 - [ ] Deploy redis with storage
 - [ ] Deploy postgresql with storage
+- [ ] Have a look at the permissions in mydata-cv Dockerfile
 
 ### Nice-to-have
 
