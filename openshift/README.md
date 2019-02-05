@@ -94,7 +94,7 @@ Replace `AverySECRETtoken` in the URL's below.
 - [x] Fix naming for stuff so that -ci and -test are in the end
 - [x] Fix hostname for ci stuff (mydata-cv-ci. etc)
 - [ ] Deploy redis with storage
-- [ ] Deploy postgresql with storage
+- [x] Deploy postgresql with storage (/lab)
 - [x] Have a look at the permissions in mydata-cv Dockerfile
 - [ ] Kort beskrivning av vad redis, postgres, apm används till
 - [x] Byggen (cv)
