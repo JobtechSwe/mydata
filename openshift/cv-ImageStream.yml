@@ -7,8 +7,8 @@ spec:
     # Latest, for CI
     - from:
         kind: DockerImage
-        name: jobtechswe/mydata-cv:openshift
-      name: ci
+        name: jobtechswe/mydata-cv:latest
+      name: latest
       referencePolicy:
         type: Source
     # test tag
@@ -42,7 +42,7 @@ spec:
   output:
     to:
       kind: ImageStreamTag
-      name: cv:ci
+      name: cv:latest
   resources:
     limits:
       memory: 1Gi

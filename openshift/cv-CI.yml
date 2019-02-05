@@ -53,7 +53,7 @@ spec:
             value: 'redis://:fubar@redis-ci.my-data.svc:6379/'
           - name: CLIENT_ID
             value: mydata-cv-ci.dev.services.jtech.se
-          image: jobtechswe/mydata-cv:openshift
+          image: jobtechswe/mydata-cv:latest
           imagePullPolicy: Always
           name: mydata-cv-ci
           ports:
@@ -74,7 +74,7 @@ spec:
           - mydata-cv-ci
         from:
           kind: ImageStreamTag
-          name: 'cv:ci'
+          name: 'cv:latest'
       
       type: ImageChange
 ---
