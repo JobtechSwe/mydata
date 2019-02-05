@@ -78,6 +78,11 @@ oc delete -f operator-TEST.yml
 - [ ] Deploy redis with storage
 - [ ] Deploy postgresql with storage
 - [ ] Have a look at the permissions in mydata-cv Dockerfile
+- [ ] Kort beskrivning av vad redis, postgres, apm används till
+- [ ] Byggen (cv)
+- [ ] Lokal test utan APM?
+- [ ] Hur gör man en lokal deploy enklast?
+- [ ] Vilka storage-providers finns det stöd för? (endast dropbox?)
 
 ### Nice-to-have
 
