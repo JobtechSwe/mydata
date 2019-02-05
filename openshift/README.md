@@ -95,9 +95,9 @@ Replace `AverySECRETtoken` in the URL's below.
 - [x] Fix hostname for ci stuff (mydata-cv-ci. etc)
 - [ ] Deploy redis with storage
 - [ ] Deploy postgresql with storage
-- [ ] Have a look at the permissions in mydata-cv Dockerfile
+- [x] Have a look at the permissions in mydata-cv Dockerfile
 - [ ] Kort beskrivning av vad redis, postgres, apm används till
-- [ ] Byggen (cv)
+- [x] Byggen (cv)
 - [ ] Lokal test utan APM?
 - [ ] Hur gör man en lokal deploy enklast?
 - [ ] Vilka storage-providers finns det stöd för? (endast dropbox?)
