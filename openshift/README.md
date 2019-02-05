@@ -2,6 +2,10 @@
 
 These instructions assume you have OpenShift CLI installed (oc version 3.x) and that you are authenticated towards your OpenShift cluster.
 
+```bash
+oc project my-data # replace my-data with your actual project namespace
+```
+
 ## Environment scripts
 
 ### Secrets
