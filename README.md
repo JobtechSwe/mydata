@@ -14,7 +14,7 @@ Förenkla och höja effektiviteten i karriärarbetet genom att katalysera ekosys
 Ett innovationsteam är framtaget som består av kompetens både inom programmering, UX, infrastruktur, kryptering/säkerhet och expertis från myndigheten. Innovationsteamet jobbar iterativt och skall uppnå högre och högre ställda mål/milstolpar. Första etappen är t ex att få alla systemkomponenter på plats men med väldigt begränsad funktionalitet. Därefter ökas komplexiteten och till slut finns det ett embryo till produkt som kan utvärderas. 
 
 ## Transparens och samarbete
-Vi har som mål att vara 100% transparenta och lägger ut all kod och dokumentation här på Github. Meningen är att konsolidera kunskap och öka samarbetet med andra initiativ som samtidigt jobbar med samma tanke. Vi är väldigt glada för att få kontakt med dig och stöttar gärna med de lärdomar vi har och lär oss gärna av dina.
+Vi har som mål att vara 100% transparenta och lägger ut all kod och dokumentation här på Github. Meningen är att konsolidera kunskap och öka samarbetet med andra initiativ som samtidigt jobbar med samma tanke. Vi är väldigt glada för att få kontakt med dig och stöttar gärna med de lärdomar vi har och lär oss gärna av dina. Projektets Kanban-tavla där utvecklarna koordinerar arbetet kan ses här https://trello.com/b/uGsJAcH1/mydata-mvp
 
 ## Koden
 

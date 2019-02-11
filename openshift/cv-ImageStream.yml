@@ -1,0 +1,76 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: cv
+spec:
+  tags:
+    # Latest, for CI
+    - from:
+        kind: DockerImage
+        name: jobtechswe/mydata-cv:latest
+      name: latest
+      referencePolicy:
+        type: Source
+    # test tag
+    - from:
+        kind: DockerImage
+        name: jobtechswe/mydata-cv:test
+      name: test
+      referencePolicy:
+        type: Source
+---
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  name: cv-ci
+spec:
+  runPolicy: Serial
+  triggers:
+    -
+      type: GitHub
+      github:
+        secret: meow123
+  source:
+    git:
+      ref: master
+      uri: https://github.com/jobtechswe/mydata-cv
+  strategy:
+    dockerStrategy:
+      from:
+        kind: DockerImage
+        name: node:alpine
+  output:
+    to:
+      kind: ImageStreamTag
+      name: cv:latest
+  resources:
+    limits:
+      memory: 1Gi
+---
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  name: cv-test
+spec:
+  runPolicy: Serial
+  triggers:
+    -
+      type: GitHub
+      github:
+        secret: meow123
+  source:
+    git:
+      ref: test
+      uri: https://github.com/jobtechswe/mydata-cv
+  strategy:
+    dockerStrategy:
+      from:
+        kind: DockerImage
+        name: node:alpine
+  output:
+    to:
+      kind: ImageStreamTag
+      name: cv:test
+  resources:
+    limits:
+      memory: 1Gi

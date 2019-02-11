@@ -1,0 +1,157 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    app: apm-server
+  name: apm-server
+  namespace: my-data
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - from:
+        kind: DockerImage
+        name: 'ilix/apm:7'
+      importPolicy: {}
+      name: apm
+      referencePolicy:
+        type: Source
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: mydata
+  name: apm-server
+  namespace: my-data
+spec:
+  replicas: 1
+  selector:
+    app: mydata
+    deploymentconfig: apm-server
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftWebConsole
+      creationTimestamp: null
+      labels:
+        app: mydata
+        deploymentconfig: apm-server
+    spec:
+      containers:
+        - args:
+            - /usr/share/apm-server/apm-server
+            - '-e'
+            - '-E'
+            - 'apm-server.rum.enabled=${RUM_ENABLED}'
+            - '-E'
+            - 'apm-server.rum.rate_limit=${RUM_RATE_LIMIT}'
+            - '-E'
+            - 'apm-server.rum.allow_origins=${RUM_ALLOW_ORIGINS}'
+            - '-E'
+            - 'apm-server.rum.library_pattern=${RUM_LIBRARY_PATTERN}'
+            - '-E'
+            - 'apm-server.rum.exclude_from_grouping=${RUM_EXCLUDE_FROM_GROUPING}'
+            - '-E'
+            - >-
+              apm-server.rum.source_mapping.cache.expiration=${RUM_SOURCE_MAPPING_CACHE_EXPIRATION}
+            - '-E'
+            - >-
+              apm-server.rum.source_mapping.index_pattern=${RUM_SOURCE_MAPPING_INDEX_PATTERN}
+            - '-E'
+            - 'output.elasticsearch.hosts=${OUTPUT_ELASTICSEARCH_HOSTS}'
+          env:
+            - name: RUM_ALLOW_ORIGINS
+              value: '[''*'']'
+            - name: RUM_ENABLED
+              value: 'true'
+            - name: RUM_EXCLUDE_FROM_GROUPING
+              value: '"^/webpack"'
+            - name: RUM_LIBRARY_PATTERN
+              value: '"node_modules|bower_components|~"'
+            - name: RUM_RATE_LIMIT
+              value: '10'
+            - name: RUM_SOURCE_MAPPING_CACHE_EXPIRATION
+              value: 5m
+            - name: RUM_SOURCE_MAPPING_INDEX_PATTERN
+              value: '"apm-*-sourcemap*"'
+            - name: OUTPUT_ELASTICSEARCH_HOSTS
+              value: >-
+                http://search-mydata2-ic3vrhdp5sevc2jshqxwi7gjmy.eu-north-1.es.amazonaws.com:80
+          image: ilix/apm:7
+          imagePullPolicy: IfNotPresent
+          name: apm-server
+          ports:
+            - containerPort: 8200
+              protocol: TCP
+          resources:
+            limits:
+              memory: 1Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+          - apm-server
+        from:
+          kind: ImageStreamTag
+          name: 'apm-server:6.4.3'
+          namespace: my-data
+        lastTriggeredImage: >-
+          docker.elastic.co/apm/apm-server@sha256:53c050e2ce5d74e6bb0bcb21541ca45499e00249c677312fbd8f9d59fa0edca5
+      type: ImageChange
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: apm-server
+  name: apm-server
+  namespace: my-data
+spec:
+  ports:
+    - name: 8200-tcp
+      port: 8200
+      protocol: TCP
+      targetPort: 8200
+  selector:
+    deploymentconfig: apm-server
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: mydata
+  name: apm-server
+  namespace: my-data
+spec:
+  host: apm-server-my-data.dev.services.jtech.se
+  port:
+    targetPort: 8200-tcp
+  to:
+    kind: Service
+    name: apm-server
+    weight: 100
+  wildcardPolicy: None

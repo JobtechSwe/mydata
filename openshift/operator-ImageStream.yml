@@ -1,0 +1,70 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: operator
+spec:
+  tags:
+    # Latest, for CI
+    - name: latest
+      from:
+        kind: DockerImage
+        name: jobtechswe/mydata-operator:latest
+      referencePolicy:
+        type: Source
+    # test tag
+    - name: test
+      from:
+        kind: DockerImage
+        name: jobtechswe/mydata-operator:test
+      referencePolicy:
+        type: Source
+---
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  name: operator-ci
+spec:
+  runPolicy: Serial
+  triggers:
+    -
+      type: GitHub
+      github:
+        secret: meow123
+  source:
+    git:
+      ref: master
+      uri: https://github.com/jobtechswe/mydata-operator
+  strategy:
+    dockerStrategy:
+      from:
+        kind: DockerImage
+        name: node:11
+  output:
+    to:
+      kind: ImageStreamTag
+      name: operator:latest
+---
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  name: operator-test
+spec:
+  runPolicy: Serial
+  triggers:
+    -
+      type: GitHub
+      github:
+        secret: meow123
+  source:
+    git:
+      ref: test
+      uri: https://github.com/jobtechswe/mydata-operator
+  strategy:
+    dockerStrategy:
+      from:
+        kind: DockerImage
+        name: node:11
+  output:
+    to:
+      kind: ImageStreamTag
+      name: operator:test
