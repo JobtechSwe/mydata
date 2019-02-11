@@ -30,9 +30,12 @@ Vi har som mål att vara 100% transparenta och lägger ut all kod och dokumentat
 
 Genom att visualisera och praktiskt visa upp hur ägande av sin egen data skulle kunna fungera så blir det enklare för flera att ta ställning till konceptet.  Vår strävan att återanvända så mycket som möjligt för att inte återuppfinna hjulet. Projektet är influerat av [mydata.org](http://mydata.org)
 
-Projektet är indelat i 4 delsystem:
+Projektet är indelat i flera delsystem:
+- [mydata-app](https://github.com/JobtechSwe/mydata/tree/master/phone-app) : En app där individen hanterar sin data
+- [mydata-operator](https://github.com/JobtechSwe/mydata/tree/master/operator) : En teknisk operatör som givet ett godkännande från individen hanterar kommunikationen mellan individen, hens data och en extern tjänst
+- [mydata-client](https://github.com/JobtechSwe/mydata/tree/master/client) : Ett npm-paket som används av tjänster för att kommunicera med `operator`. Hjälper till med signering, kryptering m.m.
 
-- [mydata-app](https://github.com/JobtechSwe/mydata-app) : En app där individen hanterar sin data
-- [mydata-operator](https://github.com/JobtechSwe/mydata-operator) : En teknisk operatör som givet ett godkännande från individen hanterar kommunikationen mellan individen, hens data och en extern tjänst
-- [mydata-cv](https://github.com/JobtechSwe/mydata-cv) : En exempeltjänst som läser/skriver till individens mydata efter att ha fått behörighet att göra det (`Data Source` och `Data Sink`)
-- [mydata-pds](https://github.com/JobtechSwe/mydata-pds) : Säker datalagring av datat som bara individen har tillgång till. PDS står för Personal Data Storage.
+[mydata-cv](https://github.com/JobtechSwe/mydata/tree/master/example) är en exempeltjänst som läser/skriver till individens mydata efter att ha fått behörighet att göra det (`Data Source` och `Data Sink`)
+
+Data lagras krypterat i en s.k. PDS (Personal Data Storage). Just nu är Dropbox enda PDS som stöds, men det kommer utökas inom kort.
+
