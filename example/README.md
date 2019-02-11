@@ -7,14 +7,15 @@ A Data Source/Data Sink offering a searchable CV
 Create a file named `.env` in the project directory containing URLs needed for the services to find each other, example for a developers machine:
 
 ```bash
-# development, test or production
+# Environment: development, test or production
 NODE_ENV=development
+
 CLIENT_ID=http://192.168.1.42:4000
 OPERATOR_URL=http://192.168.1.42:3000
 
-# optional, apm will not be used if APM_SERVER is not set
+# APM_SERVER is optional, apm will not be used if APM_SERVER is not set
 APM_SERVER=http://localhost:8200
-# optional, defaults to ''
+# APM_TOKEN is optional, defaults to ''
 APM_TOKEN=abc
 ```
 
