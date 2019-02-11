@@ -1,0 +1,42 @@
+version: '3'
+services:
+  redis-operator:
+    image: redis:4.0-alpine
+    ports:
+      - 6379:6379
+    environment:
+      - REDIS_PASSWORD=fubar
+    command: sh -c 'redis-server --requirepass $${REDIS_PASSWORD}'
+
+  postgres-operator:
+    image: postgres:11-alpine
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgresuser
+      - POSTGRES_PASSWORD=postgrespassword
+      - POSTGRES_DB=mydata
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgresuser -d mydata"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+#  operator:
+#    build: .
+#    environment:
+#      - PORT=3000
+#      - PGHOST=postgres-operator
+#      - PGPORT=5432
+#      - PGUSER=postgresuser
+#      - PGPASSWORD=postgrespassword
+#      - PGDATABASE=mydata
+#      - DATABASE_URL=postgres://postgresuser:postgrespassword@postgres-operator:5432/mydata
+#      - REDIS=redis://:fubar@redis-operator:6379/
+#      - APP_NAME=mydata-operator
+#      - APM_SERVER=http://apm-server:8200
+#    ports:
+#      - 3000:3000
+#    depends_on:
+#      - postgres-operator
+#      - redis-operator

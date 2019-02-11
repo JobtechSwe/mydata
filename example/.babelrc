@@ -1,0 +1,38 @@
+{
+  "env": {
+    "development": {
+      "presets": [
+        "next/babel"
+      ],
+      "plugins": [
+        "babel-plugin-styled-components",
+        "emotion"
+      ]
+    },
+    "production": {
+      "presets": [
+        "next/babel"
+      ],
+      "plugins": [
+        "babel-plugin-styled-components",
+        "emotion"
+      ]
+    },
+    "test": {
+      "presets": [
+        [
+          "next/babel",
+          {
+            "preset-env": {
+              "modules": "commonjs"
+            }
+          }
+        ]
+      ],
+      "plugins": [
+        "babel-plugin-styled-components",
+        "emotion"
+      ]
+    }
+  }
+}

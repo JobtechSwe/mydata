@@ -1,0 +1,59 @@
+{
+  "name": "@mydata/client",
+  "version": "0.20.0",
+  "description": "Client for MyData Operator",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watchAll",
+    "testAndLint": "npm test && npm run lint",
+    "patch-release": "npm run testAndLint && npm version patch && npm publish --access public && git push origin master --follow-tags",
+    "minor-release": "npm run testAndLint && npm version minor && npm publish --access public && git push origin master --follow-tags",
+    "major-release": "npm run testAndLint && npm version major && npm publish --access public && git push origin master --follow-tags",
+    "lint": "eslint '**/*.js'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JobtechSwe/mydata.git"
+  },
+  "contributors": [
+    "Adam Näslund <adam.naslund@iteam.se>",
+    "Einar Persson <einar.persson@iteam.se>",
+    "Johan Öbrink <johan.obrink@iteam.se>",
+    "Alexander Czigler <alexander@iteam.se>"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JobtechSwe/mydata/issues"
+  },
+  "homepage": "https://github.com/JobtechSwe/mydata/client#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "case": "^1.6.1",
+    "express": "^4.16.4",
+    "http-errors": "^1.7.1",
+    "joi": "^14.3.1",
+    "jsonwebtoken": "^8.4.0",
+    "jwks-provider": "^0.1.0",
+    "moment": "^2.24.0",
+    "ramda": "^0.26.1"
+  },
+  "devDependencies": {
+    "@types/moment": "^2.13.0",
+    "eslint": "^5.12.1",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jest": "^22.2.1",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "jest": "^23.6.0",
+    "supertest": "^3.4.2",
+    "uuid": "^3.3.2"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "automock": false,
+    "clearMocks": true
+  }
+}
