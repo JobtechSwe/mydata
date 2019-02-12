@@ -29,7 +29,7 @@ spec:
           - name: PORT
             value: '3000'
           - name: PGHOST
-            value: postgresql-operator.my-data.svc
+            value: postgresql-operator-ci.my-data.svc
           - name: PGPORT
             value: '5432'
           - name: PGUSER
@@ -51,7 +51,7 @@ spec:
               secretKeyRef:
                 name: apm
                 key: token
-          image: jobtechswe/mydata-operator:latest
+          image: operator:latest
           imagePullPolicy: Always
           name: mydata-operator-ci
           terminationMessagePath: /dev/termination-log
