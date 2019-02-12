@@ -30,7 +30,7 @@ spec:
       uri: https://github.com/jobtechswe/mydata
     contextDir: examples/cv
   strategy:
-    dockerStrategy:
+    dockerStrategy: {}
   output:
     to:
       kind: ImageStreamTag
@@ -55,7 +55,7 @@ spec:
       ref: v0.0.1
       uri: https://github.com/jobtechswe/mydata
   strategy:
-    dockerStrategy:
+    dockerStrategy: {}
   output:
     to:
       kind: ImageStreamTag

@@ -30,7 +30,7 @@ spec:
       uri: https://github.com/jobtechswe/mydata
     contextDir: operator
   strategy:
-    dockerStrategy:
+    dockerStrategy: {}
   output:
     to:
       kind: ImageStreamTag
@@ -53,7 +53,7 @@ spec:
       uri: https://github.com/jobtechswe/mydata
     contextDir: operator
   strategy:
-    dockerStrategy:
+    dockerStrategy: {}
   output:
     to:
       kind: ImageStreamTag

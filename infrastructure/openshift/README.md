@@ -128,6 +128,9 @@ oc apply -f operator-TEST.yml
 oc start-build cv-ci -n my-data
 oc start-build operator-ci -n my-data
 
+oc start-build cv-test -n my-data
+oc start-build operator-test -n my-data
+
 # Destroy everything
 oc delete -f operator-TEST.yml
 oc delete -f operator-CI.yml
