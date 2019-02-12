@@ -38,7 +38,7 @@ spec:
           - name: APP_NAME
             value: mydata-cv api
           - name: NODE_ENV
-            value: oc
+            value: test
           - name: OPERATOR_URL
             value: 'http://mydata-operator-ci.my-data.svc:3000'
           - name: POSTGRES_USER
@@ -52,8 +52,10 @@ spec:
           - name: REDIS
             value: 'redis://:fubar@redis-ci.my-data.svc:6379/'
           - name: CLIENT_ID
-            value: mydata-cv-ci.dev.services.jtech.se
-          image: jobtechswe/mydata-cv:latest
+            value: https://mydata-cv-ci.dev.services.jtech.se
+          - name: NO_UPDATE_NOTIFIER
+            value: 'true'
+          image: cv:latest
           imagePullPolicy: Always
           name: mydata-cv-ci
           ports:
@@ -75,7 +77,6 @@ spec:
         from:
           kind: ImageStreamTag
           name: 'cv:latest'
-      
       type: ImageChange
 ---
 apiVersion: v1

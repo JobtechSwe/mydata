@@ -103,13 +103,14 @@ Replace `AverySECRETtoken` in the URL's below.
 - [ ] Vilka storage-providers finns det stöd för? (endast dropbox?)
 - [ ] OpenShift-logins till Adam, Einar och Johan
 - [ ] Arbeta i develop-branch, release/test från master
+- [ ] Push till Docker Hub vid bygge
 
 ### Nice-to-have
 
 - [ ] Setup backup routine for redis
 - [ ] Setup backup routine for postgresql
 
-## MISC.
+## MISC
 
 ```bash
 # TL;DR; just give me some copy-pasta
@@ -123,6 +124,9 @@ oc apply -f cv-CI.yml
 oc apply -f operator-CI.yml
 oc apply -f cv-TEST.yml
 oc apply -f operator-TEST.yml
+
+oc start-build cv-ci -n my-data
+oc start-build operator-ci -n my-data
 
 # Destroy everything
 oc delete -f operator-TEST.yml
