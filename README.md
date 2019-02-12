@@ -31,6 +31,7 @@ Vi har som mål att vara 100% transparenta och lägger ut all kod och dokumentat
 Genom att visualisera och praktiskt visa upp hur ägande av sin egen data skulle kunna fungera så blir det enklare för flera att ta ställning till konceptet.  Vår strävan att återanvända så mycket som möjligt för att inte återuppfinna hjulet. Projektet är influerat av [mydata.org](http://mydata.org)
 
 Projektet är indelat i flera delsystem:
+
 - [mydata-app](https://github.com/JobtechSwe/mydata/tree/master/phone-app) : En app där individen hanterar sin data
 - [mydata-operator](https://github.com/JobtechSwe/mydata/tree/master/operator) : En teknisk operatör som givet ett godkännande från individen hanterar kommunikationen mellan individen, hens data och en extern tjänst
 - [mydata-client](https://github.com/JobtechSwe/mydata/tree/master/client) : Ett npm-paket som används av tjänster för att kommunicera med `operator`. Hjälper till med signering, kryptering m.m.
