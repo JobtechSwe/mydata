@@ -98,11 +98,11 @@ Replace `AverySECRETtoken` in the URL's below.
 - [x] Have a look at the permissions in mydata-cv Dockerfile
 - [ ] Kort beskrivning av vad redis, postgres, apm används till
 - [x] Byggen (cv)
-- [ ] Lokal test utan APM?
+- [x] Lokal test utan APM?
 - [ ] Hur gör man en lokal deploy enklast?
-- [ ] Vilka storage-providers finns det stöd för? (endast dropbox?)
+- [x] Vilka storage-providers finns det stöd för? (endast dropbox?)
 - [ ] OpenShift-logins till Adam, Einar och Johan
-- [ ] Arbeta i develop-branch, release/test från master
+- [x] Arbeta i develop-branch, release/test från master
 - [ ] Push till Docker Hub vid bygge
 
 ### Nice-to-have
