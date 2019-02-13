@@ -10,7 +10,8 @@
     "patch-release": "npm run testAndLint && npm version patch && npm publish --access public && git push origin master --follow-tags",
     "minor-release": "npm run testAndLint && npm version minor && npm publish --access public && git push origin master --follow-tags",
     "major-release": "npm run testAndLint && npm version major && npm publish --access public && git push origin master --follow-tags",
-    "lint": "eslint '**/*.js'"
+    "lint": "eslint '**/*.js'",
+    "pack": "node bin/pack"
   },
   "repository": {
     "type": "git",
@@ -49,6 +50,7 @@
     "eslint-plugin-standard": "^4.0.0",
     "jest": "^23.6.0",
     "supertest": "^3.4.2",
+    "tar": "^4.4.8",
     "uuid": "^3.3.2"
   },
   "jest": {
