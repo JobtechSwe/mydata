@@ -7,7 +7,7 @@ const axios = require('axios')
 const { sign } = require('jsonwebtoken')
 jest.mock('axios')
 
-async function generateKeys () {
+async function generateKeys (kid) {
   return promisify(generateKeyPair)('rsa', {
     modulusLength: 1024,
     publicKeyEncoding: { type: 'pkcs1', format: 'pem' },
@@ -119,13 +119,14 @@ describe('consents', () => {
   describe('#onApprove', () => { // TODO: Rename to onApproved ?
     let consent, accountKeys, consentKeys, readKeysGig
     beforeEach(async () => {
+      const consentId = v4()
       consentKeys = await generateKeys()
       accountKeys = await generateKeys()
       readKeysGig = await generateKeys()
-      const consentId = v4()
 
+      consentKeys.kid = 'http://localhost:4000/jwks/enc_foo'
+      consentKeys.use = 'enc'
       accountKeys.kid = `mydata://${consentId}/account_key`
-      consentKeys.kid = 'http://localhost:4000/jwks/education'
       readKeysGig.kid = 'http://gig.work/jwks/read'
 
       await client.keyProvider.saveKey(consentKeys)
@@ -198,6 +199,43 @@ describe('consents', () => {
       expect(key.publicKey).toEqual(consentKeys.publicKey)
       expect(key.privateKey).toEqual(consentKeys.privateKey)
       jest.clearAllTimers()
+    })
+    it('saves the accessKeyIds', async () => {
+      let accessKeyIds, accessKeys
+      await client.consents.onApprove(consent)
+
+      const domain = 'http://localhost:4000'
+
+      accessKeyIds = await client.keyProvider.getAccessKeyIds(consent.consentId, domain, 'education')
+      expect(accessKeyIds).toEqual([accountKeys.kid, consentKeys.kid])
+
+      accessKeys = await client.keyProvider.getAccessKeys(consent.consentId, domain, 'education')
+      expect(accessKeys).toEqual([
+        {
+          kid: accountKeys.kid,
+          use: 'enc',
+          publicKey: accountKeys.publicKey
+        },
+        consentKeys
+      ])
+
+      accessKeyIds = await client.keyProvider.getAccessKeyIds(consent.consentId, domain, 'experience')
+      expect(accessKeyIds).toEqual([accountKeys.kid, consentKeys.kid, readKeysGig.kid])
+
+      accessKeys = await client.keyProvider.getAccessKeys(consent.consentId, domain, 'experience')
+      expect(accessKeys).toEqual([
+        {
+          kid: accountKeys.kid,
+          use: 'enc',
+          publicKey: accountKeys.publicKey
+        },
+        consentKeys,
+        {
+          kid: readKeysGig.kid,
+          use: 'enc',
+          publicKey: readKeysGig.publicKey
+        }
+      ])
     })
   })
 })

@@ -35,6 +35,7 @@ async function request (client, consentRequestDescription) {
 
 async function onApprove (client, consent) {
   await saveKeys(consent.keys, client)
+  await Promise.all(consent.scope.map(s => saveAccessKeyIds(consent.consentId, s, client)))
 }
 
 async function saveKeys (keysObj, { keyProvider, config: { jwksUrl } }) {
@@ -51,6 +52,11 @@ async function saveKeys (keysObj, { keyProvider, config: { jwksUrl } }) {
     .map(async ({ kid }) => keyProvider.getKey(kid)))
   const allKeys = ownKeys.concat(externalKeys)
   return Promise.all(allKeys.map(key => keyProvider.saveKey(key)))
+}
+
+async function saveAccessKeyIds (consentId, scope, { keyProvider }) {
+  const { domain, area, accessKeyIds } = scope
+  return keyProvider.saveAccessKeyIds(consentId, domain, area, accessKeyIds)
 }
 
 module.exports = client => ({

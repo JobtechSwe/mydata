@@ -3,6 +3,9 @@ const { promisify } = require('util')
 const { serialize } = require('jwks-provider')
 const Joi = require('joi')
 
+const KEY_PREFIX = 'key|>'
+const ACCESS_KEY_IDS_PREFIX = 'accessKeyIds|>'
+
 const defaults = {
   modulusLength: 2048,
   publicKeyEncoding: { type: 'pkcs1', format: 'pem' },
@@ -56,13 +59,6 @@ module.exports = class KeyProvider {
     }
     this.options = Object.assign({}, defaults, keyOptions)
     this.keyValueStore = keyValueStore
-
-    this.getKey = this.getKey.bind(this)
-    this.generateKey = this.generateKey.bind(this)
-    this.generateTempKey = this.generateTempKey.bind(this)
-    this.removeKey = this.removeKey.bind(this)
-    this.jwksKeyList = this.jwksKeyList.bind(this)
-    this.jwksKey = this.jwksKey.bind(this)
   }
   async getKey (kid) {
     if (kid === 'client_key') {
@@ -71,24 +67,43 @@ module.exports = class KeyProvider {
     if (!await isUrl(kid)) {
       kid = `${this.jwksUrl}/${kid}`
     }
-    const key = await this.keyValueStore.load(kid)
+    const key = await this.keyValueStore.load(`${KEY_PREFIX}${kid}`)
     return key ? base64ToJson(key) : key
   }
   async generateKey ({ use, kid }) {
     const key = await generateKeyPairObject(this.jwksUrl, { use, kid }, this.options)
-    await this.keyValueStore.save(key.kid, jsonToBase64(key))
+    await this.keyValueStore.save(`${KEY_PREFIX}${key.kid}`, jsonToBase64(key))
     return key
   }
   async generateTempKey ({ use, kid }) {
     const key = await generateKeyPairObject(this.jwksUrl, { use, kid }, this.options)
-    await this.keyValueStore.save(key.kid, jsonToBase64(key), this.options.tempKeyExpiry)
+    await this.keyValueStore.save(`${KEY_PREFIX}${key.kid}`, jsonToBase64(key), this.options.tempKeyExpiry)
     return key
   }
   async saveKey (key) {
-    this.keyValueStore.save(key.kid, jsonToBase64(key))
+    this.keyValueStore.save(`${KEY_PREFIX}${key.kid}`, jsonToBase64(key))
   }
   async removeKey (kid) {
-    await this.keyValueStore.remove(kid)
+    await this.keyValueStore.remove(`${KEY_PREFIX}${kid}`)
+  }
+  async saveAccessKeyIds (consentId, domain, area, keys) {
+    const key = [consentId, domain, area].join('|')
+    this.keyValueStore.save(`${ACCESS_KEY_IDS_PREFIX}${key}`, jsonToBase64(keys))
+  }
+  async getAccessKeyIds (consentId, domain, area) {
+    const key = [consentId, domain, area].join('|')
+    const accessKeyIds = await this.keyValueStore.load(`${ACCESS_KEY_IDS_PREFIX}${key}`)
+    return accessKeyIds ? base64ToJson(accessKeyIds) : []
+  }
+  async getAccessKeys (consentId, domain, area) {
+    const accessKeyIds = await this.getAccessKeyIds(consentId, domain, area)
+    const b64Keys = await Promise.all(
+      accessKeyIds.map(async (kid) => {
+        return this.keyValueStore.load(`${KEY_PREFIX}${kid}`)
+      })
+    )
+    const keys = b64Keys.map(b64 => base64ToJson(b64))
+    return keys
   }
   async jwksKeyList () {
     return serialize([this.clientKeys])

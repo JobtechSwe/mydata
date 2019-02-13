@@ -27,15 +27,15 @@ describe('KeyProvider', () => {
   describe('#getKey', () => {
     it('calls load with kid', async () => {
       await keyProvider.getKey('http://localhost:4000/jwks/abc')
-      expect(keyValueStore.load).toHaveBeenCalledWith('http://localhost:4000/jwks/abc')
+      expect(keyValueStore.load).toHaveBeenCalledWith('key|>http://localhost:4000/jwks/abc')
     })
     it('calls load with other domain kid', async () => {
       await keyProvider.getKey('https://foobar/jwks/abc')
-      expect(keyValueStore.load).toHaveBeenCalledWith('https://foobar/jwks/abc')
+      expect(keyValueStore.load).toHaveBeenCalledWith('key|>https://foobar/jwks/abc')
     })
     it('calls load with jwks + kid', async () => {
       await keyProvider.getKey('abc')
-      expect(keyValueStore.load).toHaveBeenCalledWith('http://localhost:4000/jwks/abc')
+      expect(keyValueStore.load).toHaveBeenCalledWith('key|>http://localhost:4000/jwks/abc')
     })
     it('returns one key', async () => {
       keyValueStore.load.mockResolvedValue(jsonToBase64({ kid: 'abc' }))
@@ -50,7 +50,7 @@ describe('KeyProvider', () => {
       expect(keyValueStore.save).toHaveBeenCalledWith(expect.any(String), expect.any(String))
 
       const [kid, b64] = keyValueStore.save.mock.calls[0]
-      expect(kid).toEqual(expect.stringMatching(new RegExp(`^${jwksUrl}/enc_`)))
+      expect(kid).toEqual(expect.stringMatching(new RegExp(`^key|>${jwksUrl}/enc_`)))
       expect(base64ToJson(b64)).toEqual({
         publicKey: expect.any(String),
         privateKey: expect.any(String),
@@ -87,14 +87,15 @@ describe('KeyProvider', () => {
       expect(keyValueStore.save)
         .toHaveBeenCalledWith(expect.any(String), expect.any(String), 100)
 
-      const [kid, b64] = keyValueStore.save.mock.calls[0]
-      expect(kid).toEqual(expect.stringMatching(new RegExp(`^${jwksUrl}/enc_`)))
+      const [kid, b64, ttl] = keyValueStore.save.mock.calls[0]
+      expect(kid).toEqual(expect.stringMatching(new RegExp(`key|>^${jwksUrl}/enc_`)))
       expect(base64ToJson(b64)).toEqual({
         publicKey: expect.any(String),
         privateKey: expect.any(String),
         use: 'enc',
         kid: expect.stringMatching(new RegExp(`^${jwksUrl}/enc_`))
       })
+      expect(ttl).toEqual(100)
     })
     it('returns the generated keys', async () => {
       const result = await keyProvider.generateTempKey({ use: 'enc' })
@@ -109,7 +110,7 @@ describe('KeyProvider', () => {
   describe('#removeKey', () => {
     it('removes the key with the specified kid', async () => {
       await keyProvider.removeKey('abcd')
-      expect(keyValueStore.remove).toHaveBeenCalledWith('abcd')
+      expect(keyValueStore.remove).toHaveBeenCalledWith('key|>abcd')
     })
   })
   describe('#jwksKeyList', () => {
@@ -144,6 +145,45 @@ describe('KeyProvider', () => {
         n: expect.any(String),
         e: 'AQAB'
       })
+    })
+  })
+  describe('#saveAccessKeyIds', () => {
+    it('calls save with a correct key', async () => {
+      const consentId = 'consent-id'
+      const domain = 'http://domain'
+      const area = 'edumacation'
+      const keys = [{ kid: '1' }, { kid: '2' }]
+      await keyProvider.saveAccessKeyIds(consentId, domain, area, keys)
+      expect(keyValueStore.save).toHaveBeenCalledWith(
+        'accessKeyIds|>consent-id|http://domain|edumacation',
+        jsonToBase64(keys)
+      )
+    })
+  })
+  describe('#getAccessKeys', () => {
+    it('returns all access keys', async () => {
+      const accountKey = {
+        kid: 'account_key',
+        publicKey: 'foo-bar'
+      }
+      const consentKey = {
+        kid: 'consent_key',
+        publicKey: 'herp',
+        privateKey: 'derp'
+      }
+      const accessKeyIds = [accountKey.kid, consentKey.kid]
+
+      keyValueStore.load.mockResolvedValueOnce(jsonToBase64(accessKeyIds))
+      keyValueStore.load.mockResolvedValueOnce(jsonToBase64(accountKey))
+      keyValueStore.load.mockResolvedValueOnce(jsonToBase64(consentKey))
+
+      const keys = await keyProvider.getAccessKeys('consent-id', 'domain', 'area')
+
+      expect(keyValueStore.load).toHaveBeenNthCalledWith(1, 'accessKeyIds|>consent-id|domain|area')
+      expect(keyValueStore.load).toHaveBeenNthCalledWith(2, 'key|>account_key')
+      expect(keyValueStore.load).toHaveBeenNthCalledWith(3, 'key|>consent_key')
+
+      expect(keys).toEqual([accountKey, consentKey])
     })
   })
 })
