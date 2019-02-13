@@ -119,14 +119,14 @@ describe('services/consents #create', () => {
             permissions: ['READ'],
             purpose: 'dominance',
             lawfulBasis: 'strength',
-            readKeys: [
-              'b00e8283-5026-4204-aeb2-545809fd52a9/account_key',
+            accessKeyIds: [
+              'mydata://b00e8283-5026-4204-aeb2-545809fd52a9/account_key',
               'http://localhost:4000/jwks/enc_20190115082310'
             ]
           }
         ],
         keys: {
-          'b00e8283-5026-4204-aeb2-545809fd52a9/account_key': base64('-----BEGIN RSA PUBLIC KEY----- account'),
+          'mydata://b00e8283-5026-4204-aeb2-545809fd52a9/account_key': base64('-----BEGIN RSA PUBLIC KEY----- account'),
           'http://localhost:4000/jwks/enc_20190115082310': base64('-----BEGIN RSA PUBLIC KEY----- consent')
         }
       }

@@ -1,6 +1,5 @@
-const { generateKeyPair } = require('crypto')
+const { generateKeyPair, createHash } = require('crypto')
 const { promisify } = require('util')
-const moment = require('moment')
 const { serialize } = require('jwks-provider')
 const Joi = require('joi')
 
@@ -11,8 +10,8 @@ const defaults = {
   tempKeyExpiry: 10 * 60 * 1000
 }
 
-function generateKid (jwksUrl, use) {
-  return `${jwksUrl}/${use}_${moment.utc().format('YYYYMMDDHHmmss')}`
+function generateKid (jwksUrl, use, publicKey) {
+  return `${jwksUrl}/${use}_${createHash('SHA256').update(publicKey).digest('hex')}`
 }
 
 async function isUrl (kid) {
@@ -26,15 +25,15 @@ async function isUrl (kid) {
 }
 
 async function generateKeyPairObject (jwksUrl, { kid, use }, { modulusLength, publicKeyEncoding, privateKeyEncoding }) {
-  kid = kid || generateKid(jwksUrl, use)
-  if (!await isUrl(kid)) {
-    kid = `${jwksUrl}/${kid}`
-  }
   const { publicKey, privateKey } = await promisify(generateKeyPair)('rsa', {
     modulusLength,
     publicKeyEncoding,
     privateKeyEncoding
   })
+  kid = kid || generateKid(jwksUrl, use, publicKey)
+  if (!await isUrl(kid)) {
+    kid = `${jwksUrl}/${kid}`
+  }
   return {
     publicKey,
     privateKey,
@@ -43,8 +42,11 @@ async function generateKeyPairObject (jwksUrl, { kid, use }, { modulusLength, pu
   }
 }
 
+const jsonToBase64 = (obj) => Buffer.from(JSON.stringify(obj), 'utf8').toString('base64')
+const base64ToJson = (str) => JSON.parse(Buffer.from(str, 'base64').toString('utf8'))
+
 module.exports = class KeyProvider {
-  constructor ({ clientKeys, keyStore, keyOptions, jwksUrl }) {
+  constructor ({ clientKeys, keyValueStore, keyOptions, jwksUrl }) {
     this.jwksUrl = jwksUrl
     this.clientKeys = {
       use: 'sig',
@@ -53,10 +55,9 @@ module.exports = class KeyProvider {
       privateKey: clientKeys.privateKey
     }
     this.options = Object.assign({}, defaults, keyOptions)
-    this.keyStore = keyStore
+    this.keyValueStore = keyValueStore
 
     this.getKey = this.getKey.bind(this)
-    this.getKeys = this.getKeys.bind(this)
     this.generateKey = this.generateKey.bind(this)
     this.generateTempKey = this.generateTempKey.bind(this)
     this.removeKey = this.removeKey.bind(this)
@@ -70,28 +71,27 @@ module.exports = class KeyProvider {
     if (!await isUrl(kid)) {
       kid = `${this.jwksUrl}/${kid}`
     }
-    return this.keyStore.getKey(kid)
-  }
-  async getKeys (use) {
-    return this.keyStore.getKeys(use)
+    const key = await this.keyValueStore.load(kid)
+    return key ? base64ToJson(key) : key
   }
   async generateKey ({ use, kid }) {
     const key = await generateKeyPairObject(this.jwksUrl, { use, kid }, this.options)
-    await this.keyStore.saveKey(key)
+    await this.keyValueStore.save(key.kid, jsonToBase64(key))
     return key
   }
   async generateTempKey ({ use, kid }) {
     const key = await generateKeyPairObject(this.jwksUrl, { use, kid }, this.options)
-    await this.keyStore.saveKey(key, this.options.tempKeyExpiry)
+    await this.keyValueStore.save(key.kid, jsonToBase64(key), this.options.tempKeyExpiry)
     return key
   }
+  async saveKey (key) {
+    this.keyValueStore.save(key.kid, jsonToBase64(key))
+  }
   async removeKey (kid) {
-    await this.keyStore.removeKey(kid)
+    await this.keyValueStore.remove(kid)
   }
   async jwksKeyList () {
-    const sigKeys = await this.keyStore.getKeys('sig')
-
-    return serialize([this.clientKeys, ...sigKeys])
+    return serialize([this.clientKeys])
   }
   async jwksKey (kid) {
     const key = await this.getKey(kid)

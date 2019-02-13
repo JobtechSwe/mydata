@@ -1,11 +1,9 @@
 const Joi = require('joi')
 
-const keyStore = Joi.object({
-  getKey: Joi.func().arity(1).required(),
-  getKeys: Joi.func().arity(1).required(),
-  saveKey: Joi.func().arity(2).required(),
-  removeKey: Joi.func().arity(1).required(),
-  updateTTL: Joi.func().arity(2).required()
+const keyValueStore = Joi.object({
+  load: Joi.func().arity(1).required(),
+  save: Joi.func().arity(3).required(),
+  remove: Joi.func().arity(1).required()
 }).unknown(true)
 
 const consentRequestScopeEntry = Joi.object({
@@ -32,7 +30,7 @@ const consentRequest = Joi.object({
 })
 
 const consentScopeEntry = consentRequestScopeEntry.keys({
-  readKeys: Joi.array().items(Joi.string()).min(2).required()
+  accessKeyIds: Joi.array().items(Joi.string()).min(2).required()
 })
 
 const consent = Joi.object({
@@ -71,7 +69,7 @@ const configSchema = Joi.object({
     publicKey: Joi.string().required(),
     privateKey: Joi.string().required()
   }).required(),
-  keyStore: keyStore.required(),
+  keyValueStore: keyValueStore.required(),
   keyOptions: Joi.object().optional() // TODO: Describe key options
 })
 

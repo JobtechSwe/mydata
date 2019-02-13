@@ -1,5 +1,5 @@
 const createClient = require('../lib/client')
-const MemoryKeyStore = require('../lib/memoryKeyStore')
+const MemoryKeyValueStore = require('../lib/memoryKeyValueStore')
 const { generateKeyPair } = require('crypto')
 const { promisify } = require('util')
 const { v4 } = require('uuid')
@@ -18,13 +18,12 @@ async function generateKeys () {
 const base64 = (str) => Buffer.from(str, 'utf8').toString('base64')
 
 describe('consents', () => {
-  let clientKeys, client, keyStore, dummyRequest, dummyResponse
+  let clientKeys, client, dummyRequest, dummyResponse
 
   beforeAll(async () => {
     clientKeys = await generateKeys()
   })
   beforeEach(() => {
-    keyStore = new MemoryKeyStore()
     const config = {
       displayName: 'CV app',
       description: 'A CV app with a description which is longer than 10 chars',
@@ -33,7 +32,7 @@ describe('consents', () => {
       jwksPath: '/jwks',
       eventsPath: '/events',
       clientKeys: clientKeys,
-      keyStore,
+      keyValueStore: new MemoryKeyValueStore(),
       keyOptions: { modulusLength: 1024 }
     }
     client = createClient(config)
@@ -120,19 +119,16 @@ describe('consents', () => {
   describe('#onApprove', () => { // TODO: Rename to onApproved ?
     let consent, accountKeys, consentKeys, readKeysGig
     beforeEach(async () => {
-      accountKeys = await generateKeys()
       consentKeys = await generateKeys()
+      accountKeys = await generateKeys()
       readKeysGig = await generateKeys()
       const consentId = v4()
 
-      accountKeys.kid = `${consentId}/account_key`
+      accountKeys.kid = `mydata://${consentId}/account_key`
       consentKeys.kid = 'http://localhost:4000/jwks/education'
       readKeysGig.kid = 'http://gig.work/jwks/read'
 
-      keyStore.saveKey({
-        ...consentKeys,
-        use: 'enc'
-      }, 60000)
+      await client.keyProvider.saveKey(consentKeys)
 
       consent = {
         consentId,
@@ -147,7 +143,7 @@ describe('consents', () => {
             permissions: ['READ', 'WRITE'],
             purpose: 'In order to create a CV using our website.',
             lawfulBasis: 'CONSENT',
-            readKeys: [
+            accessKeyIds: [
               accountKeys.kid,
               consentKeys.kid
             ]
@@ -160,7 +156,7 @@ describe('consents', () => {
             permissions: ['READ'],
             purpose: 'In order to create a CV using our website.',
             lawfulBasis: 'CONSENT',
-            readKeys: [
+            accessKeyIds: [
               accountKeys.kid,
               consentKeys.kid,
               readKeysGig.kid
@@ -176,22 +172,32 @@ describe('consents', () => {
     })
     it('saves the accountKey', async () => {
       await client.consents.onApprove(consent)
-      const key = await keyStore.getKey(accountKeys.kid)
+      const key = await client.keyProvider.getKey(accountKeys.kid)
+      expect(key).toBeTruthy()
       expect(key.publicKey).toEqual(accountKeys.publicKey)
     })
     it('saves the gigKey', async () => {
       await client.consents.onApprove(consent)
-      const key = await keyStore.getKey(readKeysGig.kid)
+      const key = await client.keyProvider.getKey(readKeysGig.kid)
+      expect(key).toBeTruthy()
       expect(key.publicKey).toEqual(readKeysGig.publicKey)
     })
-    it('updates ttl for own key', async () => {
-      expect(keyStore.getTTL(consentKeys.kid)).toBeGreaterThan(0)
-
+    it('saves own key', async () => {
       await client.consents.onApprove(consent)
-      const keys = (await keyStore.getKeys('enc'))
-        .filter(k => k.kid === consentKeys.kid)
-      expect(keyStore.getTTL(consentKeys.kid)).toBeUndefined()
-      expect(keys).toHaveLength(1)
+      const key = await client.keyProvider.getKey(consentKeys.kid)
+      expect(key).toBeTruthy()
+      expect(key.publicKey).toEqual(consentKeys.publicKey)
+      expect(key.privateKey).toEqual(consentKeys.privateKey)
+    })
+    it('removes expiry for own key', async () => {
+      jest.useFakeTimers()
+      await client.consents.onApprove(consent)
+      jest.advanceTimersByTime(999999999)
+      const key = await client.keyProvider.getKey(consentKeys.kid)
+      expect(key).toBeTruthy()
+      expect(key.publicKey).toEqual(consentKeys.publicKey)
+      expect(key.privateKey).toEqual(consentKeys.privateKey)
+      jest.clearAllTimers()
     })
   })
 })

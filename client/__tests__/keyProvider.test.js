@@ -1,54 +1,44 @@
 const { generateKeyPairSync } = require('crypto')
-const KeyProvider = require(`${process.cwd()}/lib/keyProvider`)
+const KeyProvider = require('../lib/keyProvider')
+
+const jsonToBase64 = (obj) => Buffer.from(JSON.stringify(obj), 'utf8').toString('base64')
+const base64ToJson = (str) => JSON.parse(Buffer.from(str, 'base64').toString('utf8'))
 
 describe('KeyProvider', () => {
-  let keyProvider, clientKeys, keyStore, jwksUrl
+  let keyProvider, clientKeys, keyValueStore, jwksUrl
   beforeEach(() => {
     clientKeys = generateKeyPairSync('rsa', {
       modulusLength: 1024,
       publicKeyEncoding: { type: 'pkcs1', format: 'pem' },
       privateKeyEncoding: { type: 'pkcs1', format: 'pem' }
     })
-    keyStore = {
-      getKey: jest.fn().mockName('getKey').mockResolvedValue([]),
-      getKeys: jest.fn().mockName('getKeys').mockResolvedValue([]),
-      saveKey: jest.fn().mockName('saveKey').mockResolvedValue({}),
-      removeKey: jest.fn().mockName('removeKey').mockResolvedValue(),
-      updateTTL: jest.fn().mockName('updateTTL').mockResolvedValue()
+    keyValueStore = {
+      load: jest.fn().mockName('load').mockResolvedValue(''),
+      save: jest.fn().mockName('save').mockResolvedValue(),
+      remove: jest.fn().mockName('remove').mockResolvedValue()
     }
     const keyOptions = {
       modulusLength: 1024,
       tempKeyExpiry: 100
     }
     jwksUrl = 'http://localhost:4000/jwks'
-    keyProvider = new KeyProvider({ clientKeys, keyStore, keyOptions, jwksUrl })
-  })
-  describe('#getKeys', () => {
-    it('calls getKeys with type', async () => {
-      await keyProvider.getKeys('enc')
-      expect(keyStore.getKeys).toHaveBeenCalledWith('enc')
-    })
-    it('returns all keys', async () => {
-      keyStore.getKeys.mockResolvedValue([{ kid: 'abc' }])
-      const result = await keyProvider.getKeys('enc')
-      expect(result).toEqual([{ kid: 'abc' }])
-    })
+    keyProvider = new KeyProvider({ clientKeys, keyValueStore, keyOptions, jwksUrl })
   })
   describe('#getKey', () => {
-    it('calls getKey with kid', async () => {
+    it('calls load with kid', async () => {
       await keyProvider.getKey('http://localhost:4000/jwks/abc')
-      expect(keyStore.getKey).toHaveBeenCalledWith('http://localhost:4000/jwks/abc')
+      expect(keyValueStore.load).toHaveBeenCalledWith('http://localhost:4000/jwks/abc')
     })
-    it('calls getKey with other domain kid', async () => {
+    it('calls load with other domain kid', async () => {
       await keyProvider.getKey('https://foobar/jwks/abc')
-      expect(keyStore.getKey).toHaveBeenCalledWith('https://foobar/jwks/abc')
+      expect(keyValueStore.load).toHaveBeenCalledWith('https://foobar/jwks/abc')
     })
-    it('calls getKey with jwks + kid', async () => {
+    it('calls load with jwks + kid', async () => {
       await keyProvider.getKey('abc')
-      expect(keyStore.getKey).toHaveBeenCalledWith('http://localhost:4000/jwks/abc')
+      expect(keyValueStore.load).toHaveBeenCalledWith('http://localhost:4000/jwks/abc')
     })
     it('returns one key', async () => {
-      keyStore.getKey.mockResolvedValue({ kid: 'abc' })
+      keyValueStore.load.mockResolvedValue(jsonToBase64({ kid: 'abc' }))
       const result = await keyProvider.getKey('abc')
       expect(result).toEqual({ kid: 'abc' })
     })
@@ -56,7 +46,12 @@ describe('KeyProvider', () => {
   describe('#generateKey', () => {
     it('saves generated keys', async () => {
       await keyProvider.generateKey({ use: 'enc' })
-      expect(keyStore.saveKey).toHaveBeenCalledWith({
+
+      expect(keyValueStore.save).toHaveBeenCalledWith(expect.any(String), expect.any(String))
+
+      const [kid, b64] = keyValueStore.save.mock.calls[0]
+      expect(kid).toEqual(expect.stringMatching(new RegExp(`^${jwksUrl}/enc_`)))
+      expect(base64ToJson(b64)).toEqual({
         publicKey: expect.any(String),
         privateKey: expect.any(String),
         use: 'enc',
@@ -88,12 +83,18 @@ describe('KeyProvider', () => {
   describe('#generateTempKey', () => {
     it('saves generated keys', async () => {
       await keyProvider.generateTempKey({ use: 'enc' })
-      expect(keyStore.saveKey).toHaveBeenCalledWith({
+
+      expect(keyValueStore.save)
+        .toHaveBeenCalledWith(expect.any(String), expect.any(String), 100)
+
+      const [kid, b64] = keyValueStore.save.mock.calls[0]
+      expect(kid).toEqual(expect.stringMatching(new RegExp(`^${jwksUrl}/enc_`)))
+      expect(base64ToJson(b64)).toEqual({
         publicKey: expect.any(String),
         privateKey: expect.any(String),
         use: 'enc',
         kid: expect.stringMatching(new RegExp(`^${jwksUrl}/enc_`))
-      }, 100)
+      })
     })
     it('returns the generated keys', async () => {
       const result = await keyProvider.generateTempKey({ use: 'enc' })
@@ -108,29 +109,16 @@ describe('KeyProvider', () => {
   describe('#removeKey', () => {
     it('removes the key with the specified kid', async () => {
       await keyProvider.removeKey('abcd')
-      expect(keyStore.removeKey).toHaveBeenCalledWith('abcd')
+      expect(keyValueStore.remove).toHaveBeenCalledWith('abcd')
     })
   })
   describe('#jwksKeyList', () => {
-    it('returns a jwks formatted list of all keys', async () => {
-      const sig = await keyProvider.generateKey({ use: 'sig' })
-
-      keyStore.getKeys.mockResolvedValueOnce([sig])
-
+    it('returns a jwks with client_key', async () => {
       const result = await keyProvider.jwksKeyList()
-      expect(keyStore.getKeys).toHaveBeenLastCalledWith('sig')
       expect(result).toEqual({
         keys: [
           {
             kid: 'http://localhost:4000/jwks/client_key',
-            use: 'sig',
-            alg: 'RS256',
-            kty: 'RSA',
-            n: expect.any(String),
-            e: 'AQAB'
-          },
-          {
-            kid: expect.stringMatching(new RegExp(`^${jwksUrl}/sig_`)),
             use: 'sig',
             alg: 'RS256',
             kty: 'RSA',
@@ -145,7 +133,7 @@ describe('KeyProvider', () => {
     it('returns a single jwks formatted key', async () => {
       const testKey = await keyProvider.generateKey({ use: 'enc', kid: 'test_key' })
 
-      keyStore.getKey.mockResolvedValueOnce(testKey)
+      keyValueStore.load.mockResolvedValueOnce(jsonToBase64(testKey))
 
       const result = await keyProvider.jwksKey('test_key')
       expect(result).toEqual({

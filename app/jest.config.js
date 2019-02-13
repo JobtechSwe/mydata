@@ -1,15 +1,17 @@
 module.exports = {
+  name: 'app',
+  displayName: 'Phone App',
+  rootDir: './',
   setupFiles: ['<rootDir>/jest.setup.js'],
-  testPathIgnorePatterns: ['<rootDir>/node_modules/'],
   clearMocks: true,
-  preset: "react-native",
+  preset: 'react-native',
   moduleFileExtensions: [
-    "js"
+    'js'
   ],
-  testRegex: "(/__tests__/.*|\\.(test|spec))\\.js$",
+  testRegex: '(/__tests__/.*|\\.(test|spec))\\.js$',
   testPathIgnorePatterns: [
-    "\\.snap$",
-    "<rootDir>/node_modules/"
+    '\\.snap$',
+    '<rootDir>/node_modules/'
   ],
-  cacheDirectory: ".jest/cache"
+  cacheDirectory: '.jest/cache'
 }

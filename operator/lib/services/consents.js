@@ -153,10 +153,10 @@ async function create (body) {
       accessToken,
       scope: scope.map(s => ({
         ...s,
-        readKeys: [`${consentId}/account_key`, consentEncryptionKeyId]
+        accessKeyIds: [`mydata://${consentId}/account_key`, consentEncryptionKeyId]
       })),
       keys: {
-        [`${consentId}/account_key`]: accountKey,
+        [`mydata://${consentId}/account_key`]: accountKey,
         [consentEncryptionKeyId]: consentEncryptionKey
       }
     }

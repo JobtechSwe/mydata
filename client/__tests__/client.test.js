@@ -1,5 +1,5 @@
 const createClient = require('../lib/client')
-const MemoryKeyStore = require('../lib/memoryKeyStore')
+const MemoryKeyValueStore = require('../lib/memoryKeyValueStore')
 const axios = require('axios')
 const { generateKeyPairSync, createVerify } = require('crypto')
 jest.mock('axios')
@@ -21,7 +21,7 @@ describe('client', () => {
       jwksPath: '/jwks',
       eventsPath: '/events',
       clientKeys: clientKeys,
-      keyStore: new MemoryKeyStore(),
+      keyValueStore: new MemoryKeyValueStore(),
       keyOptions: { modulusLength: 1024 }
     }
   })
@@ -49,7 +49,7 @@ describe('client', () => {
         clientId,
         operator,
         clientKeys,
-        keyStore
+        keyValueStore
       } = config
       client = createClient({
         displayName,
@@ -57,7 +57,7 @@ describe('client', () => {
         clientId,
         operator,
         clientKeys,
-        keyStore
+        keyValueStore
       })
       expect(client.config.jwksPath).toEqual('/jwks')
       expect(client.config.eventsPath).toEqual('/events')
@@ -84,8 +84,8 @@ describe('client', () => {
       expect(() => createClient(config)).toThrow()
     })
 
-    it('throws if keyStore is missing', () => {
-      config.keyStore = undefined
+    it('throws if keyValueStore is missing', () => {
+      config.keyValueStore = undefined
       expect(() => createClient(config)).toThrow()
     })
 

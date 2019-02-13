@@ -52,7 +52,7 @@ describe('validation', () => {
 
     it('does not call func if invalid body', () => {
       withValidation(animalSchema)(func)(dragon)
-      expect(func).not.toBeCalled()
+      expect(func).not.toHaveBeenCalled()
     })
 
     it('returns error if invalid', () => {

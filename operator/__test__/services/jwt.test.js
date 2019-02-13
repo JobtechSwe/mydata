@@ -1,4 +1,4 @@
-const { createToken } = require(`${process.cwd()}/lib/services/jwt`)
+const { createToken } = require('../../lib/services/jwt')
 
 describe('services/auth', () => {
   describe('#createToken', () => {

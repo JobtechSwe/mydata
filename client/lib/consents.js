@@ -34,20 +34,23 @@ async function request (client, consentRequestDescription) {
 }
 
 async function onApprove (client, consent) {
-  const { keyProvider: { keyStore } } = client
-  const keys = Object.entries(consent.keys)
+  await saveKeys(consent.keys, client)
+}
+
+async function saveKeys (keysObj, { keyProvider, config: { jwksUrl } }) {
+  const keys = Object.entries(keysObj)
     .map(([kid, str]) => ({
       kid,
       use: 'enc',
       publicKey: Buffer.from(str, 'base64').toString('utf8')
     }))
-  const rxJwks = new RegExp(`^${client.config.jwksUrl}/`)
-  const ownKeys = keys.filter(key => rxJwks.test(key.kid))
+  const rxJwks = new RegExp(`^${jwksUrl}/`)
   const externalKeys = keys.filter(key => !rxJwks.test(key.kid))
-  await Promise.all([
-    Promise.all(ownKeys.map(key => keyStore.updateTTL(key.kid))),
-    Promise.all(externalKeys.map(key => keyStore.saveKey(key)))
-  ])
+  const ownKeys = await Promise.all(keys
+    .filter(key => rxJwks.test(key.kid))
+    .map(async ({ kid }) => keyProvider.getKey(kid)))
+  const allKeys = ownKeys.concat(externalKeys)
+  return Promise.all(allKeys.map(key => keyProvider.saveKey(key)))
 }
 
 module.exports = client => ({

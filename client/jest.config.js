@@ -1,6 +1,6 @@
 module.exports = {
-  name: 'operator',
-  displayName: 'Operator',
+  name: 'client',
+  displayName: '@mydata/client',
   rootDir: './',
   testEnvironment: 'node',
   setupFiles: ['<rootDir>/jest.setup.js'],
