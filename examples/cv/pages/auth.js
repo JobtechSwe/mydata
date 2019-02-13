@@ -49,7 +49,7 @@ export default () => {
     >
       {id && <Box textAlign="center">
         <Typography variant="h6">Enter the code for this consent request:</Typography>
-        <Typography variant="h1">{id}</Typography>
+        <Typography variant="h1" data-cy="consent-request-id">{id}</Typography>
         <QRCode value={id} />
       </Box>}
     </Box>

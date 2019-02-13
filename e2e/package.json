@@ -1,0 +1,38 @@
+{
+  "name": "mydata-e2e",
+  "version": "0.0.1",
+  "description": "End-to-end testing for mydata",
+  "main": "index.js",
+  "scripts": {
+    "open": "cypress open",
+    "test": "cypress run",
+    "test:chrome": "cypress run --browser chrome",
+    "test:firefox": "cypress run --browser firefox",
+    "test:electron": "cypress run --headed"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JobtechSwe/mydata.git"
+  },
+  "contributors": [
+    "Adam Näslund <adam.naslund@iteam.se>",
+    "Einar Persson <einar.persson@iteam.se>",
+    "Johan Öbrink <johan.obrink@iteam.se>",
+    "Alexander Czigler <alexander@iteam.se>"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JobtechSwe/mydata/issues"
+  },
+  "homepage": "https://github.com/JobtechSwe/mydata#readme",
+  "devDependencies": {
+    "cypress": "^3.1.5",
+    "eslint": "^5.13.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-cypress": "^2.2.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0"
+  }
+}
