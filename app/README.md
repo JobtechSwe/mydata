@@ -1,14 +1,17 @@
 # mydata-app
+
 An example app for managing consents and viewing data
 
 ## Prerequisites
 
 ### OS X
+
 * Install Android Studio
 * Install Watchman `brew install watchman`
 * Install React Native cli `npm install -g react-native-cli`
 
 ### Linux and Android
+
 * Install Android Studio https://developer.android.com/studio/install
   * In the project directory create the file `android/local.properties` with the content `sdk.dir = /home/USERNAME/Android/Sdk`
   * Approve the licenses of the SDK packages by running ` /home/USERNAME/Android/Sdk/tools/bin/sdkmanager --licenses`
@@ -22,15 +25,18 @@ An example app for managing consents and viewing data
 * Install React Native cli `npm install -g react-native-cli`
 
 ## Config
+
 * Create a `.env` in project root with:
 
-```
+```bash
 DROPBOX_KEY=tsw50ay5z1j0k0k
 OPERATOR_URL=http://192.168.110.130:3000/api
 ```
 
 (or whatever adress you are running the operator on)
+
 * Run
+
 ```bash
 react-native link react-native-config && \
 react-native link react-native-rsa-native && \
@@ -42,10 +48,12 @@ react-native link react-native-permissions
 ```
 
 ## Run
+
 ```bash
 react-native run-ios
 react-native run-android
 ```
+
 If the app doesn't open automatically go into apps and find MyData
 
 React debug menu available on ios with ⌘d and on android with ⌘m / ctrl+m

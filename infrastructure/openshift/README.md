@@ -98,18 +98,19 @@ Replace `AverySECRETtoken` in the URL's below.
 - [x] Have a look at the permissions in mydata-cv Dockerfile
 - [ ] Kort beskrivning av vad redis, postgres, apm används till
 - [x] Byggen (cv)
-- [ ] Lokal test utan APM?
+- [x] Lokal test utan APM?
 - [ ] Hur gör man en lokal deploy enklast?
-- [ ] Vilka storage-providers finns det stöd för? (endast dropbox?)
+- [x] Vilka storage-providers finns det stöd för? (endast dropbox?)
 - [ ] OpenShift-logins till Adam, Einar och Johan
-- [ ] Arbeta i develop-branch, release/test från master
+- [x] Arbeta i develop-branch, release/test från master
+- [ ] Push till Docker Hub vid bygge
 
 ### Nice-to-have
 
 - [ ] Setup backup routine for redis
 - [ ] Setup backup routine for postgresql
 
-## MISC.
+## MISC
 
 ```bash
 # TL;DR; just give me some copy-pasta
@@ -123,6 +124,12 @@ oc apply -f cv-CI.yml
 oc apply -f operator-CI.yml
 oc apply -f cv-TEST.yml
 oc apply -f operator-TEST.yml
+
+oc start-build cv-ci -n my-data
+oc start-build operator-ci -n my-data
+
+oc start-build cv-test -n my-data
+oc start-build operator-test -n my-data
 
 # Destroy everything
 oc delete -f operator-TEST.yml

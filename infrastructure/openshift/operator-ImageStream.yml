@@ -6,16 +6,10 @@ spec:
   tags:
     # Latest, for CI
     - name: latest
-      from:
-        kind: DockerImage
-        name: jobtechswe/mydata-operator:latest
       referencePolicy:
         type: Source
-    # test tag
+    # Test
     - name: test
-      from:
-        kind: DockerImage
-        name: jobtechswe/mydata-operator:test
       referencePolicy:
         type: Source
 ---
@@ -33,12 +27,10 @@ spec:
   source:
     git:
       ref: master
-      uri: https://github.com/jobtechswe/mydata-operator
+      uri: https://github.com/jobtechswe/mydata
+    contextDir: operator
   strategy:
-    dockerStrategy:
-      from:
-        kind: DockerImage
-        name: node:11
+    dockerStrategy: {}
   output:
     to:
       kind: ImageStreamTag
@@ -57,13 +49,11 @@ spec:
         secret: meow123
   source:
     git:
-      ref: test
-      uri: https://github.com/jobtechswe/mydata-operator
+      ref: v0.0.1
+      uri: https://github.com/jobtechswe/mydata
+    contextDir: operator
   strategy:
-    dockerStrategy:
-      from:
-        kind: DockerImage
-        name: node:11
+    dockerStrategy: {}
   output:
     to:
       kind: ImageStreamTag

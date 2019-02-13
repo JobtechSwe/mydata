@@ -5,17 +5,11 @@ metadata:
 spec:
   tags:
     # Latest, for CI
-    - from:
-        kind: DockerImage
-        name: jobtechswe/mydata-cv:latest
-      name: latest
+    - name: latest
       referencePolicy:
         type: Source
-    # test tag
-    - from:
-        kind: DockerImage
-        name: jobtechswe/mydata-cv:test
-      name: test
+    # Test
+    - name: test
       referencePolicy:
         type: Source
 ---
@@ -33,12 +27,10 @@ spec:
   source:
     git:
       ref: master
-      uri: https://github.com/jobtechswe/mydata-cv
+      uri: https://github.com/jobtechswe/mydata
+    contextDir: examples/cv
   strategy:
-    dockerStrategy:
-      from:
-        kind: DockerImage
-        name: node:alpine
+    dockerStrategy: {}
   output:
     to:
       kind: ImageStreamTag
@@ -60,13 +52,10 @@ spec:
         secret: meow123
   source:
     git:
-      ref: test
-      uri: https://github.com/jobtechswe/mydata-cv
+      ref: v0.0.1
+      uri: https://github.com/jobtechswe/mydata
   strategy:
-    dockerStrategy:
-      from:
-        kind: DockerImage
-        name: node:alpine
+    dockerStrategy: {}
   output:
     to:
       kind: ImageStreamTag
