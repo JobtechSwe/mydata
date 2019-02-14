@@ -1,4 +1,5 @@
 const axios = require('axios')
+const { decode } = require('jsonwebtoken')
 
 const buildUrl = (operatorUrl, domain, area) => {
   const urlParts = [domain, area]
@@ -9,24 +10,36 @@ const buildUrl = (operatorUrl, domain, area) => {
 }
 const buildHeaders = accessToken => ({ 'Authorization': 'Bearer ' + accessToken })
 
-const read = (operatorUrl, accessToken) => async ({ domain, area }) => {
-  const url = buildUrl(operatorUrl, domain, area)
-  const headers = buildHeaders(accessToken)
-  const { data } = await axios.get(url, { headers })
+const encrypt = (keyProvider) => async (accessToken, domain, area, data) => {
+  const { data: { consentId } } = decode(accessToken)
+  const documentKeys = await keyProvider.getDocumentKeys(consentId, domain, area)
   return data
 }
 
-const write = (operatorUrl, accessToken) => async ({ domain, area, data }) => {
-  const url = buildUrl(operatorUrl, domain, area)
-  const headers = buildHeaders(accessToken)
-  await axios.post(url, data, { headers })
+const decrypt = (keyProvider) => async (accessToken, domain, area, data) => {
+  const { data: { consentId } } = decode(accessToken)
+  return data
 }
 
-const auth = operatorUrl => accessToken => ({
-  read: read(operatorUrl, accessToken),
-  write: write(operatorUrl, accessToken)
+const read = (operatorUrl, accessToken, decrypt) => async ({ domain, area }) => {
+  const url = buildUrl(operatorUrl, domain, area)
+  const headers = buildHeaders(accessToken)
+  const { data } = await axios.get(url, { headers })
+  return decrypt(accessToken, domain, area, data)
+}
+
+const write = (operatorUrl, accessToken, encrypt) => async ({ domain, area, data }) => {
+  const url = buildUrl(operatorUrl, domain, area)
+  const headers = buildHeaders(accessToken)
+  const encryptedData = await encrypt(accessToken, domain, area, data)
+  await axios.post(url, encryptedData, { headers })
+}
+
+const auth = (operatorUrl, keyProvider) => accessToken => ({
+  read: read(operatorUrl, accessToken, decrypt(keyProvider)),
+  write: write(operatorUrl, accessToken, encrypt(keyProvider))
 })
 
-module.exports = client => ({
-  auth: auth(client.config.operator)
+module.exports = ({ config: { operator }, keyProvider }) => ({
+  auth: auth(operator, keyProvider)
 })

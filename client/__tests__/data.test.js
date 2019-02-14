@@ -1,18 +1,31 @@
 const dataService = require('../lib/data')
 const axios = require('axios')
+const { sign } = require('jsonwebtoken')
+const KeyProvider = require('../lib/keyProvider')
+const MemoryKeyValueStore = require('../lib/memoryKeyValueStore')
 jest.mock('axios')
 
 describe('data', () => {
-  let config, accessToken
+  let config, consentId, accessToken, keyProvider
+
+  beforeEach(() => {
+    const keyValueStore = new MemoryKeyValueStore()
+    keyProvider = new KeyProvider({
+      clientKeys: {},
+      keyOptions: {},
+      jwksUrl: 'http://localhost:4000/jwks',
+      keyValueStore
+    })
+    config = { operator: 'http://localhost:3000' }
+    consentId = '528adc99-e899-422f-a0f2-a95d3a066464'
+    accessToken = sign({ data: { consentId } }, 'secret')
+  })
 
   describe('#read', () => {
     let read
     beforeEach(() => {
       axios.get = jest.fn()
-      config = { operator: 'http://localhost:3000' }
-      accessToken = 'asuidiuasduaisd'
-
-      read = dataService({ config })
+      read = dataService({ config, keyProvider })
         .auth(accessToken)
         .read
     })
@@ -23,7 +36,7 @@ describe('data', () => {
 
       expect(axios.get).toHaveBeenCalledTimes(1)
       expect(axios.get).toHaveBeenCalledWith(`http://localhost:3000/api/data/`,
-        { headers: { 'Authorization': 'Bearer asuidiuasduaisd' } })
+        { headers: { 'Authorization': `Bearer ${accessToken}` } })
     })
 
     it('calls axios.get with correct url and header for domain', async () => {
@@ -32,7 +45,7 @@ describe('data', () => {
 
       expect(axios.get).toHaveBeenCalledTimes(1)
       expect(axios.get).toHaveBeenCalledWith(`http://localhost:3000/api/data/${encodeURIComponent('cv.work:4000')}`,
-        { headers: { 'Authorization': 'Bearer asuidiuasduaisd' } })
+        { headers: { 'Authorization': `Bearer ${accessToken}` } })
     })
 
     it('calls axios.get with correct url and header for domain and area', async () => {
@@ -41,7 +54,7 @@ describe('data', () => {
 
       expect(axios.get).toHaveBeenCalledTimes(1)
       expect(axios.get).toHaveBeenCalledWith(`http://localhost:3000/api/data/${encodeURIComponent('cv.work:4000')}/${encodeURIComponent('cv')}`,
-        { headers: { 'Authorization': 'Bearer asuidiuasduaisd' } })
+        { headers: { 'Authorization': `Bearer ${accessToken}` } })
     })
 
     it('returns data', async () => {
@@ -57,9 +70,7 @@ describe('data', () => {
     let write
     beforeEach(() => {
       axios.post = jest.fn()
-      config = { operator: 'http://localhost:3000' }
-      accessToken = 'lkfdgf'
-      write = dataService({ config })
+      write = dataService({ config, keyProvider })
         .auth(accessToken)
         .write
     })
@@ -72,7 +83,7 @@ describe('data', () => {
       expect(axios.post).toHaveBeenCalledWith(
         `http://localhost:3000/api/data/${encodeURIComponent('cv.work:4000')}/${encodeURIComponent('cv')}`,
         { foo: 'bar' },
-        { headers: { 'Authorization': 'Bearer lkfdgf' } }
+        { headers: { 'Authorization': `Bearer ${accessToken}` } }
       )
     })
   })

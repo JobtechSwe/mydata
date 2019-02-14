@@ -47,7 +47,8 @@ describe('KeyProvider', () => {
     it('saves generated keys', async () => {
       await keyProvider.generateKey({ use: 'enc' })
 
-      expect(keyValueStore.save).toHaveBeenCalledWith(expect.any(String), expect.any(String))
+      expect(keyValueStore.save)
+        .toHaveBeenCalledWith(expect.any(String), expect.any(String), undefined)
 
       const [kid, b64] = keyValueStore.save.mock.calls[0]
       expect(kid).toEqual(expect.stringMatching(new RegExp(`^key|>${jwksUrl}/enc_`)))
@@ -156,7 +157,8 @@ describe('KeyProvider', () => {
       await keyProvider.saveAccessKeyIds(consentId, domain, area, keys)
       expect(keyValueStore.save).toHaveBeenCalledWith(
         'accessKeyIds|>consent-id|http://domain|edumacation',
-        jsonToBase64(keys)
+        jsonToBase64(keys),
+        undefined
       )
     })
   })
@@ -184,6 +186,32 @@ describe('KeyProvider', () => {
       expect(keyValueStore.load).toHaveBeenNthCalledWith(3, 'key|>consent_key')
 
       expect(keys).toEqual([accountKey, consentKey])
+    })
+  })
+  describe('#saveDocumentKeys', () => {
+    it('calls save with a correct key', async () => {
+      const consentId = 'consent-id'
+      const domain = 'http://domain'
+      const area = 'edumacation'
+      const keys = { foo: 'hello', bar: 'world' }
+      await keyProvider.saveDocumentKeys(consentId, domain, area, keys)
+      expect(keyValueStore.save).toHaveBeenCalledWith(
+        'documentKeys|>consent-id|http://domain|edumacation',
+        jsonToBase64(keys),
+        undefined
+      )
+    })
+  })
+  describe('#getDocumentKeys', () => {
+    it('returns all document keys', async () => {
+      const keys = { foo: 'hello', bar: 'world' }
+
+      keyValueStore.load.mockResolvedValue(jsonToBase64(keys))
+
+      const result = await keyProvider.getDocumentKeys('consent-id', 'domain', 'area')
+
+      expect(keyValueStore.load).toHaveBeenCalledWith('documentKeys|>consent-id|domain|area')
+      expect(result).toEqual(keys)
     })
   })
 })
