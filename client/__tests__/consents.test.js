@@ -1,19 +1,10 @@
 const createClient = require('../lib/client')
 const MemoryKeyValueStore = require('../lib/memoryKeyValueStore')
-const { generateKeyPair } = require('crypto')
-const { promisify } = require('util')
+const { generateKeyPair } = require('./_helpers')
 const { v4 } = require('uuid')
 const axios = require('axios')
 const { sign } = require('jsonwebtoken')
 jest.mock('axios')
-
-async function generateKeys (kid) {
-  return promisify(generateKeyPair)('rsa', {
-    modulusLength: 1024,
-    publicKeyEncoding: { type: 'pkcs1', format: 'pem' },
-    privateKeyEncoding: { type: 'pkcs1', format: 'pem' }
-  })
-}
 
 const base64 = (str) => Buffer.from(str, 'utf8').toString('base64')
 
@@ -21,7 +12,7 @@ describe('consents', () => {
   let clientKeys, client, dummyRequest, dummyResponse
 
   beforeAll(async () => {
-    clientKeys = await generateKeys()
+    clientKeys = await generateKeyPair()
   })
   beforeEach(() => {
     const config = {
@@ -120,14 +111,16 @@ describe('consents', () => {
     let consent, accountKeys, consentKeys, readKeysGig
     beforeEach(async () => {
       const consentId = v4()
-      consentKeys = await generateKeys()
-      accountKeys = await generateKeys()
-      readKeysGig = await generateKeys()
-
-      consentKeys.kid = 'http://localhost:4000/jwks/enc_foo'
-      consentKeys.use = 'enc'
-      accountKeys.kid = `mydata://${consentId}/account_key`
-      readKeysGig.kid = 'http://gig.work/jwks/read'
+      consentKeys = await generateKeyPair({
+        use: 'enc',
+        kid: 'http://localhost:4000/jwks/enc_foo'
+      })
+      accountKeys = await generateKeyPair({
+        kid: `mydata://${consentId}/account_key`
+      })
+      readKeysGig = await generateKeyPair({
+        kid: 'http://gig.work/jwks/read'
+      })
 
       await client.keyProvider.saveKey(consentKeys)
 

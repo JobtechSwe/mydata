@@ -3,22 +3,50 @@ const axios = require('axios')
 const { sign } = require('jsonwebtoken')
 const KeyProvider = require('../lib/keyProvider')
 const MemoryKeyValueStore = require('../lib/memoryKeyValueStore')
+const crypto = require('../lib/crypto')
+const { generateKeyPair, jsonToBase64, base64ToJson } = require('./_helpers')
 jest.mock('axios')
 
 describe('data', () => {
-  let config, consentId, accessToken, keyProvider
+  let consentId, domain, consentKeys, accountKey, otherServiceKey
+  beforeAll(async () => {
+    domain = 'http://cv.work:4000'
+    consentId = '528adc99-e899-422f-a0f2-a95d3a066464'
+    consentKeys = await generateKeyPair({
+      kid: `${domain}/jwks/enc_consent-keys`
+    })
+    accountKey = await generateKeyPair({
+      kid: `mydata://${consentId}/account-key`
+    })
+    otherServiceKey = await generateKeyPair({
+      kid: `https://some-other-service/jwks/enc_some-key`
+    })
+  })
 
-  beforeEach(() => {
+  let config, accessToken, keyProvider, area1, area2
+  beforeEach(async () => {
     const keyValueStore = new MemoryKeyValueStore()
     keyProvider = new KeyProvider({
       clientKeys: {},
       keyOptions: {},
-      jwksUrl: 'http://localhost:4000/jwks',
+      jwksUrl: `${domain}/jwks`,
       keyValueStore
     })
     config = { operator: 'http://localhost:3000' }
-    consentId = '528adc99-e899-422f-a0f2-a95d3a066464'
     accessToken = sign({ data: { consentId } }, 'secret')
+
+    await keyProvider.saveKey(consentKeys)
+    await keyProvider.saveKey({ kid: accountKey.kid, publicKey: accountKey.publicKey })
+    await keyProvider.saveKey({ kid: otherServiceKey.kid, publicKey: otherServiceKey.publicKey })
+
+    area1 = 'education'
+    area2 = 'experience'
+    await keyProvider.saveAccessKeyIds(consentId, domain, area1, [
+      consentKeys.kid, accountKey.kid
+    ])
+    await keyProvider.saveAccessKeyIds(consentId, domain, area2, [
+      consentKeys.kid, accountKey.kid, otherServiceKey.kid
+    ])
   })
 
   describe('#read', () => {
@@ -75,16 +103,40 @@ describe('data', () => {
         .write
     })
 
-    it('calls axios.post with correct url, data and header', async () => {
+    it('calls axios.post with correct url and header', async () => {
       const data = { foo: 'bar' }
-      await write({ domain: 'cv.work:4000', area: 'cv', data })
+      await write({ domain, area: area1, data })
 
       expect(axios.post).toHaveBeenCalledTimes(1)
       expect(axios.post).toHaveBeenCalledWith(
-        `http://localhost:3000/api/data/${encodeURIComponent('cv.work:4000')}/${encodeURIComponent('cv')}`,
-        { foo: 'bar' },
+        `http://localhost:3000/api/data/${encodeURIComponent(domain)}/${encodeURIComponent(area1)}`,
+        expect.any(String),
         { headers: { 'Authorization': `Bearer ${accessToken}` } }
       )
+    })
+    describe('new document', () => {
+      it('generates document keys', async () => {
+        const data = { foo: 'bar' }
+        await write({ domain, area: area1, data })
+
+        const arg = axios.post.mock.calls[0][1]
+        const [, keys] = arg.split('\n')
+        expect(base64ToJson(keys)).toEqual({
+          [consentKeys.kid]: expect.any(String),
+          [accountKey.kid]: expect.any(String)
+        })
+      })
+      it('properly encrypts document', async () => {
+        const data = { foo: 'bar' }
+        await write({ domain, area: area1, data })
+
+        const arg = axios.post.mock.calls[0][1]
+        const [cipher, keys] = arg.split('\n')
+        const consentDocumentKey = base64ToJson(keys)[consentKeys.kid]
+        const aesKey = crypto.decryptDocumentKey(consentDocumentKey, consentKeys.privateKey)
+        const doc = crypto.decryptDocument(aesKey, cipher)
+        expect(doc).toEqual(data)
+      })
     })
   })
 })

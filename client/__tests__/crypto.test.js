@@ -1,16 +1,10 @@
-const { generateKeyPair } = require('crypto')
-const { promisify } = require('util')
 const crypto = require('../lib/crypto')
+const { generateKeyPair } = require('./_helpers')
 
 describe('crypto', () => {
   let keys = []
   beforeAll(async () => {
-    const options = {
-      modulusLength: 1024,
-      publicKeyEncoding: { type: 'pkcs1', format: 'pem' },
-      privateKeyEncoding: { type: 'pkcs1', format: 'pem' }
-    }
-    keys.push(await promisify(generateKeyPair)('rsa', options))
+    keys.push(await generateKeyPair())
   })
   describe('#generateDocumentKey', () => {
     it('returns a 32 byte (256 bit) key', async () => {
@@ -68,17 +62,17 @@ describe('crypto', () => {
   describe('#encryptDocument', () => {
     it('returns a Buffer', async () => {
       const key = await crypto.generateDocumentKey()
-      const cipher = await crypto.encryptDocument(key, 'foo: bar')
+      const cipher = await crypto.encryptDocument(key, { foo: 'bar' })
       expect(cipher).toBeInstanceOf(Buffer)
     })
     it('accepts base64', async () => {
       const key = await crypto.generateDocumentKey('base64')
-      const cipher = await crypto.encryptDocument(key, 'foo: bar')
+      const cipher = await crypto.encryptDocument(key, { foo: 'bar' })
       expect(cipher).toBeInstanceOf(Buffer)
     })
     it('returns base64', async () => {
       const key = await crypto.generateDocumentKey()
-      const cipher = await crypto.encryptDocument(key, 'foo: bar', 'base64')
+      const cipher = await crypto.encryptDocument(key, { foo: 'bar' }, 'base64')
       expect(typeof cipher).toEqual('string')
       expect(Buffer.from(cipher, 'base64')).toBeInstanceOf(Buffer)
     })
@@ -86,13 +80,13 @@ describe('crypto', () => {
   describe('#decryptDocument', () => {
     it('decrypts an encrypted document as buffer', async () => {
       const key = await crypto.generateDocumentKey()
-      const cipher = await crypto.encryptDocument(key, 'foo: bar')
-      expect(crypto.decryptDocument(key, cipher)).toEqual('foo: bar')
+      const cipher = await crypto.encryptDocument(key, { foo: 'bar' })
+      expect(crypto.decryptDocument(key, cipher)).toEqual({ foo: 'bar' })
     })
     it('decrypts an encrypted document as base64', async () => {
       const key = await crypto.generateDocumentKey()
-      const cipher = await crypto.encryptDocument(key, 'foo: bar', 'base64')
-      expect(crypto.decryptDocument(key, cipher)).toEqual('foo: bar')
+      const cipher = await crypto.encryptDocument(key, { foo: 'bar' }, 'base64')
+      expect(crypto.decryptDocument(key, cipher)).toEqual({ foo: 'bar' })
     })
   })
 })

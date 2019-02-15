@@ -25,6 +25,7 @@ function decryptDocumentKey (pubEncryptedDocumentKey, privDecryptionKey, encodin
 }
 
 async function encryptDocument (aesKey, data, encoding) {
+  data = JSON.stringify(data)
   if (typeof aesKey === 'string') aesKey = Buffer.from(aesKey, 'base64')
   const iv = await promisify(randomBytes)(16)
   const cipher = createCipheriv('aes-256-cbc', aesKey, iv)
@@ -36,10 +37,11 @@ function decryptDocument (aesKey, data) {
   if (typeof data === 'string') data = Buffer.from(data, 'base64')
   const iv = data.slice(0, 16)
   const decipher = createDecipheriv('aes-256-cbc', aesKey, iv)
-  return Buffer.concat([
+  const dataString = Buffer.concat([
     decipher.update(data.slice(16)),
     decipher.final()
   ]).toString('utf8')
+  return JSON.parse(dataString)
 }
 
 module.exports = {
