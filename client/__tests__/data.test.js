@@ -89,11 +89,11 @@ describe('data', () => {
       const doc = axios.post.mock.calls[0][1]
 
       // Step 2: Return the encrypted document
-      axios.get.mockResolvedValue({ data: doc })
+      axios.get.mockResolvedValue({ data: { [domain]: { [area1]: doc } } })
 
       // Step 3: Profit!
       const result = await read({ domain: 'cv', area: '/foo' })
-      expect(result).toEqual(data)
+      expect(result).toEqual({ [domain]: { [area1]: data } })
     })
   })
 

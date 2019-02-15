@@ -36,19 +36,29 @@ const encrypt = (keyProvider) => async (accessToken, domain, area, data) => {
   return doc
 }
 
-const decrypt = (keyProvider) => async (accessToken, domain, area, data) => {
+const decrypt = (keyProvider) => async (data) => {
   if (!data) return {}
-  const [cipher, documentKeys] = data.split('\n')
-  const aesKey = await keyProvider.getDocumentDecryptionKey(documentKeys)
-  const decrypted = decryptDocument(aesKey, cipher)
-  return decrypted
+  const result = {}
+  for (let domain of Object.keys(data)) {
+    result[domain] = {}
+    for (let area of Object.keys(data[domain])) {
+      if (!data[domain][area]) {
+        result[domain][area] = {}
+      } else {
+        const [cipher, documentKeys] = data[domain][area].split('\n')
+        const aesKey = await keyProvider.getDocumentDecryptionKey(documentKeys)
+        result[domain][area] = decryptDocument(aesKey, cipher)
+      }
+    }
+  }
+  return result
 }
 
 const read = (operatorUrl, accessToken, decrypt) => async ({ domain, area }) => {
   const url = buildUrl(operatorUrl, domain, area)
   const headers = buildHeaders(accessToken)
   const { data } = await axios.get(url, { headers })
-  return decrypt(accessToken, domain, area, data)
+  return decrypt(data)
 }
 
 const write = (operatorUrl, accessToken, encrypt) => async ({ domain, area, data }) => {
