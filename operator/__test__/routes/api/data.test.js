@@ -89,7 +89,7 @@ describe('routes /api/data', () => {
           'experience': '{"experience":1}'
         }
       }
-      expect(response.body).toEqual(expected)
+      expect(response.body).toEqual({ data: expected })
     })
     it('reads all data for the correct account and domain', async () => {
       const domain = 'localhost:4000'
@@ -106,7 +106,7 @@ describe('routes /api/data', () => {
           'personal': '{"name":"Johan"}'
         }
       }
-      expect(response.body).toEqual(expected)
+      expect(response.body).toEqual({ data: expected })
     })
     it('reads all data for the correct account, domain and area', async () => {
       const domain = 'localhost:4000'
@@ -123,7 +123,7 @@ describe('routes /api/data', () => {
           'personal': '{"name":"Johan"}'
         }
       }
-      expect(response.body).toEqual(expected)
+      expect(response.body).toEqual({ data: expected })
     })
   })
 })
