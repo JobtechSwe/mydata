@@ -98,7 +98,7 @@ describe('adapters/postgres', () => {
       pg.connection.query.mockResolvedValueOnce(results[0])
       pg.connection.query.mockRejectedValueOnce(new Error('b0rk'))
 
-      expect(postgres.transaction(queries)).rejects.toThrow('b0rk')
+      await expect(postgres.transaction(queries)).rejects.toThrow('b0rk')
     })
     it('closes the connection on success', async () => {
       pg.client.end.mockClear() // WHY???

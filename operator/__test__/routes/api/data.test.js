@@ -60,11 +60,11 @@ describe('routes /api/data', () => {
     dfs.filesystem = {
       'data': {
         [encodeURIComponent('localhost:4000')]: {
-          'cv.json': '{"cv":"foo"}',
-          'personal.json': '{"name":"Johan"}'
+          'cv.mydata.txt': '{"cv":"foo"}',
+          'personal.mydata.txt': '{"name":"Johan"}'
         },
         [encodeURIComponent('linkedin.com')]: {
-          'experience.json': '{"experience":1}'
+          'experience.mydata.txt': '{"experience":1}'
         }
       }
     }

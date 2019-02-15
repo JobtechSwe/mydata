@@ -2,6 +2,8 @@ const { list } = require('./consents')
 const pds = require('../adapters/pds')
 const merge = require('merge')
 
+const EXT = '.mydata.txt'
+
 const read = async (consentId, domain, area) => {
   const consents = await list(consentId, domain, area)
   if (consents.length === 0) {
@@ -14,7 +16,7 @@ const read = async (consentId, domain, area) => {
       domain,
       area
     }) => {
-      const path = `/data/${encodeURIComponent(domain)}/${encodeURIComponent(area)}.json`
+      const path = `/data/${encodeURIComponent(domain)}/${encodeURIComponent(area)}${EXT}`
       const content = await pds
         .get({ pdsProvider, pdsCredentials })
         .readFile(path, 'utf8')
@@ -33,9 +35,9 @@ const read = async (consentId, domain, area) => {
 const write = async (consentId, domain, area, data) => {
   const consents = await list(consentId, domain, area)
   const { pdsProvider, pdsCredentials } = consents[0]
-  const path = `/data/${encodeURIComponent(domain)}/${encodeURIComponent(area)}.json`
+  const path = `/data/${encodeURIComponent(domain)}/${encodeURIComponent(area)}${EXT}`
   const provider = pds.get({ pdsProvider, pdsCredentials })
-  await provider.outputFile(path, JSON.stringify(data), 'utf8')
+  await provider.outputFile(path, data, 'utf8')
 }
 
 module.exports = {
