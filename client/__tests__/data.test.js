@@ -57,7 +57,7 @@ describe('data', () => {
 
   describe('#read', () => {
     it('calls axios.get with correct url and header for root', async () => {
-      axios.get.mockResolvedValue({ data: { foo: 'bar' } })
+      axios.get.mockResolvedValue({ data: '' })
       await read({})
 
       expect(axios.get).toHaveBeenCalledTimes(1)
@@ -66,7 +66,7 @@ describe('data', () => {
     })
 
     it('calls axios.get with correct url and header for domain', async () => {
-      axios.get.mockResolvedValue({ data: { foo: 'bar' } })
+      axios.get.mockResolvedValue({ data: '' })
       await read({ domain: 'cv.work:4000' })
 
       expect(axios.get).toHaveBeenCalledTimes(1)
@@ -75,20 +75,12 @@ describe('data', () => {
     })
 
     it('calls axios.get with correct url and header for domain and area', async () => {
-      axios.get.mockResolvedValue({ data: { foo: 'bar' } })
+      axios.get.mockResolvedValue({ data: '' })
       await read({ domain: 'cv.work:4000', area: 'cv' })
 
       expect(axios.get).toHaveBeenCalledTimes(1)
       expect(axios.get).toHaveBeenCalledWith(`http://localhost:3000/api/data/${encodeURIComponent('cv.work:4000')}/${encodeURIComponent('cv')}`,
         { headers: { 'Authorization': `Bearer ${accessToken}` } })
-    })
-
-    it('returns data', async () => {
-      axios.get.mockResolvedValue({ data: { foo: 'bar' } })
-
-      const result = await read({ domain: 'cv', area: '/foo' })
-
-      expect(result).toEqual({ foo: 'bar' })
     })
     it('decrypts data', async () => {
       // Step 1: Use write to encrypt
@@ -97,7 +89,7 @@ describe('data', () => {
       const doc = axios.post.mock.calls[0][1]
 
       // Step 2: Return the encrypted document
-      axios.get.mockResolvedValue(doc)
+      axios.get.mockResolvedValue({ data: doc })
 
       // Step 3: Profit!
       const result = await read({ domain: 'cv', area: '/foo' })
