@@ -1,9 +1,13 @@
 const axios = require('axios')
 const { decode } = require('jsonwebtoken')
-const { generateDocumentKey, encryptDocumentKey, encryptDocument } = require('./crypto')
+const {
+  generateDocumentKey,
+  encryptDocumentKey,
+  encryptDocument,
+  decryptDocument
+} = require('./crypto')
 
 const jsonToBase64 = (obj) => Buffer.from(JSON.stringify(obj), 'utf8').toString('base64')
-const base64ToJson = (str) => JSON.parse(Buffer.from(str, 'base64').toString('utf8'))
 
 const buildUrl = (operatorUrl, domain, area) => {
   const urlParts = [domain, area]
@@ -33,8 +37,11 @@ const encrypt = (keyProvider) => async (accessToken, domain, area, data) => {
 }
 
 const decrypt = (keyProvider) => async (accessToken, domain, area, data) => {
-  const { data: { consentId } } = decode(accessToken)
-  return data
+  if (!data) return {}
+  const [cipher, documentKeys] = data.split('\n')
+  const aesKey = await keyProvider.getDocumentDecryptionKey(documentKeys)
+  const decrypted = decryptDocument(aesKey, cipher)
+  return decrypted
 }
 
 const read = (operatorUrl, accessToken, decrypt) => async ({ domain, area }) => {

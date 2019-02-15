@@ -1,4 +1,5 @@
 const { generateKeyPair, createHash } = require('crypto')
+const { decryptDocumentKey } = require('./crypto')
 const { promisify } = require('util')
 const { serialize } = require('jwks-provider')
 const Joi = require('joi')
@@ -112,9 +113,25 @@ class KeyProvider {
     const key = [consentId, domain, area].join('|')
     this.save(`${DOCUMENT_KEYS_PREFIX}${key}`, keys)
   }
-  async getDocumentKeys (consentId, domain, area, keys) {
+  async getDocumentKeys (consentId, domain, area) {
     const key = [consentId, domain, area].join('|')
     return this.load(`${DOCUMENT_KEYS_PREFIX}${key}`)
+  }
+  async getDocumentEncryptionKey (consentId, domain, area) {
+    const documentKeys = await this.getDocumentKeys(consentId, domain, area)
+    const [kid, encDocumentKey] = Object
+      .entries(documentKeys)
+      .find(([kid]) => kid.match(new RegExp(`^${this.jwksUrl}`)))
+    const keyPair = await this.getKey(kid)
+    return decryptDocumentKey(encDocumentKey, keyPair.privateKey)
+  }
+  async getDocumentDecryptionKey (b64DocumentKeys) {
+    const documentKeys = base64ToJson(b64DocumentKeys)
+    const [kid, encDocumentKey] = Object
+      .entries(documentKeys)
+      .find(([kid]) => kid.match(new RegExp(`^${this.jwksUrl}`)))
+    const keyPair = await this.getKey(kid)
+    return decryptDocumentKey(encDocumentKey, keyPair.privateKey)
   }
   async jwksKeyList () {
     return serialize([this.clientKeys])

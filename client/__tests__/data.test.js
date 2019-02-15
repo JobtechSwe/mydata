@@ -4,7 +4,7 @@ const { sign } = require('jsonwebtoken')
 const KeyProvider = require('../lib/keyProvider')
 const MemoryKeyValueStore = require('../lib/memoryKeyValueStore')
 const crypto = require('../lib/crypto')
-const { generateKeyPair, jsonToBase64, base64ToJson } = require('./_helpers')
+const { generateKeyPair, base64ToJson } = require('./_helpers')
 jest.mock('axios')
 
 describe('data', () => {
@@ -24,6 +24,7 @@ describe('data', () => {
   })
 
   let config, accessToken, keyProvider, area1, area2
+  let read, write
   beforeEach(async () => {
     const keyValueStore = new MemoryKeyValueStore()
     keyProvider = new KeyProvider({
@@ -47,17 +48,14 @@ describe('data', () => {
     await keyProvider.saveAccessKeyIds(consentId, domain, area2, [
       consentKeys.kid, accountKey.kid, otherServiceKey.kid
     ])
+
+    const ds = dataService({ config, keyProvider })
+      .auth(accessToken)
+    read = ds.read
+    write = ds.write
   })
 
   describe('#read', () => {
-    let read
-    beforeEach(() => {
-      axios.get = jest.fn()
-      read = dataService({ config, keyProvider })
-        .auth(accessToken)
-        .read
-    })
-
     it('calls axios.get with correct url and header for root', async () => {
       axios.get.mockResolvedValue({ data: { foo: 'bar' } })
       await read({})
@@ -92,17 +90,22 @@ describe('data', () => {
 
       expect(result).toEqual({ foo: 'bar' })
     })
+    it('decrypts data', async () => {
+      // Step 1: Use write to encrypt
+      const data = { foo: 'bar' }
+      await write({ domain, area: area1, data })
+      const doc = axios.post.mock.calls[0][1]
+
+      // Step 2: Return the encrypted document
+      axios.get.mockResolvedValue(doc)
+
+      // Step 3: Profit!
+      const result = await read({ domain: 'cv', area: '/foo' })
+      expect(result).toEqual(data)
+    })
   })
 
   describe('#write', () => {
-    let write
-    beforeEach(() => {
-      axios.post = jest.fn()
-      write = dataService({ config, keyProvider })
-        .auth(accessToken)
-        .write
-    })
-
     it('calls axios.post with correct url and header', async () => {
       const data = { foo: 'bar' }
       await write({ domain, area: area1, data })
