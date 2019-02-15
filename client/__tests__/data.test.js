@@ -62,7 +62,7 @@ describe('data', () => {
 
       expect(axios.get).toHaveBeenCalledTimes(1)
       expect(axios.get).toHaveBeenCalledWith(`http://localhost:3000/api/data/`,
-        { headers: { 'Authorization': `Bearer ${accessToken}` } })
+        { headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' } })
     })
 
     it('calls axios.get with correct url and header for domain', async () => {
@@ -71,7 +71,7 @@ describe('data', () => {
 
       expect(axios.get).toHaveBeenCalledTimes(1)
       expect(axios.get).toHaveBeenCalledWith(`http://localhost:3000/api/data/${encodeURIComponent('cv.work:4000')}`,
-        { headers: { 'Authorization': `Bearer ${accessToken}` } })
+        { headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' } })
     })
 
     it('calls axios.get with correct url and header for domain and area', async () => {
@@ -80,16 +80,16 @@ describe('data', () => {
 
       expect(axios.get).toHaveBeenCalledTimes(1)
       expect(axios.get).toHaveBeenCalledWith(`http://localhost:3000/api/data/${encodeURIComponent('cv.work:4000')}/${encodeURIComponent('cv')}`,
-        { headers: { 'Authorization': `Bearer ${accessToken}` } })
+        { headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' } })
     })
     it('decrypts data', async () => {
       // Step 1: Use write to encrypt
       const data = { foo: 'bar' }
       await write({ domain, area: area1, data })
-      const doc = axios.post.mock.calls[0][1]
+      const doc = axios.post.mock.calls[0][1].data
 
       // Step 2: Return the encrypted document
-      axios.get.mockResolvedValue({ data: { [domain]: { [area1]: doc } } })
+      axios.get.mockResolvedValue({ data: { data: { [domain]: { [area1]: doc } } } })
 
       // Step 3: Profit!
       const result = await read({ domain: 'cv', area: '/foo' })
@@ -105,8 +105,8 @@ describe('data', () => {
       expect(axios.post).toHaveBeenCalledTimes(1)
       expect(axios.post).toHaveBeenCalledWith(
         `http://localhost:3000/api/data/${encodeURIComponent(domain)}/${encodeURIComponent(area1)}`,
-        expect.any(String),
-        { headers: { 'Authorization': `Bearer ${accessToken}` } }
+        { data: expect.any(String) },
+        { headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' } }
       )
     })
     describe('new document', () => {
@@ -114,7 +114,7 @@ describe('data', () => {
         const data = { foo: 'bar' }
         await write({ domain, area: area1, data })
 
-        const arg = axios.post.mock.calls[0][1]
+        const arg = axios.post.mock.calls[0][1].data
         const [, keys] = arg.split('\n')
         expect(base64ToJson(keys)).toEqual({
           [consentKeys.kid]: expect.any(String),
@@ -125,7 +125,7 @@ describe('data', () => {
         const data = { foo: 'bar' }
         await write({ domain, area: area1, data })
 
-        const arg = axios.post.mock.calls[0][1]
+        const arg = axios.post.mock.calls[0][1].data
         const [cipher, keys] = arg.split('\n')
         const consentDocumentKey = base64ToJson(keys)[consentKeys.kid]
         const aesKey = crypto.decryptDocumentKey(consentDocumentKey, consentKeys.privateKey)
