@@ -16,7 +16,10 @@ const buildUrl = (operatorUrl, domain, area) => {
     .join('/')
   return `${operatorUrl}/api/data/${urlParts}`
 }
-const buildHeaders = accessToken => ({ 'Authorization': 'Bearer ' + accessToken })
+const buildHeaders = accessToken => ({
+  'Content-Type': 'application/json',
+  'Authorization': 'Bearer ' + accessToken
+})
 
 const encrypt = (keyProvider) => async (accessToken, domain, area, data) => {
   const { data: { consentId } } = decode(accessToken)
@@ -57,7 +60,7 @@ const decrypt = (keyProvider) => async (data) => {
 const read = (operatorUrl, accessToken, decrypt) => async ({ domain, area }) => {
   const url = buildUrl(operatorUrl, domain, area)
   const headers = buildHeaders(accessToken)
-  const { data } = await axios.get(url, { headers })
+  const { data: { data } } = await axios.get(url, { headers })
   return decrypt(data)
 }
 
@@ -65,7 +68,7 @@ const write = (operatorUrl, accessToken, encrypt) => async ({ domain, area, data
   const url = buildUrl(operatorUrl, domain, area)
   const headers = buildHeaders(accessToken)
   const encryptedData = await encrypt(accessToken, domain, area, data)
-  await axios.post(url, encryptedData, { headers })
+  await axios.post(url, { data: encryptedData }, { headers })
 }
 
 const auth = (operatorUrl, keyProvider) => accessToken => ({
