@@ -51,7 +51,7 @@ spec:
               secretKeyRef:
                 name: apm
                 key: token
-          image: jobtechswe/mydata-operator:test
+          image: operator:test
           imagePullPolicy: Always
           name: mydata-operator-test
           terminationMessagePath: /dev/termination-log

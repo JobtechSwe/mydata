@@ -53,7 +53,7 @@ spec:
             value: 'redis://:fubar@redis-test.my-data.svc:6379/'
           - name: CLIENT_ID
             value: mydata-cv-test.dev.services.jtech.se
-          image: jobtechswe/mydata-cv:test
+          image: cv:test
           imagePullPolicy: Always
           name: mydata-cv-test
           ports:
