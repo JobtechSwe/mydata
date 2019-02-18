@@ -3,12 +3,12 @@ kind: DeploymentConfig
 metadata:
   labels:
     app: CI
-  name: mydata-operator-ci
+  name: operator-ci
 spec:
   replicas: 1
   selector:
     app: CI
-    deploymentconfig: mydata-operator-ci
+    deploymentconfig: operator-ci
   strategy:
     activeDeadlineSeconds: 21600
     rollingParams:
@@ -22,7 +22,7 @@ spec:
     metadata:
       labels:
         app: CI
-        deploymentconfig: mydata-operator-ci
+        deploymentconfig: operator-ci
     spec:
       containers:
         - env:
@@ -43,7 +43,7 @@ spec:
           - name: REDIS
             value: 'redis://:fubar@redis-ci.my-data.svc:6379/'
           - name: APP_NAME
-            value: mydata-operator
+            value: operator
           - name: APM_SERVER
             value: 'https://f7a3f8bb7ac7404eb669a8798e460701.apm.eu-west-1.aws.cloud.es.io'
           - name: APM_TOKEN
@@ -53,7 +53,7 @@ spec:
                 key: token
           image: operator:latest
           imagePullPolicy: Always
-          name: mydata-operator-ci
+          name: operator-ci
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
       dnsPolicy: ClusterFirst
@@ -71,42 +71,3 @@ spec:
           name: 'operator:latest'
       
       type: ImageChange
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: CI
-  name: mydata-operator-ci
-spec:
-  ports:
-    - name: http
-      port: 3000
-      protocol: TCP
-      targetPort: 3000
-  selector:
-    app: CI
-    deploymentconfig: mydata-operator-ci
-  type: ClusterIP
----
-apiVersion: route.openshift.io/v1
-kind: Route
-metadata:
-  labels:
-    app: CI
-  name: mydata-operator-ci
-spec:
-  host: mydata-operator-ci.dev.services.jtech.se
-  port:
-    targetPort: http
-  to:
-    kind: Service
-    name: mydata-operator-ci
-    weight: 100
-  wildcardPolicy: None
-  tls:
-    valueFrom:
-      secretKeyRef:
-        key: jtech.se.crt
-        name: tls
-    termination: edge

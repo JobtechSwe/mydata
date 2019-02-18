@@ -1,22 +1,7 @@
-apiVersion: image.openshift.io/v1
-kind: ImageStream
-metadata:
-  name: cv
-spec:
-  tags:
-    # Latest, for CI
-    - name: latest
-      referencePolicy:
-        type: Source
-    # Test
-    - name: test
-      referencePolicy:
-        type: Source
----
 apiVersion: v1
 kind: BuildConfig
 metadata:
-  name: cv-ci
+  name: operator-ci
 spec:
   runPolicy: Serial
   triggers:
@@ -29,34 +14,28 @@ spec:
     git:
       ref: master
       uri: https://github.com/jobtechswe/mydata
-    contextDir: examples/cv
+    contextDir: operator
   strategy:
     dockerStrategy: {}
   output:
     to:
       kind: ImageStreamTag
-      name: cv:latest
-  resources:
-    limits:
-      memory: 1Gi
+      name: operator:latest
 ---
 apiVersion: v1
 kind: BuildConfig
 metadata:
-  name: cv-test
+  name: operator-test
 spec:
   runPolicy: Serial
   source:
     git:
       ref: v0.0.1
       uri: https://github.com/jobtechswe/mydata
-    contextDir: examples/cv
+    contextDir: operator
   strategy:
     dockerStrategy: {}
   output:
     to:
       kind: ImageStreamTag
-      name: cv:test
-  resources:
-    limits:
-      memory: 1Gi
+      name: operator:test

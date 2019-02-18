@@ -2,13 +2,13 @@ apiVersion: apps.openshift.io/v1
 kind: DeploymentConfig
 metadata:
   labels:
-    app: CI
-  name: mydata-cv-ci
+    app: TEST
+  name: cv-test
 spec:
   replicas: 1
   selector:
-    app: CI
-    deploymentconfig: mydata-cv-ci
+    app: TEST
+    deploymentconfig: cv-test
   strategy:
     activeDeadlineSeconds: 21600
     rollingParams:
@@ -21,8 +21,8 @@ spec:
   template:
     metadata:
       labels:
-        app: CI
-        deploymentconfig: mydata-cv-ci
+        app: TEST
+        deploymentconfig: cv-test
     spec:
       containers:
         - env:
@@ -38,9 +38,9 @@ spec:
           - name: APP_NAME
             value: mydata-cv api
           - name: NODE_ENV
-            value: test
+            value: oc
           - name: OPERATOR_URL
-            value: 'http://mydata-operator-ci.my-data.svc:3000'
+            value: 'http://mydata-operator-test.my-data.svc:3000'
           - name: POSTGRES_USER
             value: postgresuser
           - name: POSTGRES_PASSWORD
@@ -48,16 +48,14 @@ spec:
           - name: POSTGRES_DB
             value: cv
           - name: DATABASE_URL
-            value: postgres://postgresuser:postgrespassword@postgresql-cv-ci.my-data.svc:5432/cv
+            value: postgres://postgresuser:postgrespassword@postgresql-cv-test.my-data.svc:5432/cv
           - name: REDIS
-            value: 'redis://:fubar@redis-ci.my-data.svc:6379/'
+            value: 'redis://:fubar@redis-test.my-data.svc:6379/'
           - name: CLIENT_ID
-            value: https://mydata-cv-ci.dev.services.jtech.se
-          - name: NO_UPDATE_NOTIFIER
-            value: 'true'
-          image: cv:latest
+            value: cv-test.dev.services.jtech.se
+          image: cv:test
           imagePullPolicy: Always
-          name: mydata-cv-ci
+          name: cv-test
           ports:
             - containerPort: 4000
               name: http
@@ -73,47 +71,9 @@ spec:
     - imageChangeParams:
         automatic: true
         containerNames:
-          - mydata-cv-ci
+          - mydata-cv-test
         from:
           kind: ImageStreamTag
-          name: 'cv:latest'
+          name: 'cv:test'
+      
       type: ImageChange
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: CI
-  name: mydata-cv-ci
-spec:
-  ports:
-    - name: http
-      port: 4000
-      protocol: TCP
-      targetPort: 4000
-  selector:
-    app: CI
-    deploymentconfig: mydata-cv-ci
-  type: ClusterIP
----
-apiVersion: route.openshift.io/v1
-kind: Route
-metadata:
-  labels:
-    app: CI
-  name: mydata-cv-ci
-spec:
-  host: mydata-cv-ci.dev.services.jtech.se
-  port:
-    targetPort: http
-  to:
-    kind: Service
-    name: mydata-cv-ci
-    weight: 100
-  wildcardPolicy: None
-  tls:
-    valueFrom:
-      secretKeyRef:
-        key: jtech.se.crt
-        name: tls
-    termination: edge

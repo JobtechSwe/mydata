@@ -30,9 +30,8 @@ oc create secret generic tls --from-file=/home/ilix/Documents/jtech.se.crt
 Both `MyData-CV` and `MyData-Operator` use PostgreSQL and Redis. These following commands will deploy instances of these to be used by the CI and TEST environments.
 
 ```bash
-# Deploy ephemeral redis and postgres
-oc apply -f ci.yml
-oc apply -f test.yml
+# Deploy shared things (ImageStreams + ephemeral databases)
+oc apply -f shared/
 ```
 
 ### ImageStreams and automatic builds
@@ -50,19 +49,15 @@ oc apply -f operator-ImageStream.yml
 ### Deployments
 
 ```bash
-# CI
-oc apply -f cv-CI.yml
-oc apply -f operator-CI.yml
+# Deploy CI
+oc apply -f ci/
 
-# TEST
-oc apply -f cv-TEST.yml
-oc apply -f operator-TEST.yml
+# Deploy TEST
+oc apply -f test/
 
 # Tear down
-oc delete -f cv-CI.yml
-oc delete -f cv-TEST.yml
-oc delete -f operator-CI.yml
-oc delete -f operator-TEST.yml
+oc delete -f ci/
+oc delete -f test/
 ```
 
 ### Other information
@@ -112,27 +107,17 @@ Replace `aVERYsecretSECRET` in the URL's below (see "Secrets" section above).
 # TL;DR; just give me some copy-pasta
 
 # Run everything
-oc apply -f ci.yml
-oc apply -f test.yml
-oc apply -f cv-ImageStream.yml
-oc apply -f operator-ImageStream.yml
-oc apply -f cv-CI.yml
-oc apply -f operator-CI.yml
-oc apply -f cv-TEST.yml
-oc apply -f operator-TEST.yml
+oc apply -f shared/
+oc apply -f ci/
+oc apply -f test/
 
 oc start-build cv-ci -n my-data
 oc start-build operator-ci -n my-data
 
 # Destroy everything
-oc delete -f operator-TEST.yml
-oc delete -f operator-CI.yml
-oc delete -f cv-TEST.yml
-oc delete -f cv-CI.yml
-oc delete -f operator-ImageStream.yml
-oc delete -f cv-ImageStream.yml
-oc delete -f test.yml
-oc delete -f ci.yml
+oc delete -f test/
+oc delete -f ci/
+oc delete -f shared/
 ```
 
 ## Test environment

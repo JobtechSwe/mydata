@@ -64,32 +64,14 @@ spec:
           terminationMessagePolicy: File
           volumeMounts:
             - mountPath: /var/lib/pgsql/data
-              name: postgresql-data
+              name: postgresql-cv-test-data
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
       securityContext: {}
       terminationGracePeriodSeconds: 30
       volumes:
-        - name: postgresql-data
-          persistentVolumeClaim:
-            claimName: hello-storage
+        - emptyDir: {}
+          name: postgresql-cv-test-data
   triggers:
     - type: ConfigChange
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgresql-cv-test
-  labels:
-    app: TEST
-spec:
-  ports:
-    - name: postgresql
-      port: 5432
-      protocol: TCP
-      targetPort: 5432
-  selector:
-    name: postgresql-cv-test
-  sessionAffinity: None
-  type: ClusterIP
