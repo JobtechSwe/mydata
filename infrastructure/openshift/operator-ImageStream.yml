@@ -23,7 +23,8 @@ spec:
     -
       type: GitHub
       github:
-        secret: meow123
+        secretReference:
+          name: github-webhook-secret
   source:
     git:
       ref: master
@@ -46,7 +47,8 @@ spec:
     -
       type: GitHub
       github:
-        secret: meow123
+        secretReference:
+          name: github-webhook-secret
   source:
     git:
       ref: v0.0.1

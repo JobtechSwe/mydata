@@ -19,6 +19,8 @@ First of all, let's create some secrets that will be used in your environment.
 ```bash
 # Replace AverySECRETtoken with your APM token
 oc create secret generic apm --from-literal=token=AverySECRETtoken
+# Replace aVERYsecretSECRET with your build secret
+oc create secret generic github-webhook-secret --from-literal=WebHookSecretKey=aVERYsecretSECRET
 # Replace the path below with a path to your TLS certificate file
 oc create secret generic tls --from-file=/home/ilix/Documents/jtech.se.crt
 ```
@@ -67,7 +69,7 @@ oc delete -f operator-TEST.yml
 
 #### Build webhooks
 
-Replace `AverySECRETtoken` in the URL's below.
+Replace `aVERYsecretSECRET` in the URL's below (see "Secrets" section above).
 
 - `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/cv-ci/webhooks/AverySECRETtoken/github`
 - `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/cv-test/webhooks/AverySECRETtoken/github`
@@ -104,6 +106,7 @@ Replace `AverySECRETtoken` in the URL's below.
 - [ ] OpenShift-logins till Adam, Einar och Johan
 - [x] Arbeta i develop-branch, release/test från master
 - [ ] Push till Docker Hub vid bygge
+- [x] GitHub webhook secret
 
 ### Nice-to-have
 
