@@ -6,9 +6,10 @@
     "comma-dangle": ["error", "always-multiline"],
     "jsx-quotes": ["error", "prefer-double"],
     "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
-    "object-curly-spacing": [2, "always"],
+    "object-curly-spacing": ["error", "always"],
     "quotes": ["error", "single"],
     "react/prop-types": "off",
-    "semi": ["error", "never"]
+    "semi": ["error", "never"],
+    "no-console": ["error", { "allow": ["warn", "error"] }]
   }
 }
