@@ -71,7 +71,7 @@ spec:
     - imageChangeParams:
         automatic: true
         containerNames:
-          - mydata-cv-test
+          - cv-test
         from:
           kind: ImageStreamTag
           name: 'cv:test'

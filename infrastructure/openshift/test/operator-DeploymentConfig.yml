@@ -65,7 +65,7 @@ spec:
     - imageChangeParams:
         automatic: true
         containerNames:
-          - mydata-operator-test
+          - operator-test
         from:
           kind: ImageStreamTag
           name: 'operator:test'

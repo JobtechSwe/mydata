@@ -73,7 +73,7 @@ spec:
     - imageChangeParams:
         automatic: true
         containerNames:
-          - mydata-cv-ci
+          - cv-ci
         from:
           kind: ImageStreamTag
           name: 'cv:latest'

@@ -65,7 +65,7 @@ spec:
     - imageChangeParams:
         automatic: true
         containerNames:
-          - mydata-operator-ci
+          - operator-ci
         from:
           kind: ImageStreamTag
           name: 'operator:latest'
