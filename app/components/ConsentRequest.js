@@ -7,17 +7,17 @@ import * as storage from '../services/storage'
 class ConsentRequest extends Component {
   state = {
     view: 'loading',
-    consentRequest: null
+    consentRequest: null,
   }
 
   async componentDidMount() {
     const consentRequest = await consentsService.get(this.props.consentRequestId)
-    this.setState({ consentRequest, view: 'approve'})
+    this.setState({ consentRequest, view: 'approve' })
   }
 
   approve = async () => {
     const { id } = await storage.getAccount()
-    this.setState({view: 'approving'})
+    this.setState({ view: 'approving' })
     await consentsService.approve({ ...this.state.consentRequest, accountId: id })
     this.props.onApprove()
   }

@@ -4,7 +4,7 @@ export async function sign (data, kid, privateKey) {
   return {
     kid,
     alg: 'RSA-SHA512',
-    data: await RSA.sign(JSON.stringify(data), privateKey)
+    data: await RSA.sign(JSON.stringify(data), privateKey),
   }
 }
 
@@ -18,6 +18,8 @@ export async function verify (data, signature, publicKey) {
   return RSA.verify(signature.data, JSON.stringify(data), publicKey)
 }
 
+
+/* TODO(@einarpersson): implement these
 export async function encrypt (data, publicKey) {
 
 }
@@ -25,3 +27,4 @@ export async function encrypt (data, publicKey) {
 export async function decrypt (cipher, privateKey) {
 
 }
+*/
