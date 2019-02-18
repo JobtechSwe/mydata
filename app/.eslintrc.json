@@ -1,4 +1,10 @@
 {
-  "extends": ["standard", "plugin:jest/recommended" ],
-  "plugins": ["jest"]
+  "parser": "babel-eslint",
+  "extends": ["standard", "plugin:jest/recommended", "eslint:recommended", "plugin:react/recommended"],
+  "plugins": ["jest"],
+  "rules": {
+    "react/prop-types": "off",
+    "comma-dangle": ["error", "always-multiline"],
+    "semi": ["error", "never"]
+  }
 }
