@@ -67,19 +67,12 @@ oc delete -f operator-TEST.yml
 
 ### Other information
 
-#### Build webhooks
+#### GitHub webhooks
 
 Replace `aVERYsecretSECRET` in the URL's below (see "Secrets" section above).
 
 - `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/cv-ci/webhooks/AverySECRETtoken/github`
-- `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/cv-test/webhooks/AverySECRETtoken/github`
 - `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/operator-ci/webhooks/AverySECRETtoken/github`
-- `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/operator-test/webhooks/AverySECRETtoken/github`
-
-### Source
-
-- MyData-CV: https://github.com/JobtechSwe/mydata-cv
-- MyData-Operator: https://github.com/JobtechSwe/mydata-operator
 
 #### Docker Hub
 
@@ -88,6 +81,11 @@ Replace `aVERYsecretSECRET` in the URL's below (see "Secrets" section above).
 
 ## TODO
 
+- [ ] Deploy redis with storage
+- [ ] Hur gör man en lokal deploy enklast?
+- [ ] Kort beskrivning av vad redis, postgres, apm används till
+- [ ] OpenShift-logins till Adam, Einar och Johan
+- [ ] Push till Docker Hub vid bygge
 - [x] Move ImageStream to its own file
 - [x] Create shared CV ImageStream
 - [x] Create shared Operator ImageStream
@@ -95,17 +93,12 @@ Replace `aVERYsecretSECRET` in the URL's below (see "Secrets" section above).
 - [x] Create yaml for ephemeral postgres
 - [x] Fix naming for stuff so that -ci and -test are in the end
 - [x] Fix hostname for ci stuff (mydata-cv-ci. etc)
-- [ ] Deploy redis with storage
 - [x] Deploy postgresql with storage (/lab)
 - [x] Have a look at the permissions in mydata-cv Dockerfile
-- [ ] Kort beskrivning av vad redis, postgres, apm används till
 - [x] Byggen (cv)
 - [x] Lokal test utan APM?
-- [ ] Hur gör man en lokal deploy enklast?
 - [x] Vilka storage-providers finns det stöd för? (endast dropbox?)
-- [ ] OpenShift-logins till Adam, Einar och Johan
 - [x] Arbeta i develop-branch, release/test från master
-- [ ] Push till Docker Hub vid bygge
 - [x] GitHub webhook secret
 
 ### Nice-to-have
