@@ -40,7 +40,7 @@ spec:
           - name: NODE_ENV
             value: oc
           - name: OPERATOR_URL
-            value: 'http://mydata-operator-test.my-data.svc:3000'
+            value: 'http://operator-test.my-data.svc:3000'
           - name: POSTGRES_USER
             value: postgresuser
           - name: POSTGRES_PASSWORD

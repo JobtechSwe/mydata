@@ -40,7 +40,7 @@ spec:
           - name: NODE_ENV
             value: test
           - name: OPERATOR_URL
-            value: 'http://mydata-operator-ci.my-data.svc:3000'
+            value: 'http://operator-ci.my-data.svc:3000'
           - name: POSTGRES_USER
             value: postgresuser
           - name: POSTGRES_PASSWORD
@@ -52,7 +52,7 @@ spec:
           - name: REDIS
             value: 'redis://:fubar@redis-ci.my-data.svc:6379/'
           - name: CLIENT_ID
-            value: https://mydata-cv-ci.dev.services.jtech.se
+            value: https://cv-ci.dev.services.jtech.se
           - name: NO_UPDATE_NOTIFIER
             value: 'true'
           image: cv:latest
