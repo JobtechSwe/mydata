@@ -46,16 +46,11 @@ metadata:
   name: cv-test
 spec:
   runPolicy: Serial
-  triggers:
-    -
-      type: GitHub
-      github:
-        secretReference:
-          name: github-webhook-secret
   source:
     git:
       ref: v0.0.1
       uri: https://github.com/jobtechswe/mydata
+    contextDir: examples/cv
   strategy:
     dockerStrategy: {}
   output:

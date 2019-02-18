@@ -131,9 +131,6 @@ oc apply -f operator-TEST.yml
 oc start-build cv-ci -n my-data
 oc start-build operator-ci -n my-data
 
-oc start-build cv-test -n my-data
-oc start-build operator-test -n my-data
-
 # Destroy everything
 oc delete -f operator-TEST.yml
 oc delete -f operator-CI.yml
@@ -143,4 +140,13 @@ oc delete -f operator-ImageStream.yml
 oc delete -f cv-ImageStream.yml
 oc delete -f test.yml
 oc delete -f ci.yml
+```
+
+## Test environment
+
+```bash
+chmod +x tag-test
+
+# To tag the code and deploy to test environment, run the following:
+./tag-test v0.0.1 # Where v0.0.1 is the next semver version.
 ```
