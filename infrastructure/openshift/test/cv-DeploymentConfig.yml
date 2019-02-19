@@ -52,7 +52,7 @@ spec:
           - name: REDIS
             value: 'redis://:fubar@redis-test.my-data.svc:6379/'
           - name: CLIENT_ID
-            value: cv-test.dev.services.jtech.se
+            value: https://cv-test.dev.services.jtech.se
           image: cv:test
           imagePullPolicy: Always
           name: cv-test
