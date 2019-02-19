@@ -27,7 +27,7 @@ spec:
       containers:
         - env:
           - name: NODE_ENV
-            value: 'TEST'
+            value: test
           - name: PORT
             value: '3000'
           - name: PGHOST
