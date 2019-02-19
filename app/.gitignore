@@ -64,4 +64,9 @@ buck-out/
 
 # VS code
 .vscode
+<<<<<<< HEAD
 dist
+=======
+
+dist
+>>>>>>> 6b93989... Removed dist from repo
