@@ -40,6 +40,7 @@
     "jsonwebtoken": "^8.3.0",
     "jwks-manager": "^0.9.1",
     "jwks-provider": "^0.1.0",
+    "memory-fs": "^0.4.1",
     "merge": "^1.2.1",
     "moment": "^2.24.0",
     "morgan": "~1.9.0",

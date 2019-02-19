@@ -1,7 +1,8 @@
 const { promisify } = require('util')
 const { dirname } = require('path')
 const providers = {
-  dropbox: require('./dropbox')
+  dropbox: require('./dropbox'),
+  memory: require('./memory')
 }
 
 function promiseFs (lib) {

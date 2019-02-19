@@ -8,7 +8,7 @@ const {
 
 async function createAccount (firstName = 'Förnamn', lastName = 'Efternamnsson') {
   const keys = await crypto.generateKeys()
-  const pds = {} // await connectPDS()
+  const pds = { provider: 'dropbox', access_token: null }
   const acc = {
     firstName,
     lastName,

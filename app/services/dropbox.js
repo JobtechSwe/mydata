@@ -19,7 +19,7 @@ class DropboxConnector extends EventEmitter {
   async connect () {
     Linking.addEventListener('url', this.handleUrl)
 
-    const url = `https://api.dropbox.com//oauth2/authorize?response_type=token&client_id=${Config.DROPBOX_KEY}&redirect_uri=mydata://callback/dropbox`
+    const url = `https://api.dropbox.com/oauth2/authorize?response_type=token&client_id=${Config.DROPBOX_KEY}&redirect_uri=mydata://callback/dropbox`
     await Linking.openURL(url)
     return this
   }
@@ -28,9 +28,11 @@ class DropboxConnector extends EventEmitter {
     Linking.removeEventListener('url', this.handleUrl)
 
     const [, queryString] = event.url.match(/#(.*)/)
-    const dropbox = processQueryString(queryString)
 
-    this.emit('connect', dropbox)
+    this.emit('connect', {
+      ...processQueryString(queryString),
+      provider: 'dropbox'
+    })
   }
 }
 

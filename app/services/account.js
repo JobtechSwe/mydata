@@ -19,7 +19,7 @@ function pluck (account) {
     lastName: account.lastName,
     accountKey: Base64.encode(account.keys.publicKey),
     pds: {
-      provider: 'dropbox',
+      provider: account.pds.provider,
       access_token: account.pds.access_token
     }
   }
