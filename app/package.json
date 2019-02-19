@@ -7,7 +7,8 @@
     "test": "NODE_ENV=test jest",
     "test:watch": "NODE_ENV=test jest --watchAll",
     "lint": "eslint '**/*.js'",
-    "e2e": "babel-watch __e2e__/src/phone.js --presets @babel/preset-env"
+    "dev:e2e": "babel-watch __e2e__/src/phone.js --presets @babel/preset-env",
+    "build:e2e": "cd __e2e__/ && webpack"
   },
   "contributors": [
     "Adam Näslund <adam.naslund@iteam.se>",
@@ -69,6 +70,8 @@
     "react-dom": "^16.7.0",
     "react-native-dotenv": "^0.2.0",
     "react-test-renderer": "^16.7.0",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "webpack": "^4.29.5",
+    "webpack-cli": "^3.2.3"
   }
 }

@@ -1,14 +1,14 @@
-const {
-  account,
-  consents,
-  crypto,
-  storage,
-  Config: { setConfig, clearConfig }
-} = require('./services')
+import * as account from '../../services/account'
+import * as storage from '../../services/storage'
+import * as crypto from '../../services/crypto'
+import * as consents from '../../services/consents'
+import Config from 'react-native-config'
 
-async function createAccount (firstName = 'Förnamn', lastName = 'Efternamnsson') {
+export { Config }
+
+export async function createAccount (firstName = 'Förnamn', lastName = 'Efternamnsson') {
   const keys = await crypto.generateKeys()
-  const pds = { provider: 'dropbox', access_token: null }
+  const pds = { provider: 'memory', access_token: 'nope' }
   const acc = {
     firstName,
     lastName,
@@ -19,29 +19,14 @@ async function createAccount (firstName = 'Förnamn', lastName = 'Efternamnsson'
   return account.save(acc)
 }
 
-async function clearAccount () {
+export async function clearAccount () {
   return storage.storeAccount()
 }
 
-async function getConsentRequest (code) {
-  return consents.getConsentRequest(code)
+export async function getConsentRequest (code) {
+  return consents.get(code)
 }
 
-async function approveConsentRequest (request) {
+export async function approveConsentRequest (request) {
   return consents.approve(request)
 }
-
-module.exports = {
-  setConfig,
-  clearConfig,
-
-  createAccount,
-  clearAccount,
-
-  getConsentRequest,
-  approveConsentRequest
-}
-
-setConfig({ OPERATOR_URL: 'http://localhost:3000/api' })
-createAccount()
-console.log('YEAH')

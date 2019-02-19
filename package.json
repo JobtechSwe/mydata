@@ -11,7 +11,9 @@
     "e2e:open": "npm --prefix ./e2e run open"
   },
   "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "@babel/cli": "^7.2.3"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/JobtechSwe/mydata.git"

@@ -1,6 +1,6 @@
 let storage = {}
 
-const AsyncStorage = {
+export const AsyncStorage = {
   getItem: async (key) => {
     return storage[key]
   },
@@ -12,4 +12,8 @@ const AsyncStorage = {
   }
 }
 
-module.exports = AsyncStorage
+export const Linking = {
+  addEventListener: () => { },
+  removeEventListener: () => { },
+  openURL: () => { }
+}

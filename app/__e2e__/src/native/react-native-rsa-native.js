@@ -5,7 +5,7 @@ import {
   privateEncrypt
 } from 'crypto'
 
-const RSA = {
+export const RSA = {
   generateKeys: async (modulusLength) => {
     return new Promise((resolve, reject) => {
       generateKeyPair('rsa', {
@@ -33,5 +33,3 @@ const RSA = {
     return Promise.resolve(privateEncrypt(key, Buffer.from(data)).toString('base64'))
   }
 }
-
-module.exports = RSA
