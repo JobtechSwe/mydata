@@ -14,6 +14,7 @@ describe('account', () => {
       firstName: 'Foo',
       lastName: 'Bar',
       pds: {
+        provider: 'dropbox',
         access_token: 'abc'
       },
       keys: {
