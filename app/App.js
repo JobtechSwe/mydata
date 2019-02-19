@@ -2,6 +2,7 @@ import { createStackNavigator } from 'react-navigation'
 import HomeScreen from './screens/HomeScreen'
 import AccountScreen from './screens/AccountScreen'
 import ManageConsentsRequestScreen from './screens/ManageConsentsRequestScreen'
+import ManageLoginRequestScreen from './screens/ManageLoginRequestScreen'
 import React from 'react'
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper'
 
@@ -19,7 +20,8 @@ const stackConfig = {
 const App = createStackNavigator({
   Home: { screen: HomeScreen },
   Account: { screen: AccountScreen },
-  ManageConsentsRequest: { screen: ManageConsentsRequestScreen }
+  ManageConsentsRequest: { screen: ManageConsentsRequestScreen },
+  ManageLoginRequest: { screen: ManageLoginRequestScreen }
 }, stackConfig)
 
 export default () => (
