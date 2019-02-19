@@ -16,9 +16,8 @@ class ConsentRequest extends Component {
   }
 
   approve = async () => {
-    const { id } = await storage.getAccount()
     this.setState({view: 'approving'})
-    await consentsService.approve({ ...this.state.consentRequest, accountId: id })
+    await consentsService.approve(this.state.consentRequest)
     this.props.onApprove()
   }
 

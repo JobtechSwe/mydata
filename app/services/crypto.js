@@ -1,5 +1,13 @@
 import { RSA } from 'react-native-rsa-native'
 
+export async function generateKeys (modulusLength = 2048) {
+  const keyPair = await RSA.generateKeys(modulusLength)
+  return {
+    publicKey: keyPair.public,
+    privateKey: keyPair.private
+  }
+}
+
 export async function sign (data, kid, privateKey) {
   return {
     kid,
@@ -16,12 +24,4 @@ export async function verify (data, signature, publicKey) {
     throw new Error(`Unsupported algorithm [${signature.alg}]. Only [RSA-SHA512] is supported.`)
   }
   return RSA.verify(signature.data, JSON.stringify(data), publicKey)
-}
-
-export async function encrypt (data, publicKey) {
-
-}
-
-export async function decrypt (cipher, privateKey) {
-
 }
