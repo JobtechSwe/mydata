@@ -4,6 +4,7 @@ metadata:
   name: cv-test
 spec:
   runPolicy: Serial
+  completionDeadlineSeconds: 1800
   source:
     git:
       ref: v0.0.1
@@ -25,6 +26,7 @@ metadata:
   name: cv-ci
 spec:
   runPolicy: Serial
+  completionDeadlineSeconds: 1800
   triggers:
     -
       type: GitHub

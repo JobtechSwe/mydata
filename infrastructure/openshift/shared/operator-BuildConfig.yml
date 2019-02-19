@@ -4,6 +4,7 @@ metadata:
   name: operator-ci
 spec:
   runPolicy: Serial
+  completionDeadlineSeconds: 1800
   triggers:
     -
       type: GitHub
@@ -28,6 +29,7 @@ metadata:
   name: operator-test
 spec:
   runPolicy: Serial
+  completionDeadlineSeconds: 1800
   source:
     git:
       ref: v0.0.1
