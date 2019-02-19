@@ -2,7 +2,7 @@ const MemoryFileSystem = require('memory-fs')
 const fs = new MemoryFileSystem()
 
 const description = {
-  name: 'Memory'
+  name: 'In memory provider'
 }
 
 module.exports = {
