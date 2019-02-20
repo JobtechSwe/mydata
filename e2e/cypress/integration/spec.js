@@ -2,8 +2,13 @@ const v4Regexp = /[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-
 
 describe('Create account', () => {
   it('Creates an account', () => {
-    cy.setConfig({ OPERATOR_URL: 'http://localhost:3000/api' })
-    cy.createAccount({ firstName: 'Johan', lastName: 'Öbrink' })
+    cy
+      .setConfig({ OPERATOR_URL: 'http://localhost:3000/api' })
+      .then(config => console.log(config))
+
+    cy
+      .createAccount({ firstName: 'Johan', lastName: 'Öbrink' })
+      .then(account => console.log(account))
   })
 })
 

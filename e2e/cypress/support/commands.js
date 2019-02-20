@@ -24,20 +24,36 @@
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
-Cypress.Commands.add('setConfig', (config) => {
-  cy
+function callMethod (method, args) {
+  return cy
     .request({
-      url: 'http://localhost:1337/setConfig',
+      url: `http://localhost:1337/${method}`,
       method: 'POST',
-      body: config
+      body: args
     })
+    .then(res => res.body)
+}
+
+Cypress.Commands.add('setConfig', (args) => {
+  return callMethod('setConfig', args)
 })
 
-Cypress.Commands.add('createAccount', (data) => {
-  cy
-    .request({
-      url: 'http://localhost:1337/createAccount',
-      method: 'POST',
-      body: data
-    })
+Cypress.Commands.add('getConfig', () => {
+  return callMethod('getConfig')
+})
+
+Cypress.Commands.add('clearConfig', () => {
+  return callMethod('clearConfig')
+})
+
+Cypress.Commands.add('createAccount', (args) => {
+  return callMethod('createAccount', args)
+})
+
+Cypress.Commands.add('getConsentRequest', (args) => {
+  return callMethod('getConsentRequest', args)
+})
+
+Cypress.Commands.add('approveConsentRequest', (args) => {
+  return callMethod('approveConsentRequest', args)
 })
