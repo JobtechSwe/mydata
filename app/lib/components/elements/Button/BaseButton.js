@@ -1,0 +1,20 @@
+import styled from '../../../theme'
+
+export const BaseButton = styled.View`
+  border: 0;
+  border-radius: 96px;
+  background: ${({ theme }) => theme.colors.white};
+`
+
+export const BaseButtonText = styled.Text`
+  align-items: center;
+  padding: 18px 88px;
+  color: ${({ theme }) => theme.colors.primary};
+  font-size: ${({ theme }) => theme.fontSize.regular};
+  font-weight: 700;
+  height: 56px;
+  text-align: center;
+  width: 264px;
+`
+
+export default BaseButton
