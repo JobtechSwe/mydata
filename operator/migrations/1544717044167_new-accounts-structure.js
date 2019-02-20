@@ -7,8 +7,8 @@ exports.up = (pgm) => {
 
 exports.down = (pgm) => {
   pgm.addColumns('accounts', {
-    username: { type: 'string', notNull: true, unique: true },
-    password: { type: 'bytea', notNull: true }
+    username: { type: 'string', unique: true },
+    password: { type: 'bytea' }
   })
   pgm.dropColumns('accounts', 'public_key')
 }
