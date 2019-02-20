@@ -1,4 +1,4 @@
-import * as consentService from '../../services/consents'
+import * as consentService from '../services/consents'
 import axios from 'axios'
 import Config from 'react-native-config'
 import { getAccount } from '../../services/storage'

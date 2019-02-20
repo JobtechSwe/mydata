@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import { View } from 'react-native'
 import { Button, TextInput, withTheme } from 'react-native-paper'
+import { validate } from '../utils/uuid-validate'
 import ScanQRConsentCode from './ScanQRConsentCode'
-
-const rxUUID = /\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/
 
 class EnterConsentCode extends Component {
   state = {
@@ -15,19 +14,17 @@ class EnterConsentCode extends Component {
   scan = () => {
     this.setState({ view: 'scan' })
   }
+
   cancelScan = () => {
     this.setState({ view: 'enter' })
   }
-  validate = (code) => {
-    return rxUUID.test(code.toLowerCase())
-  }
   
   onChange = (code) => {
-    this.setState({ code, validated: this.validate(code) })
+    this.setState({ code, validated: validate(code) })
     this.props.onCodeChange(code)
   }
   onScanQRCode = (code) => {
-    this.setState({ view: 'enter', code, validated: this.validate(code) })
+    this.setState({ view: 'enter', code, validated: validate(code) })
     this.props.onCodeChange(code)
   }
   enter = () => {
@@ -40,14 +37,20 @@ class EnterConsentCode extends Component {
         return (
           <View style={{ marginHorizontal: 5, flex: 1 }}>
             <ScanQRConsentCode onRead={this.onScanQRCode} />
-            <Button mode="contained" style={{ marginBottom: 5, backgroundColor: this.props.theme.colors.accent }} onPress={this.cancelScan}>Cancel</Button>
+            <Button 
+              mode="contained" 
+              style={{ marginBottom: 5, backgroundColor: this.props.theme.colors.accent }} 
+              onPress={this.cancelScan}
+            >
+              Cancel
+            </Button>
           </View>
         )
       case 'enter':
       default:
         return (
-          <View style={{ marginHorizontal: 5, flex: 1 }}>
-            <TextInput label="code" onChangeText={this.onChange} value={this.state.code} style={{ marginBottom: 5 }} />
+          <View style={{ marginHorizontal: 25, flex: 1, justifyContent: 'center' }}>
+            <TextInput autoFocus={true} label="code" onChangeText={this.onChange} value={this.state.code} style={{ marginBottom: 5 }} />
             <Button mode="contained" label="enter" onPress={this.enter} disabled={!this.state.validated} style={{ marginBottom: 5 }}>Enter</Button>
             <Button mode="contained" icon="camera" label="scan" onPress={this.scan} style={{ marginBottom: 5, backgroundColor: this.props.theme.colors.accent }}>Scan</Button>
           </View>

@@ -1,5 +1,5 @@
 import { RSA } from 'react-native-rsa-native'
-import { sign, verify } from '../../services/crypto'
+import { sign, verify } from '../services/crypto'
 
 describe('services/crypto', () => {
   let keys

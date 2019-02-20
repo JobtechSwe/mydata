@@ -1,4 +1,4 @@
-import * as storage from '../../services/storage'
+import * as storage from '../services/storage'
 import { AsyncStorage } from 'react-native'
 
 describe('storage', () => {

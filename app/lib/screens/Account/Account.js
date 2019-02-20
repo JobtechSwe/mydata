@@ -2,23 +2,24 @@ import React from 'react'
 import { Text, View } from 'react-native'
 import styled from 'styled-components'
 
-import Screen from './Screen'
-import { getAccount, storeAccount } from '../services/storage'
-import Account from '../components/Account'
-import KeyPair from '../components/KeyPair'
-import PDS from '../components/PDS'
-import { save } from '../services/account'
+import Screen from '../Screen'
+import { getAccount, storeAccount } from '../../services/storage'
+import Account from '../../components/Account'
+import KeyPair from '../../components/KeyPair'
+import PDS from '../../components/PDS'
+import { save } from '../../services/account'
 
 const InstructionText = styled(Text)`
-text-align: center;
-color: #333;
-margin-bottom: 6px;
+  text-align: center;
+  color: #333;
+  margin-bottom: 6px;
 `
 
 const StyledView = styled(View)`
-flex: 1;
-justify-content: center;
-background-color: #F5FCFF;
+  background-color: #F5FCFF;
+  flex: 1;
+  justify-content: center;
+  padding: 25px;
 `
 
 export default class AccountScreen extends Screen {

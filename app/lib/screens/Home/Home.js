@@ -1,9 +1,9 @@
 import React from 'react'
 import { Alert, Button, Text, View, Linking, Platform, ScrollView } from 'react-native'
 import JSONTree from 'react-native-json-tree'
-import Screen from './Screen'
+import Screen from '../Screen'
 import styled from 'styled-components'
-import { getAccount, storeAccount } from '../services/storage'
+import { getAccount, storeAccount } from '../../services/storage'
 
 const WelcomeText = styled(Text)`
   font-size: 20px;

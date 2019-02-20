@@ -1,7 +1,7 @@
 import React from 'react'
-import Screen from './Screen'
-import EnterConsentCode from '../components/EnterConsentCode'
-import ConsentRequest from '../components/ConsentRequest'
+import Screen from '../Screen'
+import EnterConsentCode from '../../components/EnterConsentCode'
+import ConsentRequest from '../../components/ConsentRequest'
 import { View } from 'react-native'
 import { withTheme } from 'react-native-paper'
 

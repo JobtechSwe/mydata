@@ -1,4 +1,4 @@
-import * as accountService from '../../services/account'
+import * as accountService from '../services/account'
 import axios from 'axios'
 import { RSA } from 'react-native-rsa-native'
 import Config from 'react-native-config'
