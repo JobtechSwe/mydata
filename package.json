@@ -7,8 +7,8 @@
     "install-all": "npm i && npm --prefix ./app i ./app && npm --prefix ./client i ./client && npm --prefix ./examples/cv i ./examples/cv && npm --prefix ./operator i ./operator && npm --prefix ./e2e i ./e2e ",
     "audit-all": "npm audit && npm --prefix ./app audit && npm --prefix ./client audit && npm --prefix ./examples/cv audit && npm --prefix ./operator audit && npm --prefix ./e2e audit ",
     "audit-fix-all": "npm audit fix && npm --prefix ./app audit fix && npm --prefix ./client audit fix && npm --prefix ./examples/cv audit fix && npm --prefix ./operator audit fix && npm --prefix ./e2e audit fix",
-    "e2e": "npm --prefix ./e2e run test",
-    "e2e:open": "npm --prefix ./e2e run open"
+    "e2e": "npm --prefix ./app run build:e2e && npm --prefix ./e2e run test",
+    "e2e:open": "npm --prefix ./app run build:e2e && npm --prefix ./e2e run open"
   },
   "dependencies": {},
   "devDependencies": {},

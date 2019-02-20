@@ -1,5 +1,12 @@
 const v4Regexp = /[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}/i
 
+describe('Create account', () => {
+  it('Creates an account', () => {
+    cy.setConfig({ OPERATOR_URL: 'http://localhost:3000/api' })
+    cy.createAccount({ firstName: 'Johan', lastName: 'Öbrink' })
+  })
+})
+
 describe('Consent request for example/cv', () => {
   it('Loads auth page and displays consent request id', () => {
     cy

@@ -23,3 +23,21 @@
 //
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('setConfig', (config) => {
+  cy
+    .request({
+      url: 'http://localhost:1337/setConfig',
+      method: 'POST',
+      body: config
+    })
+})
+
+Cypress.Commands.add('createAccount', (data) => {
+  cy
+    .request({
+      url: 'http://localhost:1337/createAccount',
+      method: 'POST',
+      body: data
+    })
+})

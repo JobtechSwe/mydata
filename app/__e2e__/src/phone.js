@@ -4,9 +4,10 @@ import * as crypto from '../../services/crypto'
 import * as consents from '../../services/consents'
 import Config from 'react-native-config'
 
-export { Config }
-
-export async function createAccount (firstName = 'Förnamn', lastName = 'Efternamnsson') {
+export async function createAccount ({
+  firstName = 'Förnamn',
+  lastName = 'Efternamnsson'
+}) {
   const keys = await crypto.generateKeys()
   const pds = { provider: 'memory', access_token: 'nope' }
   const acc = {
@@ -29,4 +30,19 @@ export async function getConsentRequest (code) {
 
 export async function approveConsentRequest (request) {
   return consents.approve(request)
+}
+
+export async function setConfig (config) {
+  Object.entries(config).forEach(([key, val]) =>
+    Object.assign(Config, { [key]: val }))
+  return Config
+}
+
+export async function clearConfig () {
+  Object.entries(Config).forEach(([key]) => delete Config[key])
+  return Config
+}
+
+export async function getConfig () {
+  return Config
 }

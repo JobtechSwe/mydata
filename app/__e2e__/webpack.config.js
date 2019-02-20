@@ -3,7 +3,7 @@ const { resolve } = require('path')
 module.exports = {
   mode: 'production',
   target: 'node',
-  entry: resolve(__dirname, 'src/phone.js'),
+  entry: resolve(__dirname, 'src/server.js'),
   resolve: {
     alias: {
       'react-native': resolve(__dirname, 'src/native/react-native'),
