@@ -20,17 +20,17 @@ class ManageLoginsRequestScreen extends Screen {
   }
 
   // Actions
-  getLoginRequest = () => {
+  processLoginRequest = () => {
     this.setState({view: 'getRequest'})
   }
 
   render() {
     switch (this.state.view) {
       case 'getRequest':
-        return (<LoginRequest RequestId={this.state.code} onApprove={this.onApprove} />)
+        return (<LoginRequest loginRequestString={this.state.code} onApprove={this.onApprove} />)
       case 'enter':
       default:
-        return (<EnterLoginCode onCodeChange={this.onCodeChange} onEnterPress={this.getLoginRequest} />)
+        return (<EnterLoginCode onCodeChange={this.onCodeChange} onEnterPress={this.processLoginRequest} />)
     }
   }
 }

@@ -18,7 +18,12 @@ class EnterLoginCode extends Component {
   }
   validate = (code) => {
     // return rxUUID.test(code.toLowerCase())
-    // todo: writeme
+    // todo: write better validation
+    try {
+      JSON.parse(code)
+    } catch (e) {
+      return false
+    }
     return true
   }
 
@@ -50,7 +55,7 @@ class EnterLoginCode extends Component {
       default:
         return (
           <View style={{ marginHorizontal: 5, flex: 1 }}>
-            <TextInput label="login request" onChangeText={this.onChange} value={this.state.code} style={{ marginBottom: 5 }} />
+            <TextInput label="login request" onChangeText={this.onChange} value={this.state.code} style={{ marginBottom: 5 }} multiline={true} />
             <Button mode="contained" label="enter" onPress={this.enter} disabled={!this.state.validated} style={{ marginBottom: 5 }}>Enter</Button>
             <Button mode="contained" icon="camera" label="scan" onPress={this.scan} style={{ marginBottom: 5, backgroundColor: this.props.theme.colors.accent }}>Scan</Button>
           </View>

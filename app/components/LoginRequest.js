@@ -11,7 +11,7 @@ class LoginRequest extends Component {
   }
 
   async componentDidMount() {
-    const loginRequest = await loginService.parse(this.props.loginRequestId)
+    const loginRequest = await loginService.parse(this.props.loginRequestString)
     this.setState({ loginRequest, view: 'approve'})
   }
 
@@ -35,8 +35,8 @@ class LoginRequest extends Component {
       case 'approve':
         return (
           <View>
-            <Text style={{ marginBottom: 5 }}>Would you like to log in to this app:</Text>
-            <Headline style={{ marginBottom: 5 }}>{this.state.loginRequest.client.display_name}</Headline>
+            <Text style={{ marginBottom: 5 }}>Would you like to log in to:</Text>
+            <Headline style={{ marginBottom: 5 }}>{this.state.loginRequest.clientId}</Headline>
             <Button mode="contained" icon="check-circle" style={{ backgroundColor: this.props.theme.colors.accent, marginBottom: 5 }} onPress={this.approve}>Yes</Button>
             <Button mode="contained" icon="block" style={{ backgroundColor: this.props.theme.colors.error, marginBottom: 5 }} onPress={this.reject}>No</Button>
           </View>
