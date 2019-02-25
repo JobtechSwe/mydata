@@ -1,24 +1,32 @@
-apiVersion: image.openshift.io/v1
-kind: ImageStream
+apiVersion: v1
+kind: BuildConfig
 metadata:
-  name: operator
+  name: cv-test
 spec:
-  tags:
-    # Latest, for CI
-    - name: latest
-      referencePolicy:
-        type: Source
-    # Test
-    - name: test
-      referencePolicy:
-        type: Source
+  runPolicy: Serial
+  completionDeadlineSeconds: 1800
+  source:
+    git:
+      ref: v0.0.1
+      uri: https://github.com/jobtechswe/mydata
+    contextDir: examples/cv
+  strategy:
+    dockerStrategy: {}
+  output:
+    to:
+      kind: ImageStreamTag
+      name: cv:test
+  resources:
+    limits:
+      memory: 1Gi
 ---
 apiVersion: v1
 kind: BuildConfig
 metadata:
-  name: operator-ci
+  name: cv-ci
 spec:
   runPolicy: Serial
+  completionDeadlineSeconds: 1800
   triggers:
     -
       type: GitHub
@@ -29,34 +37,13 @@ spec:
     git:
       ref: master
       uri: https://github.com/jobtechswe/mydata
-    contextDir: operator
+    contextDir: examples/cv
   strategy:
     dockerStrategy: {}
   output:
     to:
       kind: ImageStreamTag
-      name: operator:latest
----
-apiVersion: v1
-kind: BuildConfig
-metadata:
-  name: operator-test
-spec:
-  runPolicy: Serial
-  triggers:
-    -
-      type: GitHub
-      github:
-        secretReference:
-          name: github-webhook-secret
-  source:
-    git:
-      ref: v0.0.1
-      uri: https://github.com/jobtechswe/mydata
-    contextDir: operator
-  strategy:
-    dockerStrategy: {}
-  output:
-    to:
-      kind: ImageStreamTag
-      name: operator:test
+      name: cv:latest
+  resources:
+    limits:
+      memory: 1Gi

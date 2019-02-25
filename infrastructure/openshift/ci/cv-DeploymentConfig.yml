@@ -3,12 +3,12 @@ kind: DeploymentConfig
 metadata:
   labels:
     app: CI
-  name: mydata-cv-ci
+  name: cv-ci
 spec:
   replicas: 1
   selector:
     app: CI
-    deploymentconfig: mydata-cv-ci
+    deploymentconfig: cv-ci
   strategy:
     activeDeadlineSeconds: 21600
     rollingParams:
@@ -22,7 +22,7 @@ spec:
     metadata:
       labels:
         app: CI
-        deploymentconfig: mydata-cv-ci
+        deploymentconfig: cv-ci
     spec:
       containers:
         - env:
@@ -40,7 +40,7 @@ spec:
           - name: NODE_ENV
             value: test
           - name: OPERATOR_URL
-            value: 'http://mydata-operator-ci.my-data.svc:3000'
+            value: 'http://operator-ci.my-data.svc:3000'
           - name: POSTGRES_USER
             value: postgresuser
           - name: POSTGRES_PASSWORD
@@ -52,18 +52,21 @@ spec:
           - name: REDIS
             value: 'redis://:fubar@redis-ci.my-data.svc:6379/'
           - name: CLIENT_ID
-            value: https://mydata-cv-ci.dev.services.jtech.se
+            value: https://cv-ci.dev.services.jtech.se
           - name: NO_UPDATE_NOTIFIER
             value: 'true'
           image: cv:latest
           imagePullPolicy: Always
-          name: mydata-cv-ci
+          name: cv-ci
           ports:
             - containerPort: 4000
               name: http
               protocol: TCP
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
+          resources:
+            limits:
+              memory: 400Mi
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
@@ -73,47 +76,8 @@ spec:
     - imageChangeParams:
         automatic: true
         containerNames:
-          - mydata-cv-ci
+          - cv-ci
         from:
           kind: ImageStreamTag
           name: 'cv:latest'
       type: ImageChange
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: CI
-  name: mydata-cv-ci
-spec:
-  ports:
-    - name: http
-      port: 4000
-      protocol: TCP
-      targetPort: 4000
-  selector:
-    app: CI
-    deploymentconfig: mydata-cv-ci
-  type: ClusterIP
----
-apiVersion: route.openshift.io/v1
-kind: Route
-metadata:
-  labels:
-    app: CI
-  name: mydata-cv-ci
-spec:
-  host: mydata-cv-ci.dev.services.jtech.se
-  port:
-    targetPort: http
-  to:
-    kind: Service
-    name: mydata-cv-ci
-    weight: 100
-  wildcardPolicy: None
-  tls:
-    valueFrom:
-      secretKeyRef:
-        key: jtech.se.crt
-        name: tls
-    termination: edge
