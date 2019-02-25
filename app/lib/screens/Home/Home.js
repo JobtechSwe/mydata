@@ -4,6 +4,10 @@ import JSONTree from 'react-native-json-tree'
 import Screen from '../Screen'
 import styled from 'styled-components'
 import { getAccount, storeAccount } from '../../services/storage'
+import { Input } from '../../components/elements/Input/Input';
+import { PrimaryButton } from '../../components/elements/Button/Button';
+import { H1, Paragraph } from '../../components/typography/Typography';
+import { Wrap } from '../../components/View/Wrapper'
 
 const WelcomeText = styled(Text)`
   font-size: 20px;
@@ -21,13 +25,6 @@ const ConsentText = styled(Text)`
   text-align: center;
   color: #333;
   margin-bottom: 6px;
-`
-
-const StyledView = styled(View)`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  background-color: #F5FCFF;
 `
 
 export default class HomeScreen extends Screen {
@@ -94,15 +91,20 @@ export default class HomeScreen extends Screen {
   render() {
     const { navigate } = this.props.navigation;
     return (
-      <StyledView>
+      <Wrap>
+        <H1>MyData</H1>
+        <Input placeholder="Förnamn" />
+        <Input placeholder="Efternam" />
+        <PrimaryButton>Registrera</PrimaryButton>
+        <Paragraph>Du kommer nu att kunna vara i full kontroll över din data och över vilka som använder den</Paragraph>
         <WelcomeText>Hello {this.state.account?.firstName} {this.state.account?.lastName}!</WelcomeText>
         <Button title="Edit Account" onPress={this.editAccount}>Edit account</Button>
         <Button title="Manage Consents Request" onPress={this.manageConsentsRequest}>Manage Consents Request</Button>
         <Button title="Clear Account" onPress={this.clearAccount}>Clear account</Button>
-        <ScrollView>
+                <ScrollView>
           <JSONTree data={this.state.account || {}} />
         </ScrollView>
-      </StyledView>
+      </Wrap>
     );
   }
 }

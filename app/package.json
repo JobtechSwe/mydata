@@ -62,5 +62,8 @@
     "react-native-testing-library": "^1.5.0",
     "react-test-renderer": "^16.7.0",
     "uuid": "^3.3.2"
+  },
+  "rnpm": {
+    "assets": ["./assets/fonts/"]
   }
 }

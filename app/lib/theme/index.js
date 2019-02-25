@@ -13,9 +13,16 @@ const fontSize = {
   large: '48px'
 }
 
+const typography = {
+  contrast: 'Rubik-Medium',
+  regular: 'Karla-Regular',
+  bold: 'Karla-Bold'
+}
+
 const theme = {
   colors,
-  fontSize
+  fontSize,
+  typography
 }
 
 export {
