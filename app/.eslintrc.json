@@ -1,5 +1,11 @@
 {
   "parser": "babel-eslint",
+  "settings": {
+  "react": {
+    "createClass": "createReactClass",
+    "pragma": "React",
+    "version": "detect",
+  },
   "extends": ["standard", "plugin:jest/recommended", "eslint:recommended", "plugin:react/recommended"],
   "plugins": ["jest"],
   "rules": {
