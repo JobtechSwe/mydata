@@ -7,5 +7,5 @@ git push origin "$TAG"
 oc patch buildconfig cv-test -p '{"spec": {"source": {"git": {"ref": "'$TAG'"}}}}'
 oc patch buildconfig operator-test -p '{"spec": {"source": {"git": {"ref": "'$TAG'"}}}}'
 
-oc start-build cv-test -n my-data
-oc start-build operator-test -n my-data
+oc start-build cv-test -n mydata
+oc start-build operator-test -n mydata
