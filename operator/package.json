@@ -3,14 +3,15 @@
   "version": "0.0.0",
   "description": "Backend for managing consents and data flow",
   "scripts": {
-    "start": "node-pg-migrate up && node ./lib/server.js",
+    "start": "node ./lib/server.js",
     "dev": "npm run migrate up && NODE_ENV=development nodemon --inspect ./lib/server.js",
     "test": "jest -c jest.config.js",
     "test:watch": "jest -c jest.config.js --watchAll",
     "integration": "jest -c jest.integration.config.js",
     "integration:watch": "jest -c jest.integration.config.js --watchAll",
     "lint": "eslint '**/*.js'",
-    "migrate": "DATABASE_URL=postgres://postgresuser:postgrespassword@localhost:5432/mydata node-pg-migrate"
+    "migrate": "DATABASE_URL=postgres://postgresuser:postgrespassword@localhost:5432/mydata node-pg-migrate",
+    "migrate:e2e": "node-pg-migrate"
   },
   "contributors": [
     "Adam Näslund <adam.naslund@iteam.se>",

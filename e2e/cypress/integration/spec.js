@@ -4,11 +4,12 @@ describe('Create account', () => {
   it('Creates an account', () => {
     cy
       .setConfig({ OPERATOR_URL: 'http://localhost:3000/api' })
-      .then(config => console.log(config))
 
     cy
       .createAccount({ firstName: 'Johan', lastName: 'Öbrink' })
-      .then(account => console.log(account))
+      .then(account => {
+        expect(account.id).to.match(v4Regexp)
+      })
   })
 })
 

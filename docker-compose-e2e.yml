@@ -1,0 +1,58 @@
+version: '3'
+services:
+  redis-operator-e2e:
+    image: redis:4.0-alpine
+    ports:
+      - 6381:6379
+    environment:
+      - REDIS_PASSWORD=fubar
+    command: sh -c 'redis-server --requirepass $${REDIS_PASSWORD}'
+
+  postgres-operator-e2e:
+    image: postgres:11-alpine
+    ports:
+      - 5434:5432
+    environment:
+      - POSTGRES_USER=postgresuser
+      - POSTGRES_PASSWORD=postgrespassword
+      - POSTGRES_DB=mydata
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgresuser -d mydata"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  operator-e2e:
+    image: node:11-alpine
+    volumes:
+      - ./operator:/app
+    ports:
+      - 3001:3000
+    environment:
+      - PGPORT=5434
+      - PORT=3001
+      - REDIS=redis://:fubar@localhost:6381/
+    command: npm --prefix ./app start
+
+  redis-cv-e2e:
+    image: redis:4.0-alpine
+    ports:
+      - 6382:6379
+    environment:
+      - REDIS_PASSWORD=fubar
+    command: sh -c 'redis-server --requirepass $${REDIS_PASSWORD}'
+
+  postgres-cv-e2e:
+    image: postgres:11-alpine
+    ports:
+      - 5435:5432
+    environment:
+      - POSTGRES_USER=postgresuser
+      - POSTGRES_PASSWORD=postgrespassword
+      - POSTGRES_DB=cv
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgresuser -d cv"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
