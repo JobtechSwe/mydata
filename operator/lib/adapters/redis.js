@@ -32,5 +32,8 @@ module.exports = {
   getJson: async (key) => {
     const str = await redis.get(key)
     return str ? JSON.parse(str) : str
+  },
+  status: () => {
+    return redis.status
   }
 }
