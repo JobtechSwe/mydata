@@ -6,6 +6,7 @@ const colors = {
   quiet: '#F9F9FB',
   shadow: '#B1ACEC',
   white: '#FFFFFF',
+  lightGrey: '#EAEAF1',
 }
 
 const fontSize = {

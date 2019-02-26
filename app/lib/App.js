@@ -15,9 +15,12 @@ const getTabBarIcon = (navigation, active) => {
 const AppContainer = createBottomTabNavigator(
   {
     Home: { screen: Home },
-    ConsentRequest: { screen: ConsentRequest,   navigationOptions: () => ({
-      tabBarIcon: <QRIcon />,     
-    }) },
+    'QR-code': { 
+      screen: ConsentRequest,
+      navigationOptions: () => ({
+        tabBarIcon: <QRIcon />,     
+      }), 
+    },
     Account: { screen: Account },
   },
   {
@@ -27,7 +30,11 @@ const AppContainer = createBottomTabNavigator(
     }),
     tabBarOptions: {
       showIcon: true,
-      showLabel: false,
+      showLabel: true,
+      tabStyle: { marginTop: 12, height: '100%' },
+      labelStyle: { fontFamily: 'Karla-Bold', fontSize: 12, marginTop: 4 },
+      inactiveTintColor: myDataTheme.colors.lightGrey,
+      activeTintColor: myDataTheme.colors.primary,
     },
   }
 )
