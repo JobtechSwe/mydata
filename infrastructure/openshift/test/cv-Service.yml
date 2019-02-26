@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: TEST
+  name: cv-test
+spec:
+  ports:
+    - name: http
+      port: 4000
+      protocol: TCP
+      targetPort: 4000
+  selector:
+    app: TEST
+    deploymentconfig: cv-test
+  type: ClusterIP

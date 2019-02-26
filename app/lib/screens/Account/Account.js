@@ -27,12 +27,12 @@ export default class AccountScreen extends Screen {
     firstName: 'First name',
     lastName: 'Last name',
     create: 'Create',
-    update: 'Update'
+    update: 'Update',
   }
 
   state = {
     account: {},
-    action: 'create'
+    action: 'create',
   }
 
   async componentWillFocus() {
@@ -40,7 +40,7 @@ export default class AccountScreen extends Screen {
     this.setState({
       ...this.state,
       account,
-      action: account ? 'update' : 'create'
+      action: account ? 'update' : 'create',
     })
   }
 
@@ -49,7 +49,7 @@ export default class AccountScreen extends Screen {
       account = await save(account)
     }
     await storeAccount(account)
-    this.setState({account})
+    this.setState({ account })
 
     switch(this.state.action) {
       case 'create':
@@ -67,7 +67,7 @@ export default class AccountScreen extends Screen {
   }
 
   onGenerateKeys = (keys) => {
-    this.saveAccount({ ...this.state.account, keys})
+    this.saveAccount({ ...this.state.account, keys })
   }
 
   onDropboxConnect = (pds) => {

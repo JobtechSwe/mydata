@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import {
-  AppRegistry
+  AppRegistry,
 } from 'react-native'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 
 export default class ScanQRConsentCode extends Component {
   state = {
-    code: ''
+    code: '',
   }
 
   render() {

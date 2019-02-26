@@ -68,3 +68,4 @@ typings/
 
 # OSX
 .DS_Store
+cypress/screenshots/

@@ -8,12 +8,12 @@ import { withTheme } from 'react-native-paper'
 class ManageConsentsRequestScreen extends Screen {
   state = {
     view: 'enter',
-    code: ''
+    code: '',
   }
 
   // Events
   onCodeChange = (code) => {
-    this.setState({code})
+    this.setState({ code })
   }
   onApprove = () => {
     this.props.navigation.goBack()
@@ -21,7 +21,7 @@ class ManageConsentsRequestScreen extends Screen {
 
   // Actions
   getConsentRequest = () => {
-    this.setState({view: 'getRequest'})
+    this.setState({ view: 'getRequest' })
   }
 
   render() {

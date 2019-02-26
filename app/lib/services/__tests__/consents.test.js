@@ -20,8 +20,8 @@ describe.skip('consentService', () => {
       id: 'c1949de3-6662-43c9-8cc1-578169ea817b',
       keys: {
         publicKey: keys.public,
-        privateKey: keys.private
-      }
+        privateKey: keys.private,
+      },
     }
     getAccount.mockResolvedValue(account)
     consentRequest = {
@@ -32,22 +32,22 @@ describe.skip('consentService', () => {
             area: 'cv',
             description: 'A list of your work experiences, educations, language proficiencies and so on that you have entered in the service.',
             permissions: [
-              'write'
+              'write',
             ],
             purpose: 'In order to create a CV using our website.',
             lawfulBasis: 'CONSENT',
-            required: true
-          }
+            required: true,
+          },
         ],
         expiry: 1550146999,
         clientId: 'http://localhost:4000',
-        kid: 'enc_20190114122318'
+        kid: 'enc_20190114122318',
       },
       signature: {
         kid: 'http://localhost:4000/jwks/client_key',
         alg: 'RSA-SHA512',
         data: 'rgch6Go3B56tB4UGLJiQAMKofRRmQdoSMp1teXp3Zj8V/ueyxmxbLywbjxuMTT63hfR/0Ueb+YUo60ygeQtL9l1SaT7gZjY56Ft3WASVD5pEVFw863oCr9DqIpm2jMdlUeIT1lZLJ7R1tfETLvy+vk1blaDDswfq46lFYC6OqRA=',
-        key: '-----BEGIN RSA PUBLIC KEY-----\nMIGJAoGBAMcq3gQT5ZpoDr73G5HrQpsvuB+fsgQqdKtfIM5kJLB7mmoOUwxoD+bG\nIrvC+bIHBmtQE+SudYjLtYOjEX3HnoPw2oE7+zNhIlRFOBB2aGlMozWzssJqqfhA\nvDdkZGeS8SfJjo1VjozxA+iQVjjMmU2+Wnw1Z0cY1p3+OZchkqOnAgMBAAE=\n-----END RSA PUBLIC KEY-----\n'
+        key: '-----BEGIN RSA PUBLIC KEY-----\nMIGJAoGBAMcq3gQT5ZpoDr73G5HrQpsvuB+fsgQqdKtfIM5kJLB7mmoOUwxoD+bG\nIrvC+bIHBmtQE+SudYjLtYOjEX3HnoPw2oE7+zNhIlRFOBB2aGlMozWzssJqqfhA\nvDdkZGeS8SfJjo1VjozxA+iQVjjMmU2+Wnw1Z0cY1p3+OZchkqOnAgMBAAE=\n-----END RSA PUBLIC KEY-----\n',
       },
       client: {
         clientId: 'localhost:4000',
@@ -55,8 +55,8 @@ describe.skip('consentService', () => {
         displayName: 'My CV',
         description: 'An app for your CV online',
         jwksUrl: '/jwks',
-        eventsUrl: '/events'
-      }
+        eventsUrl: '/events',
+      },
     }
     jwks = {
       keys: [
@@ -66,7 +66,7 @@ describe.skip('consentService', () => {
           alg: 'RS256',
           kty: 'RSA',
           n: 'AMcq3gQT5ZpoDr73G5HrQpsvuB+fsgQqdKtfIM5kJLB7mmoOUwxoD+bGIrvC+bIHBmtQE+SudYjLtYOjEX3HnoPw2oE7+zNhIlRFOBB2aGlMozWzssJqqfhAvDdkZGeS8SfJjo1VjozxA+iQVjjMmU2+Wnw1Z0cY1p3+OZchkqOn',
-          e: 'AQAB'
+          e: 'AQAB',
         },
         {
           kid: 'enc_20190114122318',
@@ -74,9 +74,9 @@ describe.skip('consentService', () => {
           alg: 'RS256',
           kty: 'RSA',
           n: 'AJ0/N5+0PHuaeHppV8coDss06ps73KpqU8G9X0JpYPwfNl3YZyOH/aDCF/hud9F4Fso+DnSzlSHKHVS+7wY3xgwvE9wdLVjHJSC7Lkehw1WMhpYP9D8mShmFWaXJywulL3H01EEGywLN9yZuWbjJ5agedmbxDOJY0cK3OfZHEMFURQ203gTN1U5ZawBykWR7MbwxUf1r78bfk3yagiIo98N1SjWECe1Iecjy1L6nM8z79NrQEUSqc5ROLAAey+M313aHNAHo8tFGkLtaUg+oGljW2JeGLhNuayZ3XAZhCG2sIjkWzf0O5N3ZfhNba9Fdw8yVpyeXzPjH1ZCicthVI7s=',
-          e: 'AQAB'
-        }
-      ]
+          e: 'AQAB',
+        },
+      ],
     }
     axios.get.mockImplementation((url) => {
       if (/\/consents\/requests\//.test(url)) {
@@ -110,9 +110,9 @@ describe.skip('consentService', () => {
       expect(result).toEqual({
         data: {
           ...consentRequest.data,
-          consentRequestId: 'abcd'
+          consentRequestId: 'abcd',
         },
-        client: consentRequest.client
+        client: consentRequest.client,
       })
     })
   })
@@ -139,13 +139,13 @@ describe.skip('consentService', () => {
           consentRequestId: 'abcd',
           consentEncryptionKey: Base64.encode(clientEncryptionKey),
           consentEncryptionKeyId: 'enc_20190114122318',
-          scope: consentRequest.data.scope
+          scope: consentRequest.data.scope,
         },
         signature: {
           alg: 'RSA-SHA512',
           kid: 'account_key',
-          data: expect.any(String)
-        }
+          data: expect.any(String),
+        },
       })
     })
   })

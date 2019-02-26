@@ -11,7 +11,7 @@ describe('services/crypto', () => {
     let data
     beforeEach(() => {
       data = {
-        foo: 'bar'
+        foo: 'bar',
       }
     })
 
@@ -20,7 +20,7 @@ describe('services/crypto', () => {
       const expectedResult = {
         alg: 'RSA-SHA512',
         kid: 'account_key',
-        data: await RSA.sign(JSON.stringify(data), keys.private)
+        data: await RSA.sign(JSON.stringify(data), keys.private),
       }
 
       expect(result).toEqual(expectedResult)

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Alert, Button, Text, View, Linking, Platform, ScrollView } from 'react-native'
+import { Alert, Button, Text, View, Linking, ScrollView } from 'react-native'
 import JSONTree from 'react-native-json-tree'
 import Screen from '../Screen'
 import styled from 'styled-components'
@@ -15,12 +15,6 @@ const WelcomeText = styled(Text)`
   margin: 10px;
 `
 
-const InstructionText = styled(Text)`
-  text-align: center;
-  color: #333;
-  margin-bottom: 6px;
-`
-
 const ConsentText = styled(Text)`
   text-align: center;
   color: #333;
@@ -29,22 +23,22 @@ const ConsentText = styled(Text)`
 
 export default class HomeScreen extends Screen {
   state = {
-    account: {}
+    account: {},
   }
 
   componentDidMount() {
-    Linking.addEventListener('url', this.handleOpenURL);
+    Linking.addEventListener('url', this.handleOpenURL)
   }
   componentWillUnmount() {
     Linking.removeEventListener('url', this.handleOpenURL)
   }
 
   handleOpenURL = (event) => {
-    this.navigate(event.url);
+    this.navigate(event.url)
   }
 
   navigate = (url) => {
-    const { navigate } = this.props.navigation;
+    const { navigate } = this.props.navigation
     if (/mydata:\/\/callback/.test(url)) {
       navigate('Account')
     }
@@ -70,7 +64,7 @@ export default class HomeScreen extends Screen {
   clearAccount = async () => {
     Alert.alert('Clear account', 'Are you sure you want to clear your account? This is a REALLY bad idea!', [
       { text: 'Cancel', onPress: () => {}, style: 'cancel' },
-      { text: 'OK', onPress: () => this.doClearAccount() }
+      { text: 'OK', onPress: () => this.doClearAccount() },
     ])
   }
 
@@ -84,12 +78,11 @@ export default class HomeScreen extends Screen {
   readAccountFromStorage = async () => {
     const account = await getAccount()
     this.setState({
-      account
+      account,
     })
   }
 
   render() {
-    const { navigate } = this.props.navigation;
     return (
       <Wrap>
         <H1>MyData</H1>
@@ -101,7 +94,7 @@ export default class HomeScreen extends Screen {
         <Button title="Edit Account" onPress={this.editAccount}>Edit account</Button>
         <Button title="Manage Consents Request" onPress={this.manageConsentsRequest}>Manage Consents Request</Button>
         <Button title="Clear Account" onPress={this.clearAccount}>Clear account</Button>
-                <ScrollView>
+        <ScrollView>
           <JSONTree data={this.state.account || {}} />
         </ScrollView>
       </Wrap>

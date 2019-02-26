@@ -1,6 +1,5 @@
 import { Linking } from 'react-native'
 import Config from 'react-native-config'
-import { getAccount, storeAccount } from './storage'
 import EventEmitter from 'eventemitter3'
 
 function processQueryString(qs) {
@@ -30,7 +29,7 @@ class DropboxConnector extends EventEmitter {
   async handleUrl(event) {
     Linking.removeEventListener('url', this.handleUrl)
 
-    const [, queryString] = event.url.match(/\#(.*)/)
+    const [, queryString] = event.url.match(/#(.*)/)
     const dropbox = processQueryString(queryString)
 
     this.emit('connect', dropbox)
