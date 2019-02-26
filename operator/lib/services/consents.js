@@ -169,16 +169,6 @@ async function create (body) {
   }
 }
 
-async function get (id) {
-  const result = await query('SELECT * FROM consents WHERE id=$1', [id])
-
-  if (!result || !result.rows || !result.rows.length) {
-    throw new Error('No consent found')
-  }
-
-  return camelCase(result.rows[0])
-}
-
 async function list (consentId, domain, area) {
   let sql = `
     SELECT
@@ -220,6 +210,5 @@ module.exports = {
   createRequest,
   getRequest,
   create,
-  get,
   list
 }
