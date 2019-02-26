@@ -5,28 +5,28 @@ const colors = {
   primary: '#241C7D',
   quiet: '#F9F9FB',
   shadow: '#B1ACEC',
-  white: '#FFFFFF'
+  white: '#FFFFFF',
 }
 
 const fontSize = {
   regular: '18px',
-  large: '48px'
+  large: '48px',
 }
 
 const typography = {
   contrast: 'Rubik-Medium',
   regular: 'Karla-Regular',
-  bold: 'Karla-Bold'
+  bold: 'Karla-Bold',
 }
 
 const theme = {
   colors,
   fontSize,
-  typography
+  typography,
 }
 
 export {
   theme,
   styled as default,
-  ThemeProvider
+  ThemeProvider,
 }
