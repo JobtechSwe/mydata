@@ -1,17 +1,13 @@
 version: '3'
 services:
-  redis-operator-e2e:
+  operator-redis-e2e:
     image: redis:4.0-alpine
-    ports:
-      - 6381:6379
     environment:
       - REDIS_PASSWORD=fubar
     command: sh -c 'redis-server --requirepass $${REDIS_PASSWORD}'
 
-  postgres-operator-e2e:
+  operator-postgres-e2e:
     image: postgres:11-alpine
-    ports:
-      - 5434:5432
     environment:
       - POSTGRES_USER=postgresuser
       - POSTGRES_PASSWORD=postgrespassword
@@ -26,26 +22,25 @@ services:
     image: node:11-alpine
     volumes:
       - ./operator:/app
-    ports:
-      - 3001:3000
     environment:
-      - PGPORT=5434
-      - PORT=3001
-      - REDIS=redis://:fubar@localhost:6381/
-    command: npm --prefix ./app start
+      - PGHOST=operator-postgres-e2e
+      - REDIS=redis://:fubar@operator-redis-e2e:6379/
+      - DATABASE_URL=postgres://postgresuser:postgrespassword@operator-postgres-e2e:5432/mydata
+      - NODE_ENV=development
+    depends_on:
+     - operator-postgres-e2e
+     - operator-redis-e2e
+    working_dir: /app
+    command: sh -c 'npm run migrate up && npm start'
 
-  redis-cv-e2e:
+  cv-redis-e2e:
     image: redis:4.0-alpine
-    ports:
-      - 6382:6379
     environment:
       - REDIS_PASSWORD=fubar
     command: sh -c 'redis-server --requirepass $${REDIS_PASSWORD}'
 
-  postgres-cv-e2e:
+  cv-postgres-e2e:
     image: postgres:11-alpine
-    ports:
-      - 5435:5432
     environment:
       - POSTGRES_USER=postgresuser
       - POSTGRES_PASSWORD=postgrespassword
@@ -56,3 +51,37 @@ services:
       timeout: 5s
       retries: 5
 
+  cv-e2e:
+    image: node:11-alpine
+    volumes:
+      - ./examples/cv:/app
+    ports:
+      - 4001:4000
+    environment:
+      - PGHOST=cv-postgres-e2e
+      - DATABASE_URL=postgres://postgresuser:postgrespassword@cv-postgres-e2e:5432/cv
+      - REDIS=redis://:fubar@cv-redis-e2e:6379/
+      - NODE_ENV=development
+      - CLIENT_ID=http://cv-e2e:4000
+      - OPERATOR_URL=http://operator-e2e:3000
+      - PUBLIC_KEY="-----BEGIN RSA PUBLIC KEY-----\nMIGJAoGBAMcq3gQT5ZpoDr73G5HrQpsvuB+fsgQqdKtfIM5kJLB7mmoOUwxoD+bG\nIrvC+bIHBmtQE+SudYjLtYOjEX3HnoPw2oE7+zNhIlRFOBB2aGlMozWzssJqqfhA\nvDdkZGeS8SfJjo1VjozxA+iQVjjMmU2+Wnw1Z0cY1p3+OZchkqOnAgMBAAE=\n-----END RSA PUBLIC KEY-----\n"
+      - PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----\nMIICXAIBAAKBgQDHKt4EE+WaaA6+9xuR60KbL7gfn7IEKnSrXyDOZCSwe5pqDlMM\naA/mxiK7wvmyBwZrUBPkrnWIy7WDoxF9x56D8NqBO/szYSJURTgQdmhpTKM1s7LC\naqn4QLw3ZGRnkvEnyY6NVY6M8QPokFY4zJlNvlp8NWdHGNad/jmXIZKjpwIDAQAB\nAoGAZSKYcJul6N1UN5aFcnhzbxgxOCXAoKrqaac5onRpyRBK3fX+J/ujr30HYC7m\n2ocEtHOKVoJcfqVqu7iPhj5aeCD9iKl9vtspMF3El4PDsq4i3R7pM+gajOWk6vhV\nooFtXD/EwbscwmcVwxS19JHE1q/QDNKuPOMcAmjzYmIfVeECQQD4AZ9otmTcPUoI\nMO+RZztC2V+HqV+W7lL6b7S1sfUJmWj/nqdWEeNrSMGqPd59j0Li2dsssd1RNuSR\nGsiOBLcxAkEAzZZCfVEgoz/E+aBK3rfZ5A1l8IpCs1/pfZQxSSSo5jFWwvmt83+K\n/ez7oeCeQFndSCVt2ZVsWqb3eX3UjqoCVwJABgwUFPuNjgk4iuaWkNcRjNm8CJTK\nreV1xIGAyIVkUi2Zb9Iwhlq9TtphToNfr3QUz288duSHXvmVrSwYA859oQJBAKsr\n3nREpe4GXFSTF4NUhECSvzuFgn+i7d83Ecoakd4HWnvAMws4OFuvgtuHD3v41nsJ\nXur4tFzOA+LN17po5sUCQFJbubbpJDp70dyJ8XlJTbXvFMJtTbs3dy8n5dmzXwCa\nU1/LgYCwvPycA5NAPzE42fHWjbZkNvRamMQRlBX8Nl0=\n-----END RSA PRIVATE KEY-----\n"
+      - APM_SERVER=''
+    working_dir: /app
+    depends_on:
+     - operator-postgres-e2e
+     - operator-redis-e2e
+    command: sh -c 'npm run migrate up && npm start'
+
+  app-e2e:
+    image: node:11-alpine
+    volumes:
+      - ./app:/app
+    working_dir: /app
+    ports:
+      - 1337:1337
+    depends_on:
+      - operator-e2e
+    environment:
+      - OPERATOR_URL=http://operator-e2e:3000/api
+    command: npm run e2e:server

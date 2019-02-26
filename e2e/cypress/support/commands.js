@@ -29,7 +29,9 @@ function callMethod (method, args) {
     .request({
       url: `http://localhost:1337/${method}`,
       method: 'POST',
-      body: args
+      body: {
+        args
+      }
     })
     .then(res => res.body)
 }
@@ -48,6 +50,10 @@ Cypress.Commands.add('clearConfig', () => {
 
 Cypress.Commands.add('createAccount', (args) => {
   return callMethod('createAccount', args)
+})
+
+Cypress.Commands.add('clearAccount', (args) => {
+  return callMethod('clearAccount', args)
 })
 
 Cypress.Commands.add('getConsentRequest', (args) => {

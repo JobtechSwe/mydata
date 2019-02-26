@@ -10,8 +10,7 @@
     "integration": "jest -c jest.integration.config.js",
     "integration:watch": "jest -c jest.integration.config.js --watchAll",
     "lint": "eslint '**/*.js'",
-    "migrate": "DATABASE_URL=postgres://postgresuser:postgrespassword@localhost:5432/mydata node-pg-migrate",
-    "migrate:e2e": "node-pg-migrate"
+    "migrate": "node-pg-migrate"
   },
   "contributors": [
     "Adam Näslund <adam.naslund@iteam.se>",

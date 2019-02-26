@@ -17,6 +17,9 @@ OPERATOR_URL=http://192.168.1.42:3000
 APM_SERVER=http://localhost:8200
 # APM_TOKEN is optional, defaults to ''
 APM_TOKEN=abc
+
+# Db url for migrations in npm script
+DATABASE_URL=postgres://postgresuser:postgrespassword@localhost:5433/cv
 ```
 
 - `CLIENT_ID` is the URL where the phone app can reach this service (with protocol, http/https).

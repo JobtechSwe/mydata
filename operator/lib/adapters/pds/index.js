@@ -5,9 +5,19 @@ const providers = {
   memory: require('./memory')
 }
 
+function getMethods (lib) {
+  // Check if lib seems to be an object with enumerable properties
+  if (Object.keys(lib).length > 1) {
+    return Object.keys(lib)
+  }
+
+  // Lib seems to be a class
+  const proto = Object.getPrototypeOf(lib)
+  return Object.getOwnPropertyNames(proto)
+}
+
 function promiseFs (lib) {
-  const fs = Object
-    .keys(lib)
+  const fs = getMethods(lib)
     .filter(prop => typeof lib[prop] === 'function')
     .reduce((newLib, funcName) => Object.assign(newLib, { [funcName]: promisify(lib[funcName].bind(lib)) }), {})
 
