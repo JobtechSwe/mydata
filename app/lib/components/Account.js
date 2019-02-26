@@ -1,33 +1,35 @@
 import React, { Component } from 'react'
+import { Input } from './elements/Input/Input'
+import { PrimaryButton } from './elements/Button/Button'
 import { View } from 'react-native'
-import { TextInput, Button } from 'react-native-paper'
 
 export default class Account extends Component {
-
   constructor(props) {
     super(props)
     this.state = props.account || {}
   }
 
-  render () {
+  render() {
     return (
       <View>
-        <TextInput
+        <Input
           label={this.props.firstName}
-          onChangeText={(text) => this.setState({ firstName: text })}
+          placeholder={this.props.firstName}
+          onChangeText={text => this.setState({ firstName: text })}
           value={this.state.firstName}
         />
-        <TextInput
+        <Input
           label={this.props.lastName}
-          onChangeText={(text) => this.setState({ lastName: text })}
+          placeholder={this.props.lastName}
+          onChangeText={text => this.setState({ lastName: text })}
           value={this.state.lastName}
         />
-        <Button
+        <PrimaryButton
           title={this.props.button}
           onPress={() => this.props.onSubmit(this.state)}
         >
           {this.props.button}
-        </Button>
+        </PrimaryButton>
       </View>
     )
   }

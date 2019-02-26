@@ -1,35 +1,40 @@
 import React from 'react'
-import { View } from 'react-native'
-import { createStackNavigator } from 'react-navigation'
+import { Image, View } from 'react-native'
+import { createAppContainer, createBottomTabNavigator } from 'react-navigation'
 import Home from './screens/Home/Home'
 import Account from './screens/Account/Account'
 import ConsentRequest from './screens/ConsentRequest/ConsentRequest'
 import { ThemeProvider, theme as myDataTheme } from './theme'
-import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper'
+import { NavbarIcon } from './components/elements/Icon/Icon'
 
-const theme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
+const getTabBarIcon = (navigation, active) => {
+  const { routeName } = navigation.state
+
+  return <NavbarIcon name={routeName.toLowerCase()} active={active} />
+}
+
+const AppContainer = createBottomTabNavigator(
+  {
+    Home: { screen: Home },
+    ConsentRequest: { screen: ConsentRequest },
+    Account: { screen: Account },
   },
-}
-
-const stackConfig = {
-  initialRouteName: 'Home',
-}
-
-const AppStackNavigator = createStackNavigator({
-  Home: { screen: Home },
-  Account: { screen: Account },
-  ConsentRequest: { screen: ConsentRequest },
-}, stackConfig)
+  {
+    navigationOptions: ({ navigation }) => ({
+      tabBarIcon: ({ focused, _tintColor }) =>
+        getTabBarIcon(navigation, focused),
+    }),
+    tabBarOptions: {
+      showIcon: true,
+      showLabel: false,
+    },
+  }
+)
 
 const App = () => (
-    <PaperProvider theme={theme}>
-      <ThemeProvider theme={myDataTheme}>
-        <AppStackNavigator/>
-      </ThemeProvider>
-    </PaperProvider>
+  <ThemeProvider theme={myDataTheme}>
+    <AppContainer />
+  </ThemeProvider>
 )
 
 export default App

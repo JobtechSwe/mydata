@@ -28,7 +28,9 @@
     "react-native-push-notification": "^3.1.2",
     "react-native-qrcode-scanner": "^1.1.2",
     "react-native-rsa-native": "^1.0.24",
-    "react-native-vector-icons": "^6.2.0",
+    "react-native-svg": "^9.2.4",
+    "react-native-svg-uri": "^1.2.3",
+    "react-native-vector-icons": "^6.3.0",
     "react-navigation": "^2.18.3",
     "styled-components": "^3.4.10"
   },
@@ -47,6 +49,7 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
+    "babel-plugin-inline-import": "^3.0.0",
     "enzyme": "^3.8.0",
     "enzyme-adapter-react-16": "^1.8.0",
     "eslint": "^5.12.1",
@@ -61,11 +64,14 @@
     "metro-react-native-babel-preset": "^0.47.1",
     "react-dom": "^16.7.0",
     "react-native-dotenv": "^0.2.0",
+    "react-native-svg-transformer": "^0.12.1",
     "react-native-testing-library": "^1.5.0",
     "react-test-renderer": "^16.7.0",
     "uuid": "^3.3.2"
   },
   "rnpm": {
-    "assets": ["./assets/fonts/"]
+    "assets": [
+      "./assets/fonts/"
+    ]
   }
 }
