@@ -6,7 +6,7 @@ describe('storage', () => {
   beforeEach(() => {
     account = {
       firstName: 'Foo',
-      lastName: 'Bar'
+      lastName: 'Bar',
     }
   })
   describe('#getAccount', () => {

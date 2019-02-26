@@ -9,7 +9,7 @@ export default class KeyPair extends Component {
   state = {
     keys: {},
     icon: 'loading1',
-    status: ''
+    status: '',
   }
 
   componentDidMount() {
@@ -17,7 +17,7 @@ export default class KeyPair extends Component {
       this.setState({
         keys: this.props.keys,
         icon: 'key',
-        status: 'RSA key pair'
+        status: 'RSA key pair',
       })
     } else {
       this.generate()
@@ -30,7 +30,7 @@ export default class KeyPair extends Component {
     const keyPair = await RSA.generateKeys(4096)
     const keys = {
       publicKey: keyPair.public,
-      privateKey: keyPair.private
+      privateKey: keyPair.private,
     }
 
     this.setState({ keys, icon: 'key', status: 'RSA key pair' })

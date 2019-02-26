@@ -6,12 +6,12 @@ Enzyme.configure({ adapter: new Adapter() })
 jest.mock('AsyncStorage', () => ({
   setItem: jest.fn(),
   getItem: jest.fn(),
-  removeItem: jest.fn()
+  removeItem: jest.fn(),
 }))
 
 jest.mock('axios')
 jest.mock('react-native-config', () => ({
-  Config: {}
+  Config: {},
 }))
 
 jest.mock('react-native-vector-icons/AntDesign', () => jest.fn())
