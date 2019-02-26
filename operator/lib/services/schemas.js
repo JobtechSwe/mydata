@@ -27,13 +27,18 @@ const createAccount = Joi.object({
 }).required().unknown(true)
 
 // Clients
-const registerClient = () => Joi.object({
+const registerClient = Joi.object({
   clientId: Joi.string().uri({ scheme: allowedSchemes() }).required(),
   displayName: Joi.string().required(),
   description: Joi.string().required().min(10),
   eventsUrl: Joi.string().uri({ scheme: allowedSchemes() }).required(),
   jwksUrl: Joi.string().uri({ scheme: allowedSchemes() }).required()
 }).required()
+
+const getClientConsents = Joi.object({
+  accountId: Joi.string().guid().required(),
+  clientId: Joi.string().uri({ scheme: allowedSchemes() }).required()
+})
 
 // Consent
 const consentRequest = () => Joi.object({
@@ -105,6 +110,7 @@ module.exports = {
   createAccount,
 
   registerClient,
+  getClientConsents,
 
   consentRequest,
   consent,

@@ -206,9 +206,33 @@ async function list (consentId, domain, area) {
   })
 }
 
+async function get (accountId, clientId) {
+  // Only get from db and not redis since we only want approved consents
+  const sql = `
+  SELECT 
+    consent_id,
+    client_id,
+    processed
+  FROM 
+    consent_requests 
+  WHERE 
+    account_id = $1
+  AND 
+    client_id = $2`
+  const params = [accountId, clientId]
+
+  let result = await query(sql, params)
+  return result.rows.map(row => ({
+    consentId: row.consent_id,
+    clientId: row.client_id,
+    approvedAt: row.processed.getTime()
+  }))
+}
+
 module.exports = {
   createRequest,
   getRequest,
   create,
-  list
+  list,
+  get
 }
