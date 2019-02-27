@@ -31,7 +31,7 @@ class DropboxConnector extends EventEmitter {
 
     this.emit('connect', {
       ...processQueryString(queryString),
-      provider: 'dropbox'
+      provider: 'dropbox',
     })
   }
 }

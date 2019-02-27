@@ -9,11 +9,11 @@ export const AsyncStorage = {
   },
   clear: async () => {
     storage = {}
-  }
+  },
 }
 
 export const Linking = {
   addEventListener: () => { },
   removeEventListener: () => { },
-  openURL: () => { }
+  openURL: () => { },
 }

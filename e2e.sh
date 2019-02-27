@@ -9,8 +9,8 @@ echo 'Docker containers are up'
 
 # Wait
 # TODO: Create a while loop that checks app-server and cv health routes if ready
-echo 'waiting 20 s'
-sleep 20
+echo 'waiting 15 s'
+sleep 15
 
 # Run e2e tests
 echo 'running tests'

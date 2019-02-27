@@ -11,7 +11,7 @@ export async function createAccount ({ firstName, lastName }) {
     firstName,
     lastName,
     keys,
-    pds
+    pds,
   }
   const accountWithId = await account.save(acc)
   await storage.storeAccount(accountWithId)

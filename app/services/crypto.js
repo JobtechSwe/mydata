@@ -4,7 +4,7 @@ export async function generateKeys (modulusLength = 2048) {
   const keyPair = await RSA.generateKeys(modulusLength)
   return {
     publicKey: keyPair.public,
-    privateKey: keyPair.private
+    privateKey: keyPair.private,
   }
 }
 
@@ -12,7 +12,7 @@ export async function sign (data, kid, privateKey) {
   return {
     kid,
     alg: 'RSA-SHA512',
-    data: await RSA.sign(JSON.stringify(data), privateKey)
+    data: await RSA.sign(JSON.stringify(data), privateKey),
   }
 }
 

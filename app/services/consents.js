@@ -35,9 +35,9 @@ export async function get (id) {
     return {
       data: {
         ...data,
-        consentRequestId: id
+        consentRequestId: id,
       },
-      client
+      client,
     }
   } catch (error) {
     console.error(error)
@@ -59,7 +59,7 @@ export async function approve ({ data }) {
       consentRequestId: data.consentRequestId,
       consentEncryptionKey: Base64.encode(encryptionKey.publicKey || encryptionKey.rsaPublicKey),
       consentEncryptionKeyId: data.kid,
-      scope: data.scope
+      scope: data.scope,
     }
     const signature = await sign(consent, 'account_key', account.keys.privateKey)
     payload = { data: consent, signature }

@@ -20,6 +20,10 @@ APM_TOKEN=abc
 
 # Db url for migrations in npm script
 DATABASE_URL=postgres://postgresuser:postgrespassword@localhost:5433/cv
+
+# Client keys
+PUBLIC_KEY="-----BEGIN RSA PUBLIC KEY-----\nMIG ... AAE=\n-----END RSA PUBLIC KEY-----\n"
+PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----\nMIIC ... RlBX8Nl0=\n-----END RSA PRIVATE KEY-----\n"
 ```
 
 - `CLIENT_ID` is the URL where the phone app can reach this service (with protocol, http/https).

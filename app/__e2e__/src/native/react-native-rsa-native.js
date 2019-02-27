@@ -2,7 +2,7 @@ import {
   createSign,
   createVerify,
   generateKeyPair,
-  privateEncrypt
+  privateEncrypt,
 } from 'crypto'
 
 export const RSA = {
@@ -11,7 +11,7 @@ export const RSA = {
       generateKeyPair('rsa', {
         modulusLength,
         publicKeyEncoding: { type: 'pkcs1', format: 'pem' },
-        privateKeyEncoding: { type: 'pkcs1', format: 'pem' }
+        privateKeyEncoding: { type: 'pkcs1', format: 'pem' },
       }, (err, publicKey, privateKey) => {
         if (err) {
           reject(err)
@@ -31,5 +31,5 @@ export const RSA = {
   },
   encrypt: async (data, key) => {
     return Promise.resolve(privateEncrypt(key, Buffer.from(data)).toString('base64'))
-  }
+  },
 }

@@ -15,12 +15,12 @@ describe('account', () => {
       lastName: 'Bar',
       pds: {
         provider: 'dropbox',
-        access_token: 'abc'
+        access_token: 'abc',
       },
       keys: {
         publicKey: keys.public,
-        privateKey: keys.private
-      }
+        privateKey: keys.private,
+      },
     }
   })
 
@@ -44,14 +44,14 @@ describe('account', () => {
           accountKey: Buffer.from(account.keys.publicKey).toString('base64'),
           pds: {
             provider: 'dropbox',
-            access_token: account.pds.access_token
-          }
+            access_token: account.pds.access_token,
+          },
         },
         signature: {
           kid: 'account_key',
           alg: 'RSA-SHA512',
-          data: expect.any(String)
-        }
+          data: expect.any(String),
+        },
       }
       expect(axios.post).toHaveBeenCalledWith('aTotallyLegitOperatorUrl/accounts', expected)
     })
@@ -81,14 +81,14 @@ describe('account', () => {
           accountKey: Buffer.from(account.keys.publicKey).toString('base64'),
           pds: {
             provider: 'dropbox',
-            access_token: account.pds.access_token
-          }
+            access_token: account.pds.access_token,
+          },
         },
         signature: {
           alg: 'RSA-SHA512',
           kid: 'account_key',
-          data: expect.any(String)
-        }
+          data: expect.any(String),
+        },
       }
       expect(axios.put).toHaveBeenCalledWith('aTotallyLegitOperatorUrl/accounts/abc123', expected)
     })
@@ -110,14 +110,14 @@ describe('account', () => {
             accountKey: Buffer.from(account.keys.publicKey).toString('base64'),
             pds: {
               provider: 'dropbox',
-              access_token: account.pds.access_token
-            }
+              access_token: account.pds.access_token,
+            },
           },
           signature: {
             alg: 'RSA-SHA512',
             kid: 'account_key',
-            data: expect.any(String)
-          }
+            data: expect.any(String),
+          },
         }
         expect(axios.put).toHaveBeenCalledWith('aTotallyLegitOperatorUrl/accounts/abc123', expected)
       })
@@ -141,14 +141,14 @@ describe('account', () => {
             accountKey: Buffer.from(account.keys.publicKey).toString('base64'),
             pds: {
               provider: 'dropbox',
-              access_token: account.pds.access_token
-            }
+              access_token: account.pds.access_token,
+            },
           },
           signature: {
             alg: 'RSA-SHA512',
             kid: 'account_key',
-            data: expect.any(String)
-          }
+            data: expect.any(String),
+          },
         }
         expect(axios.post).toHaveBeenCalledWith('aTotallyLegitOperatorUrl/accounts', expected)
       })

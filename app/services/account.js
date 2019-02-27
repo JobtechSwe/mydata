@@ -9,7 +9,7 @@ async function pluckAndSign (account) {
 
   return {
     data,
-    signature
+    signature,
   }
 }
 
@@ -20,8 +20,8 @@ function pluck (account) {
     accountKey: Base64.encode(account.keys.publicKey),
     pds: {
       provider: account.pds.provider,
-      access_token: account.pds.access_token
-    }
+      access_token: account.pds.access_token,
+    },
   }
   return data
 }

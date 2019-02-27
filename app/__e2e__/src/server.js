@@ -2,7 +2,7 @@ import express, { json } from 'express'
 import * as phone from './phone'
 
 phone.setConfig({
-  OPERATOR_URL: process.env.OPERATOR_URL
+  OPERATOR_URL: process.env.OPERATOR_URL,
 })
 
 const app = express()
@@ -15,7 +15,7 @@ app.post('/:method', async ({ body = {}, params: { method } }, res, next) => {
     next(err)
   }
 })
-app.use((error, req, res, next) => {
+app.use((error, req, res, _) => {
   const { status, message, stack } = error
   console.error(error)
   res.status(status || 500).send({ message, stack })
@@ -23,5 +23,5 @@ app.use((error, req, res, next) => {
 
 const port = process.env.PORT || 1337
 app.listen(port, () => {
-  console.log(`Listening on port ${port}`)
+  console.info(`Listening on port ${port}`)
 })
