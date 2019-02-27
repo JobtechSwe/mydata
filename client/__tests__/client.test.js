@@ -1,5 +1,5 @@
 const createClient = require('../lib/client')
-const MemoryKeyValueStore = require('../lib/memoryKeyValueStore')
+const { createMemoryStore } = require('../lib/memoryStore')
 const axios = require('axios')
 const { generateKeyPair, verifySignature } = require('./_helpers')
 jest.mock('axios')
@@ -17,7 +17,7 @@ describe('client', () => {
       jwksPath: '/jwks',
       eventsPath: '/events',
       clientKeys: clientKeys,
-      keyValueStore: new MemoryKeyValueStore(),
+      keyValueStore: createMemoryStore(),
       keyOptions: { modulusLength: 1024 }
     }
   })
