@@ -1,26 +1,26 @@
-# mydata-operator-client
+# mydata-client
 
 Client library for mydata operator
 
 ## Install
 
-`npm install @mydata/operator-client`
+`npm install @mydata/client`
 
 ## Create client
 
 ```javascript
 const { readFileSync } = require('fs')
-const operator = require('@mydata/operator-client')
+const operator = require('@mydata/client')
 
 const config = {
   displayName: 'The name of your service',
-  description: 'A nice description of your fantastic service'
+  description: 'A nice description of your fantastic service',
   clientId: 'https://mycv.work', // Application domain with protocol
   operatorUrl: 'https://smoothoperator.work', // URL of Operator
   clientKeys: {
     publicKey: '',
     privateKey: ''
-  }
+  },
   jwksUrl: '/jwks',     // endpoint for keys in jwks format
   eventsUrl: '/events'  // endpoint for events - webhook style
 }
