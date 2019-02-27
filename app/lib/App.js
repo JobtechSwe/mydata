@@ -19,6 +19,14 @@ const AppContainer = createBottomTabNavigator(
       screen: ConsentRequest,
       navigationOptions: () => ({
         tabBarIcon: <QRIcon />,     
+        tabBarOptions: {
+          showIcon: true,
+          showLabel: true,
+          tabStyle: { marginTop: 12, height: '100%' },
+          labelStyle: { fontFamily: 'Karla-Bold', fontSize: 12, marginTop: 4 },
+          inactiveTintColor: myDataTheme.colors.lightGrey,
+          activeTintColor: myDataTheme.colors.lightGrey,
+        },
       }), 
     },
     Account: { screen: Account },

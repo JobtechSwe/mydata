@@ -8,10 +8,6 @@ import { PrimaryButton } from '../../components/elements/Button/Button'
 import { H1, Paragraph } from '../../components/typography/Typography'
 import { Wrap, ScrollViewWrap } from '../../components/View/Wrapper'
 
-const HomeWrap = styled(Wrap)`
-  padding: 48px 32px;
-`
-
 export default class HomeScreen extends React.Component {
   state = {
     account: {},
@@ -77,7 +73,7 @@ export default class HomeScreen extends React.Component {
 
   render() {
     return (
-      <HomeWrap>
+      <Wrap>
         <ScrollViewWrap>
           <H1>MyData</H1>
           <Input placeholder="Förnamn" />
@@ -91,9 +87,9 @@ export default class HomeScreen extends React.Component {
             Clear account
           </Button>
 
-          {/* <JSONTree data={this.state.account || {}} /> */}
+          <JSONTree data={this.state.account || {}} />
         </ScrollViewWrap>
-      </HomeWrap>
+      </Wrap>
     )
   }
 }

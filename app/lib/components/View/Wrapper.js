@@ -8,7 +8,7 @@ export const Wrap = styled(View)`
   background-color: ${({ theme }) => theme.colors.quiet};
   height: 100%;
   justify-content: center;
-  padding: 48px 32px;
+  padding: 48px 32px 0;
 `
 
 export const ScrollViewWrap = props => (
