@@ -9,7 +9,6 @@ Client library for mydata operator
 ## Create client
 
 ```javascript
-const { readFileSync } = require('fs')
 const operator = require('@mydata/client')
 
 const config = {
