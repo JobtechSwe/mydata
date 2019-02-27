@@ -1,4 +1,5 @@
 import React from 'react'
+import { View } from 'react-native'
 import { Wrap, ScrollViewWrap } from '../../components/View/Wrapper'
 import { H1 } from '../../components/typography/Typography'
 
@@ -74,17 +75,17 @@ export default class AccountScreen extends React.Component {
         )
       case 'create2':
         return (
-          <Wrap>
+          <View>
             <KeyPair onGenerate={this.onGenerateKeys} />
             <PDS
               pds={this.state.account.pds}
               onConnect={this.onDropboxConnect}
             />
-          </Wrap>
+          </View>
         )
       case 'update':
         return (
-          <Wrap>
+          <View>
             <Account
               account={this.state.account}
               firstName={this.text.firstName}
@@ -97,7 +98,7 @@ export default class AccountScreen extends React.Component {
               pds={this.state.account.pds}
               onConnect={this.onDropboxConnect}
             />
-          </Wrap>
+          </View>
         )
     }
   }

@@ -39,7 +39,11 @@ const StyledQRImage = styled(Image)`
   height: 28px;
 `
 
-export const QRIcon = () => <StyledQRIcon><StyledQRImage source={require('./img/qr_inactive.png')} /></StyledQRIcon> 
+export const QRIcon = () => (
+  <StyledQRIcon>
+    <StyledQRImage source={require('./img/qr_inactive.png')} />
+  </StyledQRIcon>
+)
 
 const AccountIcon = ({ active }) => (
   <StyledNavbarIcon
