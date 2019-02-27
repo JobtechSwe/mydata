@@ -9,21 +9,21 @@ Client library for mydata operator
 ## Create client
 
 ```javascript
-const operator = require('@mydata/client')
+const { create } = require('@mydata/client')
 
 const config = {
   displayName: 'The name of your service',
   description: 'A nice description of your fantastic service',
   clientId: 'https://mycv.work', // Application domain with protocol
-  operatorUrl: 'https://smoothoperator.work', // URL of Operator
+  operator: 'https://smoothoperator.work', // URL of Operator
   clientKeys: {
-    publicKey: '',
-    privateKey: ''
+    publicKey: '-----BEGIN RSA PUBLIC KEY-----\nMIGJ...',
+    privateKey: '-----BEGIN RSA PRIVATE KEY-----\nMIICX...'
   },
-  jwksUrl: '/jwks',     // endpoint for keys in jwks format
-  eventsUrl: '/events'  // endpoint for events - webhook style
+  jwksPath '/jwks',     // endpoint for keys in jwks format
+  eventsPath: '/events'  // endpoint for events - webhook style
 }
-const client = operator(config)
+const client = create(config)
 ```
 
 ## Provide routes
@@ -35,6 +35,13 @@ const app = express()
 // Routes used by the operator
 app.use(client.routes)
 ```
+
+
+## Connecting
+```
+await client.connect()
+```
+
 
 ## Subscribe to events
 
