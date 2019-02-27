@@ -64,9 +64,6 @@ buck-out/
 
 # VS code
 .vscode
-<<<<<<< HEAD
-dist
-=======
 
-dist
->>>>>>> 6b93989... Removed dist from repo
+# Webpack bundle for app-e2e-server
+__e2e__/dist
