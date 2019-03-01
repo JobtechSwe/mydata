@@ -33,7 +33,7 @@ services:
      - operator-postgres
      - operator-redis
     working_dir: /app
-    command: sh -c 'npm run migrate up && npm start'
+    command: sh -c 'npm run migrate up && npm run start:watch'
 
   cv-redis:
     image: redis:4.0-alpine

@@ -8,12 +8,12 @@ module.exports = {
     alias: {
       'react-native': resolve(__dirname, 'src/native/react-native'),
       'react-native-config': resolve(__dirname, 'src/native/react-native-config'),
-      'react-native-rsa-native': resolve(__dirname, 'src/native/react-native-rsa-native')
-    }
+      'react-native-rsa-native': resolve(__dirname, 'src/native/react-native-rsa-native'),
+    },
   },
   output: {
     path: resolve(__dirname, 'dist'),
     filename: 'index.js',
-    libraryTarget: 'commonjs2'
-  }
+    libraryTarget: 'commonjs2',
+  },
 }

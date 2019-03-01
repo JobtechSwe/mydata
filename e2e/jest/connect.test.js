@@ -1,7 +1,7 @@
 const express = require('express')
 const { createClient } = require('./helpers/index')
 
-describe('One client', () => {
+describe('Connect', () => {
   let server, client
 
   beforeEach(done => {
