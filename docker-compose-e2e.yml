@@ -22,6 +22,8 @@ services:
     image: node:11-alpine
     volumes:
       - ./operator:/app
+    ports:
+      - 3001:3000
     environment:
       - PGHOST=operator-postgres-e2e
       - REDIS=redis://:fubar@operator-redis-e2e:6379/

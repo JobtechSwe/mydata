@@ -18,17 +18,7 @@ npm --prefix ./e2e run test
 
 # Run jest integration tests
 echo 'running jest integration tests'
-docker run \
-  --mount type=bind,source=$PWD/e2e,destination=/e2e \
-  --mount type=bind,source=$PWD/client,destination=/client \
-  --workdir=/e2e \
-  --env OPERATOR_URL='http://operator-e2e:3000' \
-  --name jest \
-  --network=mydata_default \
-  node:11-alpine \
-  npm run test:jest
-
-docker rm jest
+OPERATOR_URL='http://localhost:3001' npm --prefix ./e2e run test:jest
 
 # # Tear down
 docker-compose -f docker-compose-e2e.yml down
