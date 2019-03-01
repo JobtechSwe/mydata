@@ -4,12 +4,9 @@
   "description": "End-to-end testing for mydata",
   "main": "index.js",
   "scripts": {
-    "open": "cypress open",
-    "test": "cypress run",
-    "test:chrome": "cypress run --browser chrome",
-    "test:firefox": "cypress run --browser firefox",
-    "test:electron": "cypress run --headed",
-    "test:jest": "jest --runInBand --detectOpenHandles"
+    "cypress": "cypress run",
+    "cypress:open": "cypress open",
+    "jest": "jest --runInBand"
   },
   "repository": {
     "type": "git",

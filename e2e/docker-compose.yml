@@ -1,12 +1,12 @@
 version: '3'
 services:
-  operator-redis-e2e:
+  operator-redis:
     image: redis:4.0-alpine
     environment:
       - REDIS_PASSWORD=fubar
     command: sh -c 'redis-server --requirepass $${REDIS_PASSWORD}'
 
-  operator-postgres-e2e:
+  operator-postgres:
     image: postgres:11-alpine
     environment:
       - POSTGRES_USER=postgresuser
@@ -18,30 +18,30 @@ services:
       timeout: 5s
       retries: 5
 
-  operator-e2e:
+  operator:
     image: node:11-alpine
     volumes:
-      - ./operator:/app
+      - ./../operator:/app
     ports:
       - 3001:3000
     environment:
-      - PGHOST=operator-postgres-e2e
-      - REDIS=redis://:fubar@operator-redis-e2e:6379/
-      - DATABASE_URL=postgres://postgresuser:postgrespassword@operator-postgres-e2e:5432/mydata
+      - PGHOST=operator-postgres
+      - REDIS=redis://:fubar@operator-redis:6379/
+      - DATABASE_URL=postgres://postgresuser:postgrespassword@operator-postgres:5432/mydata
       - NODE_ENV=development
     depends_on:
-     - operator-postgres-e2e
-     - operator-redis-e2e
+     - operator-postgres
+     - operator-redis
     working_dir: /app
     command: sh -c 'npm run migrate up && npm start'
 
-  cv-redis-e2e:
+  cv-redis:
     image: redis:4.0-alpine
     environment:
       - REDIS_PASSWORD=fubar
     command: sh -c 'redis-server --requirepass $${REDIS_PASSWORD}'
 
-  cv-postgres-e2e:
+  cv-postgres:
     image: postgres:11-alpine
     environment:
       - POSTGRES_USER=postgresuser
@@ -53,35 +53,35 @@ services:
       timeout: 5s
       retries: 5
 
-  cv-e2e:
+  cv:
     image: node:11-alpine
     volumes:
-      - ./examples/cv:/app
+      - ./../examples/cv:/app
     ports:
       - 4001:4000
     environment:
-      - PGHOST=cv-postgres-e2e
-      - DATABASE_URL=postgres://postgresuser:postgrespassword@cv-postgres-e2e:5432/cv
-      - REDIS=redis://:fubar@cv-redis-e2e:6379/
+      - PGHOST=cv-postgres
+      - DATABASE_URL=postgres://postgresuser:postgrespassword@cv-postgres:5432/cv
+      - REDIS=redis://:fubar@cv-redis:6379/
       - NODE_ENV=development
-      - CLIENT_ID=http://cv-e2e:4000
-      - OPERATOR_URL=http://operator-e2e:3000
+      - CLIENT_ID=http://cv:4000
+      - OPERATOR_URL=http://operator:3000
       - APM_SERVER=''
     working_dir: /app
     depends_on:
-     - operator-postgres-e2e
-     - operator-redis-e2e
+     - operator-postgres
+     - operator-redis
     command: sh -c 'npm run migrate up && npm start'
 
-  app-e2e:
+  app:
     image: node:11-alpine
     volumes:
-      - ./app:/app
+      - ./../app:/app
     working_dir: /app
     ports:
       - 1337:1337
     depends_on:
-      - operator-e2e
+      - operator
     environment:
-      - OPERATOR_URL=http://operator-e2e:3000/api
+      - OPERATOR_URL=http://operator:3000/api
     command: npm run e2e:server
