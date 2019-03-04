@@ -21,6 +21,10 @@ app.use((error, req, res, _) => {
   res.status(status || 500).send({ message, stack })
 })
 
+app.get('/health', (req, res, _) => {
+  res.send('ok')
+})
+
 const port = process.env.PORT || 1337
 app.listen(port, () => {
   console.info(`Listening on port ${port}`)
