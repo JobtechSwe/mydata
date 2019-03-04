@@ -1,0 +1,89 @@
+version: '3'
+services:
+  operator-redis:
+    image: redis:4.0-alpine
+    environment:
+      - REDIS_PASSWORD=fubar
+    command: sh -c 'redis-server --requirepass $${REDIS_PASSWORD}'
+
+  operator-postgres:
+    image: postgres:11-alpine
+    environment:
+      - POSTGRES_USER=postgresuser
+      - POSTGRES_PASSWORD=postgrespassword
+      - POSTGRES_DB=mydata
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgresuser -d mydata"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  operator:
+    image: node:11-alpine
+    volumes:
+      - ./../operator:/app
+    ports:
+      - 3001:3000
+    environment:
+      - PGHOST=operator-postgres
+      - PGPORT=5432
+      - REDIS=redis://:fubar@operator-redis:6379/
+      - DATABASE_URL=postgres://postgresuser:postgrespassword@operator-postgres:5432/mydata
+      - NODE_ENV=development
+    depends_on:
+     - operator-postgres
+     - operator-redis
+    working_dir: /app
+    command: sh -c 'sleep 10 && npm run migrate up && npm run start:watch'
+
+  cv-redis:
+    image: redis:4.0-alpine
+    environment:
+      - REDIS_PASSWORD=fubar
+    command: sh -c 'redis-server --requirepass $${REDIS_PASSWORD}'
+
+  cv-postgres:
+    image: postgres:11-alpine
+    environment:
+      - POSTGRES_USER=postgresuser
+      - POSTGRES_PASSWORD=postgrespassword
+      - POSTGRES_DB=cv
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgresuser -d cv"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  cv:
+    image: node:11-alpine
+    volumes:
+      - ./../examples/cv:/app
+    ports:
+      - 4001:4000
+    environment:
+      - PGHOST=cv-postgres
+      - PGPORT=5432
+      - DATABASE_URL=postgres://postgresuser:postgrespassword@cv-postgres:5432/cv
+      - REDIS=redis://:fubar@cv-redis:6379/
+      - NODE_ENV=development
+      - CLIENT_ID=http://cv:4000
+      - OPERATOR_URL=http://operator:3000
+      - APM_SERVER=''
+    working_dir: /app
+    depends_on:
+     - operator-postgres
+     - operator-redis
+    command: sh -c 'sleep 4 && npm run migrate up && npm start'
+
+  app:
+    image: node:11-alpine
+    volumes:
+      - ./../app:/app
+    working_dir: /app
+    ports:
+      - 1337:1337
+    depends_on:
+      - operator
+    environment:
+      - OPERATOR_URL=http://operator:3000/api
+    command: npm run e2e:server

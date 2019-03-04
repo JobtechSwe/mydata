@@ -2,7 +2,7 @@ const dataService = require('../lib/data')
 const axios = require('axios')
 const { sign } = require('jsonwebtoken')
 const KeyProvider = require('../lib/keyProvider')
-const MemoryKeyValueStore = require('../lib/memoryKeyValueStore')
+const { createMemoryStore } = require('../lib/memoryStore')
 const crypto = require('../lib/crypto')
 const { generateKeyPair, base64ToJson } = require('./_helpers')
 jest.mock('axios')
@@ -26,7 +26,7 @@ describe('data', () => {
   let config, accessToken, keyProvider, area1, area2
   let read, write
   beforeEach(async () => {
-    const keyValueStore = new MemoryKeyValueStore()
+    const keyValueStore = createMemoryStore()
     keyProvider = new KeyProvider({
       clientKeys: {},
       keyOptions: {},

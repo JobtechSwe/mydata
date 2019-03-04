@@ -1,5 +1,5 @@
 const createClient = require('../lib/client')
-const MemoryKeyValueStore = require('../lib/memoryKeyValueStore')
+const { createMemoryStore } = require('../lib/memoryStore')
 const { generateKeyPair } = require('./_helpers')
 const { v4 } = require('uuid')
 const axios = require('axios')
@@ -23,7 +23,7 @@ describe('consents', () => {
       jwksPath: '/jwks',
       eventsPath: '/events',
       clientKeys: clientKeys,
-      keyValueStore: new MemoryKeyValueStore(),
+      keyValueStore: createMemoryStore(),
       keyOptions: { modulusLength: 1024 }
     }
     client = createClient(config)

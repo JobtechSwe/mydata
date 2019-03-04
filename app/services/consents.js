@@ -7,6 +7,9 @@ import { Base64 } from 'js-base64'
 
 export async function get (id) {
   const account = await getAccount()
+
+  if (!account) { throw new Error('Account is not set!') }
+
   const url = `${Config.OPERATOR_URL}/consents/requests/${encodeURIComponent(id)}?accountId=${account.id}`
 
   let response
