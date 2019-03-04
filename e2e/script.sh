@@ -13,8 +13,8 @@ then
   echo 'Docker containers are up'
 
   # TODO: Create a while loop that checks app-server and cv health routes if ready
-  echo 'Waiting for /examples/cv (15 s)'
-  sleep 15
+  echo 'Waiting for /examples/cv (20 s)'
+  sleep 20
 fi
 
 # Run jest integration tests
@@ -22,8 +22,8 @@ echo 'Running jest integration tests'
 OPERATOR_URL='http://localhost:3001' npm run jest
 
 # Run cypress e2e tests for /examples
-# echo 'Running cypress e2e tests for /examples'
-# npm run cypress
+echo 'Running cypress e2e tests for /examples'
+npm run cypress
 
 if [ $TESTS_ONLY -eq 0 ]
 then
