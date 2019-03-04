@@ -40,7 +40,7 @@ spec:
           - name: NODE_ENV
             value: production
           - name: OPERATOR_URL
-            value: 'http://operator-test.my-data.svc:3000'
+            value: 'http://operator-test.mydata.svc:3000'
           - name: POSTGRES_USER
             value: postgresuser
           - name: POSTGRES_PASSWORD
@@ -48,9 +48,9 @@ spec:
           - name: POSTGRES_DB
             value: cv
           - name: DATABASE_URL
-            value: postgres://postgresuser:postgrespassword@postgresql-cv-test.my-data.svc:5432/cv
+            value: postgres://postgresuser:postgrespassword@postgresql-cv-test.mydata.svc:5432/cv
           - name: REDIS
-            value: 'redis://:fubar@redis-test.my-data.svc:6379/'
+            value: 'redis://:fubar@redis-test.mydata.svc:6379/'
           - name: CLIENT_ID
             value: https://cv-test.dev.services.jtech.se
           image: cv:test
