@@ -1,7 +1,8 @@
 const { createClientWithServer, createSampleRequest, sampleRequest } = require('./helpers/index')
 const axios = require('axios')
-const { v4Regexp, jwtRegexp } = require ('./helpers/regexp')
+const { v4Regexp } = require ('./helpers/regexp')
 const phone = require('./helpers/phone')
+const { decode } = require('jsonwebtoken')
 
 describe('Client', () => {
   let client
@@ -32,12 +33,16 @@ describe('Client', () => {
     })
   })
 
-  it('Gets accessToken when consent is approved', async (done) => {
+  it('Gets accessToken (jwt) when consent is approved', async (done) => {
     const sampleRequest = createSampleRequest(client.config.clientId)
 
     client.events.on('CONSENT_APPROVED', (event) => {
-      expect(event.accessToken).toMatch(jwtRegexp)
-      done()
+      try {
+        expect(decode(event.accessToken)).not.toBe(null)
+        done()
+      } catch (error) {
+        done(error)
+      }
     })
 
     const { id } = await client.consents.request(sampleRequest)
