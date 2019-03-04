@@ -8,10 +8,8 @@ export default class Screen extends Component {
     this.props.navigation.addListener('didBlur', (payload) => this.componentDidBlur(payload))
   }
 
-  /* TODO(@einarpersson): implement these
   async componentWillFocus(navigationProps) { }
   async componentDidFocus(navigationProps) { }
   async componentWillBlur(navigationProps) { }
   async componentDidBlur(navigationProps) { }
-  */
 }
