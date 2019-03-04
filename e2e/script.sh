@@ -10,13 +10,17 @@ docker-compose down
 docker-compose up -d
 echo 'Docker containers are up'
 
-# TODO: Create a while loop that checks app-server and cv health routes if ready
-echo 'Waiting for /examples/cv (/health route should return status code 200)'
-sh wait-for-cv.sh
+# Wait for operator and app-server
+sh wait-for.sh http://localhost:3001/health
+sh wait-for.sh http://localhost:1337/health
 
 # Run jest integration tests
 echo 'Running jest integration tests'
 npm run jest
+
+# TODO: Create a while loop that checks app-server and cv health routes if ready
+echo 'Waiting for /examples/cv (/health route should return status code 200)'
+sh wait-for.sh http://localhost:4001/health
 
 # Run cypress e2e tests for /examples
 echo 'Running cypress e2e tests for /examples'
