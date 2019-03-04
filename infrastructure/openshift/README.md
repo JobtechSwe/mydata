@@ -25,6 +25,9 @@ oc create secret generic github-webhook-secret --from-literal=WebHookSecretKey=a
 oc create secret generic tls --from-file=/home/ilix/Documents/jtech.se.crt
 ```
 
+**TODO:**
+`c create secret docker-registry dockerhub --docker-server=docker.io --docker-username=ilix --docker-password="nope" --docker-email=alexander@iteam.se`
+
 ### Shared resources
 
 Both `MyData-CV` and `MyData-Operator` use PostgreSQL and Redis. These following commands will deploy instances of these to be used by the CI and TEST environments.

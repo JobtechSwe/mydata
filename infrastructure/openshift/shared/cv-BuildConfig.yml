@@ -47,3 +47,27 @@ spec:
   resources:
     limits:
       memory: 1Gi
+---
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  name: cv-dockerhub
+spec:
+  runPolicy: Serial
+  completionDeadlineSeconds: 1800
+  source:
+    git:
+      ref: master
+      uri: https://github.com/jobtechswe/mydata
+    contextDir: examples/cv
+  strategy:
+    dockerStrategy: {}
+  output:
+    to:
+      kind: DockerImage
+      name: docker.io/jobtechswe/mydata-cv
+    pushSecret:
+      name: dockerhub
+  resources:
+    limits:
+      memory: 1Gi

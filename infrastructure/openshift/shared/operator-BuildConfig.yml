@@ -41,3 +41,24 @@ spec:
     to:
       kind: ImageStreamTag
       name: operator:test
+---
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  name: operator-dockerhub
+spec:
+  runPolicy: Serial
+  completionDeadlineSeconds: 1800
+  source:
+    git:
+      ref: master
+      uri: https://github.com/jobtechswe/mydata
+    contextDir: operator
+  strategy:
+    dockerStrategy: {}
+  output:
+    to:
+      kind: DockerImage
+      name: docker.io/jobtechswe/mydata-operator
+    pushSecret:
+      name: dockerhub
