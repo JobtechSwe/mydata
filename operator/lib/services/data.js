@@ -20,12 +20,9 @@ const read = async (consentId, domain, area) => {
       const content = await pds
         .get({ pdsProvider, pdsCredentials })
         .readFile(path, 'utf8')
-        .catch(err => {
-          if (err.message === 'File not found') {
-            return null
-          } else {
-            throw err
-          }
+        .catch(_ => {
+          // TODO: Handle different error codes (stop handling all errors as if everything is fine and file is just missing...)
+          return null
         })
       const result = {
         [domain]: {
