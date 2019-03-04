@@ -40,7 +40,7 @@ spec:
           - name: NODE_ENV
             value: test
           - name: OPERATOR_URL
-            value: 'http://operator-ci.my-data.svc:3000'
+            value: 'http://operator-ci.mydata.svc:3000'
           - name: POSTGRES_USER
             value: postgresuser
           - name: POSTGRES_PASSWORD
@@ -48,13 +48,23 @@ spec:
           - name: POSTGRES_DB
             value: cv
           - name: DATABASE_URL
-            value: postgres://postgresuser:postgrespassword@postgresql-cv-ci.my-data.svc:5432/cv
+            value: postgres://postgresuser:postgrespassword@postgresql-cv-ci.mydata.svc:5432/cv
           - name: REDIS
-            value: 'redis://:fubar@redis-ci.my-data.svc:6379/'
+            value: 'redis://:fubar@redis-ci.mydata.svc:6379/'
           - name: CLIENT_ID
             value: https://cv-ci.dev.services.jtech.se
           - name: NO_UPDATE_NOTIFIER
             value: 'true'
+          - name: PUBLIC_KEY
+            valueFrom:
+              secretKeyRef:
+                name: cv
+                key: public.key
+          - name: PRIVATE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: cv
+                key: private.key
           image: cv:latest
           imagePullPolicy: Always
           name: cv-ci
@@ -79,5 +89,5 @@ spec:
           - cv-ci
         from:
           kind: ImageStreamTag
-          name: 'cv:latest'
+          name: cv:latest
       type: ImageChange
