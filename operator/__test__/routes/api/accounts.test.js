@@ -152,7 +152,7 @@ describe('routes /api/accounts', () => {
       expect(response.status).toBe(500)
     })
 
-    it('calls the login service accountId and login data', async () => {
+    it('calls the login service with accountId and login data', async () => {
       await api.post(`/api/accounts/${accountId}/login`, loginRequest)
       expect(accountService.login).toHaveBeenCalledWith(accountId, loginRequest)
     })
