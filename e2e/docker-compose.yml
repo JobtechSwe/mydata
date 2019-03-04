@@ -34,7 +34,7 @@ services:
      - operator-postgres
      - operator-redis
     working_dir: /app
-    command: sh -c 'sleep 10 && npm run migrate up && npm run start:watch'
+    command: sh -c 'node wait-for-postgres && npm run migrate up && npm run start:watch'
 
   cv-redis:
     image: redis:4.0-alpine
@@ -73,7 +73,7 @@ services:
     depends_on:
      - operator-postgres
      - operator-redis
-    command: sh -c 'sleep 4 && npm run migrate up && npm start'
+    command: sh -c 'node wait-for-postgres && npm run migrate up && npm start'
 
   app:
     image: node:11-alpine
