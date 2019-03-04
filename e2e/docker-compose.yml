@@ -62,7 +62,7 @@ services:
       - 4001:4000
     environment:
       - PGHOST=cv-postgres
-      - PGPORT=5434
+      - PGPORT=5432
       - DATABASE_URL=postgres://postgresuser:postgrespassword@cv-postgres:5432/cv
       - REDIS=redis://:fubar@cv-redis:6379/
       - NODE_ENV=development
