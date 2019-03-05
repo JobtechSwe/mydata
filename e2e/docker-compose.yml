@@ -53,7 +53,7 @@ services:
       - 4001:4000
     environment:
       - REDIS=redis://:fubar@cv-redis:6379/
-      - NODE_ENV=test
+      - NODE_ENV=development
       - CLIENT_ID=http://cv:4000
       - OPERATOR_URL=http://operator:3000
       - APM_SERVER=
