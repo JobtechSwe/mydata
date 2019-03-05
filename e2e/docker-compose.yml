@@ -32,7 +32,7 @@ services:
       - REDIS=redis://:fubar@operator-redis:6379/
       - DATABASE_URL=postgres://postgresuser:postgrespassword@operator-postgres:5432/mydata
       - NODE_ENV=development
-      - APM_SERVER=''
+      - APM_SERVER=
     depends_on:
      - operator-postgres
      - operator-redis
@@ -53,10 +53,10 @@ services:
       - 4001:4000
     environment:
       - REDIS=redis://:fubar@cv-redis:6379/
-      - NODE_ENV=development
+      - NODE_ENV=test
       - CLIENT_ID=http://cv:4000
       - OPERATOR_URL=http://operator:3000
-      - APM_SERVER=''
+      - APM_SERVER=
     working_dir: /app
     depends_on:
      - operator-postgres
