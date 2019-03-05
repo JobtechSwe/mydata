@@ -8,6 +8,7 @@
     "update-all": "npm i && npm --prefix ./app i ./app && npm --prefix ./client i ./client && npm --prefix ./examples/cv i ./examples/cv && npm --prefix ./operator i ./operator && npm --prefix ./e2e i ./e2e ",
     "audit-all": "npm audit && npm --prefix ./app audit && npm --prefix ./client audit && npm --prefix ./examples/cv audit && npm --prefix ./operator audit && npm --prefix ./e2e audit ",
     "audit-fix-all": "npm audit fix && npm --prefix ./app audit fix && npm --prefix ./client audit fix && npm --prefix ./examples/cv audit fix && npm --prefix ./operator audit fix && npm --prefix ./e2e audit fix",
+    "lint-all": "npm --prefix ./app run lint && npm --prefix ./client run lint && npm --prefix ./examples/cv run lint && npm --prefix ./operator run lint",
     "test-all": "npm --prefix ./app test ./app && npm --prefix ./client test ./client && npm --prefix ./examples/cv test ./examples/cv && npm --prefix ./operator test ./operator",
     "test": "sh -c 'cd ./e2e && ./script.sh'"
   },
