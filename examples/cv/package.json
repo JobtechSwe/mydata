@@ -6,11 +6,10 @@
   "scripts": {
     "build": "next build",
     "start": "node server.js",
-    "dev": "npm run migrate up && nodemon --watch ./api --watch ./components --watch ./pages --watch ./services --watch server.js",
+    "dev": "nodemon --watch ./api --watch ./components --watch ./pages --watch ./services --watch server.js",
     "test": "NODE_ENV=test jest",
     "test:watch": "NODE_ENV=test jest --watchAll",
-    "lint": "eslint '**/*.js'",
-    "migrate": "node-pg-migrate"
+    "lint": "eslint '**/*.js'"
   },
   "contributors": [
     "Adam Näslund <adam.naslund@iteam.se>",
@@ -36,8 +35,6 @@
     "jsonwebtoken": "^8.3.0",
     "morgan": "^1.9.1",
     "next": "^7.0.3",
-    "node-pg-migrate": "^3.16.0",
-    "pg": "^7.8.0",
     "qrcode.react": "^0.8.0",
     "react": "next",
     "react-dom": "next",
