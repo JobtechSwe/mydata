@@ -9,7 +9,7 @@
     "audit-all": "npm audit && npm --prefix ./app audit && npm --prefix ./client audit && npm --prefix ./examples/cv audit && npm --prefix ./operator audit && npm --prefix ./e2e audit ",
     "audit-fix-all": "npm audit fix && npm --prefix ./app audit fix && npm --prefix ./client audit fix && npm --prefix ./examples/cv audit fix && npm --prefix ./operator audit fix && npm --prefix ./e2e audit fix",
     "test-all": "npm --prefix ./app test ./app && npm --prefix ./client test ./client && npm --prefix ./examples/cv test ./examples/cv && npm --prefix ./operator test ./operator",
-    "test": "sh -c 'cd ./e2e && ./script.sh'"
+    "test": "bash -c 'cd ./e2e && ./script.sh'"
   },
   "dependencies": {},
   "devDependencies": {},

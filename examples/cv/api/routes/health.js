@@ -1,7 +1,6 @@
 const { Router } = require('express')
 const router = Router()
 
-const postgres = require('../adapters/postgres')
 const redis = require('../adapters/redis')
 
 const http = require('http')
@@ -40,16 +39,6 @@ router.get('/', (req, res, next) => {
     .catch(() => {
       res.statusCode = 503
       status.operator = '!OK'
-    })
-    .then(() => {
-      return postgres.query('SELECT NOW()')
-    })
-    .then(() => {
-      status.postgres = 'OK'
-    })
-    .catch(error => {
-      res.statusCode = 503
-      status.postgres = '!OK'
     })
     .then(() => {
       if (redis.status === 'ready') {

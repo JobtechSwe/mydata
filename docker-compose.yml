@@ -78,17 +78,3 @@ services:
     environment:
       - REDIS_PASSWORD=fubar
     command: sh -c 'redis-server --requirepass $${REDIS_PASSWORD}'
-
-  postgres-cv:
-    image: postgres:11-alpine
-    ports:
-      - 5433:5432
-    environment:
-      - POSTGRES_USER=postgresuser
-      - POSTGRES_PASSWORD=postgrespassword
-      - POSTGRES_DB=cv
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgresuser -d cv"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
