@@ -8,7 +8,7 @@ import ScanQRConsentCode from './ScanQRConsentCode'
 
 class EnterConsentCode extends Component {
   state = {
-    view: 'enter',
+    view: 'scan',
     code: '',
     validated: false,
   }
@@ -39,6 +39,7 @@ class EnterConsentCode extends Component {
         return (
           <Wrap>
             <ScanQRConsentCode onRead={this.onScanQRCode} />
+            {/*
             <Button
               mode="contained"
               style={{
@@ -49,6 +50,7 @@ class EnterConsentCode extends Component {
             >
               Cancel
             </Button>
+            */}
           </Wrap>
         )
       case 'enter':

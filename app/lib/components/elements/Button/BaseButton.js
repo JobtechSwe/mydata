@@ -15,7 +15,8 @@ export const BaseButtonText = styled.Text`
   font-weight: 700;
   height: 56px;
   text-align: center;
-  width: 264px;
+  min-width: 264px;
+  width: 100%;
 `
 
 export default BaseButton

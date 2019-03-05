@@ -1,14 +1,11 @@
 import React, { Component } from 'react'
-import { View } from 'react-native'
-import { Text } from 'react-native-paper'
-import Icon from 'react-native-vector-icons/AntDesign'
 import { RSA } from 'react-native-rsa-native'
+import { Paragraph } from './typography/Typography'
+import { Spinner } from './elements/Spinner/Spinner'
 
 export default class KeyPair extends Component {
-
   state = {
     keys: {},
-    icon: 'loading1',
     status: '',
   }
 
@@ -16,7 +13,6 @@ export default class KeyPair extends Component {
     if (this.props.keys) {
       this.setState({
         keys: this.props.keys,
-        icon: 'key',
         status: 'RSA key pair',
       })
     } else {
@@ -25,7 +21,7 @@ export default class KeyPair extends Component {
   }
 
   generate = async () => {
-    this.setState({ icon: 'loading1', status: 'Generating keys' })
+    this.setState({ status: 'Genererar nycklar...' })
 
     const keyPair = await RSA.generateKeys(4096)
     const keys = {
@@ -33,20 +29,17 @@ export default class KeyPair extends Component {
       privateKey: keyPair.private,
     }
 
-    this.setState({ keys, icon: 'key', status: 'RSA key pair' })
+    this.setState({ status: 'Nycklar genererade' })
 
     this.props.onGenerate(keys)
   }
 
   render() {
     return (
-      <View>
-        <Icon
-          name={this.state.icon}
-          size={20}
-          />
-        <Text>{this.state.status}</Text>
-      </View>
+      <>
+        <Spinner />
+        <Paragraph style={{ marginTop: 24 }}>{this.state.status}</Paragraph>
+      </>
     )
   }
 }

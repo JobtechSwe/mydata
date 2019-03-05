@@ -1,54 +1,43 @@
 import React from 'react'
-import { View } from 'react-native'
 import { Wrap, ScrollViewWrap } from '../../components/View/Wrapper'
-import { H1 } from '../../components/typography/Typography'
-
-import { getAccount, storeAccount } from '../../services/storage'
-import Account from '../../components/Account'
+import { storeAccount } from '../../services/storage'
+import Register from '../../components/Register/Register'
 import KeyPair from '../../components/KeyPair'
-import PDS from '../../components/PDS'
+import PDS from '../../components/PDS/PDS'
+import Finished from '../../components/Finished/Finished'
 import { save } from '../../services/account'
 
 export default class AccountScreen extends React.Component {
-  text = {
-    firstName: 'First name',
-    lastName: 'Last name',
-    create: 'Create',
-    update: 'Update',
-  }
-
   state = {
     account: {},
-    action: 'create',
-  }
-
-  async componenDidMount() {
-    const account = await getAccount()
-    this.setState({
-      ...this.state,
-      account,
-      action: account ? 'update' : 'create',
-    })
+    status: 'register',
   }
 
   saveAccount = async account => {
+    /* 
+     * TODO(@all): Find out why it doesn't get passed this step after Dropbox 
+     *
     if (account.keys && account.pds) {
+      console.log('THIS', this)
       account = await save(account)
     }
+    */
     await storeAccount(account)
+
     this.setState({ account })
 
-    switch (this.state.action) {
-      case 'create':
-        this.setState({ action: 'create2' })
+    switch (this.state.status) {
+      case 'register':
+        this.setState({ status: 'generateKeys' })
         break
-      case 'create2':
-        if (account.pds && account.keys) {
-          this.props.navigation.navigate('Home')
-        }
+      case 'generateKeys':
+        this.setState({ status: 'choosePds' })
+        break
+      case 'choosePds':
+        this.setState({ status: 'finished' })
         break
       default:
-        this.setState({ action: 'update' })
+        this.setState({ status: 'register' })
         break
     }
   }
@@ -62,43 +51,20 @@ export default class AccountScreen extends React.Component {
   }
 
   currentComponent = () => {
-    switch (this.state.action) {
-      case 'create':
+    switch (this.state.status) {
+      case 'register':
+        return <Register onSubmit={account => this.saveAccount(account)} />
+      case 'generateKeys':
+        return <KeyPair onGenerate={this.onGenerateKeys} />
+      case 'choosePds':
         return (
-          <Account
-            account={this.state.account}
-            firstName={this.text.firstName}
-            lastName={this.text.lastName}
-            button={this.text.create}
-            onSubmit={account => this.saveAccount(account)}
+          <PDS pds={this.state.account.pds} onConnect={this.onDropboxConnect} />
+        )
+      case 'finished':
+        return (
+          <Finished
+            onFinished={() => this.props.navigation.navigate('AuthLoading')}
           />
-        )
-      case 'create2':
-        return (
-          <View>
-            <KeyPair onGenerate={this.onGenerateKeys} />
-            <PDS
-              pds={this.state.account.pds}
-              onConnect={this.onDropboxConnect}
-            />
-          </View>
-        )
-      case 'update':
-        return (
-          <View>
-            <Account
-              account={this.state.account}
-              firstName={this.text.firstName}
-              lastName={this.text.lastName}
-              button={this.text.update}
-              onSubmit={account => this.saveAccount(account)}
-            />
-            <KeyPair keys={this.state.account.keys} />
-            <PDS
-              pds={this.state.account.pds}
-              onConnect={this.onDropboxConnect}
-            />
-          </View>
         )
     }
   }
@@ -106,10 +72,7 @@ export default class AccountScreen extends React.Component {
   render() {
     return (
       <Wrap>
-        <ScrollViewWrap>
-          <H1>Account</H1>
-          {this.currentComponent()}
-        </ScrollViewWrap>
+        <ScrollViewWrap>{this.currentComponent()}</ScrollViewWrap>
       </Wrap>
     )
   }

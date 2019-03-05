@@ -1,10 +1,17 @@
 import React from 'react'
-import { createBottomTabNavigator } from 'react-navigation'
+import {
+  createAppContainer,
+  createStackNavigator,
+  createSwitchNavigator,
+  createBottomTabNavigator,
+} from 'react-navigation'
 import Home from './screens/Home/Home'
-import Account from './screens/Account/Account'
+import Wizard from './screens/Account/Account'
 import ConsentRequest from './screens/ConsentRequest/ConsentRequest'
+import AuthLoading from './screens/AuthLoading/AuthLoading'
 import { ThemeProvider, theme as myDataTheme } from './theme'
-import { NavbarIcon, QRIcon } from './components/elements/Icon/Icon'
+import { NavbarIcon } from './components/elements/Icon/Icon'
+import QRIcon from './components/elements/Icon/QRIcon'
 
 const getTabBarIcon = (navigation, active) => {
   const { routeName } = navigation.state
@@ -12,13 +19,13 @@ const getTabBarIcon = (navigation, active) => {
   return <NavbarIcon name={routeName.toLowerCase()} active={active} />
 }
 
-const AppContainer = createBottomTabNavigator(
+const AppStack = createBottomTabNavigator(
   {
-    Home: { screen: Home },
-    'QR-code': { 
+    Hem: { screen: Home },
+    'QR-kod': {
       screen: ConsentRequest,
       navigationOptions: () => ({
-        tabBarIcon: <QRIcon />,     
+        tabBarIcon: <QRIcon />,
         tabBarOptions: {
           showIcon: true,
           showLabel: true,
@@ -27,12 +34,12 @@ const AppContainer = createBottomTabNavigator(
           inactiveTintColor: myDataTheme.colors.lightGrey,
           activeTintColor: myDataTheme.colors.lightGrey,
         },
-      }), 
+      }),
     },
-    Account: { screen: Account },
+    Konto: { screen: Wizard },
   },
   {
-    navigationOptions: ({ navigation }) => ({
+    defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused, _tintColor }) =>
         getTabBarIcon(navigation, focused),
     }),
@@ -46,11 +53,52 @@ const AppContainer = createBottomTabNavigator(
     },
   }
 )
+const RegisterStack = createStackNavigator({
+  Register: { screen: Wizard, navigationOptions: () => ({ header: null }) },
+})
 
-const App = () => (
-  <ThemeProvider theme={myDataTheme}>
-    <AppContainer />
-  </ThemeProvider>
+const AppSwitchContainer = createAppContainer(
+  createSwitchNavigator(
+    {
+      AuthLoading,
+      App: AppStack,
+      Register: RegisterStack,
+    },
+    {
+      initialRouteName: 'AuthLoading',
+    }
+  )
 )
+
+const App = props => {
+  return (
+    <ThemeProvider theme={myDataTheme}>
+      <AppSwitchContainer {...props} />
+    </ThemeProvider>
+  )
+}
+/*
+class App extends React.Component {
+  state = {
+    loggedIn: false,
+  }
+
+  async componentDidMount() {
+    let result = await getAccount()
+
+    result === undefined
+      ? this.setState({ loggedIn: false })
+      : this.setState({ loggedIn: true })
+  }
+
+  render() {
+    return (
+      <ThemeProvider theme={myDataTheme}>
+        {this.state.loggedIn ? <AppContainer /> : <Wizard />}
+      </ThemeProvider>
+    )
+  }
+}
+*/
 
 export default App

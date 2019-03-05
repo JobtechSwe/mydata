@@ -61,7 +61,7 @@ export default class HomeScreen extends React.Component {
     await storeAccount()
     this.setState({ account: undefined })
     const { navigate } = this.props.navigation
-    navigate('Account')
+    navigate('AuthLoading')
   }
 
   readAccountFromStorage = async () => {
@@ -76,18 +76,11 @@ export default class HomeScreen extends React.Component {
       <Wrap>
         <ScrollViewWrap>
           <H1>MyData</H1>
-          <Input placeholder="Förnamn" />
-          <Input placeholder="Efternam" />
-          <PrimaryButton>Registrera</PrimaryButton>
-          <Paragraph>
-            Du kommer nu att kunna vara i full kontroll över din data och över
-            vilka som använder den
-          </Paragraph>
           <Button title="Clear Account" onPress={this.clearAccount}>
             Clear account
           </Button>
 
-          <JSONTree data={this.state.account || {}} />
+          {/*<JSONTree data={this.state.account || {}} /> */}
         </ScrollViewWrap>
       </Wrap>
     )

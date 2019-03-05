@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, View } from 'react-native'
+import { Image } from 'react-native'
 import styled from '../../../theme'
 
 const StyledNavbarIcon = styled(Image)`
@@ -16,6 +16,7 @@ const HomeIcon = ({ active }) => (
     }
   />
 )
+
 const ConsentIcon = ({ active }) => (
   <StyledNavbarIcon
     style={{ width: 18, height: 21 }}
@@ -23,26 +24,6 @@ const ConsentIcon = ({ active }) => (
       active ? require('./img/qr_active.png') : require('./img/qr_inactive.png')
     }
   />
-)
-
-const StyledQRIcon = styled(View)`
-  align-items: center;
-  width: 96px;
-  height: 96px;
-  justify-content: center;
-  border-radius: 96px;
-  background-color: ${({ theme }) => theme.colors.primary};
-`
-
-const StyledQRImage = styled(Image)`
-  width: 28px;
-  height: 28px;
-`
-
-export const QRIcon = () => (
-  <StyledQRIcon>
-    <StyledQRImage source={require('./img/qr_inactive.png')} />
-  </StyledQRIcon>
 )
 
 const AccountIcon = ({ active }) => (
@@ -60,13 +41,13 @@ const getNavbarIcon = (name, active) => {
   let icon
 
   switch (name) {
-    case 'account':
+    case 'konto':
       icon = <AccountIcon active={active} />
       break
     case 'consentrequest':
       icon = <ConsentIcon active={active} />
       break
-    case 'home':
+    case 'hem':
       icon = <HomeIcon active={active} />
       break
   }
