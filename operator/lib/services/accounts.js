@@ -1,4 +1,5 @@
 const { query } = require('../adapters/postgres')
+const { sendEventLoginApproved } = require('../services/clients')
 const { v4 } = require('uuid')
 const { camelCase } = require('changecase-objects')
 const schemas = require('./schemas')
@@ -32,7 +33,20 @@ async function get (accountId) {
   return account
 }
 
+async function login (accountId, data) {
+  await schemas.accountId.validate(accountId, schemas.defaultOptions)
+  // must allow conversion for timestamp
+  await schemas.login.validate(data, { abortEarly: false, convert: true })
+
+  const result = await query('SELECT COUNT(*) FROM consent_requests WHERE account_id=$1 AND consent_id=$2', [accountId, data.consentId])
+  if (result.rows[0].count === '0') {
+    throw new Error('Consent does not belong to user')
+  }
+  sendEventLoginApproved(data)
+}
+
 module.exports = {
   create,
-  get
+  get,
+  login
 }

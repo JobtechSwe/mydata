@@ -26,6 +26,13 @@ const createAccount = Joi.object({
   }).required().unknown(true)
 }).required().unknown(true)
 
+const login = Joi.object({
+  timestamp: Joi.date().timestamp('javascript').required(),
+  clientId: Joi.string().uri({ scheme: allowedSchemes() }).required(),
+  sessionId: Joi.string().required(),
+  consentId: Joi.string().guid().required()
+}).required()
+
 // Clients
 const registerClient = Joi.object({
   clientId: Joi.string().uri({ scheme: allowedSchemes() }).required(),
@@ -108,6 +115,7 @@ module.exports = {
 
   accountId,
   createAccount,
+  login,
 
   registerClient,
   getClientConsents,

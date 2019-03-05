@@ -1,5 +1,6 @@
 const { query } = require('../adapters/postgres')
 const { camelCase } = require('changecase-objects')
+const { post } = require('axios')
 
 async function create ({ clientId, displayName, description, eventsUrl, jwksUrl, clientKey }) {
   const result = await query(`
@@ -38,7 +39,23 @@ async function get (clientId) {
   return camelCase(result.rows[0])
 }
 
+async function sendEventLoginApproved (loginData, accessToken) {
+  const result = await query(`
+    SELECT events_url FROM clients
+    WHERE client_id = $1
+  `, [loginData.clientId])
+  const eventsUrl = result.rows[0].events_url
+
+  const loginEvent = {
+    type: 'LOGIN_APPROVED',
+    accessToken,
+    loginData
+  }
+  post(eventsUrl, loginEvent)
+}
+
 module.exports = {
   create,
-  get
+  get,
+  sendEventLoginApproved
 }
