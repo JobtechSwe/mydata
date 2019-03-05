@@ -20,7 +20,10 @@ const read = async (consentId, domain, area) => {
       const content = await pds
         .get({ pdsProvider, pdsCredentials })
         .readFile(path, 'utf8')
-        .catch(_ => null)
+        .catch(_ => {
+          // TODO: Handle different error codes (stop handling all errors as if everything is fine and file is just missing...)
+          return null
+        })
       const result = {
         [domain]: {
           [area]: content

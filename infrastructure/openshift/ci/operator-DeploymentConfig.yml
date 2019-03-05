@@ -31,7 +31,7 @@ spec:
           - name: PORT
             value: '3000'
           - name: PGHOST
-            value: postgresql-operator-ci.my-data.svc
+            value: postgresql-operator-ci.mydata.svc
           - name: PGPORT
             value: '5432'
           - name: PGUSER
@@ -41,9 +41,9 @@ spec:
           - name: PGDATABASE
             value: mydata
           - name: DATABASE_URL
-            value: postgres://postgresuser:postgrespassword@postgresql-operator-ci.my-data.svc:5432/mydata
+            value: postgres://postgresuser:postgrespassword@postgresql-operator-ci.mydata.svc:5432/mydata
           - name: REDIS
-            value: 'redis://:fubar@redis-ci.my-data.svc:6379/'
+            value: 'redis://:fubar@redis-ci.mydata.svc:6379/'
           - name: APP_NAME
             value: operator
           - name: APM_SERVER

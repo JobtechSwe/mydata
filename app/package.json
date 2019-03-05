@@ -6,7 +6,9 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "NODE_ENV=test jest",
     "test:watch": "NODE_ENV=test jest --watchAll",
-    "lint": "eslint '**/*.js'"
+    "lint": "eslint '**/*.js'",
+    "e2e:build": "cd __e2e__/ && webpack",
+    "e2e:server": "npm run e2e:build && nodemon __e2e__/dist/ --watch __e2e__/dist/"
   },
   "contributors": [
     "Adam Näslund <adam.naslund@iteam.se>",
@@ -40,6 +42,7 @@
     "@babel/plugin-proposal-decorators": "^7.3.0",
     "@babel/plugin-transform-flow-strip-types": "^7.2.3",
     "@babel/runtime": "^7.3.1",
+    "@types/express": "^4.16.1",
     "@types/jest": "^23.3.13",
     "@types/react": "^16.7.22",
     "@types/react-native": "^0.57.33",
@@ -60,15 +63,19 @@
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-react": "^7.12.4",
     "eslint-plugin-standard": "^4.0.0",
+    "express": "^4.16.4",
     "jest": "23.6.0",
     "metro-react-native-babel-preset": "^0.47.1",
     "prettier": "^1.16.4",
+    "nodemon": "^1.18.10",
     "react-dom": "^16.7.0",
     "react-native-dotenv": "^0.2.0",
     "react-native-svg-transformer": "^0.12.1",
     "react-native-testing-library": "^1.5.0",
     "react-test-renderer": "^16.7.0",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "webpack": "^4.29.5",
+    "webpack-cli": "^3.2.3"
   },
   "rnpm": {
     "assets": [

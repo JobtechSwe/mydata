@@ -6,9 +6,9 @@ Before you begin, this guide assumes that...
 
 - ...you have the OpenShift CLI installed (oc) version 3.x
 - ...you have a functioning OpenShift cluster
-- ...you have created a project namespace (example: `my-data`)
+- ...you have created a project namespace (example: `mydata`)
 - ...you have run `oc login` towards your OpenShift cluster
-- ...you are set oc to use your project `oc project my-data`
+- ...you are set oc to use your project `oc project mydata`
 
 ## Components
 
@@ -22,7 +22,10 @@ oc create secret generic apm --from-literal=token=AverySECRETtoken
 # Replace aVERYsecretSECRET with your build secret
 oc create secret generic github-webhook-secret --from-literal=WebHookSecretKey=aVERYsecretSECRET
 # Replace the path below with a path to your TLS certificate file
-oc create secret generic tls --from-file=/home/ilix/Documents/jtech.se.crt
+oc create secret generic tls --from-file=/tmp/jtech.se.crt
+
+# Certificates for examples/cv
+oc create secret generic cv --from-file=/tmp/public.key --from-file=/tmp/private.key
 ```
 
 ### Shared resources
@@ -66,8 +69,8 @@ oc delete -f test/
 
 Replace `aVERYsecretSECRET` in the URL's below (see "Secrets" section above).
 
-- `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/cv-ci/webhooks/AverySECRETtoken/github`
-- `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/operator-ci/webhooks/AverySECRETtoken/github`
+- `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/mydata/buildconfigs/cv-ci/webhooks/AverySECRETtoken/github`
+- `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/mydata/buildconfigs/operator-ci/webhooks/AverySECRETtoken/github`
 
 #### Docker Hub
 
@@ -111,8 +114,8 @@ oc apply -f shared/
 oc apply -f ci/
 oc apply -f test/
 
-oc start-build cv-ci -n my-data
-oc start-build operator-ci -n my-data
+oc start-build cv-ci -n mydata
+oc start-build operator-ci -n mydata
 
 # Destroy everything
 oc delete -f test/

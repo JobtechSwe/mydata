@@ -64,3 +64,6 @@ buck-out/
 
 # VS code
 .vscode
+
+# Webpack bundle for app-e2e-server
+__e2e__/dist
