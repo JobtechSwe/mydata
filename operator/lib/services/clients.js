@@ -39,17 +39,17 @@ async function get (clientId) {
   return camelCase(result.rows[0])
 }
 
-async function sendEventLoginApproved (loginData, accessToken) {
+async function sendEventLoginApproved (payload, accessToken) {
   const result = await query(`
     SELECT events_url FROM clients
     WHERE client_id = $1
-  `, [loginData.clientId])
+  `, [payload.clientId])
   const eventsUrl = result.rows[0].events_url
 
   const loginEvent = {
     type: 'LOGIN_APPROVED',
     accessToken,
-    loginData
+    payload
   }
   post(eventsUrl, loginEvent)
 }

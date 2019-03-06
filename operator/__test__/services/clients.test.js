@@ -67,7 +67,7 @@ describe('services/clients', () => {
   })
 
   describe('#sendEventLoginApproved', async () => {
-    const loginData = {
+    const payload = {
       timestamp: '1551373858751',
       clientId: 'https://cv.tld',
       sessionId: '84845151884',
@@ -76,8 +76,8 @@ describe('services/clients', () => {
     const accessToken = 't0k3n'
 
     it('gets the event path from db', async () => {
-      await sendEventLoginApproved(loginData, accessToken)
-      expect(pg.client.query).toHaveBeenCalledWith(expect.any(String), [ loginData.clientId ])
+      await sendEventLoginApproved(payload, accessToken)
+      expect(pg.client.query).toHaveBeenCalledWith(expect.any(String), [ payload.clientId ])
     })
 
     it('posts data to event route', async () => {
@@ -89,9 +89,9 @@ describe('services/clients', () => {
       const loginEvent = {
         type: 'LOGIN_APPROVED',
         accessToken,
-        loginData
+        payload
       }
-      await sendEventLoginApproved(loginData, accessToken)
+      await sendEventLoginApproved(payload, accessToken)
       expect(axiosPost).toHaveBeenCalledWith('some_event_url', loginEvent)
     })
   })
