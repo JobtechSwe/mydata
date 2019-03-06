@@ -1,4 +1,4 @@
-# #!/bin/bash
+# #!/bin/sh
 echo '**** Running script for e2e & integration tests ****'
 
 # TODO: Lint, Test
