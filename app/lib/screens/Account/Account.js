@@ -14,14 +14,15 @@ export default class AccountScreen extends React.Component {
   }
 
   saveAccount = async account => {
-    /* 
-     * TODO(@all): Find out why it doesn't get passed this step after Dropbox 
+    /*
+     * TODO(@all): Find out why it doesn't get passed this step after Dropbox
      *
     if (account.keys && account.pds) {
       console.log('THIS', this)
       account = await save(account)
     }
     */
+
     await storeAccount(account)
 
     this.setState({ account })

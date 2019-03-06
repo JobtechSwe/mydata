@@ -5,12 +5,16 @@ import { sign, verify } from './crypto'
 import { getAccount } from './storage'
 import { Base64 } from 'js-base64'
 
-export async function get (id) {
+export async function get(id) {
   const account = await getAccount()
 
-  if (!account) { throw new Error('Account is not set!') }
+  if (!account) {
+    throw new Error('Account is not set!')
+  }
 
-  const url = `${Config.OPERATOR_URL}/consents/requests/${encodeURIComponent(id)}?accountId=${account.id}`
+  const url = `${Config.OPERATOR_URL}/consents/requests/${encodeURIComponent(
+    id
+  )}?accountId=${account.id}`
 
   let response
   try {
@@ -19,19 +23,26 @@ export async function get (id) {
     console.error('GET', url, error)
     throw error
   }
-  const { data: { data, signature, client } } = response
+  const {
+    data: { data, signature, client },
+  } = response
 
   let signingKey
-  const jwksUri = `${data.clientId}${client.jwksUrl}`
   try {
     signingKey = await getKey(signature.kid)
   } catch (error) {
-    console.error('GET', jwksUri, error)
+    console.error('GET', signature.kid, error)
     throw error
   }
 
   try {
-    if (!await verify(data, signature, signingKey.publicKey || signingKey.rsaPublicKey)) {
+    if (
+      !(await verify(
+        data,
+        signature,
+        signingKey.publicKey || signingKey.rsaPublicKey
+      ))
+    ) {
       throw new Error('Invalid signature')
     }
 
@@ -48,7 +59,7 @@ export async function get (id) {
   }
 }
 
-export async function approve ({ data }) {
+export async function approve({ data }) {
   const url = `${Config.OPERATOR_URL}/consents`
   let payload
   try {
@@ -60,11 +71,17 @@ export async function approve ({ data }) {
       accountKey: Base64.encode(account.keys.publicKey),
       clientId: data.clientId,
       consentRequestId: data.consentRequestId,
-      consentEncryptionKey: Base64.encode(encryptionKey.publicKey || encryptionKey.rsaPublicKey),
+      consentEncryptionKey: Base64.encode(
+        encryptionKey.publicKey || encryptionKey.rsaPublicKey
+      ),
       consentEncryptionKeyId: data.kid,
       scope: data.scope,
     }
-    const signature = await sign(consent, 'account_key', account.keys.privateKey)
+    const signature = await sign(
+      consent,
+      'account_key',
+      account.keys.privateKey
+    )
     payload = { data: consent, signature }
     await axios.post(url, payload)
   } catch (error) {

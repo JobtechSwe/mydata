@@ -77,28 +77,5 @@ const App = props => {
     </ThemeProvider>
   )
 }
-/*
-class App extends React.Component {
-  state = {
-    loggedIn: false,
-  }
-
-  async componentDidMount() {
-    let result = await getAccount()
-
-    result === undefined
-      ? this.setState({ loggedIn: false })
-      : this.setState({ loggedIn: true })
-  }
-
-  render() {
-    return (
-      <ThemeProvider theme={myDataTheme}>
-        {this.state.loggedIn ? <AppContainer /> : <Wizard />}
-      </ThemeProvider>
-    )
-  }
-}
-*/
 
 export default App
