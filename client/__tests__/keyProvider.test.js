@@ -1,17 +1,14 @@
-const { generateKeyPairSync } = require('crypto')
+const { generateKeyPair } = require('./_helpers')
+const crypto = require('../lib/crypto')
 const KeyProvider = require('../lib/keyProvider')
 
 const jsonToBase64 = (obj) => Buffer.from(JSON.stringify(obj), 'utf8').toString('base64')
 const base64ToJson = (str) => JSON.parse(Buffer.from(str, 'base64').toString('utf8'))
 
 describe('KeyProvider', () => {
-  let keyProvider, clientKeys, keyValueStore, jwksUrl
-  beforeEach(() => {
-    clientKeys = generateKeyPairSync('rsa', {
-      modulusLength: 1024,
-      publicKeyEncoding: { type: 'pkcs1', format: 'pem' },
-      privateKeyEncoding: { type: 'pkcs1', format: 'pem' }
-    })
+  let keyProvider, clientKeys, keyValueStore, domain, jwksUrl
+  beforeEach(async () => {
+    clientKeys = await generateKeyPair()
     keyValueStore = {
       load: jest.fn().mockName('load').mockResolvedValue(''),
       save: jest.fn().mockName('save').mockResolvedValue(),
@@ -21,7 +18,8 @@ describe('KeyProvider', () => {
       modulusLength: 1024,
       tempKeyExpiry: 100
     }
-    jwksUrl = 'http://localhost:4000/jwks'
+    domain = 'http://localhost:4000'
+    jwksUrl = `${domain}/jwks`
     keyProvider = new KeyProvider({ clientKeys, keyValueStore, keyOptions, jwksUrl })
   })
   describe('#getKey', () => {
@@ -212,6 +210,51 @@ describe('KeyProvider', () => {
 
       expect(keyValueStore.load).toHaveBeenCalledWith('documentKeys|>consent-id|domain|area')
       expect(result).toEqual(keys)
+    })
+  })
+  describe('#getDocumentEncryptionKey', () => {
+    it('returns decrypted aes document key', async () => {
+      const consentId = '19e82885-abfc-4e43-b35c-6d3807b5ebeb'
+      const area = 'cv'
+      const consentKeyPair = await generateKeyPair({ kid: `${jwksUrl}/enc_consent` })
+      const accountKeyPair = await generateKeyPair({ kid: `mydata://${consentId}/account_key` })
+      const aesDocumentKey = await crypto.generateDocumentKey()
+      const documentKeys = {
+        [consentKeyPair.kid]: crypto.encryptDocumentKey(aesDocumentKey, consentKeyPair.publicKey, 'base64'),
+        [accountKeyPair.kid]: crypto.encryptDocumentKey(aesDocumentKey, accountKeyPair.publicKey, 'base64')
+      }
+
+      // Expected: First get documentKeys
+      keyValueStore.load.mockResolvedValueOnce(jsonToBase64(documentKeys))
+      // ...then load own key and decrypt
+      keyValueStore.load.mockResolvedValueOnce(jsonToBase64(consentKeyPair))
+
+      const result = await keyProvider.getDocumentEncryptionKey(consentId, domain, area)
+
+      expect(keyValueStore.load).toHaveBeenNthCalledWith(1, `documentKeys|>${consentId}|${domain}|${area}`)
+      expect(keyValueStore.load).toHaveBeenNthCalledWith(2, `key|>${consentKeyPair.kid}`)
+
+      expect(result).toEqual(aesDocumentKey)
+    })
+  })
+  describe('#getDocumentDecryptionKey', () => {
+    it('returns decrypted aes document key', async () => {
+      const consentId = '19e82885-abfc-4e43-b35c-6d3807b5ebeb'
+      const consentKeyPair = await generateKeyPair({ kid: `${jwksUrl}/enc_consent` })
+      const accountKeyPair = await generateKeyPair({ kid: `mydata://${consentId}/account_key` })
+      const aesDocumentKey = await crypto.generateDocumentKey()
+      const documentKeys = {
+        [consentKeyPair.kid]: crypto.encryptDocumentKey(aesDocumentKey, consentKeyPair.publicKey, 'base64'),
+        [accountKeyPair.kid]: crypto.encryptDocumentKey(aesDocumentKey, accountKeyPair.publicKey, 'base64')
+      }
+      const b64DocumentKeys = jsonToBase64(documentKeys)
+
+      // Expected: First get matching keyPair
+      keyValueStore.load.mockResolvedValueOnce(jsonToBase64(consentKeyPair))
+
+      const result = await keyProvider.getDocumentDecryptionKey(b64DocumentKeys)
+      expect(keyValueStore.load).toHaveBeenNthCalledWith(1, `key|>${consentKeyPair.kid}`)
+      expect(result).toEqual(aesDocumentKey)
     })
   })
 })

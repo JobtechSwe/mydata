@@ -40,3 +40,12 @@ Projektet är indelat i flera delsystem:
 
 Data lagras krypterat i en s.k. PDS (Personal Data Storage). Just nu är Dropbox enda PDS som stöds, men det kommer utökas inom kort.
 
+## Install and develop (english)
+
+1. Clone this repo
+2. `npm run install-all`
+3. `docker-compose up -d` (will start elasticsearch, kibana, apm-server, redis (x2) and postgres (x2))
+4. Look in each subfolder for instructions on how to start each sub-project
+
+*Before pushing/PR:* `npm run e2e` in main repo. Also make sure you have run all (unit) test suites in the sub-projects you have edited. 
+

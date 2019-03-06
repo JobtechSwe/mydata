@@ -1,20 +1,20 @@
-const { get, set, expire, persist, del } = require('../adapters/redis')
+const redis = require('../adapters/redis')
 
 async function save (key, value, ttl) {
-  await set(key, value)
+  await redis.set(key, value)
   if (typeof ttl === 'number') {
-    await expire(key, Math.round(ttl / 1000))
+    await redis.expire(key, Math.round(ttl / 1000))
   } else {
-    await persist(key)
+    await redis.persist(key)
   }
 }
 
 async function load (key) {
-  return get(key)
+  return redis.get(key)
 }
 
 async function remove (key) {
-  return del(key)
+  return redis.del(key)
 }
 
 module.exports = {

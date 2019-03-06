@@ -1,5 +1,5 @@
 const createClient = require('../lib/client')
-const MemoryKeyValueStore = require('../lib/memoryKeyValueStore')
+const { createMemoryStore } = require('../lib/memoryStore')
 const { generateKeyPairSync } = require('crypto')
 const request = require('supertest')
 const express = require('express')
@@ -28,7 +28,7 @@ describe('routes', () => {
       jwksPath: '/jwks',
       eventsPath: '/events',
       clientKeys: clientKeys,
-      keyValueStore: new MemoryKeyValueStore(),
+      keyValueStore: createMemoryStore(),
       keyOptions: { modulusLength: 1024 }
     }
     client = createClient(config)

@@ -9,7 +9,7 @@ async function pluckAndSign (account) {
 
   return {
     data,
-    signature
+    signature,
   }
 }
 
@@ -19,9 +19,9 @@ function pluck (account) {
     lastName: account.lastName,
     accountKey: Base64.encode(account.keys.publicKey),
     pds: {
-      provider: 'dropbox',
-      access_token: account.pds.access_token
-    }
+      provider: account.pds.provider,
+      access_token: account.pds.access_token,
+    },
   }
   return data
 }
@@ -33,7 +33,7 @@ export async function register (account) {
     const { data: { data: { id } } } = await axios.post(url, payload)
     return id
   } catch (error) {
-    console.error('POST', url, payload, error)
+    console.error('POST', url, payload, error.message)
     throw error
   }
 }
@@ -44,7 +44,7 @@ export async function update (account) {
   try {
     await axios.put(url, payload)
   } catch (error) {
-    console.error('PUT', url, payload, error)
+    console.error('PUT', url, payload, error.message)
     throw error
   }
 }

@@ -1,7 +1,7 @@
 version: '3'
 services:
   apm-server:
-    image: docker.elastic.co/apm/apm-server:6.4.3
+    image: docker.elastic.co/apm/apm-server:6.5.4
     ports:
       - 8200:8200
     depends_on:
@@ -18,7 +18,7 @@ services:
     command: apm-server -e -E apm-server.rum.enabled=$${RUM_ENABLED} -E apm-server.rum.rate_limit=$${RUM_RATE_LIMIT} -E apm-server.rum.allow_origins=$${RUM_ALLOW_ORIGINS} -E apm-server.rum.library_pattern=$${RUM_LIBRARY_PATTERN} -E apm-server.rum.exclude_from_grouping=$${RUM_EXCLUDE_FROM_GROUPING} -E apm-server.rum.source_mapping.cache.expiration=$${RUM_SOURCE_MAPPING_CACHE_EXPIRATION} -E apm-server.rum.source_mapping.index_pattern=$${RUM_SOURCE_MAPPING_INDEX_PATTERN}
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.3
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.4
     environment:
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
@@ -35,7 +35,7 @@ services:
       retries: 3
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:6.4.3
+    image: docker.elastic.co/kibana/kibana:6.5.4
     environment:
       SERVER_NAME: kibana
       ELASTICSEARCH_URL: http://elasticsearch:9200
@@ -48,24 +48,6 @@ services:
       retries: 3
     depends_on:
       - elasticsearch
-
-  operator:
-    image: jobtechswe/mydata-operator
-    environment:
-      - PORT=3000
-      - PGHOST=postgres-operator
-      - PGPORT=5432
-      - PGUSER=postgresuser
-      - PGPASSWORD=postgrespassword
-      - PGDATABASE=mydata
-      - DATABASE_URL=postgres://postgresuser:postgrespassword@postgres-operator:5432/mydata
-      - REDIS=redis://:fubar@redis-operator:6379/
-      - APP_NAME=mydata-operator
-      - APM_SERVER=http://apm-server:8200
-    ports:
-      - 3000:3000
-    depends_on:
-      - postgres-operator
 
   redis-operator:
     image: redis:4.0-alpine
@@ -89,11 +71,10 @@ services:
       timeout: 5s
       retries: 5
 
-  cv:
-    image: jobtechswe/mydata-cv
-    environment:
-      - PORT=4000
-      - APP_NAME='mydata-cv api'
-      - APM_SERVER=http://apm-server:8200
+  redis-cv:
+    image: redis:4.0-alpine
     ports:
-      - 4000:4000
+      - 6380:6379
+    environment:
+      - REDIS_PASSWORD=fubar
+    command: sh -c 'redis-server --requirepass $${REDIS_PASSWORD}'

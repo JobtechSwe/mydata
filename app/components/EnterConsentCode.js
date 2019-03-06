@@ -9,7 +9,7 @@ class EnterConsentCode extends Component {
   state = {
     view: 'enter',
     code: '',
-    validated: false
+    validated: false,
   }
 
   scan = () => {

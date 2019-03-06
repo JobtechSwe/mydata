@@ -1,18 +1,14 @@
 const createClient = require('../lib/client')
-const MemoryKeyValueStore = require('../lib/memoryKeyValueStore')
+const { createMemoryStore } = require('../lib/memoryStore')
 const axios = require('axios')
-const { generateKeyPairSync, createVerify } = require('crypto')
+const { generateKeyPair, verifySignature } = require('./_helpers')
 jest.mock('axios')
 
 describe('client', () => {
   let config, clientKeys
 
-  beforeEach(() => {
-    clientKeys = generateKeyPairSync('rsa', {
-      modulusLength: 1024,
-      publicKeyEncoding: { type: 'pkcs1', format: 'pem' },
-      privateKeyEncoding: { type: 'pkcs1', format: 'pem' }
-    })
+  beforeEach(async () => {
+    clientKeys = await generateKeyPair()
     config = {
       displayName: 'CV app',
       description: 'A CV app with a description which is at least 10 chars',
@@ -21,7 +17,7 @@ describe('client', () => {
       jwksPath: '/jwks',
       eventsPath: '/events',
       clientKeys: clientKeys,
-      keyValueStore: new MemoryKeyValueStore(),
+      keyValueStore: createMemoryStore(),
       keyOptions: { modulusLength: 1024 }
     }
   })
@@ -127,11 +123,7 @@ describe('client', () => {
       it('signs the payload', async () => {
         await client.connect()
         const [, { data, signature }] = axios.post.mock.calls[0]
-        const verified = createVerify(signature.alg)
-          .update(JSON.stringify(data))
-          .verify(clientKeys.publicKey, signature.data, 'base64')
-
-        expect(verified).toEqual(true)
+        expect(verifySignature({ data, signature }, clientKeys.publicKey)).toEqual(true)
       })
     })
   })

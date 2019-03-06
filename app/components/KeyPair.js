@@ -2,14 +2,14 @@ import React, { Component } from 'react'
 import { View } from 'react-native'
 import { Text } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/AntDesign'
-import { RSA } from 'react-native-rsa-native'
+import { generateKeys } from '../services/crypto'
 
 export default class KeyPair extends Component {
 
   state = {
     keys: {},
     icon: 'loading1',
-    status: ''
+    status: '',
   }
 
   componentDidMount() {
@@ -17,7 +17,7 @@ export default class KeyPair extends Component {
       this.setState({
         keys: this.props.keys,
         icon: 'key',
-        status: 'RSA key pair'
+        status: 'RSA key pair',
       })
     } else {
       this.generate()
@@ -27,14 +27,9 @@ export default class KeyPair extends Component {
   generate = async () => {
     this.setState({ icon: 'loading1', status: 'Generating keys' })
 
-    const keyPair = await RSA.generateKeys(4096)
-    const keys = {
-      publicKey: keyPair.public,
-      privateKey: keyPair.private
-    }
+    const keys = await generateKeys(2048)
 
     this.setState({ keys, icon: 'key', status: 'RSA key pair' })
-
     this.props.onGenerate(keys)
   }
 

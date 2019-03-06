@@ -9,23 +9,25 @@ import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper'
 const theme = {
   ...DefaultTheme,
   colors: {
-    ...DefaultTheme.colors
+    ...DefaultTheme.colors,
   },
 }
 
 const stackConfig = {
-  initialRouteName: 'Home'
+  initialRouteName: 'Home',
 }
 
-const App = createStackNavigator({
+const AppStackNavigator = createStackNavigator({
   Home: { screen: HomeScreen },
   Account: { screen: AccountScreen },
   ManageConsentsRequest: { screen: ManageConsentsRequestScreen },
-  ManageLoginRequest: { screen: ManageLoginRequestScreen }
+  ManageLoginRequest: { screen: ManageLoginRequestScreen },
 }, stackConfig)
 
-export default () => (
+const App = () => (
   <PaperProvider theme={theme}>
-    <App/>
+    <AppStackNavigator/>
   </PaperProvider>
 )
+
+export default App

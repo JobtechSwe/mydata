@@ -1,0 +1,75 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: TEST
+  name: operator-test
+spec:
+  replicas: 1
+  selector:
+    app: TEST
+    deploymentconfig: operator-test
+  strategy:
+    activeDeadlineSeconds: 21600
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      labels:
+        app: TEST
+        deploymentconfig: operator-test
+    spec:
+      containers:
+        - env:
+          - name: NODE_ENV
+            value: production
+          - name: PORT
+            value: '3000'
+          - name: PGHOST
+            value: postgresql-operator-test.mydata.svc
+          - name: PGPORT
+            value: '5432'
+          - name: PGUSER
+            value: postgresuser
+          - name: PGPASSWORD
+            value: postgrespassword
+          - name: PGDATABASE
+            value: mydata
+          - name: DATABASE_URL
+            value: postgres://postgresuser:postgrespassword@postgresql-operator-test.mydata.svc:5432/mydata
+          - name: REDIS
+            value: 'redis://:fubar@redis-test.mydata.svc:6379/'
+          - name: APP_NAME
+            value: mydata-operator
+          - name: APM_SERVER
+            value: 'https://f7a3f8bb7ac7404eb669a8798e460701.apm.eu-west-1.aws.cloud.es.io'
+          - name: APM_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: apm
+                key: token
+          image: operator:test
+          imagePullPolicy: Always
+          name: operator-test
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
+  triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+          - operator-test
+        from:
+          kind: ImageStreamTag
+          name: 'operator:test'
+      
+      type: ImageChange

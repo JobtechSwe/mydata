@@ -45,6 +45,7 @@ async function transaction (queries) {
     return results
   } catch (error) {
     await conn.query('ROLLBACK')
+    throw error
   } finally {
     await conn.end()
   }

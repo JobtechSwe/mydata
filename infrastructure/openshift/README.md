@@ -6,9 +6,9 @@ Before you begin, this guide assumes that...
 
 - ...you have the OpenShift CLI installed (oc) version 3.x
 - ...you have a functioning OpenShift cluster
-- ...you have created a project namespace (example: `my-data`)
+- ...you have created a project namespace (example: `mydata`)
 - ...you have run `oc login` towards your OpenShift cluster
-- ...you are set oc to use your project `oc project my-data`
+- ...you are set oc to use your project `oc project mydata`
 
 ## Components
 
@@ -19,8 +19,13 @@ First of all, let's create some secrets that will be used in your environment.
 ```bash
 # Replace AverySECRETtoken with your APM token
 oc create secret generic apm --from-literal=token=AverySECRETtoken
+# Replace aVERYsecretSECRET with your build secret
+oc create secret generic github-webhook-secret --from-literal=WebHookSecretKey=aVERYsecretSECRET
 # Replace the path below with a path to your TLS certificate file
-oc create secret generic tls --from-file=/home/ilix/Documents/jtech.se.crt
+oc create secret generic tls --from-file=/tmp/jtech.se.crt
+
+# Certificates for examples/cv
+oc create secret generic cv --from-file=/tmp/public.key --from-file=/tmp/private.key
 ```
 
 ### Shared resources
@@ -28,9 +33,8 @@ oc create secret generic tls --from-file=/home/ilix/Documents/jtech.se.crt
 Both `MyData-CV` and `MyData-Operator` use PostgreSQL and Redis. These following commands will deploy instances of these to be used by the CI and TEST environments.
 
 ```bash
-# Deploy ephemeral redis and postgres
-oc apply -f ci.yml
-oc apply -f test.yml
+# Deploy shared things (ImageStreams + ephemeral databases)
+oc apply -f shared/
 ```
 
 ### ImageStreams and automatic builds
@@ -48,36 +52,25 @@ oc apply -f operator-ImageStream.yml
 ### Deployments
 
 ```bash
-# CI
-oc apply -f cv-CI.yml
-oc apply -f operator-CI.yml
+# Deploy CI
+oc apply -f ci/
 
-# TEST
-oc apply -f cv-TEST.yml
-oc apply -f operator-TEST.yml
+# Deploy TEST
+oc apply -f test/
 
 # Tear down
-oc delete -f cv-CI.yml
-oc delete -f cv-TEST.yml
-oc delete -f operator-CI.yml
-oc delete -f operator-TEST.yml
+oc delete -f ci/
+oc delete -f test/
 ```
 
 ### Other information
 
-#### Build webhooks
+#### GitHub webhooks
 
-Replace `AverySECRETtoken` in the URL's below.
+Replace `aVERYsecretSECRET` in the URL's below (see "Secrets" section above).
 
-- `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/cv-ci/webhooks/AverySECRETtoken/github`
-- `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/cv-test/webhooks/AverySECRETtoken/github`
-- `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/operator-ci/webhooks/AverySECRETtoken/github`
-- `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/my-data/buildconfigs/operator-test/webhooks/AverySECRETtoken/github`
-
-### Source
-
-- MyData-CV: https://github.com/JobtechSwe/mydata-cv
-- MyData-Operator: https://github.com/JobtechSwe/mydata-operator
+- `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/mydata/buildconfigs/cv-ci/webhooks/AverySECRETtoken/github`
+- `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/mydata/buildconfigs/operator-ci/webhooks/AverySECRETtoken/github`
 
 #### Docker Hub
 
@@ -86,6 +79,11 @@ Replace `AverySECRETtoken` in the URL's below.
 
 ## TODO
 
+- [ ] Deploy redis with storage
+- [ ] Hur gör man en lokal deploy enklast?
+- [ ] Kort beskrivning av vad redis, postgres, apm används till
+- [ ] OpenShift-logins till Adam, Einar och Johan
+- [ ] Push till Docker Hub vid bygge
 - [x] Move ImageStream to its own file
 - [x] Create shared CV ImageStream
 - [x] Create shared Operator ImageStream
@@ -93,17 +91,13 @@ Replace `AverySECRETtoken` in the URL's below.
 - [x] Create yaml for ephemeral postgres
 - [x] Fix naming for stuff so that -ci and -test are in the end
 - [x] Fix hostname for ci stuff (mydata-cv-ci. etc)
-- [ ] Deploy redis with storage
 - [x] Deploy postgresql with storage (/lab)
 - [x] Have a look at the permissions in mydata-cv Dockerfile
-- [ ] Kort beskrivning av vad redis, postgres, apm används till
 - [x] Byggen (cv)
 - [x] Lokal test utan APM?
-- [ ] Hur gör man en lokal deploy enklast?
 - [x] Vilka storage-providers finns det stöd för? (endast dropbox?)
-- [ ] OpenShift-logins till Adam, Einar och Johan
 - [x] Arbeta i develop-branch, release/test från master
-- [ ] Push till Docker Hub vid bygge
+- [x] GitHub webhook secret
 
 ### Nice-to-have
 
@@ -116,28 +110,24 @@ Replace `AverySECRETtoken` in the URL's below.
 # TL;DR; just give me some copy-pasta
 
 # Run everything
-oc apply -f ci.yml
-oc apply -f test.yml
-oc apply -f cv-ImageStream.yml
-oc apply -f operator-ImageStream.yml
-oc apply -f cv-CI.yml
-oc apply -f operator-CI.yml
-oc apply -f cv-TEST.yml
-oc apply -f operator-TEST.yml
+oc apply -f shared/
+oc apply -f ci/
+oc apply -f test/
 
-oc start-build cv-ci -n my-data
-oc start-build operator-ci -n my-data
-
-oc start-build cv-test -n my-data
-oc start-build operator-test -n my-data
+oc start-build cv-ci -n mydata
+oc start-build operator-ci -n mydata
 
 # Destroy everything
-oc delete -f operator-TEST.yml
-oc delete -f operator-CI.yml
-oc delete -f cv-TEST.yml
-oc delete -f cv-CI.yml
-oc delete -f operator-ImageStream.yml
-oc delete -f cv-ImageStream.yml
-oc delete -f test.yml
-oc delete -f ci.yml
+oc delete -f test/
+oc delete -f ci/
+oc delete -f shared/
+```
+
+## Test environment
+
+```bash
+chmod +x tag-test
+
+# To tag the code and deploy to test environment, run the following:
+./tag-test v0.0.1 # Where v0.0.1 is the next semver version.
 ```

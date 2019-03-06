@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql-operator-test
+  labels:
+    app: TEST
+spec:
+  ports:
+    - name: postgresql
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+  selector:
+    name: postgresql-operator-test
+  sessionAffinity: None
+  type: ClusterIP

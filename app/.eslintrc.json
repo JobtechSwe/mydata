@@ -1,4 +1,22 @@
 {
-  "extends": ["standard", "plugin:jest/recommended" ],
-  "plugins": ["jest"]
+  "parser": "babel-eslint",
+  "settings": {
+    "react": {
+      "createClass": "createReactClass",
+      "pragma": "React",
+      "version": "detect"
+    }
+  },
+  "extends": ["standard", "plugin:jest/recommended", "eslint:recommended", "plugin:react/recommended"],
+  "plugins": ["jest"],
+  "rules": {
+    "comma-dangle": ["error", "always-multiline"],
+    "jsx-quotes": ["error", "prefer-double"],
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "object-curly-spacing": ["error", "always"],
+    "quotes": ["error", "single"],
+    "react/prop-types": "off",
+    "semi": ["error", "never"],
+    "no-console": ["error", { "allow": ["warn", "error", "info"] }]
+  }
 }

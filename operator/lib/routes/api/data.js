@@ -19,7 +19,7 @@ router.get('/:domain?/:area?', async (req, res, next) => {
       : null
 
     const data = await read(consentId, domain, area)
-    res.send(data)
+    res.send({ data })
   } catch (error) {
     next(error)
   }
@@ -37,7 +37,8 @@ router.post('/:domain?/:area?', async (req, res, next) => {
     const area = req.params.area
       ? decodeURIComponent(req.params.area)
       : null
-    const data = req.body
+    const data = req.body.data
+    console.log(data)
 
     await write(consentId, domain, area, data)
     res.sendStatus(201)

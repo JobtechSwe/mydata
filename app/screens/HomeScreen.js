@@ -1,5 +1,5 @@
 import React from 'react'
-import { Alert, Button, Text, View, Linking, Platform, ScrollView } from 'react-native'
+import { Alert, Button, Text, View, Linking, ScrollView } from 'react-native'
 import JSONTree from 'react-native-json-tree'
 import Screen from './Screen'
 import styled from 'styled-components'
@@ -11,18 +11,6 @@ const WelcomeText = styled(Text)`
   margin: 10px;
 `
 
-const InstructionText = styled(Text)`
-  text-align: center;
-  color: #333;
-  margin-bottom: 6px;
-`
-
-const ConsentText = styled(Text)`
-  text-align: center;
-  color: #333;
-  margin-bottom: 6px;
-`
-
 const StyledView = styled(View)`
   flex: 1;
   justify-content: center;
@@ -32,22 +20,22 @@ const StyledView = styled(View)`
 
 export default class HomeScreen extends Screen {
   state = {
-    account: {}
+    account: {},
   }
 
   componentDidMount() {
-    Linking.addEventListener('url', this.handleOpenURL);
+    Linking.addEventListener('url', this.handleOpenURL)
   }
   componentWillUnmount() {
     Linking.removeEventListener('url', this.handleOpenURL)
   }
 
   handleOpenURL = (event) => {
-    this.navigate(event.url);
+    this.navigate(event.url)
   }
 
   navigate = (url) => {
-    const { navigate } = this.props.navigation;
+    const { navigate } = this.props.navigation
     if (/mydata:\/\/callback/.test(url)) {
       navigate('Account')
     }
@@ -77,7 +65,7 @@ export default class HomeScreen extends Screen {
   clearAccount = async () => {
     Alert.alert('Clear account', 'Are you sure you want to clear your account? This is a REALLY bad idea!', [
       { text: 'Cancel', onPress: () => {}, style: 'cancel' },
-      { text: 'I never liked this account anyway', onPress: () => this.doClearAccount() }
+      { text: 'I never liked this account anyway', onPress: () => this.doClearAccount() },
     ])
   }
 
@@ -91,12 +79,11 @@ export default class HomeScreen extends Screen {
   readAccountFromStorage = async () => {
     const account = await getAccount()
     this.setState({
-      account
+      account,
     })
   }
 
   render() {
-    const { navigate } = this.props.navigation;
     return (
       <StyledView>
         <WelcomeText>Hello {this.state.account?.firstName} {this.state.account?.lastName}!</WelcomeText>
@@ -108,6 +95,6 @@ export default class HomeScreen extends Screen {
           <JSONTree data={this.state.account || {}} />
         </ScrollView>
       </StyledView>
-    );
+    )
   }
 }

@@ -4,11 +4,9 @@
   "description": "End-to-end testing for mydata",
   "main": "index.js",
   "scripts": {
-    "open": "cypress open",
-    "test": "cypress run",
-    "test:chrome": "cypress run --browser chrome",
-    "test:firefox": "cypress run --browser firefox",
-    "test:electron": "cypress run --headed"
+    "cypress": "cypress run",
+    "cypress:open": "cypress open",
+    "jest": "OPERATOR_URL='http://localhost:3001' jest --runInBand --verbose"
   },
   "repository": {
     "type": "git",
@@ -26,18 +24,19 @@
   },
   "homepage": "https://github.com/JobtechSwe/mydata#readme",
   "devDependencies": {
+    "axios": "^0.18.0",
     "cypress": "^3.1.5",
     "eslint": "^5.13.0",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-cypress": "^2.2.0",
     "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jest": "^22.3.0",
     "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-promise": "^4.0.1",
-    "eslint-plugin-standard": "^4.0.0"
+    "eslint-plugin-standard": "^4.0.0",
+    "express": "^4.16.4",
+    "jest": "^24.1.0",
+    "jsonwebtoken": "^8.5.0"
   },
-  "dependencies": {
-    "i": "^0.3.6",
-    "mydata-operator": "file:../operator",
-    "npm": "^6.7.0"
-  }
+  "dependencies": {}
 }

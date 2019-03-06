@@ -60,11 +60,11 @@ describe('routes /api/data', () => {
     dfs.filesystem = {
       'data': {
         [encodeURIComponent('localhost:4000')]: {
-          'cv.json': '{"cv":"foo"}',
-          'personal.json': '{"name":"Johan"}'
+          'cv.mydata.txt': '{"cv":"foo"}',
+          'personal.mydata.txt': '{"name":"Johan"}'
         },
         [encodeURIComponent('linkedin.com')]: {
-          'experience.json': '{"experience":1}'
+          'experience.mydata.txt': '{"experience":1}'
         }
       }
     }
@@ -89,7 +89,7 @@ describe('routes /api/data', () => {
           'experience': '{"experience":1}'
         }
       }
-      expect(response.body).toEqual(expected)
+      expect(response.body).toEqual({ data: expected })
     })
     it('reads all data for the correct account and domain', async () => {
       const domain = 'localhost:4000'
@@ -106,7 +106,7 @@ describe('routes /api/data', () => {
           'personal': '{"name":"Johan"}'
         }
       }
-      expect(response.body).toEqual(expected)
+      expect(response.body).toEqual({ data: expected })
     })
     it('reads all data for the correct account, domain and area', async () => {
       const domain = 'localhost:4000'
@@ -123,7 +123,7 @@ describe('routes /api/data', () => {
           'personal': '{"name":"Johan"}'
         }
       }
-      expect(response.body).toEqual(expected)
+      expect(response.body).toEqual({ data: expected })
     })
   })
 })

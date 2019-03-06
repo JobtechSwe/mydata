@@ -7,6 +7,9 @@ import { Base64 } from 'js-base64'
 
 export async function get (id) {
   const account = await getAccount()
+
+  if (!account) { throw new Error('Account is not set!') }
+
   const url = `${Config.OPERATOR_URL}/consents/requests/${encodeURIComponent(id)}?accountId=${account.id}`
 
   let response
@@ -35,9 +38,9 @@ export async function get (id) {
     return {
       data: {
         ...data,
-        consentRequestId: id
+        consentRequestId: id,
       },
-      client
+      client,
     }
   } catch (error) {
     console.error(error)
@@ -59,7 +62,7 @@ export async function approve ({ data }) {
       consentRequestId: data.consentRequestId,
       consentEncryptionKey: Base64.encode(encryptionKey.publicKey || encryptionKey.rsaPublicKey),
       consentEncryptionKeyId: data.kid,
-      scope: data.scope
+      scope: data.scope,
     }
     const signature = await sign(consent, 'account_key', account.keys.privateKey)
     payload = { data: consent, signature }

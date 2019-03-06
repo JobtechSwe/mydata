@@ -4,13 +4,12 @@
   "description": "A Data Source/Data Sink offering a searchable CV",
   "main": "server.js",
   "scripts": {
-    "start": "node .",
     "build": "next build",
-    "dev": "npm run migrate up && nodemon --watch ./api --watch ./components --watch ./pages --watch ./services --watch server.js",
+    "start": "node server.js",
+    "dev": "nodemon --watch ./api --watch ./components --watch ./pages --watch ./services --watch server.js",
     "test": "NODE_ENV=test jest",
     "test:watch": "NODE_ENV=test jest --watchAll",
-    "lint": "eslint '**/*.js'",
-    "migrate": "DATABASE_URL=postgres://postgresuser:postgrespassword@localhost:5433/cv node-pg-migrate"
+    "lint": "eslint '**/*.js'"
   },
   "contributors": [
     "Adam Näslund <adam.naslund@iteam.se>",
@@ -24,7 +23,7 @@
   },
   "homepage": "https://github.com/JobtechSwe/mydata/example#readme",
   "dependencies": {
-    "@mydata/client": "0.21.0",
+    "@mydata/client": "0.22.3",
     "@smooth-ui/core-sc": "^7.1.1",
     "axios": "^0.18.0",
     "changecase-objects": "^1.1.0",
@@ -36,8 +35,6 @@
     "jsonwebtoken": "^8.3.0",
     "morgan": "^1.9.1",
     "next": "^7.0.3",
-    "node-pg-migrate": "^3.16.0",
-    "pg": "^7.8.0",
     "qrcode.react": "^0.8.0",
     "react": "next",
     "react-dom": "next",
