@@ -1,5 +1,6 @@
 const { query } = require('../adapters/postgres')
 const { sendEventLoginApproved } = require('../services/clients')
+const { createToken } = require('./jwt')
 const { v4 } = require('uuid')
 const { camelCase } = require('changecase-objects')
 const schemas = require('./schemas')
@@ -40,9 +41,11 @@ async function login (accountId, data) {
 
   const result = await query('SELECT COUNT(*) FROM consent_requests WHERE account_id=$1 AND consent_id=$2', [accountId, data.consentId])
   if (result.rows[0].count === '0') {
-    throw new Error('Consent does not belong to user')
+    throw new Error('Login denied. Consent does not belong to user')
   }
-  sendEventLoginApproved(data)
+
+  const accessToken = createToken({ consentId: data.consentId })
+  sendEventLoginApproved(data, accessToken)
 }
 
 module.exports = {

@@ -5,6 +5,9 @@ jest.mock('../../lib/adapters/redis')
 jest.mock('../../lib/services/clients')
 const { sendEventLoginApproved } = require('../../lib/services/clients')
 
+jest.mock('../../lib/services/jwt')
+const { createToken } = require('../../lib/services/jwt')
+
 describe('services/accounts', () => {
   afterEach(() => {
     pg.clearMocks()
@@ -108,12 +111,15 @@ describe('services/accounts', () => {
           count: '0'
         }]
       })
-      await expect(login(validAccountId, validData)).rejects.toThrowError(new Error('Consent does not belong to user'))
+      await expect(login(validAccountId, validData)).rejects.toThrowError(new Error('Login denied. Consent does not belong to user'))
     })
 
-    it('calls client service to send login approval', async () => {
-      const accessToken = 'TODO: generate this'
+    it('generates and uses access token', async () => {
+      const accessToken = 'a token token'
+      createToken.mockReturnValue(accessToken)
+
       await login(validAccountId, validData)
+      expect(createToken).toHaveBeenCalledWith({ consentId: validData.consentId })
       expect(sendEventLoginApproved).toHaveBeenCalledWith(validData, accessToken)
     })
   })

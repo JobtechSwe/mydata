@@ -67,7 +67,7 @@ router.post('/:accountId/login', async (req, res, next) => {
   const { params: { accountId }, body } = req
   try {
     await login(accountId, body)
-    res.send()
+    res.send('Login successful')
   } catch (error) {
     if (error.name === 'ValidationError') {
       next(createError(400, error))
