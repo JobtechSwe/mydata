@@ -1,10 +1,6 @@
 import React from 'react'
-import { Dimensions } from 'react-native'
 import EnterConsentCode from '../../components/EnterConsentCode'
 import ConsentRequest from '../../components/ConsentRequest'
-import QRCodeScanner from 'react-native-qrcode-scanner'
-import { Mask, Svg, Rect } from 'react-native-svg'
-import { NavigationActions } from 'react-navigation'
 
 class ManageConsentsRequestScreen extends React.Component {
   state = {

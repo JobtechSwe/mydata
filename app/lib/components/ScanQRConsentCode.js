@@ -1,12 +1,19 @@
 import React, { Component } from 'react'
-import { AppRegistry, Dimensions, Text } from 'react-native'
+import { AppRegistry, Dimensions, Clipboard, Alert } from 'react-native'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 import { Mask, Svg, Rect } from 'react-native-svg'
-import { PrimaryButton } from './elements/Button/Button'
+import DeviceInfo from 'react-native-device-info'
 
 export default class ScanQRConsentCode extends Component {
   state = {
     code: '',
+  }
+
+  async pasteQR () {
+    if (DeviceInfo.isEmulator()) {
+      const qr = await Clipboard.getString()
+      this.props.onRead(qr)
+    }
   }
 
   render() {
@@ -18,10 +25,12 @@ export default class ScanQRConsentCode extends Component {
         cameraStyle={{
           height: '100%',
         }}
+        cameraProps={{ captureAudio: false }}
         showMarker={true}
         customMarker={
           <>
-            <Svg width="100%" height="100%">
+            <Svg width="100%" height="100%"
+              onTouchEnd={() => this.pasteQR()}>
               <Mask id="qrMask">
                 <Rect x="0" y="0" width="100%" height="100%" fill="white" />
 

@@ -1,4 +1,5 @@
 import React from 'react'
+import { Alert } from 'react-native'
 import { Wrap, ScrollViewWrap } from '../../components/View/Wrapper'
 import { storeAccount } from '../../services/storage'
 import Register from '../../components/Register/Register'
@@ -14,32 +15,31 @@ export default class AccountScreen extends React.Component {
   }
 
   saveAccount = async account => {
-    /*
-     * TODO(@all): Find out why it doesn't get passed this step after Dropbox
-     *
-    if (account.keys && account.pds) {
-      console.log('THIS', this)
-      account = await save(account)
-    }
-    */
+    try {
+      if (account.keys && account.pds) {
+        account = await save(account)
+      }
 
-    await storeAccount(account)
+      await storeAccount(account)
 
-    this.setState({ account })
+      this.setState({ account })
 
-    switch (this.state.status) {
-      case 'register':
-        this.setState({ status: 'generateKeys' })
-        break
-      case 'generateKeys':
-        this.setState({ status: 'choosePds' })
-        break
-      case 'choosePds':
-        this.setState({ status: 'finished' })
-        break
-      default:
-        this.setState({ status: 'register' })
-        break
+      switch (this.state.status) {
+        case 'register':
+          this.setState({ status: 'generateKeys' })
+          break
+        case 'generateKeys':
+          this.setState({ status: 'choosePds' })
+          break
+        case 'choosePds':
+          this.setState({ status: 'finished' })
+          break
+        default:
+          this.setState({ status: 'register' })
+          break
+      }
+    } catch (err) {
+      Alert.alert('Error', `${err.message}\n${err.stack}`, [{ text: '"OK"' }])
     }
   }
 

@@ -1,11 +1,7 @@
 import React from 'react'
 import { Alert, Button, Linking } from 'react-native'
-import JSONTree from 'react-native-json-tree'
-import styled from 'styled-components'
 import { getAccount, storeAccount } from '../../services/storage'
-import { Input } from '../../components/elements/Input/Input'
-import { PrimaryButton } from '../../components/elements/Button/Button'
-import { H1, Paragraph } from '../../components/typography/Typography'
+import { H1 } from '../../components/typography/Typography'
 import { Wrap, ScrollViewWrap } from '../../components/View/Wrapper'
 
 export default class HomeScreen extends React.Component {
