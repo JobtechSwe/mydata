@@ -9,7 +9,7 @@ router.use('/health', health)
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
-  res.render('index', { title: 'Express' })
+  res.send({ name: 'Smooth Operator' })
 })
 
 module.exports = router
