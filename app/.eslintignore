@@ -2,3 +2,4 @@ ios/**
 android/**
 node_modules/**
 *.config.js
+__e2e__/dist/**

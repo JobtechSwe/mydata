@@ -83,11 +83,16 @@ describe('adapters/pds', () => {
   describe('#providers', () => {
     it('returns a list of supported providers', () => {
       const providers = pds.providers()
-      expect(providers).toEqual([{
-        name: 'Dropbox',
-        link: expect.any(String),
-        img: expect.any(String)
-      }])
+      expect(providers).toEqual([
+        {
+          name: 'Dropbox',
+          link: expect.any(String),
+          img: expect.any(String)
+        },
+        {
+          name: 'In memory provider'
+        }
+      ])
     })
   })
 })

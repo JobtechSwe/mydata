@@ -13,8 +13,9 @@ if (process.env.APM_SERVER) {
   console.log('No APM instrumentation configured')
 }
 console.log(`NODE_ENV: ${process.env.NODE_ENV}`)
+
 const app = require('./app')
-const debug = require('debug')('mydata-operator:server')
+
 const http = require('http')
 
 /**
@@ -93,5 +94,5 @@ function onListening () {
   const bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port
-  debug('Listening on ' + bind)
+  console.log('Listening on ' + bind)
 }

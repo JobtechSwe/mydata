@@ -1,6 +1,13 @@
 const v4Regexp = /[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}/i
 
 describe('Consent request for example/cv', () => {
+  beforeEach(() => {
+    cy.clearAccount()
+
+    cy.window().then(win => {
+      win.sessionStorage.clear()
+    })
+  })
   it('Loads auth page and displays consent request id', () => {
     cy
       .visit('/')
@@ -21,5 +28,32 @@ describe('Consent request for example/cv', () => {
       })
 
     cy.visit('/')
+  })
+
+  it('Profile page is loaded when consent is approved', () => {
+    cy
+      .createAccount({ firstName: 'Johan', lastName: 'Öbrink' })
+
+    cy
+      .visit('/')
+
+    cy
+      .get('button')
+      .contains('Log in')
+      .click()
+
+    cy
+      .get('[data-cy="consent-request-id"]')
+      .then(res => {
+        const id = res[0].innerHTML
+        return cy.getConsentRequest(id)
+      })
+      .then(consentReq => {
+        return cy.approveConsentRequest(consentReq)
+      })
+
+    cy
+      .url()
+      .should('include', '/profile')
   })
 })
