@@ -1,4 +1,4 @@
-FROM node:11
+FROM node:10
 
 # Setup normal user.
 ENV USER=operator-user
