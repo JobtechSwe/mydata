@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  name: app
+spec:
+  runPolicy: Serial
+  completionDeadlineSeconds: 1800
+  triggers:
+    -
+      type: GitHub
+      github:
+        secretReference:
+          name: github-webhook-secret
+  source:
+    git:
+      ref: master
+      uri: https://github.com/jobtechswe/mydata
+    contextDir: app
+  strategy:
+    dockerStrategy: {}
+  output:
+    to:
+      kind: ImageStreamTag
+      name: app:latest
+  resources:
+    limits:
+      memory: 1Gi
+---
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  name: app-dockerhub
+spec:
+  runPolicy: Serial
+  completionDeadlineSeconds: 1800
+  triggers:
+    -
+      type: GitHub
+      github:
+        secretReference:
+          name: github-webhook-secret
+  source:
+    git:
+      ref: master
+      uri: https://github.com/jobtechswe/mydata
+    contextDir: app
+  strategy:
+    dockerStrategy: {}
+  output:
+    to:
+      kind: DockerImage
+      name: docker.io/jobtechswe/mydata-app
+    pushSecret:
+      name: dockerhub
+  resources:
+    limits:
+      memory: 1Gi
