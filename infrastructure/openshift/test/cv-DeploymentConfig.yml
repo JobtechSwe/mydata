@@ -41,14 +41,6 @@ spec:
             value: production
           - name: OPERATOR_URL
             value: 'http://operator-test.mydata.svc:3000'
-          - name: POSTGRES_USER
-            value: postgresuser
-          - name: POSTGRES_PASSWORD
-            value: postgrespassword
-          - name: POSTGRES_DB
-            value: cv
-          - name: DATABASE_URL
-            value: postgres://postgresuser:postgrespassword@postgresql-cv-test.mydata.svc:5432/cv
           - name: REDIS
             value: 'redis://:fubar@redis-test.mydata.svc:6379/'
           - name: CLIENT_ID
