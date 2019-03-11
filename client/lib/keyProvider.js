@@ -89,14 +89,14 @@ class KeyProvider {
     return key
   }
   async saveKey (key) {
-    this.save(`${KEY_PREFIX}${key.kid}`, key)
+    return this.save(`${KEY_PREFIX}${key.kid}`, key)
   }
   async removeKey (kid) {
     await this.keyValueStore.remove(`${KEY_PREFIX}${kid}`)
   }
   async saveAccessKeyIds (consentId, domain, area, keys) {
     const key = [consentId, domain, area].join('|')
-    this.save(`${ACCESS_KEY_IDS_PREFIX}${key}`, keys)
+    return this.save(`${ACCESS_KEY_IDS_PREFIX}${key}`, keys)
   }
   async getAccessKeyIds (consentId, domain, area) {
     const key = [consentId, domain, area].join('|')
@@ -111,7 +111,7 @@ class KeyProvider {
   }
   async saveDocumentKeys (consentId, domain, area, keys) {
     const key = [consentId, domain, area].join('|')
-    this.save(`${DOCUMENT_KEYS_PREFIX}${key}`, keys)
+    return this.save(`${DOCUMENT_KEYS_PREFIX}${key}`, keys)
   }
   async getDocumentKeys (consentId, domain, area) {
     const key = [consentId, domain, area].join('|')
