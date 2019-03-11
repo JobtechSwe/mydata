@@ -1,4 +1,4 @@
-import * as accountService from '../services/account'
+import * as accountService from '../account'
 import axios from 'axios'
 import { RSA } from 'react-native-rsa-native'
 import Config from 'react-native-config'
@@ -53,7 +53,10 @@ describe('account', () => {
           data: expect.any(String),
         },
       }
-      expect(axios.post).toHaveBeenCalledWith('aTotallyLegitOperatorUrl/accounts', expected)
+      expect(axios.post).toHaveBeenCalledWith(
+        'aTotallyLegitOperatorUrl/accounts',
+        expected
+      )
     })
     it('returns id axios.post resolves', async () => {
       const id = await accountService.register(account)
@@ -90,7 +93,10 @@ describe('account', () => {
           data: expect.any(String),
         },
       }
-      expect(axios.put).toHaveBeenCalledWith('aTotallyLegitOperatorUrl/accounts/abc123', expected)
+      expect(axios.put).toHaveBeenCalledWith(
+        'aTotallyLegitOperatorUrl/accounts/abc123',
+        expected
+      )
     })
   })
 
@@ -119,7 +125,10 @@ describe('account', () => {
             data: expect.any(String),
           },
         }
-        expect(axios.put).toHaveBeenCalledWith('aTotallyLegitOperatorUrl/accounts/abc123', expected)
+        expect(axios.put).toHaveBeenCalledWith(
+          'aTotallyLegitOperatorUrl/accounts/abc123',
+          expected
+        )
       })
       it('returns account', async () => {
         const result = await accountService.save(account)
@@ -150,7 +159,10 @@ describe('account', () => {
             data: expect.any(String),
           },
         }
-        expect(axios.post).toHaveBeenCalledWith('aTotallyLegitOperatorUrl/accounts', expected)
+        expect(axios.post).toHaveBeenCalledWith(
+          'aTotallyLegitOperatorUrl/accounts',
+          expected
+        )
       })
       it('returns account', async () => {
         const result = await accountService.save(account)

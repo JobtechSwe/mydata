@@ -1,5 +1,5 @@
 import { RSA } from 'react-native-rsa-native'
-import { sign, verify } from '../services/crypto'
+import { sign, verify } from '../crypto'
 
 describe('services/crypto', () => {
   let keys
@@ -35,13 +35,17 @@ describe('services/crypto', () => {
       })
 
       it('throws if alg is unsupported', () => {
-        return expect(verify(data, { alg: 'RSA-SHA256' }, keys.public))
-          .rejects.toThrowError('Unsupported algorithm [RSA-SHA256]. Only [RSA-SHA512] is supported.')
+        return expect(
+          verify(data, { alg: 'RSA-SHA256' }, keys.public)
+        ).rejects.toThrowError(
+          'Unsupported algorithm [RSA-SHA256]. Only [RSA-SHA512] is supported.'
+        )
       })
 
       it('throws if alg is omitted', () => {
-        return expect(verify(data, { }, keys.public))
-          .rejects.toThrowError('Signature algorithm must be specified. Only [RSA-SHA512] is supported.')
+        return expect(verify(data, {}, keys.public)).rejects.toThrowError(
+          'Signature algorithm must be specified. Only [RSA-SHA512] is supported.'
+        )
       })
 
       it('returns false if signature is wrong', async () => {
@@ -63,9 +67,9 @@ describe('services/crypto', () => {
     })
   })
   xdescribe('encrypt', () => {
-    it('works', () => { })
+    it('works', () => {})
   })
   xdescribe('decrypt', () => {
-    it('works', () => { })
+    it('works', () => {})
   })
 })

@@ -1,12 +1,12 @@
-import React from 'react'
-import { Alert } from 'react-native'
-import { Wrap, ScrollViewWrap } from '../../components/View/Wrapper'
-import { storeAccount } from '../../services/storage'
-import Register from '../../components/Register/Register'
+import Finished from '../../components/Finished/Finished'
 import KeyPair from '../../components/KeyPair'
 import PDS from '../../components/PDS/PDS'
-import Finished from '../../components/Finished/Finished'
+import React from 'react'
+import Register from '../../components/Register/Register'
+import { Alert } from 'react-native'
+import { Wrap, ScrollViewWrap } from '../../components/View/Wrapper'
 import { save } from '../../services/account'
+import { storeAccount } from '../../services/storage'
 
 export default class AccountScreen extends React.Component {
   state = {
