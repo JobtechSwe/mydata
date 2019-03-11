@@ -1,6 +1,6 @@
 import React from 'react'
-import { View, ScrollView } from 'react-native'
 import styled from '../../theme'
+import { View, ScrollView } from 'react-native'
 
 export const Wrap = styled(View)`
   overflow: hidden;

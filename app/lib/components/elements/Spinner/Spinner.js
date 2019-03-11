@@ -1,12 +1,6 @@
 import React from 'react'
-import { ActivityIndicator, Animated, Easing, View } from 'react-native'
-import styled, { theme } from '../../../theme'
-
-export const DefaultSpinner = ({ size = 'large' }) => (
-  <View>
-    <ActivityIndicator color={theme.colors.primary} size={size} />
-  </View>
-)
+import styled from '../../../theme'
+import { Animated, Easing } from 'react-native'
 
 export const StyledSpinner = styled(Animated.View)`
   border-radius: 96px;

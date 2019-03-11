@@ -44,7 +44,7 @@ const getNavbarIcon = (name, active) => {
     case 'konto':
       icon = <AccountIcon active={active} />
       break
-    case 'consentrequest':
+    case 'qr-kod':
       icon = <ConsentIcon active={active} />
       break
     case 'hem':
