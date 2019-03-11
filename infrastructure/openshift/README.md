@@ -26,10 +26,10 @@ oc create secret generic tls --from-file=/tmp/jtech.se.crt
 
 # Certificates for examples/cv
 oc create secret generic cv --from-file=/tmp/public.key --from-file=/tmp/private.key
-```
 
-**TODO:**
-`c create secret docker-registry dockerhub --docker-server=docker.io --docker-username=ilix --docker-password="nope" --docker-email=alexander@iteam.se`
+# Docker Hub credentials (use if you wish to push images to Docker's registry)
+oc create secret docker-registry dockerhub --docker-server=docker.io --docker-username=mydata --docker-password="mydata" --docker-email=code@mydata
+```
 
 ### Shared resources
 

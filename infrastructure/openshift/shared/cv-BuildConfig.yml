@@ -55,6 +55,12 @@ metadata:
 spec:
   runPolicy: Serial
   completionDeadlineSeconds: 1800
+  triggers:
+    -
+      type: GitHub
+      github:
+        secretReference:
+          name: github-webhook-secret
   source:
     git:
       ref: master
