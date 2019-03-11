@@ -22,6 +22,7 @@ services:
 
   operator:
     image: node:11-alpine
+    user: ${DC_U}:${DC_G}
     volumes:
       - ./../operator:/app
     ports:
@@ -47,6 +48,7 @@ services:
 
   cv:
     image: node:11-alpine
+    user: ${DC_U}:${DC_G}
     volumes:
       - ./../examples/cv:/app
     ports:
@@ -65,6 +67,7 @@ services:
 
   app:
     image: node:11-alpine
+    user: ${DC_U}:${DC_G}
     volumes:
       - ./../app:/app
     working_dir: /app
