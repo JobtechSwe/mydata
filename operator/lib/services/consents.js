@@ -10,10 +10,11 @@ const { createToken } = require('./jwt')
 async function createRequest (data, signature) {
   await schemas.consentRequest().validate(data, schemas.defaultOptions)
 
-  let id, result, expires
+  let id, link, result, expires
   let tries = 0
   do {
     id = v4()
+    link = `mydata://register/${id}`
     const redisData = JSON.stringify({ data, signature })
     const expireInSeconds = 3600
     result = await redis.set(`consentRequest:${id}`, redisData, 'NX', 'EX', expireInSeconds)
@@ -26,6 +27,7 @@ async function createRequest (data, signature) {
 
   return {
     id,
+    link,
     expires
   }
 }
@@ -208,7 +210,12 @@ async function list (consentId, domain, area) {
     }
   }
 
+  console.log(sql)
+  console.log(params)
+
   const result = await query(sql, params)
+
+  console.log(result)
 
   return result.rows.map(row => {
     row.pds_credentials = JSON.parse(row.pds_credentials.toString('utf8'))

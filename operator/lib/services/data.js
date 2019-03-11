@@ -6,17 +6,19 @@ const EXT = '.mydata.txt'
 
 const read = async (consentId, domain, area) => {
   const consents = await list(consentId, domain, area)
+  console.log(consents)
   if (consents.length === 0) {
     throw Error('Found no consents for the provided arguments')
   }
   const content = await Promise.all(
     consents.map(async ({
+      accountId,
       pdsProvider,
       pdsCredentials,
       domain,
       area
     }) => {
-      const path = `/data/${encodeURIComponent(domain)}/${encodeURIComponent(area)}${EXT}`
+      const path = `/${accountId}/data/${encodeURIComponent(domain)}/${encodeURIComponent(area)}${EXT}`
       const content = await pds
         .get({ pdsProvider, pdsCredentials })
         .readFile(path, 'utf8')
@@ -31,14 +33,15 @@ const read = async (consentId, domain, area) => {
       }
       return result
     }))
+  console.log(content)
 
   return content.reduce((obj, res) => merge.recursive(obj, res))
 }
 
 const write = async (consentId, domain, area, data) => {
   const consents = await list(consentId, domain, area)
-  const { pdsProvider, pdsCredentials } = consents[0]
-  const path = `/data/${encodeURIComponent(domain)}/${encodeURIComponent(area)}${EXT}`
+  const { accountId, pdsProvider, pdsCredentials } = consents[0]
+  const path = `/${accountId}/data/${encodeURIComponent(domain)}/${encodeURIComponent(area)}${EXT}`
   const provider = pds.get({ pdsProvider, pdsCredentials })
   await provider.outputFile(path, data, 'utf8')
 }

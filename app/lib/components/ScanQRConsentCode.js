@@ -12,7 +12,10 @@ export default class ScanQRConsentCode extends Component {
   async pasteQR () {
     if (DeviceInfo.isEmulator()) {
       const qr = await Clipboard.getString()
-      this.props.onRead(qr)
+      Alert.alert('Paste code', qr, [
+        { text: 'Cancel' },
+        { text: 'OK', onPress: () => this.props.onRead(qr) },
+      ])
     }
   }
 

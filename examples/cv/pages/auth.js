@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { Box, Typography } from '@smooth-ui/core-sc'
+import { Box, Button, Typography,  } from '@smooth-ui/core-sc'
 import axios from 'axios'
 import QRCode from 'qrcode.react'
+import copy from 'copy-to-clipboard'
 import { StoreContext } from '../services/StoreContext'
 import * as storage from '../services/storage'
 
@@ -22,13 +23,13 @@ export default () => {
     }
   }, 2000)
 
-  const [id, setId] = useState(null)
+  const [data, setData] = useState(null)
   useEffect(() => {
     axios.post('/api/auth')
-      .then(val => val.data.id)
-      .then(id => {
-        setId(id)
-        pollId = poll(id)
+      .then(({data}) => {
+        console.log(data)
+        setData(data)
+        pollId = poll(data.id)
       })
       .catch(err => {
         console.error(err)
@@ -47,10 +48,13 @@ export default () => {
       height="100vh"
       width="100vw"
     >
-      {id && <Box textAlign="center">
+      {data && <Box textAlign="center">
         <Typography variant="h6">Enter the code for this consent request:</Typography>
-        <Typography variant="h1" data-cy="consent-request-id">{id}</Typography>
-        <QRCode value={id} />
+        <Box><QRCode
+          size={256}
+          value={data.link}
+          onClick={() => copy(data.link)} /></Box>
+        <Button variant="dark" onClick={() => window.location.assign(data.link)} style={{ marginTop: 10 + 'px' }}>Open on this device</Button>
       </Box>}
     </Box>
   )
