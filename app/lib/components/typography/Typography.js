@@ -1,6 +1,6 @@
 import React from 'react'
-import { Text } from 'react-native'
 import styled from '../../theme'
+import { Text } from 'react-native'
 
 export const H1 = styled(Text)`
   color: ${({ theme }) => theme.colors.primary};

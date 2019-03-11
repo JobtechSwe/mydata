@@ -1,7 +1,7 @@
-import * as storage from '../services/storage'
+import * as storage from '../storage'
 import { AsyncStorage } from 'react-native'
 
-describe('storage', () => {
+describe.only('storage', () => {
   let account
   beforeEach(() => {
     account = {
@@ -32,7 +32,10 @@ describe('storage', () => {
     it('calls AsyncStorage.setItem', async () => {
       await storage.storeAccount(account)
 
-      expect(AsyncStorage.setItem).toHaveBeenCalledWith('account', JSON.stringify(account))
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+        'account',
+        JSON.stringify(account)
+      )
     })
   })
 })
