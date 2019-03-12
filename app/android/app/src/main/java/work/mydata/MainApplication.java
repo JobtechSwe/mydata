@@ -3,6 +3,8 @@ package work.mydata;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.horcrux.svg.SvgPackage;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import org.reactnative.camera.RNCameraPackage;
 import com.RNRSA.RNRSAPackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;

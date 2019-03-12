@@ -49,6 +49,7 @@
 		88ED3EF12DEB4A21BA8D50B0 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A8B1C712B223459DA85B335D /* FontAwesome.ttf */; };
 		A042252A9336407FA428CAF3 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5328593715CA4FB789D93345 /* Zocial.ttf */; };
 		A6C3C9DAA98945D1B24BDD6E /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 76780E773258402B85E8C615 /* Ionicons.ttf */; };
+		A8BD86EF72854A7FB4B100F6 /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E6F3F66DD574CC0966BECDE /* libRNGestureHandler.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		C2B9D336CE8E4002A81CA6A6 /* libRNVectorIcons-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 88B5BC18D9644382B55F1B97 /* libRNVectorIcons-tvOS.a */; };
 		C35DFBDFC94644FCAF272776 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 55401381E6A3447386420ABB /* Octicons.ttf */; };
@@ -350,6 +351,13 @@
 			remoteGlobalIDString = 3DF7F6AC203AA09B00D0EAB7;
 			remoteInfo = "ReactNativeConfig-tvOS";
 		};
+		517D6DEB22313B8500B4E056 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AED279217C004B988AE973FC /* RNGestureHandler.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B5C32A36220C603B000FFB8D;
+			remoteInfo = "RNGestureHandler-tvOS";
+		};
 		518D2EF621C7B2CD00496561 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B56FB8E06494463AB572F859 /* ReactNativePermissions.xcodeproj */;
@@ -450,12 +458,16 @@
 		BA56E826BD934102AB9A0532 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		C2EB3430502A4A4481C4E69B /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		C5AE43BE3E8741819D3BD6C4 /* libRNCamera.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCamera.a; sourceTree = "<group>"; };
-		D70A60DE22369F4A003D056D /* MyData.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = MyData.entitlements; path = MyData/MyData.entitlements; sourceTree = "<group>"; };
+		D72251872237BA1000F58274 /* MyData.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = MyData.entitlements; path = MyData/MyData.entitlements; sourceTree = "<group>"; };
+		D74ED6BE27894FEEBA8FCD07 /* rubikRegular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = rubikRegular.ttf; path = ../assets/fonts/rubikRegular.ttf; sourceTree = "<group>"; };
+		D83F21BE08C64744B7C478EA /* libRNSVG.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSVG.a; sourceTree = "<group>"; };
+		D941342C97C048DDB21F104B /* karlaRegular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = karlaRegular.ttf; path = ../assets/fonts/fonts/karlaRegular.ttf; sourceTree = "<group>"; };
 		DDCD678654E748718A9EF08C /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		E53D46609E644C07822ED39B /* RNCamera.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RNCamera.xcodeproj"; sourceTree = "<group>"; };
 		E5DD5913937F4C178ACB531F /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		ECE9A602540342BDB8789B4D /* ReactNativeConfig.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeConfig.xcodeproj; path = "../node_modules/react-native-config/ios/ReactNativeConfig.xcodeproj"; sourceTree = "<group>"; };
 		F7025A5EB072483592A671F3 /* libRNRSA.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNRSA.a; sourceTree = "<group>"; };
+		FC4E0E85E9744228B090976D /* Karla-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Karla-Bold.ttf"; path = "../assets/fonts/Karla-Bold.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -489,6 +501,8 @@
 				4172B70FD0A64786AD35AEDA /* libRNRSA.a in Frameworks */,
 				D095BA65E7B147E581193F66 /* libRNCamera.a in Frameworks */,
 				EC8F162AE7D543A4AA1DFF3B /* libReactNativePermissions.a in Frameworks */,
+				FDE3040CCEF24EE687A7F4F0 /* libRNSVG.a in Frameworks */,
+				A8BD86EF72854A7FB4B100F6 /* libRNGestureHandler.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -505,6 +519,7 @@
 				2D02E4C71E0B4AEC006451C7 /* libRCTText-tvOS.a in Frameworks */,
 				2D02E4C81E0B4AEC006451C7 /* libRCTWebSocket-tvOS.a in Frameworks */,
 				C2B9D336CE8E4002A81CA6A6 /* libRNVectorIcons-tvOS.a in Frameworks */,
+				771FDDD2A2DD4ABBBD1670F4 /* libRNSVG-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -601,7 +616,7 @@
 		13B07FAE1A68108700A75B9A /* MyData */ = {
 			isa = PBXGroup;
 			children = (
-				D70A60DE22369F4A003D056D /* MyData.entitlements */,
+				D72251872237BA1000F58274 /* MyData.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -662,6 +677,9 @@
 				88B5BC18D9644382B55F1B97 /* libRNVectorIcons-tvOS.a */,
 				C5AE43BE3E8741819D3BD6C4 /* libRNCamera.a */,
 				008B7F98B8CE49419652F17B /* libReactNativePermissions.a */,
+				D83F21BE08C64744B7C478EA /* libRNSVG.a */,
+				21D0528B663A4E1DAC17EE32 /* libRNSVG-tvOS.a */,
+				4E6F3F66DD574CC0966BECDE /* libRNGestureHandler.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -769,6 +787,8 @@
 				0E34F6DB5E3D465EB492CB59 /* RNRSA.xcodeproj */,
 				E53D46609E644C07822ED39B /* RNCamera.xcodeproj */,
 				B56FB8E06494463AB572F859 /* ReactNativePermissions.xcodeproj */,
+				96B1FD4CAEA947EE999F66F4 /* RNSVG.xcodeproj */,
+				AED279217C004B988AE973FC /* RNGestureHandler.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -912,7 +932,7 @@
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.Push = {
-								enabled = 0;
+								enabled = 1;
 							};
 						};
 					};
@@ -1002,6 +1022,10 @@
 				{
 					ProductGroup = 518D2EF121C7B2CD00496561 /* Products */;
 					ProjectRef = E53D46609E644C07822ED39B /* RNCamera.xcodeproj */;
+				},
+				{
+					ProductGroup = D711048A222D923B00704A86 /* Products */;
+					ProjectRef = AED279217C004B988AE973FC /* RNGestureHandler.xcodeproj */;
 				},
 				{
 					ProductGroup = 5139338021BE727000CC0630 /* Products */;
@@ -1296,6 +1320,13 @@
 			remoteRef = 5139338F21BEAB6D00CC0630 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		517D6DEC22313B8500B4E056 /* libRNGestureHandler-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRNGestureHandler-tvOS.a";
+			remoteRef = 517D6DEB22313B8500B4E056 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		518D2EF721C7B2CD00496561 /* libReactNativePermissions.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1506,6 +1537,8 @@
 					"$(SRCROOT)/../node_modules/react-native-rsa-native/ios",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
 				INFOPLIST_FILE = MyDataTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1534,6 +1567,8 @@
 					"$(SRCROOT)/../node_modules/react-native-rsa-native/ios",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
 				INFOPLIST_FILE = MyDataTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1553,9 +1588,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_ENTITLEMENTS = MyData/MyData.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 17;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = BSE2J6442R;
 				HEADER_SEARCH_PATHS = (
@@ -1566,6 +1602,8 @@
 					"$(SRCROOT)/../node_modules/react-native/Libraries/LinkingIOS",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
 				INFOPLIST_FILE = MyData/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1576,7 +1614,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = work.mydata.ConsentApp;
 				PRODUCT_NAME = MyData;
-				PROVISIONING_PROFILE_SPECIFIER = "MyData iOS Distribution";
+				PROVISIONING_PROFILE_SPECIFIER = "MyData iOS";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1585,9 +1623,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MyData/MyData.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = BSE2J6442R;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1597,6 +1636,8 @@
 					"$(SRCROOT)/../node_modules/react-native/Libraries/LinkingIOS",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
 				INFOPLIST_FILE = MyData/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1631,6 +1672,8 @@
 					"$(SRCROOT)/../node_modules/react-native-rsa-native/ios",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
 				INFOPLIST_FILE = "MyData-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1666,6 +1709,8 @@
 					"$(SRCROOT)/../node_modules/react-native-rsa-native/ios",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
 				INFOPLIST_FILE = "MyData-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1700,6 +1745,8 @@
 					"$(SRCROOT)/../node_modules/react-native-rsa-native/ios",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
 				INFOPLIST_FILE = "MyData-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1734,6 +1781,8 @@
 					"$(SRCROOT)/../node_modules/react-native-rsa-native/ios",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
 				INFOPLIST_FILE = "MyData-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

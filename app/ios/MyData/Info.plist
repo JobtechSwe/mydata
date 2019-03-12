@@ -34,7 +34,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>14</string>
+	<string>17</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -50,6 +50,18 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>We need this in order to detect what abilities your device supports.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>We need this in order to detect what abilities your device supports.</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>We need this in order to detect what abilities your device supports.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>We need this in order to detect what abilities your device supports.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>We need this in order to detect what abilities your device supports.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>We need the camera to scan QR codes</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string/>
 	<key>UIAppFonts</key>
