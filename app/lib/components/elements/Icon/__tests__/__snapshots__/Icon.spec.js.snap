@@ -1,0 +1,91 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`elements/Icons should return appropriate icon based on name = "hem" 1`] = `
+<ThemeProvider
+  theme={
+    Object {
+      "colors": Object {
+        "inactive": "#D8D5F6",
+        "lightGrey": "#EAEAF1",
+        "primary": "#241C7D",
+        "quiet": "#F9F9FB",
+        "shadow": "#B1ACEC",
+        "white": "#FFFFFF",
+      },
+      "fontSize": Object {
+        "large": "48px",
+        "regular": "18px",
+      },
+      "typography": Object {
+        "bold": "Karla-Bold",
+        "contrast": "Rubik-Medium",
+        "regular": "Karla-Regular",
+      },
+    }
+  }
+>
+  <NavbarIcon
+    name="hem"
+  />
+</ThemeProvider>
+`;
+
+exports[`elements/Icons should return appropriate icon based on name = "konto" 1`] = `
+<ThemeProvider
+  theme={
+    Object {
+      "colors": Object {
+        "inactive": "#D8D5F6",
+        "lightGrey": "#EAEAF1",
+        "primary": "#241C7D",
+        "quiet": "#F9F9FB",
+        "shadow": "#B1ACEC",
+        "white": "#FFFFFF",
+      },
+      "fontSize": Object {
+        "large": "48px",
+        "regular": "18px",
+      },
+      "typography": Object {
+        "bold": "Karla-Bold",
+        "contrast": "Rubik-Medium",
+        "regular": "Karla-Regular",
+      },
+    }
+  }
+>
+  <NavbarIcon
+    name="konto"
+  />
+</ThemeProvider>
+`;
+
+exports[`elements/Icons should return appropriate icon based on name = "qr-kod" 1`] = `
+<ThemeProvider
+  theme={
+    Object {
+      "colors": Object {
+        "inactive": "#D8D5F6",
+        "lightGrey": "#EAEAF1",
+        "primary": "#241C7D",
+        "quiet": "#F9F9FB",
+        "shadow": "#B1ACEC",
+        "white": "#FFFFFF",
+      },
+      "fontSize": Object {
+        "large": "48px",
+        "regular": "18px",
+      },
+      "typography": Object {
+        "bold": "Karla-Bold",
+        "contrast": "Rubik-Medium",
+        "regular": "Karla-Regular",
+      },
+    }
+  }
+>
+  <NavbarIcon
+    name="qr-kod"
+  />
+</ThemeProvider>
+`;
