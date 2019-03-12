@@ -3,7 +3,9 @@ node_js:
   - '10'
 
 install: npm run install-all
-test: npm run test-all
+
+script:
+  - bash build.bash
 
 branches:
   except:
