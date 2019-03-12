@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
+import { View } from 'react-native'
 import { Wrap } from '../components/View/Wrapper'
 import { Spinner } from '../components/elements/Spinner/Spinner'
-import { Headline, Button, List, Text, withTheme } from 'react-native-paper'
+import { H3, Paragraph } from '../components/typography/Typography'
+import { PrimaryButton } from '../components/elements/Button/Button'
 import * as consentsService from '../services/consents'
 
 class ConsentRequest extends Component {
@@ -36,45 +38,22 @@ class ConsentRequest extends Component {
       case 'approve':
         return (
           <Wrap>
-            <Text style={{ marginBottom: 5 }}>This app:</Text>
-            <Headline style={{ marginBottom: 5 }}>
-              {this.state.consentRequest.client.display_name}
-            </Headline>
-            <Text style={{ marginBottom: 5 }}>
+            <Paragraph>This app:</Paragraph>
+            <H3>{this.state.consentRequest.client.display_name}</H3>
+            <Paragraph align="left">
               {this.state.consentRequest.client.description}
-            </Text>
-            <Text style={{ marginBottom: 5 }}>Wants these permissions</Text>
-            <List.Section style={{ marginBottom: 5 }}>
+            </Paragraph>
+            <Paragraph>Wants these permissions</Paragraph>
+            <View>
               {this.state.consentRequest.data.scope.map(scope => (
-                <List.Item
-                  title={scope.area}
-                  description={scope.description}
-                  key={scope.area}
-                />
+                <View key={scope.area} style={{ marginBottom: 32 }}>
+                  <H3>{scope.area}</H3>
+                  <Paragraph small>{scope.description}</Paragraph>
+                </View>
               ))}
-            </List.Section>
-            <Button
-              mode="contained"
-              icon="check-circle"
-              style={{
-                backgroundColor: this.props.theme.colors.accent,
-                marginBottom: 5,
-              }}
-              onPress={this.approve}
-            >
-              I Approve!
-            </Button>
-            <Button
-              mode="contained"
-              icon="block"
-              style={{
-                backgroundColor: this.props.theme.colors.error,
-                marginBottom: 5,
-              }}
-              onPress={this.reject}
-            >
-              Nope!
-            </Button>
+            </View>
+            <PrimaryButton onPress={this.approve}>I Approve!</PrimaryButton>
+            <PrimaryButton onPress={this.reject}>Nope!</PrimaryButton>
           </Wrap>
         )
       case 'approving':

@@ -10,6 +10,7 @@ const colors = {
 }
 
 const fontSize = {
+  small: '14px',
   regular: '18px',
   large: '48px',
 }
@@ -26,8 +27,4 @@ const theme = {
   typography,
 }
 
-export {
-  theme,
-  styled as default,
-  ThemeProvider,
-}
+export { theme, styled as default, ThemeProvider }

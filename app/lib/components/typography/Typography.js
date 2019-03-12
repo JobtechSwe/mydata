@@ -10,13 +10,23 @@ export const H1 = styled(Text)`
   margin-bottom: 32px;
 `
 
-export const StyledParagraph = styled(Text)`
+export const H3 = styled(Text)`
   color: ${({ theme }) => theme.colors.primary};
   font-family: ${({ theme }) => theme.typography.regular};
   font-size: ${({ theme }) => theme.fontSize.regular};
-  line-height: 22;
+  font-weight: 700;
+  margin-bottom: 8px;
 `
 
-export const Paragraph = ({ align = 'left', style, ...props }) => (
-  <StyledParagraph {...props} style={{ ...style, textAlign: align }} />
+export const StyledParagraph = styled(Text)`
+  color: ${({ theme }) => theme.colors.primary};
+  font-family: ${({ theme }) => theme.typography.regular};
+  font-size: ${({ small, theme }) =>
+    small ? theme.fontSize.small : theme.fontSize.regular};
+  line-height: 22;
+  text-align: ${({ align }) => align.toString()};
+`
+
+export const Paragraph = ({ align = 'left', small = false, ...props }) => (
+  <StyledParagraph align={align} small={small} {...props} />
 )

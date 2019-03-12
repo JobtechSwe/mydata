@@ -15,6 +15,7 @@ exports[`elements/Icons/QRIcon should render 1`] = `
       "fontSize": Object {
         "large": "48px",
         "regular": "18px",
+        "small": "14px",
       },
       "typography": Object {
         "bold": "Karla-Bold",

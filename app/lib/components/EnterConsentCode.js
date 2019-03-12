@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Wrap } from '../components/View/Wrapper'
 import { Input } from '../components/elements/Input/Input'
 import { PrimaryButton } from '../components/elements/Button/Button'
-import { Button, TextInput, withTheme } from 'react-native-paper'
 import { validate } from '../utils/uuid-validate'
 import ScanQRConsentCode from './ScanQRConsentCode'
 
@@ -39,18 +38,6 @@ class EnterConsentCode extends Component {
         return (
           <Wrap>
             <ScanQRConsentCode onRead={this.onScanQRCode} />
-            {/*
-            <Button
-              mode="contained"
-              style={{
-                marginBottom: 5,
-                backgroundColor: this.props.theme.colors.accent,
-              }}
-              onPress={this.cancelScan}
-            >
-              Cancel
-            </Button>
-            */}
           </Wrap>
         )
       case 'enter':
@@ -65,8 +52,6 @@ class EnterConsentCode extends Component {
               placeholder="Enter the code here"
             />
             <PrimaryButton
-              mode="contained"
-              label="enter"
               onPress={this.enter}
               disabled={!this.state.validated}
               style={{ marginBottom: 5 }}
@@ -80,4 +65,4 @@ class EnterConsentCode extends Component {
   }
 }
 
-export default withTheme(EnterConsentCode)
+export default EnterConsentCode

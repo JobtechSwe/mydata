@@ -1,8 +1,25 @@
 import React from 'react'
-import { Alert, Button, Linking } from 'react-native'
+import { View, Alert, Linking } from 'react-native'
 import { getAccount, storeAccount } from '../../services/storage'
-import { H1 } from '../../components/typography/Typography'
+import { H3, Paragraph } from '../../components/typography/Typography'
+import { PrimaryButton } from '../../components/elements/Button/Button'
 import { Wrap, ScrollViewWrap } from '../../components/View/Wrapper'
+
+const scopes = [
+  {
+    area: 'Education',
+    description: 'För att du skall kunna hålla reda på dina utbildningar.',
+  },
+  {
+    area: 'Skills',
+    description:
+      'För att du skall kunna spara ner dina tidigare arbetserfarenheter.',
+  },
+  {
+    area: 'Language',
+    description: 'För att du skall kunna spara ner dina språkkunskaper.',
+  },
+]
 
 export default class HomeScreen extends React.Component {
   state = {
@@ -71,12 +88,23 @@ export default class HomeScreen extends React.Component {
     return (
       <Wrap>
         <ScrollViewWrap>
-          <H1>MyData</H1>
-          <Button title="Clear Account" onPress={this.clearAccount}>
-            Clear account
-          </Button>
-
-          {/*<JSONTree data={this.state.account || {}} /> */}
+          <Paragraph>This app:</Paragraph>
+          <H3>myskills.se</H3>
+          <Paragraph align="left">
+            MySkills.se är en tjänst för att du enkelt skall kunna fylla i
+            kompetenser på ett och samma ställe.
+          </Paragraph>
+          <Paragraph>Wants these permissions</Paragraph>
+          <View>
+            {scopes.map(scope => (
+              <View key={scope.area} style={{ marginBottom: 32 }}>
+                <H3>{scope.area}</H3>
+                <Paragraph small>{scope.description}</Paragraph>
+              </View>
+            ))}
+          </View>
+          <PrimaryButton onPress={this.approve}>I Approve!</PrimaryButton>
+          <PrimaryButton onPress={this.reject}>Nope!</PrimaryButton>
         </ScrollViewWrap>
       </Wrap>
     )
