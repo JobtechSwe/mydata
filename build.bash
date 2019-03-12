@@ -1,4 +1,5 @@
 #!/bin/bash
 
 echo "$TRAVIS_BRANCH"
-npm run test-all
+uname -a
+# npm run test-all
