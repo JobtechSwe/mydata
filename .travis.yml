@@ -3,7 +3,9 @@ node_js:
   - "10"
 
 install: npm run install-all
-
+cache:
+  directories:
+    - $HOME/.npm
 script:
   - npm run test-all
   - bash build.bash
