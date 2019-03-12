@@ -3,7 +3,7 @@ import { shallow } from 'enzyme'
 import EventEmitter from 'eventemitter3'
 
 import AccountScreen from '../../screens/AccountScreen'
-import Account from '../../components/account'
+import Account from '../../components/Account'
 
 xdescribe('AccountScreen', () => {
   let navigation
