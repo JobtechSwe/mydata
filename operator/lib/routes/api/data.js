@@ -1,5 +1,4 @@
 const { Router } = require('express')
-// const createError = require('http-errors')
 const { verify } = require('../../services/jwt')
 const { read, write } = require('../../services/data')
 
@@ -38,7 +37,6 @@ router.post('/:domain?/:area?', async (req, res, next) => {
       ? decodeURIComponent(req.params.area)
       : null
     const data = req.body.data
-    console.log(data)
 
     await write(consentId, domain, area, data)
     res.sendStatus(201)

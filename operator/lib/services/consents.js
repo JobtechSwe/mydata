@@ -210,12 +210,7 @@ async function list (consentId, domain, area) {
     }
   }
 
-  console.log(sql)
-  console.log(params)
-
   const result = await query(sql, params)
-
-  console.log(result)
 
   return result.rows.map(row => {
     row.pds_credentials = JSON.parse(row.pds_credentials.toString('utf8'))

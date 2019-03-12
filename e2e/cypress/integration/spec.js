@@ -22,9 +22,9 @@ describe('Consent request for example/cv', () => {
       .should('include', '/auth')
 
     cy
-      .get('[data-cy="consent-request-id"]')
+      .get('#qr-code')
       .should(res => {
-        expect(res[0].innerHTML).to.match(v4Regexp)
+        expect(res[0].getAttribute('data-consent-request-id')).to.match(v4Regexp)
       })
 
     cy.visit('/')
@@ -43,9 +43,9 @@ describe('Consent request for example/cv', () => {
       .click()
 
     cy
-      .get('[data-cy="consent-request-id"]')
+      .get('#qr-code')
       .then(res => {
-        const id = res[0].innerHTML
+        const id = res[0].getAttribute('data-consent-request-id')
         return cy.getConsentRequest(id)
       })
       .then(consentReq => {

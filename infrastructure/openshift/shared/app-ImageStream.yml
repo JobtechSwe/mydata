@@ -1,0 +1,9 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: app
+spec:
+  tags:
+    - name: latest
+      referencePolicy:
+        type: Source

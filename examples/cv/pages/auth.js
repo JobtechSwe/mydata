@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { Box, Button, Typography,  } from '@smooth-ui/core-sc'
+import { Box, Button, Typography } from '@smooth-ui/core-sc'
 import axios from 'axios'
 import QRCode from 'qrcode.react'
 import copy from 'copy-to-clipboard'
@@ -26,7 +26,7 @@ export default () => {
   const [data, setData] = useState(null)
   useEffect(() => {
     axios.post('/api/auth')
-      .then(({data}) => {
+      .then(({ data }) => {
         console.log(data)
         setData(data)
         pollId = poll(data.id)
@@ -53,6 +53,9 @@ export default () => {
         <Box><QRCode
           size={256}
           value={data.link}
+          id="qr-code"
+          data-consent-request-id={data.id}
+          data-consent-request-link={data.link}
           onClick={() => copy(data.link)} /></Box>
         <Button variant="dark" onClick={() => window.location.assign(data.link)} style={{ marginTop: 10 + 'px' }}>Open on this device</Button>
       </Box>}

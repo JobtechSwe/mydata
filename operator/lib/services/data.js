@@ -6,7 +6,6 @@ const EXT = '.mydata.txt'
 
 const read = async (consentId, domain, area) => {
   const consents = await list(consentId, domain, area)
-  console.log(consents)
   if (consents.length === 0) {
     throw Error('Found no consents for the provided arguments')
   }
@@ -33,7 +32,6 @@ const read = async (consentId, domain, area) => {
       }
       return result
     }))
-  console.log(content)
 
   return content.reduce((obj, res) => merge.recursive(obj, res))
 }
