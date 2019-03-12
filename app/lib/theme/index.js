@@ -7,6 +7,9 @@ const colors = {
   shadow: '#B1ACEC',
   white: '#FFFFFF',
   lightGrey: '#EAEAF1',
+  border: '#EBEAFA',
+  accept: '#0AC238',
+  deny: '#F20D0D',
 }
 
 const fontSize = {

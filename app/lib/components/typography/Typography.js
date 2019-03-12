@@ -1,8 +1,9 @@
 import React from 'react'
 import styled from '../../theme'
-import { Text } from 'react-native'
+import { Text, View } from 'react-native'
 
 export const H1 = styled(Text)`
+  align-self: stretch;
   color: ${({ theme }) => theme.colors.primary};
   font-family: ${({ theme }) => theme.typography.contrast};
   font-size: ${({ theme }) => theme.fontSize.large};
@@ -11,6 +12,7 @@ export const H1 = styled(Text)`
 `
 
 export const H3 = styled(Text)`
+  align-self: stretch;
   color: ${({ theme }) => theme.colors.primary};
   font-family: ${({ theme }) => theme.typography.regular};
   font-size: ${({ theme }) => theme.fontSize.regular};
@@ -19,12 +21,20 @@ export const H3 = styled(Text)`
 `
 
 export const StyledParagraph = styled(Text)`
+  align-self: stretch;
   color: ${({ theme }) => theme.colors.primary};
   font-family: ${({ theme }) => theme.typography.regular};
   font-size: ${({ small, theme }) =>
     small ? theme.fontSize.small : theme.fontSize.regular};
   line-height: 22;
   text-align: ${({ align }) => align.toString()};
+`
+
+export const Separator = styled(View)`
+  align-self: stretch;
+  background-color: ${({ theme }) => theme.colors.border};
+  height: 1px;
+  margin: 24px 0;
 `
 
 export const Paragraph = ({ align = 'left', small = false, ...props }) => (

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View } from 'react-native'
 import { Wrap } from '../components/View/Wrapper'
 import { Spinner } from '../components/elements/Spinner/Spinner'
-import { H3, Paragraph } from '../components/typography/Typography'
+import { H3, Paragraph, Separator } from '../components/typography/Typography'
 import { PrimaryButton } from '../components/elements/Button/Button'
 import * as consentsService from '../services/consents'
 
@@ -38,11 +38,11 @@ class ConsentRequest extends Component {
       case 'approve':
         return (
           <Wrap>
-            <Paragraph>This app:</Paragraph>
             <H3>{this.state.consentRequest.client.display_name}</H3>
             <Paragraph align="left">
               {this.state.consentRequest.client.description}
             </Paragraph>
+            <Separator />
             <Paragraph>Wants these permissions</Paragraph>
             <View>
               {this.state.consentRequest.data.scope.map(scope => (
@@ -52,16 +52,26 @@ class ConsentRequest extends Component {
                 </View>
               ))}
             </View>
-            <PrimaryButton onPress={this.approve}>I Approve!</PrimaryButton>
-            <PrimaryButton onPress={this.reject}>Nope!</PrimaryButton>
+            <PrimaryButton onPress={this.approve}>Godkänn</PrimaryButton>
+            <PrimaryButton onPress={this.reject}>Neka</PrimaryButton>
           </Wrap>
         )
       case 'approving':
-        return <Text>Approving...</Text>
+        return (
+          <Wrap>
+            <Spinner />
+            <Paragraph style={{ marginTop: 24 }}>Godkänner...</Paragraph>
+          </Wrap>
+        )
       case 'generating':
-        return <Wrap />
+        return (
+          <Wrap>
+            <Spinner />
+            <Paragraph style={{ marginTop: 24 }}>Genererar...</Paragraph>
+          </Wrap>
+        )
     }
   }
 }
 
-export default withTheme(ConsentRequest)
+export default ConsentRequest

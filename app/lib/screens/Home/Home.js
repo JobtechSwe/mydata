@@ -1,8 +1,16 @@
 import React from 'react'
-import { View, Alert, Linking } from 'react-native'
+import { View, Alert, Linking, Modal } from 'react-native'
 import { getAccount, storeAccount } from '../../services/storage'
-import { H3, Paragraph } from '../../components/typography/Typography'
-import { PrimaryButton } from '../../components/elements/Button/Button'
+import {
+  H3,
+  Paragraph,
+  Separator,
+} from '../../components/typography/Typography'
+import {
+  AcceptConsentButton,
+  DenyConsentButton,
+  ConsentButtonWrap,
+} from '../../components/elements/Button/ConsentButton'
 import { Wrap, ScrollViewWrap } from '../../components/View/Wrapper'
 
 const scopes = [
@@ -88,23 +96,29 @@ export default class HomeScreen extends React.Component {
     return (
       <Wrap>
         <ScrollViewWrap>
-          <Paragraph>This app:</Paragraph>
-          <H3>myskills.se</H3>
-          <Paragraph align="left">
-            MySkills.se är en tjänst för att du enkelt skall kunna fylla i
-            kompetenser på ett och samma ställe.
-          </Paragraph>
-          <Paragraph>Wants these permissions</Paragraph>
-          <View>
-            {scopes.map(scope => (
-              <View key={scope.area} style={{ marginBottom: 32 }}>
-                <H3>{scope.area}</H3>
-                <Paragraph small>{scope.description}</Paragraph>
-              </View>
-            ))}
-          </View>
-          <PrimaryButton onPress={this.approve}>I Approve!</PrimaryButton>
-          <PrimaryButton onPress={this.reject}>Nope!</PrimaryButton>
+          <Modal>
+            <H3>myskills.se</H3>
+            <Paragraph align="left">
+              MySkills.se är en tjänst för att du enkelt skall kunna fylla i
+              kompetenser på ett och samma ställe.
+            </Paragraph>
+            <Separator />
+            <H3>Begär följande rättigheter:</H3>
+            <View>
+              {scopes.map(scope => (
+                <View key={scope.area} style={{ marginBottom: 24 }}>
+                  <H3>{scope.area}</H3>
+                  <Paragraph small>{scope.description}</Paragraph>
+                </View>
+              ))}
+            </View>
+            <ConsentButtonWrap>
+              <AcceptConsentButton onPress={this.approve}>
+                Godkänn
+              </AcceptConsentButton>
+              <DenyConsentButton onPress={this.reject}>Neka</DenyConsentButton>
+            </ConsentButtonWrap>
+          </Modal>
         </ScrollViewWrap>
       </Wrap>
     )

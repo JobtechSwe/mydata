@@ -14,6 +14,7 @@ export const Wrap = styled(View)`
 export const ScrollViewWrap = props => (
   <ScrollView
     contentContainerStyle={{
+      backgroundColor: 'transparent',
       alignItems: 'center',
       justifyContent: 'center',
       height: '100%',

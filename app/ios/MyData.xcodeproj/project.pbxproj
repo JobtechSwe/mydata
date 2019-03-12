@@ -61,6 +61,7 @@
 		D095BA65E7B147E581193F66 /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C5AE43BE3E8741819D3BD6C4 /* libRNCamera.a */; };
 		D0CA971824EA4804B7D727D6 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5DD5913937F4C178ACB531F /* MaterialCommunityIcons.ttf */; };
 		D6C91B0AFA454379B0785C15 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 03A1285B15E0402E983737BC /* Rubik-Regular.ttf */; };
+		D73B9D5022381D4400E8B39D /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = D73B9D1B22381D4400E8B39D /* Fonts */; };
 		E701B3C0CF7F46328413AAE8 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9D61341AB0F64A26A53C294D /* Feather.ttf */; };
 		EC8F162AE7D543A4AA1DFF3B /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 008B7F98B8CE49419652F17B /* libReactNativePermissions.a */; };
 		F21ACE78165E4549B04B9287 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BA56E826BD934102AB9A0532 /* Foundation.ttf */; };
@@ -514,6 +515,7 @@
 		C2EB3430502A4A4481C4E69B /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		C4F5FCCDC2034DA9BB46FC43 /* karlaRegular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = karlaRegular.ttf; path = ../assets/fonts/karlaRegular.ttf; sourceTree = "<group>"; };
 		C5AE43BE3E8741819D3BD6C4 /* libRNCamera.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCamera.a; sourceTree = "<group>"; };
+		D73B9D1B22381D4400E8B39D /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fonts; path = "../node_modules/react-native-vector-icons/Fonts"; sourceTree = "<group>"; };
 		D74ED6BE27894FEEBA8FCD07 /* rubikRegular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = rubikRegular.ttf; path = ../assets/fonts/rubikRegular.ttf; sourceTree = "<group>"; };
 		D83F21BE08C64744B7C478EA /* libRNSVG.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSVG.a; sourceTree = "<group>"; };
 		D941342C97C048DDB21F104B /* karlaRegular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = karlaRegular.ttf; path = ../assets/fonts/fonts/karlaRegular.ttf; sourceTree = "<group>"; };
@@ -887,6 +889,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				D73B9D1B22381D4400E8B39D /* Fonts */,
 				13B07FAE1A68108700A75B9A /* MyData */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* MyDataTests */,
@@ -1539,6 +1542,7 @@
 				165158A2F77545C48B22A4A3 /* FontAwesome5_Regular.ttf in Resources */,
 				1C95FFD7B7F04477A760F11C /* FontAwesome5_Solid.ttf in Resources */,
 				F21ACE78165E4549B04B9287 /* Foundation.ttf in Resources */,
+				D73B9D5022381D4400E8B39D /* Fonts in Resources */,
 				A6C3C9DAA98945D1B24BDD6E /* Ionicons.ttf in Resources */,
 				D0CA971824EA4804B7D727D6 /* MaterialCommunityIcons.ttf in Resources */,
 				09106DE58C024DF0BB62CC6D /* MaterialIcons.ttf in Resources */,
