@@ -44,8 +44,16 @@ Data lagras krypterat i en s.k. PDS (Personal Data Storage). Just nu är Dropbox
 
 1. Clone this repo
 2. `npm run install-all`
-3. `docker-compose up -d` (will start elasticsearch, kibana, apm-server, redis (x2) and postgres (x2))
-4. Look in each subfolder for instructions on how to start each sub-project
+3. Add the following to your host file (probably /etc/hosts) 
+```
+127.0.0.1 operator
+127.0.0.1 cv
+```
+4. `npm run dev` (will start elasticsearch, kibana, apm-server, redis (x2) and postgres (x2))
+5. Look in each subfolder for instructions on how to start each sub-project
+
+
+If you want to run the app on an actual phone it will of course not use your computer's hosts-file so you will need to use a proxy such as squidman.
 
 *Before pushing/PR:* `npm run e2e` in main repo. Also make sure you have run all (unit) test suites in the sub-projects you have edited. 
 
