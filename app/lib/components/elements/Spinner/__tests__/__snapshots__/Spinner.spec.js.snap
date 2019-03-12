@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`elements/Spinner should render 1`] = `
+<Styled(AnimatedComponent)
+  style={
+    Object {
+      "transform": Array [
+        Object {
+          "rotate": "0deg",
+        },
+      ],
+    }
+  }
+/>
+`;
