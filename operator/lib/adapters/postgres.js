@@ -7,9 +7,16 @@ const config = {
   database: process.env.PGDATABASE || 'mydata'
 }
 
+console.log('=)=)=)=)=)=))=')
+console.log('Hej från postgres adapter!')
+console.log('=)=)=)=)=)=))=')
+
 const wait = (ms) => new Promise(resolve => setTimeout(() => resolve(), ms))
 
 async function connect (attemptNo = 0) {
+  console.log('=)=)=)=)=)=))=')
+  console.log('CONNECT i postgres adapter!')
+  console.log('=)=)=)=)=)=))=')
   try {
     const client = new Client(config)
     await client.connect()
@@ -17,6 +24,9 @@ async function connect (attemptNo = 0) {
   } catch (err) {
     console.warn(err)
     const delay = Math.min(1000 * attemptNo, 7000)
+    console.log('=)=)=)=)=)=))=')
+    console.log('WAIT i postgres adapter!')
+    console.log('=)=)=)=)=)=))=')
     await wait(delay)
     return connect(++attemptNo)
   }
