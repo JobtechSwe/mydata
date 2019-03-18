@@ -3,12 +3,12 @@ import styled from '../../theme'
 import { Text, View } from 'react-native'
 
 export const H1 = styled(Text)`
-  align-self: stretch;
   color: ${({ theme }) => theme.colors.primary};
   font-family: ${({ theme }) => theme.typography.contrast};
   font-size: ${({ theme }) => theme.fontSize.large};
   font-weight: 500;
   text-align: center;
+  width: 100%;
   margin-bottom: 32px;
 `
 

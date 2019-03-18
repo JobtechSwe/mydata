@@ -59,7 +59,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>We need the camera to scan QR codes</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>We need this in order to detect what abilities your device supports.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We need this in order to detect what abilities your device supports.</string>
 	<key>NSMotionUsageDescription</key>
