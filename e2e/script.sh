@@ -3,11 +3,11 @@ echo '**** Running script for e2e & integration tests ****'
 
 # TODO: Lint, Test
 
-# Tear down containers
-docker-compose down
-
 export DC_U=`id -u`
 export DC_G=`id -g`
+
+# Tear down containers
+docker-compose down
 
 # Start temporary databases, operator & cv (and run migrations), and start app-server
 docker-compose up -d
