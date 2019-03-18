@@ -4,14 +4,16 @@ env:
 jobs:
   include:
     # code linter
-    - stage: lint
+    - stage: "lint"
+      name: "Code lint"
       language: node_js
       install:
         - npm run install-all
       test:
         - npm run lint-all
     # end-to-end tests
-    - stage: e2e
+    - stage: "e2e"
+      name: "End-to-end tests"
       language: node_js
       # cache:
       #   bundler: true
@@ -29,6 +31,9 @@ jobs:
         - npm run install-all
       test:
         - "npm run test:e2e"
+    - stage: test
+      install: skip
+      test: skip
     - stage: build
       install: skip
       services:
