@@ -2,22 +2,25 @@ import * as consentService from '../consents'
 import axios from 'axios'
 import Config from 'react-native-config'
 import { getAccount } from '../storage'
-import { RSA } from 'react-native-rsa-native'
 import { rsaPublicKeyToPEM } from '../rsaUtils'
 import { Base64 } from 'js-base64'
+import jwksService from '../jwks'
 
 jest.mock('../storage')
+jest.mock('../jwks', () => ({
+  getKey: jest.fn(),
+}))
 
 Config.OPERATOR_URL = 'aTotallyLegitOperatorUrl'
 jest.useFakeTimers()
 
-describe('consentService', () => {
+describe.skip('consentService', () => {
   const account = {
     id: 'c1949de3-6662-43c9-8cc1-578169ea817b',
     keys: {
       publicKey: 'dis my public key yeah',
-      privateKey: 'private keeeeeey'
-    }
+      privateKey: 'private keeeeeey',
+    },
   }
   const jwks = {
     keys: [
@@ -93,11 +96,11 @@ describe('consentService', () => {
 
   describe('#get', () => {
     it('calls axios.get with correct url', async () => {
-      // jwksService.getKey.mockResolvedValue({
-      //   kid: 'http://localhost:4000/jwks/client_key',
-      //   nbf: undefined,
-      //   publicKey: '-----BEGIN RSA PUBLIC KEY-----\nMIGJAoGBAMcq3gQT5ZpoDr73G5HrQpsvuB+fsgQqdKtfIM5kJLB7mmoOUwxoD+bG\nIrvC+bIHBmtQE+SudYjLtYOjEX3HnoPw2oE7+zNhIlRFOBB2aGlMozWzssJqqfhA\nvDdkZGeS8SfJjo1VjozxA+iQVjjMmU2+Wnw1Z0cY1p3+OZchkqOnAgMBAAE=\n-----END RSA PUBLIC KEY-----\n'
-      // })
+      jwksService.getKey.mockResolvedValue({
+        kid: 'http://localhost:4000/jwks/client_key',
+        nbf: undefined,
+        publicKey: '-----BEGIN RSA PUBLIC KEY-----\nMIGJAoGBAMcq3gQT5ZpoDr73G5HrQpsvuB+fsgQqdKtfIM5kJLB7mmoOUwxoD+bG\nIrvC+bIHBmtQE+SudYjLtYOjEX3HnoPw2oE7+zNhIlRFOBB2aGlMozWzssJqqfhA\nvDdkZGeS8SfJjo1VjozxA+iQVjjMmU2+Wnw1Z0cY1p3+OZchkqOnAgMBAAE=\n-----END RSA PUBLIC KEY-----\n'
+      })
 
       await consentService.get('abcd')
       expect(axios.get).toBeCalledWith(

@@ -14,7 +14,7 @@ describe('Consent request for example/cv', () => {
 
     cy
       .get('button')
-      .contains('Log in')
+      .contains('Sign up')
       .click()
 
     cy
@@ -39,7 +39,7 @@ describe('Consent request for example/cv', () => {
 
     cy
       .get('button')
-      .contains('Log in')
+      .contains('Sign up')
       .click()
 
     cy

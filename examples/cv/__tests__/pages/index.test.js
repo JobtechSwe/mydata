@@ -7,7 +7,7 @@ describe('Index', () => {
   it('renders a login button', () => {
     const app = mount(<Index />)
 
-    expect(app.find('button').text()).toEqual('Log in with Mydata')
+    expect(app.find('button').text()).toEqual('Sign up with Mydata')
   })
 })
 
