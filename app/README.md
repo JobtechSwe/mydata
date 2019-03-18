@@ -6,9 +6,9 @@ An example app for managing consents and viewing data
 
 ### OS X
 
-* Install Android Studio
-* Install Watchman `brew install watchman`
-* Install React Native cli `npm install -g react-native-cli`
+- Install Android Studio
+- Install Watchman `brew install watchman`
+- Install React Native cli `npm install -g react-native-cli`
 
 ### Linux and Android
 
@@ -25,7 +25,7 @@ An example app for managing consents and viewing data
 
 ## Config
 
-* Create a `.env` in project root with:
+- Create a `.env` in project root with:
 
 ```bash
 DROPBOX_KEY=tsw50ay5z1j0k0k
@@ -34,7 +34,7 @@ OPERATOR_URL=http://192.168.110.130:3000/api
 
 (or whatever adress you are running the operator on)
 
-* Run
+- Run
 
 ```bash
 react-native link react-native-config && \
@@ -61,3 +61,35 @@ react-native run-android
 If the app doesn't open automatically go into apps and find MyData
 
 React debug menu available on ios with ⌘d and on android with ⌘m / ctrl+m
+
+## Release Beta - iOS
+
+1. Install the latest Xcode command line tools:
+
+`xcode-select --install`
+
+2. Install fastlane
+
+```
+# Using RubyGems
+sudo gem install fastlane -NV
+```
+
+or
+
+```
+# Alternatively using Homebrew
+brew cask install fastlane
+```
+
+3. Certificates
+
+- Add a file name "Appfile" within `ios/fastlane`. For contents, see LastPass.
+- Download and open the matching certificates and provisioning-profiles from the [Apple Developer Potal](developer.apple.com)
+
+4. Release
+
+```
+cd ios
+fastlane beta
+```
