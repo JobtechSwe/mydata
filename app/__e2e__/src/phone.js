@@ -1,7 +1,7 @@
-import * as account from '../../services/account'
-import * as storage from '../../services/storage'
-import * as crypto from '../../services/crypto'
-import * as consents from '../../services/consents'
+import * as account from '../../lib/services/account'
+import * as storage from '../../lib/services/storage'
+import * as crypto from '../../lib/services/crypto'
+import * as consents from '../../lib/services/consents'
 import Config from 'react-native-config'
 
 export async function createAccount ({ firstName, lastName }) {

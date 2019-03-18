@@ -38,7 +38,7 @@ const signed = ({ accountKey = false } = {}) => async (req, res, next) => {
         const { publicKey, rsaPublicKey } = await getKey(signature.kid)
         verifyKey = publicKey || rsaPublicKey
       } catch (err) {
-        throw createError(401, 'Could not retrieve key')
+        throw createError(401, `Could not retrieve key [${signature.kid}]`)
       }
     }
 

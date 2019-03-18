@@ -1,4 +1,4 @@
-version: '3'
+version: '3.5'
 services:
   apm-server:
     image: docker.elastic.co/apm/apm-server:6.5.4
@@ -16,6 +16,8 @@ services:
       - RUM_SOURCE_MAPPING_CACHE_EXPIRATION=5m
       - RUM_SOURCE_MAPPING_INDEX_PATTERN="apm-*-sourcemap*"
     command: apm-server -e -E apm-server.rum.enabled=$${RUM_ENABLED} -E apm-server.rum.rate_limit=$${RUM_RATE_LIMIT} -E apm-server.rum.allow_origins=$${RUM_ALLOW_ORIGINS} -E apm-server.rum.library_pattern=$${RUM_LIBRARY_PATTERN} -E apm-server.rum.exclude_from_grouping=$${RUM_EXCLUDE_FROM_GROUPING} -E apm-server.rum.source_mapping.cache.expiration=$${RUM_SOURCE_MAPPING_CACHE_EXPIRATION} -E apm-server.rum.source_mapping.index_pattern=$${RUM_SOURCE_MAPPING_INDEX_PATTERN}
+    networks:
+      - mydata
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.5.4
@@ -33,6 +35,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+    networks:
+      - mydata
 
   kibana:
     image: docker.elastic.co/kibana/kibana:6.5.4
@@ -48,6 +52,8 @@ services:
       retries: 3
     depends_on:
       - elasticsearch
+    networks:
+      - mydata
 
   redis-operator:
     image: redis:4.0-alpine
@@ -56,6 +62,8 @@ services:
     environment:
       - REDIS_PASSWORD=fubar
     command: sh -c 'redis-server --requirepass $${REDIS_PASSWORD}'
+    networks:
+      - mydata
 
   postgres-operator:
     image: postgres:11-alpine
@@ -70,6 +78,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - mydata
 
   redis-cv:
     image: redis:4.0-alpine
@@ -78,3 +88,10 @@ services:
     environment:
       - REDIS_PASSWORD=fubar
     command: sh -c 'redis-server --requirepass $${REDIS_PASSWORD}'
+    networks:
+      - mydata
+
+networks:
+  mydata:
+    driver: bridge
+    name: mydata
