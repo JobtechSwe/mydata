@@ -1,25 +1,9 @@
 import React from 'react'
 import { Alert, Linking } from 'react-native'
 import { getAccount, storeAccount } from '../../services/storage'
-import { H3 } from '../../components/typography/Typography'
-import ConsentModal from '../../components/ConsentModal'
-import { Wrap } from '../../components/View/Wrapper'
-
-const scopes = [
-  {
-    area: 'Education',
-    description: 'För att du skall kunna hålla reda på dina utbildningar.',
-  },
-  {
-    area: 'Skills',
-    description:
-      'För att du skall kunna spara ner dina tidigare arbetserfarenheter.',
-  },
-  {
-    area: 'Language',
-    description: 'För att du skall kunna spara ner dina språkkunskaper.',
-  },
-]
+import { H1 } from '../../components/typography/Typography'
+import { Wrap, ScrollViewWrap } from '../../components/View/Wrapper'
+import { PrimaryButton } from '../../components/elements/Button/Button'
 
 export default class HomeScreen extends React.Component {
   state = {
@@ -88,13 +72,12 @@ export default class HomeScreen extends React.Component {
   render() {
     return (
       <Wrap>
-        <H3 style={{ position: 'absolute', top: 48 }}>Hello World</H3>
-        <ConsentModal
-          visible={this.state.modalVisible}
-          scope={scopes}
-          client={{ display_name: 'myskills.se', description: 'Foo' }}
-          onReject={() => this.setState({ modalVisible: false })}
-        />
+        <ScrollViewWrap>
+          <H1>MyData</H1>
+          <PrimaryButton onPress={this.clearAccount}>
+            Clear account
+          </PrimaryButton>
+        </ScrollViewWrap>
       </Wrap>
     )
   }

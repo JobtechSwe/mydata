@@ -41,7 +41,10 @@ class EnterConsentCode extends Component {
       default:
         return (
           <Wrap>
-            <ScanQRConsentCode onRead={this.onScanQRCode} />
+            <ScanQRConsentCode
+              onCancel={this.props.onCancel}
+              onRead={this.onScanQRCode}
+            />
           </Wrap>
         )
     }

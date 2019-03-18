@@ -1,0 +1,120 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/ConsentModal should render without errors 1`] = `
+<Styled(View)>
+  <Styled(ReactNativeModal)
+    animationType="slide"
+    backdropOpacity={0.6}
+    isVisible={true}
+  >
+    <Styled(View)>
+      <Styled(View)
+        style={
+          Object {
+            "marginBottom": 0,
+            "marginTop": 0,
+          }
+        }
+      />
+      <Styled(View)>
+        <Styled(Text)>
+          ACME
+        </Styled(Text)>
+        <Paragraph
+          align="left"
+        >
+          En tjänst för att du enkelt skall kunna fylla i dina kompetenser på ett och samma ställe.
+        </Paragraph>
+      </Styled(View)>
+      <Styled(View)
+        style={
+          Object {
+            "marginBottom": 0,
+            "marginTop": 0,
+          }
+        }
+      />
+      <ScrollViewWrap
+        contentContainerStyle={
+          Object {
+            "alignItems": "flex-start",
+          }
+        }
+        style={
+          Object {
+            "backgroundColor": "#F9F9FB",
+            "paddingHorizontal": 36,
+            "paddingTop": 24,
+          }
+        }
+      >
+        <Styled(View)
+          style={
+            Object {
+              "marginBottom": 24,
+            }
+          }
+        >
+          <Styled(Text)>
+            Education
+          </Styled(Text)>
+          <Paragraph
+            small={true}
+          >
+            För att du skall kunna hålla reda på dina utbildningar.
+          </Paragraph>
+        </Styled(View)>
+        <Styled(View)
+          style={
+            Object {
+              "marginBottom": 24,
+            }
+          }
+        >
+          <Styled(Text)>
+            Skills
+          </Styled(Text)>
+          <Paragraph
+            small={true}
+          >
+            För att du skall kunna spara ner dina tidigare arbetserfarenheter.
+          </Paragraph>
+        </Styled(View)>
+        <Styled(View)
+          style={
+            Object {
+              "marginBottom": 24,
+            }
+          }
+        >
+          <Styled(Text)>
+            Language
+          </Styled(Text)>
+          <Paragraph
+            small={true}
+          >
+            För att du skall kunna spara ner dina språkkunskaper.
+          </Paragraph>
+        </Styled(View)>
+      </ScrollViewWrap>
+      <Styled(View)>
+        <AcceptConsentButton>
+          Tillåt
+        </AcceptConsentButton>
+        <Styled(View)
+          style={
+            Object {
+              "marginBottom": 0,
+              "marginTop": 0,
+            }
+          }
+          vertical={true}
+        />
+        <DenyConsentButton>
+          Neka
+        </DenyConsentButton>
+      </Styled(View)>
+    </Styled(View)>
+  </Styled(ReactNativeModal)>
+</Styled(View)>
+`;

@@ -33,7 +33,8 @@ export const StyledParagraph = styled(Text)`
 export const Separator = styled(View)`
   align-self: stretch;
   background-color: ${({ theme }) => theme.colors.border};
-  height: 1px;
+  height: ${({ vertical = false }) => (vertical ? '100%' : '1px')};
+  width: ${({ vertical = false }) => (vertical ? '1px' : '100%')};
   margin: 24px 0;
 `
 

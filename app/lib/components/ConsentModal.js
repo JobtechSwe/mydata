@@ -2,6 +2,7 @@ import React from 'react'
 import { View } from 'react-native'
 import Modal from 'react-native-modal'
 import { Wrap, ScrollViewWrap } from './View/Wrapper'
+import styled, { theme } from '../theme'
 import { H3, Paragraph, Separator } from './typography/Typography'
 import {
   AcceptConsentButton,
@@ -9,55 +10,65 @@ import {
   ConsentButtonWrap,
 } from './elements/Button/ConsentButton'
 
+const StyledModal = styled(Modal)`
+  margin: 0;
+  width: 100%;
+  height: 100%;
+`
+
+const ModalWrapper = styled(View)`
+  margin-top: auto;
+  height: 85%;
+`
+
+const ConsentHeader = styled(View)`
+  background-color: ${({ theme }) => theme.colors.white};
+  padding: 24px 36px;
+`
+
+const ScopeItemWrapper = styled(View)`
+  margin-bottom: 24px;
+`
+
 const ConsentModal = ({ client, scope, visible, onApprove, onReject }) => (
   <Wrap>
-    <Modal
+    <StyledModal
       animationType="slide"
       isVisible={visible}
       backdropOpacity={0.6}
-      style={{
-        marginHorizontal: 0,
-        marginBottom: 0,
-        width: '100%',
-        height: '100%',
-      }}
     >
-      <View style={{ marginTop: 'auto', height: '82.5%' }}>
+      <ModalWrapper>
         <Separator style={{ marginBottom: 0, marginTop: 0 }} />
-        <View
-          style={{
-            backgroundColor: 'white',
-            paddingHorizontal: 36,
-            paddingVertical: 24,
-          }}
-        >
-          <H3>{client.display_name}</H3>
+        <ConsentHeader>
+          <H3>{client.displayName}</H3>
           <Paragraph align="left">{client.description}</Paragraph>
-        </View>
+        </ConsentHeader>
         <Separator style={{ marginBottom: 0, marginTop: 0 }} />
         <ScrollViewWrap
           style={{
             paddingHorizontal: 36,
             paddingTop: 24,
-            backgroundColor: '#F9F9FB',
+            backgroundColor: theme.colors.quiet,
           }}
           contentContainerStyle={{ alignItems: 'flex-start' }}
         >
-          <View>
-            {scope.map(scope => (
-              <View key={scope.area} style={{ marginBottom: 24 }}>
-                <H3>{scope.area}</H3>
-                <Paragraph small>{scope.description}</Paragraph>
-              </View>
-            ))}
-          </View>
+          {scope.map(scope => (
+            <ScopeItemWrapper key={scope.area} style={{ marginBottom: 24 }}>
+              <H3>{scope.area}</H3>
+              <Paragraph small>{scope.description}</Paragraph>
+            </ScopeItemWrapper>
+          ))}
         </ScrollViewWrap>
         <ConsentButtonWrap>
           <AcceptConsentButton onPress={onApprove}>Tillåt</AcceptConsentButton>
+          <Separator
+            vertical={true}
+            style={{ marginBottom: 0, marginTop: 0 }}
+          />
           <DenyConsentButton onPress={onReject}>Neka</DenyConsentButton>
         </ConsentButtonWrap>
-      </View>
-    </Modal>
+      </ModalWrapper>
+    </StyledModal>
   </Wrap>
 )
 
