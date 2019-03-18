@@ -3,21 +3,23 @@ env:
 
 jobs:
   include:
+    # code linter
     - stage: lint
       language: node_js
       install:
         - npm run ci
       test:
         - npm run lint-all
-    - stage: run_tests
+    # end-to-end tests
+    - stage: e2e
       language: node_js
-      cache:
-        bundler: true
-        directories:
-          - node_modules
-          - app/node_modules
-          - examcples/cv/node_modules
-          - operator/node_modules
+      # cache:
+      #   bundler: true
+      #   directories:
+      #     - node_modules
+      #     - app/node_modules
+      #     - examcples/cv/node_modules
+      #     - operator/node_modules
       before_install:
         - sudo rm /usr/local/bin/docker-compose
         - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
@@ -40,8 +42,9 @@ jobs:
       script: bash infrastructure/travis/deploy.sh
 stages:
   - name: lint
-    if: (branch != master AND type = pull_request)
-  - run_tests
+    if: branch = master OR type = pull_request
+  - name: e2e
+    if: branch = master OR type = pull_request
   - name: build
     if: (branch = master AND type != pull_request) OR tag IS present
   - name: deploy
