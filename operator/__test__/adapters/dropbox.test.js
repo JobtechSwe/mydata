@@ -12,7 +12,7 @@ describe('adapters/pds/dropbox', () => {
       fs = dropbox.getFs({ access_token: 'derp' })
     })
     describe('#readFile', () => {
-      xit('fixes utf-8 error', (done) => {
+      it('fixes utf-8 error', (done) => {
         fs.readFile('/data/derp.txt', 'utf8', (_, res) => {
           expect(res).toEqual('brök')
           done()
