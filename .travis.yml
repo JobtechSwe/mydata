@@ -3,6 +3,12 @@ env:
 
 jobs:
   include:
+    - stage: lint
+      language: node_js
+      install:
+        - npm run ci
+      test:
+        - npm run lint-all
     - stage: run_tests
       language: node_js
       cache:
@@ -20,8 +26,7 @@ jobs:
       install:
         - npm run install-all
       script:
-        - docker-compose --version
-        - npm run test
+        - npm run test:e2e
     - stage: build
       install: skip
       services:
@@ -34,6 +39,8 @@ jobs:
         - export PATH=$PATH:/tmp/openshift
       script: bash infrastructure/travis/deploy.sh
 stages:
+  - lint
+    if: (branch != master AND type = pull_request)
   - run_tests
   - name: build
     if: (branch = master AND type != pull_request) OR tag IS present
