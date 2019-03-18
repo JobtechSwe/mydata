@@ -7,7 +7,7 @@ jobs:
     - stage: lint
       language: node_js
       install:
-        - npm run ci
+        - npm run install-all
       test:
         - npm run lint-all
     # end-to-end tests
