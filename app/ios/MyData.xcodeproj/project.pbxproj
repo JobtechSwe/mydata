@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -514,6 +515,7 @@
 		C2EB3430502A4A4481C4E69B /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		C4F5FCCDC2034DA9BB46FC43 /* karlaRegular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = karlaRegular.ttf; path = ../assets/fonts/karlaRegular.ttf; sourceTree = "<group>"; };
 		C5AE43BE3E8741819D3BD6C4 /* libRNCamera.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCamera.a; sourceTree = "<group>"; };
+		D73B9BA02237F08B00E8B39D /* MyData.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = MyData.entitlements; path = MyData/MyData.entitlements; sourceTree = "<group>"; };
 		D74ED6BE27894FEEBA8FCD07 /* rubikRegular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = rubikRegular.ttf; path = ../assets/fonts/rubikRegular.ttf; sourceTree = "<group>"; };
 		D83F21BE08C64744B7C478EA /* libRNSVG.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSVG.a; sourceTree = "<group>"; };
 		D941342C97C048DDB21F104B /* karlaRegular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = karlaRegular.ttf; path = ../assets/fonts/fonts/karlaRegular.ttf; sourceTree = "<group>"; };
@@ -675,6 +677,7 @@
 		13B07FAE1A68108700A75B9A /* MyData */ = {
 			isa = PBXGroup;
 			children = (
+				D73B9BA02237F08B00E8B39D /* MyData.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -1029,7 +1032,12 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = BSE2J6442R;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -1746,9 +1754,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MyData/MyData.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 11;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = BSE2J6442R;
 				HEADER_SEARCH_PATHS = (
@@ -1770,9 +1779,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = work.mydata.ConsentApp;
 				PRODUCT_NAME = MyData;
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "MyData iOS";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1781,9 +1790,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_ENTITLEMENTS = MyData/MyData.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_TEAM = BSE2J6442R;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1804,9 +1814,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = work.mydata.ConsentApp;
 				PRODUCT_NAME = MyData;
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "MyData iOS Distribution";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
