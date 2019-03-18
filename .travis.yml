@@ -39,11 +39,10 @@ jobs:
         - export PATH=$PATH:/tmp/openshift
       script: bash infrastructure/travis/deploy.sh
 stages:
-  - lint
+  - name: lint
     if: (branch != master AND type = pull_request)
   - run_tests
   - name: build
     if: (branch = master AND type != pull_request) OR tag IS present
   - name: deploy
     if: (branch = master AND type != pull_request) OR tag IS present
-# ..
