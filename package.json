@@ -11,7 +11,7 @@
     "lint-all": "npm --prefix ./app run lint && npm --prefix ./client run lint && npm --prefix ./examples/cv run lint && npm --prefix ./operator run lint",
     "test-all": "npm --prefix ./operator test ./operator",
     "dev": "docker-compose -f docker-compose.dev.yml down && docker-compose down && docker-compose up -d && docker-compose -f docker-compose.dev.yml up -d",
-    "test": "npm run test-all && sh -c 'cd ./e2e && ./script.sh'"
+    "test": "sh -c 'cd ./e2e && ./script.sh'"
   },
   "dependencies": {},
   "devDependencies": {},
