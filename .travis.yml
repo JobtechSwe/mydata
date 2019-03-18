@@ -46,4 +46,4 @@ stages:
     if: (branch = master AND type != pull_request) OR tag IS present
   - name: deploy
     if: (branch = master AND type != pull_request) OR tag IS present
-# ...
+# ..
