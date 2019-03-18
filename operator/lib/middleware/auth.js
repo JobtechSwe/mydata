@@ -60,7 +60,6 @@ const signed = ({ accountKey = false } = {}) => async (req, res, next) => {
     }
     next()
   } catch (error) {
-    console.error(error)
     switch (error.name) {
       case 'ValidationError':
         const errorToReturn = error.message.includes('"clientId" must be a valid uri with a scheme matching the https pattern')

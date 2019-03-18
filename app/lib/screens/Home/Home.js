@@ -75,8 +75,6 @@ export default class HomeScreen extends React.Component {
           <Button title="Clear Account" onPress={this.clearAccount}>
             Clear account
           </Button>
-
-          {/*<JSONTree data={this.state.account || {}} /> */}
         </ScrollViewWrap>
       </Wrap>
     )

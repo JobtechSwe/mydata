@@ -21,7 +21,7 @@ describe('routes /api/data', () => {
         account_id: 'b106b599-d821-48cb-b588-e583d6dc41e8',
         pds_provider: 'dropbox',
         pds_credentials: credentialsBuffer,
-        domain: 'localhost:4000',
+        domain: 'http://localhost:4000',
         area: 'cv',
         read: true,
         write: true
@@ -30,7 +30,7 @@ describe('routes /api/data', () => {
         account_id: 'b106b599-d821-48cb-b588-e583d6dc41e8',
         pds_provider: 'dropbox',
         pds_credentials: credentialsBuffer,
-        domain: 'localhost:4000',
+        domain: 'http://localhost:4000',
         area: 'personal',
         read: true,
         write: true
@@ -58,13 +58,15 @@ describe('routes /api/data', () => {
 
     // PDS
     dfs.filesystem = {
-      'data': {
-        [encodeURIComponent('localhost:4000')]: {
-          'cv.mydata.txt': '{"cv":"foo"}',
-          'personal.mydata.txt': '{"name":"Johan"}'
-        },
-        [encodeURIComponent('linkedin.com')]: {
-          'experience.mydata.txt': '{"experience":1}'
+      'b106b599-d821-48cb-b588-e583d6dc41e8': {
+        'data': {
+          [encodeURIComponent('http://localhost:4000')]: {
+            'cv.mydata.txt': '{"cv":"foo"}',
+            'personal.mydata.txt': '{"name":"Johan"}'
+          },
+          [encodeURIComponent('linkedin.com')]: {
+            'experience.mydata.txt': '{"experience":1}'
+          }
         }
       }
     }
@@ -81,7 +83,7 @@ describe('routes /api/data', () => {
       expect(pg.client.query).toHaveBeenCalledWith(expect.any(String), [consentId])
 
       const expected = {
-        'localhost:4000': {
+        'http://localhost:4000': {
           'cv': '{"cv":"foo"}',
           'personal': '{"name":"Johan"}'
         },
@@ -92,7 +94,7 @@ describe('routes /api/data', () => {
       expect(response.body).toEqual({ data: expected })
     })
     it('reads all data for the correct account and domain', async () => {
-      const domain = 'localhost:4000'
+      const domain = 'http://localhost:4000'
       const url = `/api/data/${encodeURIComponent(domain)}`
       const response = await api.get(url, authHeader)
 
@@ -101,7 +103,7 @@ describe('routes /api/data', () => {
       )
 
       const expected = {
-        'localhost:4000': {
+        'http://localhost:4000': {
           'cv': '{"cv":"foo"}',
           'personal': '{"name":"Johan"}'
         }
@@ -109,7 +111,7 @@ describe('routes /api/data', () => {
       expect(response.body).toEqual({ data: expected })
     })
     it('reads all data for the correct account, domain and area', async () => {
-      const domain = 'localhost:4000'
+      const domain = 'http://localhost:4000'
       const area = 'personal'
       const url = `/api/data/${encodeURIComponent(domain)}/${encodeURIComponent(area)}`
       const response = await api.get(url, authHeader)
@@ -119,7 +121,7 @@ describe('routes /api/data', () => {
       )
 
       const expected = {
-        'localhost:4000': {
+        'http://localhost:4000': {
           'personal': '{"name":"Johan"}'
         }
       }
