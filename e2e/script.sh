@@ -3,6 +3,9 @@ echo '**** Running script for e2e & integration tests ****'
 
 # TODO: Lint, Test
 
+export DC_U=`id -u`
+export DC_G=`id -g`
+
 # Tear down containers
 docker-compose down
 
