@@ -34,7 +34,6 @@ module.exports = operator => {
 
     try {
       const data = await operator.data.auth(accessToken).read({ domain, area })
-
       res.send(data[domain][area])
     } catch (error) {
       next(error)

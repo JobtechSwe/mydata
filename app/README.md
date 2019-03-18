@@ -12,17 +12,16 @@ An example app for managing consents and viewing data
 
 ### Linux and Android
 
-- Install Android Studio https://developer.android.com/studio/install
-  - In the project directory create the file `android/local.properties` with the content `sdk.dir = /home/USERNAME/Android/Sdk`
-  - Approve the licenses of the SDK packages by running `/home/USERNAME/Android/Sdk/tools/bin/sdkmanager --licenses`
-  - If you get `Could not find tools.jar` then you need to point gradle to the JDK installation.
-    - You can find it with `2>/dev/null find / -name tools.jar -path "*jdk*"`
-    - If you don't have JDK installed then install it
-    - Create the file `~/.gradle/gradle.properties` with the line `org.gradle.java.home = /PATH/TO/JDK`
-  - Set up the device which will run the app (API Level 26, Android 8.0) https://facebook.github.io/react-native/docs/getting-started.html#preparing-the-android-device
-  - Start the device that will run the app from Android Studio. Virtual devices are under Tools->AVD Manager (if you do not see `AVD Manager`, go to `Help` and use `Find action`)
-- (Optionally, if you want it to automatically reload on code change) Install Watchman https://facebook.github.io/watchman/docs/install.html#installing-from-source
-- Install React Native cli `npm install -g react-native-cli`
+* Install Android Studio https://developer.android.com/studio/install
+  * In the project directory create the file `android/local.properties` with the content `sdk.dir = /home/USERNAME/Android/Sdk`
+  * Approve the licenses of the SDK packages by running ` /home/USERNAME/Android/Sdk/tools/bin/sdkmanager --licenses`
+  * If you get `Could not find tools.jar` then you need to point gradle to the JDK installation.
+    * You can find it with `2>/dev/null find / -name tools.jar -path "*jdk*"`
+    * If you don't have JDK installed then install it
+    * Create the file `~/.gradle/gradle.properties` with the line `org.gradle.java.home = /PATH/TO/JDK`
+  * Set up the device which will run the app (API Level 26, Android 8.0) https://facebook.github.io/react-native/docs/getting-started.html#preparing-the-android-device
+* (Optionally, if you want it to automatically reload on code change) Install Watchman https://facebook.github.io/watchman/docs/install.html#installing-from-source
+* Install React Native cli `npm install -g react-native-cli`
 
 ## Config
 
@@ -49,6 +48,10 @@ react-native link react-native-gesture-handler
 ```
 
 ## Run
+
+For Android:
+
+* Start the device that will run the app from Android Studio. Virtual devices are under Tools->AVD Manager (if you do not see `AVD Manager`, go to `Help` and use `Find action`)
 
 ```bash
 react-native run-ios

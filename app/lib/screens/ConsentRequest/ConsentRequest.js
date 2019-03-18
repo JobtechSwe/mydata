@@ -13,16 +13,11 @@ class ManageConsentsRequestScreen extends React.Component {
   }
 
   // Events
-  onCodeChange = code => {
-    this.setState({ code })
+  onCode = code => {
+    this.setState({ code, view: 'getRequest' })
   }
   onApprove = () => {
     this.props.navigation.goBack()
-  }
-
-  // Actions
-  getConsentRequest = () => {
-    this.setState({ view: 'getRequest' })
   }
 
   render() {
@@ -38,8 +33,7 @@ class ManageConsentsRequestScreen extends React.Component {
       default:
         return (
           <EnterConsentCode
-            onCodeChange={this.onCodeChange}
-            onEnterPress={this.getConsentRequest}
+            onCode={this.onCode}
           />
         )
     }

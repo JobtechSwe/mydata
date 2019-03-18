@@ -1,4 +1,4 @@
-const { createClientWithServer, createSampleRequest, sampleRequest } = require('./helpers/index')
+const { createClientWithServer, createSampleRequest } = require('./helpers/index')
 const axios = require('axios')
 const { v4Regexp } = require ('./helpers/regexp')
 const phone = require('./helpers/phone')
@@ -29,7 +29,8 @@ describe('Client', () => {
 
     expect(res).toEqual({
       expires: expect.stringMatching(/^\d+$/),
-      id: expect.stringMatching(v4Regexp)
+      id: expect.stringMatching(v4Regexp),
+      link: expect.stringMatching(/^mydata:\/\/register\//)
     })
   })
 

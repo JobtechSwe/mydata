@@ -6,9 +6,10 @@ import { getAccount } from './storage'
 import { Base64 } from 'js-base64'
 
 export async function get(id) {
+  id = id.substring(id.lastIndexOf('/') + 1)
   const account = await getAccount()
 
-  if (!account) {
+  if (!account || !account.id) {
     throw new Error('Account is not set!')
   }
 
