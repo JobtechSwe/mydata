@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
-import { View } from 'react-native'
 import { Wrap } from '../components/View/Wrapper'
 import { Spinner } from '../components/elements/Spinner/Spinner'
-import { H3, Paragraph, Separator } from '../components/typography/Typography'
-import { PrimaryButton } from '../components/elements/Button/Button'
 import * as consentsService from '../services/consents'
+import { Paragraph } from '../components/typography/Typography'
+import ConsentModal from './ConsentModal'
 
 class ConsentRequest extends Component {
   state = {
     view: 'loading',
     consentRequest: null,
+    modalVisible: true,
   }
 
   async componentDidMount() {
@@ -25,7 +25,9 @@ class ConsentRequest extends Component {
     this.props.onApprove()
   }
 
-  reject = () => {}
+  reject = () => {
+    this.setState({ modalVisible: false })
+  }
 
   render() {
     switch (this.state.view) {
@@ -37,37 +39,30 @@ class ConsentRequest extends Component {
         )
       case 'approve':
         return (
-          <Wrap>
-            <H3>{this.state.consentRequest.client.display_name}</H3>
-            <Paragraph align="left">
-              {this.state.consentRequest.client.description}
-            </Paragraph>
-            <Separator />
-            <Paragraph>Wants these permissions</Paragraph>
-            <View>
-              {this.state.consentRequest.data.scope.map(scope => (
-                <View key={scope.area} style={{ marginBottom: 32 }}>
-                  <H3>{scope.area}</H3>
-                  <Paragraph small>{scope.description}</Paragraph>
-                </View>
-              ))}
-            </View>
-            <PrimaryButton onPress={this.approve}>Godkänn</PrimaryButton>
-            <PrimaryButton onPress={this.reject}>Neka</PrimaryButton>
-          </Wrap>
+          <ConsentModal
+            onApprove={this.approve}
+            onReject={this.reject}
+            visible={this.state.modalVisible}
+            client={this.state.consentRequest.client}
+            scope={this.state.consentRequest.data.scope}
+          />
         )
       case 'approving':
         return (
           <Wrap>
             <Spinner />
-            <Paragraph style={{ marginTop: 24 }}>Godkänner...</Paragraph>
+            <Paragraph align="center" style={{ marginTop: 24 }}>
+              Godkänner...
+            </Paragraph>
           </Wrap>
         )
       case 'generating':
         return (
           <Wrap>
             <Spinner />
-            <Paragraph style={{ marginTop: 24 }}>Genererar...</Paragraph>
+            <Paragraph align="center" style={{ marginTop: 24 }}>
+              Genererar...
+            </Paragraph>
           </Wrap>
         )
     }

@@ -1,17 +1,9 @@
 import React from 'react'
-import { View, Alert, Linking, Modal } from 'react-native'
+import { Alert, Linking } from 'react-native'
 import { getAccount, storeAccount } from '../../services/storage'
-import {
-  H3,
-  Paragraph,
-  Separator,
-} from '../../components/typography/Typography'
-import {
-  AcceptConsentButton,
-  DenyConsentButton,
-  ConsentButtonWrap,
-} from '../../components/elements/Button/ConsentButton'
-import { Wrap, ScrollViewWrap } from '../../components/View/Wrapper'
+import { H3 } from '../../components/typography/Typography'
+import ConsentModal from '../../components/ConsentModal'
+import { Wrap } from '../../components/View/Wrapper'
 
 const scopes = [
   {
@@ -32,6 +24,7 @@ const scopes = [
 export default class HomeScreen extends React.Component {
   state = {
     account: {},
+    modalVisible: true,
   }
 
   async componentDidMount() {
@@ -95,31 +88,13 @@ export default class HomeScreen extends React.Component {
   render() {
     return (
       <Wrap>
-        <ScrollViewWrap>
-          <Modal>
-            <H3>myskills.se</H3>
-            <Paragraph align="left">
-              MySkills.se är en tjänst för att du enkelt skall kunna fylla i
-              kompetenser på ett och samma ställe.
-            </Paragraph>
-            <Separator />
-            <H3>Begär följande rättigheter:</H3>
-            <View>
-              {scopes.map(scope => (
-                <View key={scope.area} style={{ marginBottom: 24 }}>
-                  <H3>{scope.area}</H3>
-                  <Paragraph small>{scope.description}</Paragraph>
-                </View>
-              ))}
-            </View>
-            <ConsentButtonWrap>
-              <AcceptConsentButton onPress={this.approve}>
-                Godkänn
-              </AcceptConsentButton>
-              <DenyConsentButton onPress={this.reject}>Neka</DenyConsentButton>
-            </ConsentButtonWrap>
-          </Modal>
-        </ScrollViewWrap>
+        <H3 style={{ position: 'absolute', top: 48 }}>Hello World</H3>
+        <ConsentModal
+          visible={this.state.modalVisible}
+          scope={scopes}
+          client={{ display_name: 'myskills.se', description: 'Foo' }}
+          onReject={() => this.setState({ modalVisible: false })}
+        />
       </Wrap>
     )
   }

@@ -34,7 +34,9 @@ export default class KeyPair extends Component {
     return (
       <>
         <Spinner />
-        <Paragraph style={{ marginTop: 24 }}>{this.state.status}</Paragraph>
+        <Paragraph align="center" style={{ marginTop: 24 }}>
+          {this.state.status}
+        </Paragraph>
       </>
     )
   }
