@@ -12,8 +12,9 @@ jobs:
       test: skip
       script:
         - npm run lint-all
+
     # end-to-end tests
-    - stage: "e2e"
+    - stage: "endToEnd"
       name: "End-to-end tests"
       language: node_js
       # cache:
@@ -32,15 +33,16 @@ jobs:
         - npm run install-all
       test:
         - "npm run test:e2e"
-    - stage: test
-      install: skip
-      test: skip
+
+    # build docker image(s)
     - stage: build
       install: skip
       services:
         - docker
       script:
         - bash infrastructure/travis/build.sh
+
+    # update openshift DeployConfig(s)
     - stage: deploy
       install:
         - bash ./infrastructure/travis/install-openshift.sh
@@ -49,7 +51,7 @@ jobs:
 stages:
   - name: lint
     if: branch != master OR type = pull_request
-  - name: e2e
+  - name: endToEnd
     if: branch != master OR type = pull_request
   - name: build
     if: (branch = master AND type != pull_request) OR tag IS present
