@@ -154,7 +154,7 @@ describe('/middleware/auth', () => {
           payload.signature.kid = 'http://somethingelse.bork/jwks/derp'
           const res = await api.post('/test', payload)
           expect(res.status).toEqual(401)
-          expect(res.body.message).toEqual('Could not retrieve key')
+          expect(res.body.message).toEqual('Could not retrieve key [http://somethingelse.bork/jwks/derp]')
         })
         it('throws 403 if signature cannot be validated', async () => {
           payload.signature.data = 'bork'
