@@ -12,9 +12,7 @@ jobs:
       install:
         - npm run install-all
       script:
-        - npm run lint-all
-      script:
-        - npm run test-all
+        - npm run test
     - stage: build
       install: skip
       services:
