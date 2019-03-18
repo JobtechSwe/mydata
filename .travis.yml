@@ -28,7 +28,7 @@ jobs:
       install:
         - npm run install-all
       test:
-        - npm run test:e2e
+        - "npm run test:e2e"
     - stage: build
       install: skip
       services:
