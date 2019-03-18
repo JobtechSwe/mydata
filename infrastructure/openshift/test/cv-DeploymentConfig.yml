@@ -41,14 +41,6 @@ spec:
             value: production
           - name: OPERATOR_URL
             value: 'http://operator-test.mydata.svc:3000'
-          - name: POSTGRES_USER
-            value: postgresuser
-          - name: POSTGRES_PASSWORD
-            value: postgrespassword
-          - name: POSTGRES_DB
-            value: cv
-          - name: DATABASE_URL
-            value: postgres://postgresuser:postgrespassword@postgresql-cv-test.mydata.svc:5432/cv
           - name: REDIS
             value: 'redis://:fubar@redis-test.mydata.svc:6379/'
           - name: CLIENT_ID
@@ -65,6 +57,26 @@ spec:
           resources:
             limits:
               memory: 400Mi
+          readinessProbe:
+            failureThreshold: 59
+            httpGet:
+              path: /health
+              port: 4000
+              scheme: HTTP
+            initialDelaySeconds: 1
+            periodSeconds: 1
+            successThreshold: 1
+            timeoutSeconds: 1
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 4000
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
