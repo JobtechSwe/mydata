@@ -2,7 +2,13 @@ jobs:
   include:
     - stage: run_tests
       language: node_js
-      cache: npm
+      cache:
+        bundler: true
+        directories:
+          - node_modules
+          - app/node_modules
+          - examcples/cv/node_modules
+          - operator/node_modules
       install:
         - npm run install-all
       script:
