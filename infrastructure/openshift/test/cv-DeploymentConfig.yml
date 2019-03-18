@@ -45,6 +45,18 @@ spec:
             value: 'redis://:fubar@redis-test.mydata.svc:6379/'
           - name: CLIENT_ID
             value: https://cv-test.dev.services.jtech.se
+                    - name: NO_UPDATE_NOTIFIER
+            value: 'true'
+          - name: PUBLIC_KEY
+            valueFrom:
+              secretKeyRef:
+                name: cv
+                key: public.key
+          - name: PRIVATE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: cv
+                key: private.key
           image: cv:test
           imagePullPolicy: Always
           name: cv-test
