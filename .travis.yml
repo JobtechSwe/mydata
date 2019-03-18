@@ -9,7 +9,8 @@ jobs:
       language: node_js
       install:
         - npm run install-all
-      test:
+      test: skip
+      script:
         - npm run lint-all
     # end-to-end tests
     - stage: "e2e"
