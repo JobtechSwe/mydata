@@ -45,7 +45,7 @@ spec:
             value: 'redis://:fubar@redis-test.mydata.svc:6379/'
           - name: CLIENT_ID
             value: https://cv-test.dev.services.jtech.se
-                    - name: NO_UPDATE_NOTIFIER
+          - name: NO_UPDATE_NOTIFIER
             value: 'true'
           - name: PUBLIC_KEY
             valueFrom:
