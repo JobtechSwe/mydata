@@ -67,7 +67,7 @@ class KeyProvider {
     return value ? base64ToJson(value) : value
   }
   async save (key, value, ttl) {
-    this.keyValueStore.save(key, jsonToBase64(value), ttl)
+    return this.keyValueStore.save(key, jsonToBase64(value), ttl)
   }
   async getKey (kid) {
     if (kid === 'client_key') {
