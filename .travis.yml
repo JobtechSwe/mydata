@@ -27,7 +27,7 @@ jobs:
         - sudo mv docker-compose /usr/local/bin
       install:
         - npm run install-all
-      script:
+      test:
         - npm run test:e2e
     - stage: build
       install: skip
