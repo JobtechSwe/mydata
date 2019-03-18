@@ -1,5 +1,5 @@
 env:
-  - DOCKER_COMPOSE_VERSION=1.4.2
+  - DOCKER_COMPOSE_VERSION=1.23.2
 
 jobs:
   include:
@@ -20,6 +20,7 @@ jobs:
       install:
         - npm run install-all
       script:
+        - docker-compose --version
         - npm run test
     - stage: build
       install: skip
