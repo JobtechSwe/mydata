@@ -3,7 +3,6 @@ const createError = require('http-errors')
 const { basename } = require('path')
 
 const { create, get, del, login } = require('../../services/accounts')
-const consentService = require('../../services/consents')
 const { signed } = require('../../middleware/auth')
 const pds = require('../../adapters/pds')
 
