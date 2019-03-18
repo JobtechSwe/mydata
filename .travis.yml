@@ -1,0 +1,28 @@
+jobs:
+  include:
+    - stage: run_tests
+      language: node_js
+      cache: npm
+      install:
+        - npm run install-all
+      script:
+        - npm run lint-all
+      script:
+        - npm run test-all
+    - stage: build
+      install: skip
+      services:
+        - docker
+      script:
+        - bash infrastructure/travis/build.sh
+    - stage: deploy
+      install:
+        - bash ./infrastructure/travis/install-openshift.sh
+        - export PATH=$PATH:/tmp/openshift
+      script: bash infrastructure/travis/deploy.sh
+stages:
+  - run_tests
+  - name: build
+    if: (branch = master AND type != pull_request) OR tag IS present
+  - name: deploy
+    if: (branch = master AND type != pull_request) OR tag IS present
