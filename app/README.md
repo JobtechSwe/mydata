@@ -82,7 +82,12 @@ or
 brew cask install fastlane
 ```
 
-3. Release
+3. Certificates
+
+- Add a file name "Appfile" within `ios/fastlane`. For contents, see LastPass.
+- Download and open the matching certificates and provisioning-profiles from the [Apple Developer Potal](developer.apple.com)
+
+4. Release
 
 ```
 cd ios
