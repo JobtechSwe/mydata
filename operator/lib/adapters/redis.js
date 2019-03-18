@@ -1,15 +1,25 @@
 const Redis = require('ioredis')
 
+console.log('==========')
+console.log('Require redis')
+console.log('==========')
+
 const connectionString = process.env.REDIS || 'redis://:fubar@localhost:6379/'
 
 const redis = new Redis(connectionString, {
   retryStrategy: (times) => {
+    console.log('==========')
+    console.log('Hej där! new Redis()')
+    console.log('==========')
     const maxReconnectTime = 50 * 1000
     return Math.min(times * 50, maxReconnectTime)
   }
 })
 const sub = new Redis(connectionString, {
   retryStrategy: (times) => {
+    console.log('==========')
+    console.log('Hej där! (sub) new Redis()')
+    console.log('==========')
     const maxReconnectTime = 50 * 1000
     return Math.min(times * 50, maxReconnectTime)
   }
