@@ -8,6 +8,7 @@ export const H1 = styled(Text)`
   font-family: ${({ theme }) => theme.typography.contrast};
   font-size: ${({ theme }) => theme.fontSize.large};
   font-weight: 500;
+  text-align: center;
   margin-bottom: 32px;
 `
 
