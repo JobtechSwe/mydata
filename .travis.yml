@@ -42,14 +42,14 @@ jobs:
       services:
         - docker
       script:
-        - docker build -t JobTechSwe/app app
-        - docker push JobTechSwe/app
+        - docker build -t jobtechswe/app app
+        - docker push jobtechswe/app
       script:
-        - docker build -t JobTechSwe/cv examples/cv
-        - docker push JobTechSwe/cv
+        - docker build -t jobtechswe/cv examples/cv
+        - docker push jobtechswe/cv
       script:
-        - docker build -t JobTechSwe/operator operator
-        - docker push JobTechSwe/operator
+        - docker build -t jobtechswe/operator operator
+        - docker push jobtechswe/operator
 
     # update openshift DeployConfig(s)
     - stage: deploy
