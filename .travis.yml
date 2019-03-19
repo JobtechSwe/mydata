@@ -49,12 +49,13 @@ jobs:
         - docker
       script:
         - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
-        - docker build --pull -t jobtechswe/mydata-app:$IMAGE_TAG app/
-        - docker build --pull -t jobtechswe/mydata-cv:$IMAGE_TAG examples/cv/
-        - docker build --pull -t jobtechswe/mydata-operator:$IMAGE_TAG operator/
-        - docker push jobtechswe/mydata-cv:$IMAGE_TAG
-        - docker push jobtechswe/mydata-app:$IMAGE_TAG
-        - docker push jobtechswe/mydata-operator:$IMAGE_TAG
+        - echo ${IMAGE_TAG}
+        - docker build --pull -t jobtechswe/mydata-app:${IMAGE_TAG} app/
+        - docker build --pull -t jobtechswe/mydata-cv:${IMAGE_TAG} examples/cv/
+        - docker build --pull -t jobtechswe/mydata-operator:${IMAGE_TAG} operator/
+        - docker push jobtechswe/mydata-cv:${IMAGE_TAG}
+        - docker push jobtechswe/mydata-app:${IMAGE_TAG}
+        - docker push jobtechswe/mydata-operator:${IMAGE_TAG}
 
     # update openshift DeployConfig(s)
     - stage: deploy
