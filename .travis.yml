@@ -1,7 +1,5 @@
 env:
-  global:
-    - DOCKER_COMPOSE_VERSION=1.23.2
-    - IMAGE_TAG=latest
+  - DOCKER_COMPOSE_VERSION=1.23.2
 
 jobs:
   include:
@@ -31,14 +29,6 @@ jobs:
       test:
         - "npm run test:e2e"
 
-    - stage: set-tag
-      install: skip
-      test: skip
-      script:
-        - echo $TRAVIS_TAG
-        - export IMAGE_TAG=$TRAVIS_TAG
-        - echo $IMAGE_TAG
-
     # build docker image(s)
     - stage: build
       install: skip
@@ -47,7 +37,7 @@ jobs:
         - docker
       script:
         - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
-        - if [ -z "$TRAVIS_TAG" ]; then export IMAGE_TAG="$TRAVIS_TAG"; fi
+        - if [ ! -z "$TRAVIS_TAG" ]; then export TAG="$TRAVIS_TAG"; else export TAG="latest"; fi
         - echo ${IMAGE_TAG}
         - docker build --pull -t jobtechswe/mydata-app:${IMAGE_TAG} app/
         - docker build --pull -t jobtechswe/mydata-cv:${IMAGE_TAG} examples/cv/
@@ -71,8 +61,6 @@ stages:
   - name: end-2-end
     # if: branch != master OR type = pull_request
     if: 1 = 0
-  - name: set-tag
-    if: tag IS present
   - name: build
     # if: (branch = master AND type != pull_request) OR tag IS present
   - name: deploy
