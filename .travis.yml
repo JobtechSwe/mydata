@@ -37,17 +37,15 @@ jobs:
     # build docker image(s)
     - stage: build
       install: skip
-      test:
-        - docker login -u $DOCKER_USER -p $DOCKER_PASS
+      test: skip
       services:
         - docker
       script:
+        - docker login -u $DOCKER_USER -p $DOCKER_PASS
         - docker build -t jobtechswe/mydata-app app
         - docker push jobtechswe/mydata-app
-      script:
         - docker build -t jobtechswe/mydata-cv examples/cv
         - docker push jobtechswe/mydata-cv
-      script:
         - docker build -t jobtechswe/mydata-operator operator
         - docker push jobtechswe/mydata-operator
 
