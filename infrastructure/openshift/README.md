@@ -80,33 +80,6 @@ Replace `aVERYsecretSECRET` in the URL's below (see "Secrets" section above).
 - https://hub.docker.com/r/jobtechswe/mydata-cv
 - https://hub.docker.com/r/jobtechswe/mydata-operator
 
-## TODO
-
-- [ ] Deploy redis with storage
-- [ ] Hur gör man en lokal deploy enklast?
-- [ ] Kort beskrivning av vad redis, postgres, apm används till
-- [ ] OpenShift-logins till Adam, Einar och Johan
-- [ ] Push till Docker Hub vid bygge
-- [x] Move ImageStream to its own file
-- [x] Create shared CV ImageStream
-- [x] Create shared Operator ImageStream
-- [x] Create yaml for ephemeral redis
-- [x] Create yaml for ephemeral postgres
-- [x] Fix naming for stuff so that -ci and -test are in the end
-- [x] Fix hostname for ci stuff (mydata-cv-ci. etc)
-- [x] Deploy postgresql with storage (/lab)
-- [x] Have a look at the permissions in mydata-cv Dockerfile
-- [x] Byggen (cv)
-- [x] Lokal test utan APM?
-- [x] Vilka storage-providers finns det stöd för? (endast dropbox?)
-- [x] Arbeta i develop-branch, release/test från master
-- [x] GitHub webhook secret
-
-### Nice-to-have
-
-- [ ] Setup backup routine for redis
-- [ ] Setup backup routine for postgresql
-
 ## MISC
 
 ```bash
@@ -124,13 +97,4 @@ oc start-build operator-ci -n mydata
 oc delete -f test/
 oc delete -f ci/
 oc delete -f shared/
-```
-
-## Test environment
-
-```bash
-chmod +x tag-test
-
-# To tag the code and deploy to test environment, run the following:
-./tag-test v0.0.1 # Where v0.0.1 is the next semver version.
 ```
