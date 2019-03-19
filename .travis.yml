@@ -1,11 +1,12 @@
 env:
   - DOCKER_COMPOSE_VERSION=1.23.2
 
+# The jobs section declares jobs available in this build context
 jobs:
   include:
     # code linter
     - stage: "lint"
-      name: "Code lint"
+      name: "Ensure code maintains the linting rules"
       language: node_js
       install:
         - npm run install-all
@@ -15,11 +16,13 @@ jobs:
 
     # end-to-end tests
     - stage: "end-2-end"
-      name: "End-to-end tests"
+      name: "Run end-to-end tests"
       language: node_js
       services:
+        # Require docker to be running in the build context
         - docker
       before_install:
+        # Install a fresh version of docker-compose
         - sudo rm /usr/local/bin/docker-compose
         - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
         - chmod +x docker-compose
@@ -31,13 +34,19 @@ jobs:
 
     # build docker image(s)
     - stage: build
+      name: "Build Docker images and push them to Docker Hub"
       install: skip
       test: skip
       services:
+        # Require docker to be running in the build context
         - docker
       script:
+        # Authenticate towards Docker Hub
         - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
+
+        # Set the $TAG variable that controls the output docker image tag(s)
         - if [ ! -z "$TRAVIS_TAG" ]; then export TAG="$TRAVIS_TAG"; else export TAG="latest"; fi
+        
         # Build images
         - docker build --pull -t jobtechswe/mydata-app:${TAG} --cache-from jobtechswe/mydata-app:${TAG} app/
         - docker build --pull -t jobtechswe/mydata-cv:${TAG} --cache-from jobtechswe/mydata-cv:${TAG} examples/cv/
@@ -52,22 +61,34 @@ jobs:
         - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-cv:$TAG jobtechswe/mydata-cv:latest-tag && docker push jobtechswe/mydata-cv:latest-tag; fi
         - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-app:$TAG jobtechswe/mydata-app:latest-tag && docker push jobtechswe/mydata-app:latest-tag; fi
         - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-operator:$TAG jobtechswe/mydata-operator:latest-tag && docker push jobtechswe/mydata-operator:latest-tag; fi
+        
+        # ...and finally remove cached credentials
         - docker logout
 
     # update openshift DeployConfig(s)
     - stage: deploy
+      name: "Update deployments in OpenShift"
       install:
+        # Install a fresh version of the openshift cli
         - mkdir -p /opt/openshift
         - wget -qO- https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz | tar xvzf - -C /opt/openshift --strip-components=1
         - export PATH=$PATH:/opt/openshift
       script:
+        # Authenticate towards OpenShift
         - oc login $OPENSHIFT_URL --token=$OPENSHIFT_TOKEN --insecure-skip-tls-verify=true
+
+        # Set the $PHASE variable that controls which DeploymentConfigs are affected
         - if [ ! -z "$TRAVIS_TAG" ]; then export PHASE=test; else PHASE=ci; fi
+
+        # Tell CV and Operator to deploy, making them pull the latest images from Docker Hub
         - oc rollout latest cv-${PHASE} -n mydata
         - oc rollout latest operator-${PHASE} -n mydata
+
+        # ...and finally remove cached credentials
         - oc logout
 
 # Flow control
+# This section defines the order in which stages are run and when to run certain stages
 stages:
   - name: lint
     # if: branch != master OR type = pull_request
@@ -76,7 +97,6 @@ stages:
     # if: branch != master OR type = pull_request
     if: 1 = 0
   - name: build
-    if: 1 = 0
-    # if: (branch = master AND type != pull_request) OR tag IS present
+    if: (branch = master AND type != pull_request) OR tag IS present
   - name: deploy
     if: (branch = master AND type != pull_request) OR tag IS present
