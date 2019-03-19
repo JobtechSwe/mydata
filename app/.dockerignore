@@ -6,12 +6,9 @@
 # docker
 .dockerignore
 Dockerfile
-docker-compose*.yml
 
 # misc
 **/*.md
+node_modules
 .env
 .nvmrc
-.travis.yml
-LICENSE
-node_modules

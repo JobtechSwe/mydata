@@ -42,13 +42,12 @@ jobs:
         - docker
       script:
         - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
-        - export R="jobtechswe/mydata"
-        - sh -c "cd app && docker build --pull -t $R-app ."
-        - sh -c "cd examples/cv && docker build --pull -t $R-cv ."
-        - sh -c "cd operator && docker build --pull -t $R-operator ."
-        - docker push $R-app
-        - docker push $R-cv
-        - docker push $R-operator
+        - docker build --pull -t jobtechswe/mydata-app app/
+        - docker build --pull -t jobtechswe/mydata-cv examples/cv/
+        - docker build --pull -t jobtechswe/mydata-operator operator/
+        - docker push jobtechswe/mydata-cv
+        - docker push jobtechswe/mydata-app
+        - docker push jobtechswe/mydata-operator
 
     # update openshift DeployConfig(s)
     - stage: deploy
