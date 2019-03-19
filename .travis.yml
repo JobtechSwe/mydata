@@ -44,6 +44,10 @@ jobs:
         - docker push jobtechswe/mydata-cv:${TAG}
         - docker push jobtechswe/mydata-app:${TAG}
         - docker push jobtechswe/mydata-operator:${TAG}
+        - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-cv:$TAG jobtechswe/mydata-cv:latest-tag && docker push jobtechswe/mydata-cv:latest-tag; fi
+        - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-app:$TAG jobtechswe/mydata-app:latest-tag && docker push jobtechswe/mydata-app:latest-tag; fi
+        - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-operator:$TAG jobtechswe/mydata-operator:latest-tag && docker push jobtechswe/mydata-operator:latest-tag; fi
+        - docker logout
 
     # update openshift DeployConfig(s)
     - stage: deploy
@@ -55,8 +59,9 @@ jobs:
         - export PATH=$PATH:/opt/openshift
       script:
         - oc login $OPENSHIFT_URL --token=$OPENSHIFT_TOKEN --insecure-skip-tls-verify=true
-        - if [ ! -z "$TRAVIS_TAG" ]; then oc patch deploymentconfig cv-$PHASE -p '{"spec": {"template": {"spec": {"containers": {"image": "jobtechswe/mydata-cv:'$TRAVIS_TAG'"}}}}}'; fi
-        - if [ ! -z "$TRAVIS_TAG" ]; then oc patch deploymentconfig operator-$PHASE -p '{"spec": {"template": {"spec": {"containers": {"image": "jobtechswe/mydata-operator:'$TRAVIS_TAG'"}}}}}'; fi
+        - if [ ! -z "$TRAVIS_TAG" ]; then export PHASE=test; else PHASE=ci fi
+        - oc rollout latest ci-$PHASE -n mydata
+        - oc rollout latest operator-$PHASE -n mydata
         - oc logout
 
 # Flow control
