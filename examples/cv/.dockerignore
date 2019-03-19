@@ -1,8 +1,19 @@
-node_modules
-.next
-__tests__
+# git
+.git
+.gitignore
+.gitattributes
 
+# docker
 .dockerignore
 Dockerfile
-README.md
-.gitignore
+docker-compose*.yml
+
+# misc
+**/*.md
+.env
+.next
+.nvmrc
+.travis.yml
+__tests__
+LICENSE
+node_modules
