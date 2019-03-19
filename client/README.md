@@ -20,7 +20,7 @@ const config = {
     publicKey: '-----BEGIN RSA PUBLIC KEY-----\nMIGJ...',
     privateKey: '-----BEGIN RSA PRIVATE KEY-----\nMIICX...'
   },
-  jwksPath '/jwks',     // endpoint for keys in jwks format
+  jwksPath: '/jwks',     // endpoint for keys in jwks format
   eventsPath: '/events'  // endpoint for events - webhook style
 }
 const client = create(config)
@@ -47,7 +47,11 @@ await client.connect()
 
 ```javascript
 client.events.on('CONSENT_APPROVED', consent => {
-  // store your consent here and take action (eg. redirect user)
+  // take action (eg. log in and redirect user)
+})
+
+client.events.on('LOGIN_APPROVED', consent => {
+  // log in and redirect the session which has the provided sessionId
 })
 ```
 
