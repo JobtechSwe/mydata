@@ -19,6 +19,8 @@ jobs:
     - stage: "end-2-end"
       name: "End-to-end tests"
       language: node_js
+      services:
+        - docker
       # cache:
       #   bundler: true
       #   directories:
