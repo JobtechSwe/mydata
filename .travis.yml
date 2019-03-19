@@ -21,13 +21,6 @@ jobs:
       language: node_js
       services:
         - docker
-      # cache:
-      #   bundler: true
-      #   directories:
-      #     - node_modules
-      #     - app/node_modules
-      #     - examcples/cv/node_modules
-      #     - operator/node_modules
       before_install:
         - sudo rm /usr/local/bin/docker-compose
         - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
@@ -54,7 +47,7 @@ jobs:
         - docker
       script:
         - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
-        - if [ -z "$TRAVIS_TAG" ]; export IMAGE_TAG=$TRAVIS_TAG; fi
+        - if [ -z "$TRAVIS_TAG" ]; then export IMAGE_TAG="$TRAVIS_TAG"; fi
         - echo ${IMAGE_TAG}
         - docker build --pull -t jobtechswe/mydata-app:${IMAGE_TAG} app/
         - docker build --pull -t jobtechswe/mydata-cv:${IMAGE_TAG} examples/cv/
