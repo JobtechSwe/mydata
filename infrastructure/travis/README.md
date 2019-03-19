@@ -26,3 +26,5 @@ Get the token from the first token secret belonging to this user.
 oc describe sa mydata-deployer
 oc describe secret myskills-deployer-token-31337
 ```
+
+Grab the resulting token and save it to a variable called **OPENSHIFT_TOKEN**.
