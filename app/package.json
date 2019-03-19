@@ -26,6 +26,7 @@
     "react-native-camera": "^1.10.0",
     "react-native-config": "^0.11.7",
     "react-native-device-info": "^0.26.4",
+    "react-native-fontawesome": "^6.0.1",
     "react-native-gesture-handler": "^1.1.0",
     "react-native-json-tree": "^1.2.0",
     "react-native-modal": "^9.0.0",
@@ -34,7 +35,6 @@
     "react-native-rsa-native": "^1.0.24",
     "react-native-svg": "^9.2.4",
     "react-native-svg-uri": "^1.2.3",
-    "react-native-vector-icons": "^6.4.0",
     "react-navigation": "3.3.2",
     "styled-components": "^3.4.10"
   },
@@ -65,7 +65,6 @@
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-react": "^7.12.4",
     "eslint-plugin-standard": "^4.0.0",
-    "express": "^4.16.4",
     "jest": "23.6.0",
     "metro-react-native-babel-preset": "^0.47.1",
     "prettier": "^1.16.4",

@@ -8,7 +8,6 @@ import { PrimaryButton } from '../../components/elements/Button/Button'
 export default class HomeScreen extends React.Component {
   state = {
     account: {},
-    modalVisible: true,
   }
 
   async componentDidMount() {

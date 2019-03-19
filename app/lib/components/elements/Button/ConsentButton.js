@@ -1,7 +1,7 @@
 import React from 'react'
 import { TouchableOpacity, View, Text } from 'react-native'
 import styled, { theme } from '../../../theme'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import FontAwesome, { Icons } from 'react-native-fontawesome'
 
 const StyledConsentButton = styled(View)`
   align-items: center;
@@ -31,12 +31,9 @@ export const ConsentButtonWrap = styled(View)`
 export const AcceptConsentButton = ({ children, ...props }) => (
   <TouchableOpacity {...props}>
     <StyledConsentButton>
-      <FontAwesome5
-        color={theme.colors.accept}
-        name={'check'}
-        size={24}
-        solid
-      />
+      <Text style={{ fontSize: 24, color: theme.colors.accept }}>
+        <FontAwesome>{Icons.check}</FontAwesome>
+      </Text>
       <StyledConsentText>{children}</StyledConsentText>
     </StyledConsentButton>
   </TouchableOpacity>
@@ -45,7 +42,9 @@ export const AcceptConsentButton = ({ children, ...props }) => (
 export const DenyConsentButton = ({ children, ...props }) => (
   <TouchableOpacity {...props}>
     <StyledConsentButton>
-      <FontAwesome5 name={'ban'} size={24} color={theme.colors.deny} solid />
+      <Text style={{ fontSize: 24, color: theme.colors.deny }}>
+        <FontAwesome>{Icons.ban}</FontAwesome>
+      </Text>
       <StyledConsentText>{children}</StyledConsentText>
     </StyledConsentButton>
   </TouchableOpacity>
