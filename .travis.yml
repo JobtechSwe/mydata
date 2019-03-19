@@ -41,13 +41,14 @@ jobs:
       services:
         - docker
       script:
-        - docker login -u $DOCKER_USER -p $DOCKER_PASS
-        - docker build -t jobtechswe/mydata-app app/
-        - docker push jobtechswe/mydata-app
-        - docker build -t jobtechswe/mydata-cv examples/cv/
-        - docker push jobtechswe/mydata-cv
-        - docker build -t jobtechswe/mydata-operator operator/
-        - docker push jobtechswe/mydata-operator
+        - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
+        - export R="jobtechswe/mydata"
+        - docker build -t $R-app app/
+        - docker build -t $R-cv examples/cv/
+        - docker build -t $R-operator operator/
+        - docker push $R-app
+        - docker push $R-cv
+        - docker push $R-operator
 
     # update openshift DeployConfig(s)
     - stage: deploy
