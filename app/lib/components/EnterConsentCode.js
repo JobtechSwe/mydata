@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Wrap } from '../components/View/Wrapper'
 import { Paragraph } from '../components/typography/Typography'
 import { PrimaryButton } from '../components/elements/Button/Button'
-import { withTheme } from 'react-native-paper'
 import { validate } from '../utils/uuid-validate'
 import ScanQRConsentCode from './ScanQRConsentCode'
 
@@ -31,7 +30,8 @@ class EnterConsentCode extends Component {
           <Wrap>
             <Paragraph>
               Unrecognized code:{'\n'}
-              {this.state.code}{'\n'}
+              {this.state.code}
+              {'\n'}
               Try again!{'\n'}
             </Paragraph>
             <PrimaryButton onPress={this.scan}>Scan</PrimaryButton>
@@ -41,11 +41,14 @@ class EnterConsentCode extends Component {
       default:
         return (
           <Wrap>
-            <ScanQRConsentCode onRead={this.onScanQRCode} />
+            <ScanQRConsentCode
+              onCancel={this.props.onCancel}
+              onRead={this.onScanQRCode}
+            />
           </Wrap>
         )
     }
   }
 }
 
-export default withTheme(EnterConsentCode)
+export default EnterConsentCode

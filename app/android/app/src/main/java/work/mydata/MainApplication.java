@@ -9,7 +9,6 @@ import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import org.reactnative.camera.RNCameraPackage;
 import com.RNRSA.RNRSAPackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -31,14 +30,13 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+        new SvgPackage(),
         new RNDeviceInfo(),
         new RNGestureHandlerPackage(),
         new RNCameraPackage(),
         new RNRSAPackage(),
         new ReactNativeConfigPackage(),
-        new VectorIconsPackage(),
-        new ReactNativePushNotificationPackage(),
-        new SvgPackage()
+        new ReactNativePushNotificationPackage()
       );
     }
 

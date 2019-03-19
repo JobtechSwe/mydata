@@ -1,8 +1,9 @@
 import React from 'react'
-import { Alert, Button, Linking } from 'react-native'
+import { Alert, Linking } from 'react-native'
 import { getAccount, storeAccount } from '../../services/storage'
 import { H1 } from '../../components/typography/Typography'
 import { Wrap, ScrollViewWrap } from '../../components/View/Wrapper'
+import { PrimaryButton } from '../../components/elements/Button/Button'
 
 export default class HomeScreen extends React.Component {
   state = {
@@ -72,9 +73,9 @@ export default class HomeScreen extends React.Component {
       <Wrap>
         <ScrollViewWrap>
           <H1>MyData</H1>
-          <Button title="Clear Account" onPress={this.clearAccount}>
+          <PrimaryButton onPress={this.clearAccount}>
             Clear account
-          </Button>
+          </PrimaryButton>
         </ScrollViewWrap>
       </Wrap>
     )
