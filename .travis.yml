@@ -48,6 +48,11 @@ jobs:
         - export TAG=latest
         - if [ ! -z "$TRAVIS_TAG" ]; then export TAG="latest-tag"; fi
         
+        # Pull old images to benefit from layer cache
+        - docker pull jobtechswe/mydata-app:$TAG
+        - docker pull jobtechswe/mydata-cv:$TAG
+        - docker pull jobtechswe/mydata-operator:$TAG
+
         # Build images
         - docker build app -t jobtechswe/mydata-app:$TAG --cache-from jobtechswe/mydata-app:$TAG --pull
         - docker build examples/cv -t jobtechswe/mydata-cv:$TAG --cache-from jobtechswe/mydata-cv:$TAG --pull
