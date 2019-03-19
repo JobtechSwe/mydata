@@ -87,8 +87,8 @@ jobs:
         - if [ ! -z "$TRAVIS_TAG" ]; then export PHASE=test; else PHASE=ci; fi
 
         # Tell CV and Operator to deploy, making them pull the latest images from Docker Hub
-        - oc rollout latest cv-${PHASE} -n mydata
-        - oc rollout latest operator-${PHASE} -n mydata
+        - oc rollout latest cv-$PHASE -n mydata
+        - oc rollout latest operator-$PHASE -n mydata
 
         # ...and finally remove cached credentials
         - oc logout
@@ -97,11 +97,9 @@ jobs:
 # This section defines the order in which stages are run and when to run certain stages
 stages:
   - name: lint
-    # if: branch != master OR type = pull_request
-    if: 1 = 0
+    if: branch != master OR type = pull_request
   - name: end-2-end
-    # if: branch != master OR type = pull_request
-    if: 1 = 0
+    if: branch != master OR type = pull_request
   - name: build
     if: (branch = master AND type != pull_request) OR tag IS present
   - name: deploy
