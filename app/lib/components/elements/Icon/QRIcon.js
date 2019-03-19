@@ -16,8 +16,10 @@ const StyledQRImage = styled(Image)`
   height: 28px;
 `
 
-export default QRIcon = () => (
+const QRIcon = () => (
   <StyledQRIcon>
     <StyledQRImage source={require('./img/qr_inactive.png')} />
   </StyledQRIcon>
 )
+
+export default QRIcon

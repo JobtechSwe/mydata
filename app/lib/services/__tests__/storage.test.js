@@ -1,7 +1,7 @@
 import * as storage from '../storage'
 import { AsyncStorage } from 'react-native'
 
-describe.only('storage', () => {
+describe('storage', () => {
   let account
   beforeEach(() => {
     account = {
