@@ -1,5 +1,6 @@
 env:
   - DOCKER_COMPOSE_VERSION=1.23.2
+  - IMAGE_TAG=latest
 
 jobs:
   include:
@@ -34,6 +35,12 @@ jobs:
       test:
         - "npm run test:e2e"
 
+    - stage: set-tag
+      install: skip
+      test: skip
+      script:
+        - export IMAGE_TAG=$TRAVIS_TAG
+
     # build docker image(s)
     - stage: build
       install: skip
@@ -42,12 +49,12 @@ jobs:
         - docker
       script:
         - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
-        - docker build --pull -t jobtechswe/mydata-app app/
-        - docker build --pull -t jobtechswe/mydata-cv examples/cv/
-        - docker build --pull -t jobtechswe/mydata-operator operator/
-        - docker push jobtechswe/mydata-cv
-        - docker push jobtechswe/mydata-app
-        - docker push jobtechswe/mydata-operator
+        - docker build --pull -t jobtechswe/mydata-app:$IMAGE_TAG app/
+        - docker build --pull -t jobtechswe/mydata-cv:$IMAGE_TAG examples/cv/
+        - docker build --pull -t jobtechswe/mydata-operator:$IMAGE_TAG operator/
+        - docker push jobtechswe/mydata-cv:$IMAGE_TAG
+        - docker push jobtechswe/mydata-app:$IMAGE_TAG
+        - docker push jobtechswe/mydata-operator:$IMAGE_TAG
 
     # update openshift DeployConfig(s)
     - stage: deploy
@@ -64,6 +71,8 @@ stages:
   - name: end-2-end
     # if: branch != master OR type = pull_request
     if: 1 = 0
+  - name: set-tag
+    if: tag IS present
   - name: build
     # if: (branch = master AND type != pull_request) OR tag IS present
   - name: deploy
