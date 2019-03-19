@@ -11,8 +11,7 @@ jobs:
         - npm run install-all
       test: skip
       script:
-        - echo meow
-        # - npm run lint-all
+        - npm run lint-all
 
     # end-to-end tests
     - stage: "end-2-end"
@@ -62,10 +61,12 @@ jobs:
 # Flow control
 stages:
   - name: lint
-    if: branch != master OR type = pull_request
+    # if: branch != master OR type = pull_request
+    if: 1 = 0
   - name: end-2-end
-    if: branch != master OR type = pull_request
+    # if: branch != master OR type = pull_request
+    if: 1 = 0
   - name: build
-    if: (branch = master AND type != pull_request) OR tag IS present
+    # if: (branch = master AND type != pull_request) OR tag IS present
   - name: deploy
     if: (branch = master AND type != pull_request) OR tag IS present
