@@ -42,11 +42,11 @@ jobs:
         - docker
       script:
         - docker login -u $DOCKER_USER -p $DOCKER_PASS
-        - docker build -t jobtechswe/mydata-app app
+        - docker build -t jobtechswe/mydata-app app/
         - docker push jobtechswe/mydata-app
-        - docker build -t jobtechswe/mydata-cv examples/cv
+        - docker build -t jobtechswe/mydata-cv examples/cv/
         - docker push jobtechswe/mydata-cv
-        - docker build -t jobtechswe/mydata-operator operator
+        - docker build -t jobtechswe/mydata-operator operator/
         - docker push jobtechswe/mydata-operator
 
     # update openshift DeployConfig(s)
