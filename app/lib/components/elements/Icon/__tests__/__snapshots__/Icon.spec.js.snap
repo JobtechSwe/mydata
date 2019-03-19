@@ -5,6 +5,9 @@ exports[`elements/Icons should return appropriate icon based on name = "hem" 1`]
   theme={
     Object {
       "colors": Object {
+        "accept": "#0AC238",
+        "border": "#EBEAFA",
+        "deny": "#F20D0D",
         "inactive": "#D8D5F6",
         "lightGrey": "#EAEAF1",
         "primary": "#241C7D",
@@ -15,6 +18,7 @@ exports[`elements/Icons should return appropriate icon based on name = "hem" 1`]
       "fontSize": Object {
         "large": "48px",
         "regular": "18px",
+        "small": "14px",
       },
       "typography": Object {
         "bold": "Karla-Bold",
@@ -35,6 +39,9 @@ exports[`elements/Icons should return appropriate icon based on name = "konto" 1
   theme={
     Object {
       "colors": Object {
+        "accept": "#0AC238",
+        "border": "#EBEAFA",
+        "deny": "#F20D0D",
         "inactive": "#D8D5F6",
         "lightGrey": "#EAEAF1",
         "primary": "#241C7D",
@@ -45,6 +52,7 @@ exports[`elements/Icons should return appropriate icon based on name = "konto" 1
       "fontSize": Object {
         "large": "48px",
         "regular": "18px",
+        "small": "14px",
       },
       "typography": Object {
         "bold": "Karla-Bold",
@@ -65,6 +73,9 @@ exports[`elements/Icons should return appropriate icon based on name = "qr-kod" 
   theme={
     Object {
       "colors": Object {
+        "accept": "#0AC238",
+        "border": "#EBEAFA",
+        "deny": "#F20D0D",
         "inactive": "#D8D5F6",
         "lightGrey": "#EAEAF1",
         "primary": "#241C7D",
@@ -75,6 +86,7 @@ exports[`elements/Icons should return appropriate icon based on name = "qr-kod" 
       "fontSize": Object {
         "large": "48px",
         "regular": "18px",
+        "small": "14px",
       },
       "typography": Object {
         "bold": "Karla-Bold",
