@@ -45,22 +45,23 @@ jobs:
         - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
 
         # Set the $TAG variable that controls the output docker image tag(s)
-        - if [ ! -z "$TRAVIS_TAG" ]; then export TAG="$TRAVIS_TAG"; else export TAG="latest"; fi
+        - export TAG=latest
+        - if [ ! -z "$TRAVIS_TAG" ]; then export TAG="latest-tag"; fi
         
         # Build images
-        - docker build --pull -t jobtechswe/mydata-app:${TAG} --cache-from jobtechswe/mydata-app:${TAG} app/
-        - docker build --pull -t jobtechswe/mydata-cv:${TAG} --cache-from jobtechswe/mydata-cv:${TAG} examples/cv/
-        - docker build --pull -t jobtechswe/mydata-operator:${TAG} --cache-from jobtechswe/mydata-operator:${TAG} operator/
+        - docker build app -t jobtechswe/mydata-app:$TAG --cache-from jobtechswe/mydata-app:$TAG --pull
+        - docker build examples/cv -t jobtechswe/mydata-cv:$TAG --cache-from jobtechswe/mydata-cv:$TAG --pull
+        - docker build operator -t jobtechswe/mydata-operator:$TAG --cache-from jobtechswe/mydata-operator:$TAG --pull
 
         # Push images to Docker Hub
-        - docker push jobtechswe/mydata-cv:${TAG}
-        - docker push jobtechswe/mydata-app:${TAG}
-        - docker push jobtechswe/mydata-operator:${TAG}
+        - docker push jobtechswe/mydata-cv:$TAG
+        - docker push jobtechswe/mydata-app:$TAG
+        - docker push jobtechswe/mydata-operator:$TAG
 
         # If tag build, tag images as latest-tag
-        - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-cv:$TAG jobtechswe/mydata-cv:latest-tag && docker push jobtechswe/mydata-cv:latest-tag; fi
-        - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-app:$TAG jobtechswe/mydata-app:latest-tag && docker push jobtechswe/mydata-app:latest-tag; fi
-        - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-operator:$TAG jobtechswe/mydata-operator:latest-tag && docker push jobtechswe/mydata-operator:latest-tag; fi
+        - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-cv:$TAG jobtechswe/mydata-cv:$TRAVIS_TAG && docker push jobtechswe/mydata-cv:$TRAVIS_TAG; fi
+        - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-app:$TAG jobtechswe/mydata-app:$TRAVIS_TAG && docker push jobtechswe/mydata-app:$TRAVIS_TAG; fi
+        - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-operator:$TAG jobtechswe/mydata-operator:$TRAVIS_TAG && docker push jobtechswe/mydata-operator:$TRAVIS_TAG; fi
         
         # ...and finally remove cached credentials
         - docker logout
