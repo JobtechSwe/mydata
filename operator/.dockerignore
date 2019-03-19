@@ -1,6 +1,17 @@
-node_modules
+# git
+.git
+.gitignore
+.gitattributes
 
+# docker
 .dockerignore
 Dockerfile
-README.md
-.gitignore
+docker-compose*.yml
+
+# misc
+**/*.md
+.env
+.nvmrc
+.travis.yml
+LICENSE
+node_modules
