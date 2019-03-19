@@ -38,13 +38,13 @@ jobs:
       script:
         - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
         - if [ ! -z "$TRAVIS_TAG" ]; then export TAG="$TRAVIS_TAG"; else export TAG="latest"; fi
-        - echo ${IMAGE_TAG}
-        - docker build --pull -t jobtechswe/mydata-app:${IMAGE_TAG} app/
-        - docker build --pull -t jobtechswe/mydata-cv:${IMAGE_TAG} examples/cv/
-        - docker build --pull -t jobtechswe/mydata-operator:${IMAGE_TAG} operator/
-        - docker push jobtechswe/mydata-cv:${IMAGE_TAG}
-        - docker push jobtechswe/mydata-app:${IMAGE_TAG}
-        - docker push jobtechswe/mydata-operator:${IMAGE_TAG}
+        - echo ${TAG}
+        - docker build --pull -t jobtechswe/mydata-app:${TAG} app/
+        - docker build --pull -t jobtechswe/mydata-cv:${TAG} examples/cv/
+        - docker build --pull -t jobtechswe/mydata-operator:${TAG} operator/
+        - docker push jobtechswe/mydata-cv:${TAG}
+        - docker push jobtechswe/mydata-app:${TAG}
+        - docker push jobtechswe/mydata-operator:${TAG}
 
     # update openshift DeployConfig(s)
     - stage: deploy
