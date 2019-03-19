@@ -1,0 +1,14 @@
+# git
+.git
+.gitignore
+.gitattributes
+
+# docker
+.dockerignore
+Dockerfile
+
+# misc
+**/*.md
+node_modules
+.env
+.nvmrc
