@@ -30,7 +30,7 @@ jobs:
       install:
         - npm run install-all
       test:
-        - "npm run test:e2e"
+        - "npm run test-all:e2e"
 
     # build docker image(s)
     - stage: build
