@@ -63,8 +63,8 @@ jobs:
       script:
         - oc login $OPENSHIFT_URL --token=$OPENSHIFT_TOKEN --insecure-skip-tls-verify=true
         - if [ ! -z "$TRAVIS_TAG" ]; then export PHASE=test; else PHASE=ci fi
-        - oc rollout latest ci-$PHASE -n mydata
-        - oc rollout latest operator-$PHASE -n mydata
+        - oc rollout latest ci-${PHASE} -n mydata
+        - oc rollout latest operator-${PHASE} -n mydata
         - oc logout
 
 # Flow control
