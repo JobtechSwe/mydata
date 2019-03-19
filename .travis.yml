@@ -40,7 +40,9 @@ jobs:
       install: skip
       test: skip
       script:
+        - echo $TRAVIS_TAG
         - export IMAGE_TAG=$TRAVIS_TAG
+        - echo $IMAGE_TAG
 
     # build docker image(s)
     - stage: build
