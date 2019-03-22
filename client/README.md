@@ -60,6 +60,27 @@ client.events.on('LOGIN_APPROVED', consent => {
 ```javascript
 {
   id: '78c2b714-222f-42fa-8ffa-ff0d6366c856', // uuid for consent
-  scope: ['something']
+  scope: [
+    {
+      domain: 'https://mycv.work', // Application domain with protocol
+      area: 'work_experience', // Name of the subset of data covered by this consent, something which makes sense in your domain
+      description: 'A list of your work experience with dates.', // Description of the contents of the data area
+      permissions: [ 'write' ], // Can be read or write
+      purpose: 'In order to create a CV using our website.',
+      lawfulBasis: 'CONSENT' // One of 'CONSENT', 'CONTRACT', 'LEGAL_OBLIGATION', 'VITAL_INTERESTS', 'PUBLIC_TASK', 'LEGITIMATE_INTERESTS' 
+    }
+  ]
+}
+```
+
+### Login request format
+User logs in by scanning a QR-code containing:
+`mydata://login/PAYLOAD`
+
+where PAYLOAD is a base64url encoded (RFC4648) JSON string containing:
+```javascript
+{
+  clientId: 'https://mycv.work',
+  sessionId: '84845151884' // This is any string with which you can uniquely identify this user session
 }
 ```

@@ -2,6 +2,7 @@ const { Router } = require('express')
 const router = Router()
 const { getConsentRequest } = require('../services/db')
 const { createDefaultRequest, domain, area } = require('../services/consents')
+const { loginRequest } = require('../services/login')
 
 module.exports = operator => {
   router.post('/auth', async (req, res, next) => {
@@ -54,6 +55,10 @@ module.exports = operator => {
     } catch (error) {
       next(error)
     }
+  })
+
+  router.get('/loginRequest', async (req, res, next) => {
+    res.send(loginRequest())
   })
 
   return router

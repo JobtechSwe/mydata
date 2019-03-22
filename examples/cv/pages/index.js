@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Typography, Button, theme, styled } from '@smooth-ui/core-sc'
-import QRCode from 'qrcode.react'
+import Login from '../components/Login'
 
 const Background = styled.div`
   background-image: url('/static/landing-page.jpg');
@@ -37,13 +37,7 @@ export default () => {
           </ul>
           <Button variant="success" onClick={() => window.location.assign('/auth')} style={{ marginTop: 10 + 'px' }}>Sign up with Mydata</Button>
         </Box>
-        <Box
-          ml={100 + 'px'}
-          mr="auto" maxWidth={550}
-          style={{ backgroundColor: 'white', boxShadow: '3px 3px 7px 7px rgba(0,0,0,0.1)', padding: 50 + 'px', marginTop: 50 + 'px', borderRadius: 2 + 'px' }}>
-          <Typography variant="h2">Scan this code to sign in</Typography>
-          <QRCode value={'"butt": "soup"'} />
-        </Box>
+        <Login />
       </Box>
     </React.Fragment>
   )
