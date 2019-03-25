@@ -23,32 +23,34 @@ export function parse (code) {
   return loginRequest
 }
 
-export async function get (code) {
+export async function get(code) {
+  const { clientId, sessionId } = parse(code)
+  const account = await getAccount()
+  const url = `${Config.OPERATOR_URL}/clients/${encodeURIComponent(clientId)}/consents?accountId=${account.id}`
   try {
-    const { clientId, sessionId } = parse(code)
-    const url = `${Config.OPERATOR_URL}/clients/${clientId}/consents`
-
-    const consent = await axios.get(url)
+    const { data } = await axios.get(url)
+    console.log(data)
     return {
       request: { clientId, sessionId },
-      consent,
+      consent: data,
     }
   } catch(error) {
-    console.error(error)
+    console.error(url, error)
     throw error
   }
 }
 
-export async function approve({ clientId, sessionId }) {
+export async function approve({ clientId, sessionId, consentId }) {
   const account = await getAccount()
-  const accountId = encodeURIComponent(account.id)
-  const url = `${Config.OPERATOR_URL}/accounts/${accountId}/login`
+  const url = `${Config.OPERATOR_URL}/accounts/${account.id}/login`
 
   let loginApproval = {
     clientId,
+    consentId,
     sessionId,
     timestamp: (new Date()).toISOString(),
   }
+  console.log(url, loginApproval)
 
   axios.post(url, loginApproval)
 }

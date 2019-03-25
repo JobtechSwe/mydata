@@ -4,7 +4,6 @@ import { Headline, Button, Text, withTheme } from 'react-native-paper'
 import { Wrap } from '../components/View/Wrapper'
 import { Spinner } from '../components/elements/Spinner/Spinner'
 import * as loginService from '../services/login'
-import * as storage from '../services/storage'
 
 class LoginRequest extends Component {
   state = {
@@ -18,9 +17,8 @@ class LoginRequest extends Component {
   }
 
   approve = async () => {
-    const { id } = await storage.getAccount()
     this.setState({ view: 'approving' })
-    await loginService.approve({ ...this.state.loginRequest, accountId: id })
+    await loginService.approve({ ...this.state.request, ...this.state.consent })
     this.props.onApprove()
   }
 
@@ -41,7 +39,7 @@ class LoginRequest extends Component {
           <Wrap>
             <Text style={{ marginBottom: 5 }}>Would you like to log in to:</Text>
             <Headline style={{ marginBottom: 5 }}>
-              {this.state.request.client_id}
+              {this.state.request.clientId}
             </Headline>
             <Text style={{ marginBottom: 5 }}>
               Description
