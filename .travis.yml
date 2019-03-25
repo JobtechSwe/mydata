@@ -11,6 +11,7 @@ jobs:
         directories:
           - node_modules
           - app/node_modules
+          - client/node_modules
           - examples/cv/node_modules
           - operator/node_modules
       language: node_js
@@ -27,6 +28,7 @@ jobs:
         directories:
           - node_modules
           - app/node_modules
+          - client/node_modules
           - examples/cv/node_modules
           - operator/node_modules
       language: node_js
