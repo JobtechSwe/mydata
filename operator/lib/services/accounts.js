@@ -36,8 +36,7 @@ async function get (accountId) {
 
 async function login (accountId, data) {
   await schemas.accountId.validate(accountId, schemas.defaultOptions)
-  // must allow conversion for timestamp
-  await schemas.login.validate(data, { abortEarly: false, convert: true })
+  await schemas.login.validate(data, schemas.defaultOptions)
 
   const result = await query('SELECT COUNT(*) FROM consent_requests WHERE account_id=$1 AND consent_id=$2', [accountId, data.consentId])
   if (result.rows[0].count === '0') {

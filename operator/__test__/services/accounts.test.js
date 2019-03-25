@@ -84,7 +84,7 @@ describe('services/accounts', () => {
     })
     const validAccountId = '22d2b385-d69e-4a46-b983-718a470ab302'
     const validData = {
-      timestamp: '1551373858751',
+      timestamp: '2019-03-25T14:02:22.223Z',
       clientId: 'https://cv.tld',
       sessionId: '84845151884',
       consentId: '2b2a759e-8fac-49d0-a9d0-3ca9e7cb8e22'
@@ -94,6 +94,20 @@ describe('services/accounts', () => {
       await expect(login()).rejects.toThrow()
       await expect(login(validAccountId, {})).rejects.toThrow()
       await expect(login('', validData)).rejects.toThrow()
+    })
+
+    it('throws if time is not iso string', async () => {
+      const withJsString = Object.assign({}, validData)
+      withJsString.timestamp = '1551373858000'
+      await expect(login(validAccountId, withJsString)).rejects.toThrow()
+
+      const withUnixString = Object.assign({}, validData)
+      withUnixString.timestamp = '1551373858'
+      await expect(login(validAccountId, withUnixString)).rejects.toThrow()
+
+      const withJsNumber = Object.assign({}, validData)
+      withJsNumber.timestamp = 1551373858000
+      await expect(login(validAccountId, withJsNumber)).rejects.toThrow()
     })
 
     it('does not throw if input is valid', async () => {

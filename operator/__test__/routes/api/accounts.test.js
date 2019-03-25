@@ -119,10 +119,7 @@ describe('routes /api/accounts', () => {
     })
 
     const loginRequest = {
-      timestamp: '1551373858751',
-      clientId: 'https://cv.tld',
-      sessionId: '84845151884',
-      consentId: '2b2a759e-8fac-49d0-a9d0-3ca9e7cb8e22'
+      stuff: 'somestuff'
     }
     const accountId = '31337'
 

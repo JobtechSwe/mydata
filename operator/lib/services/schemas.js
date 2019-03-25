@@ -27,7 +27,7 @@ const createAccount = Joi.object({
 }).required().unknown(true)
 
 const login = Joi.object({
-  timestamp: Joi.date().timestamp('javascript').required(),
+  timestamp: Joi.date().iso().required().strict(false), // allow conversion of string
   clientId: Joi.string().uri({ scheme: allowedSchemes() }).required(),
   sessionId: Joi.string().required(),
   consentId: Joi.string().guid().required()
