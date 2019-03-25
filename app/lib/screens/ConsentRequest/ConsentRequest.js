@@ -1,7 +1,7 @@
 import React from 'react'
 import EnterConsentCode from '../../components/EnterConsentCode'
 import ConsentRequest from '../../components/ConsentRequest'
-import Login from '../../components/Login'
+import LoginRequest from '../../components/LoginRequest'
 
 class ManageConsentsRequestScreen extends React.Component {
   state = {
@@ -25,7 +25,7 @@ class ManageConsentsRequestScreen extends React.Component {
     switch (this.state.view) {
       case 'login':
         return (
-          <Login
+          <LoginRequest
             code={this.state.code}
             onApprove={this.onApprove}
           />

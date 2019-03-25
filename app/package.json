@@ -17,6 +17,7 @@
     "Alexander Czigler <alexander@iteam.se>"
   ],
   "dependencies": {
+    "@types/js-base64": "^2.3.1",
     "axios": "^0.18.0",
     "buffer": "^5.2.1",
     "eventemitter3": "^3.1.0",

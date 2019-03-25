@@ -1,23 +1,25 @@
 import React, { Component } from 'react'
 import { View } from 'react-native'
-import { Headline, Button, List, Text, withTheme } from 'react-native-paper'
+import { Headline, Button, Text, withTheme } from 'react-native-paper'
+import { Wrap } from '../components/View/Wrapper'
+import { Spinner } from '../components/elements/Spinner/Spinner'
 import * as loginService from '../services/login'
 import * as storage from '../services/storage'
 
 class LoginRequest extends Component {
   state = {
     view: 'loading',
-    loginRequest: null
+    loginRequest: null,
   }
 
   async componentDidMount() {
-    const loginRequest = await loginService.parse(this.props.loginRequestString)
-    this.setState({ loginRequest, view: 'approve'})
+    const loginRequest = await loginService.parse(this.props.code)
+    this.setState({ loginRequest, view: 'approve' })
   }
 
   approve = async () => {
     const { id } = await storage.getAccount()
-    this.setState({view: 'approving'})
+    this.setState({ view: 'approving' })
     await loginService.approve({ ...this.state.loginRequest, accountId: id })
     this.props.onApprove()
   }
@@ -30,7 +32,9 @@ class LoginRequest extends Component {
     switch(this.state.view) {
       case 'loading':
         return (
-          <View><Text>Loading...</Text></View>
+          <Wrap>
+            <Spinner />
+          </Wrap>
         )
       case 'approve':
         return (

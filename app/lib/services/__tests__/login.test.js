@@ -2,19 +2,23 @@ import * as loginService from '../../services/login'
 import axios from 'axios'
 import Config from 'react-native-config'
 import { getAccount } from '../../services/storage'
+import { Base64 } from 'js-base64'
 
 jest.mock('../../services/storage')
 
 describe('loginService', () => {
-  const loginRequest = {
-    type: 'LOGIN_REQUESTED',
-    clientId: 'https://cv.tld',
-    sessionId: '5479744949494949949',
-  }
+  let loginRequest
+  beforeEach(() => {
+    loginRequest = {
+      clientId: 'https://cv.tld',
+      sessionId: '5479744949494949949',
+    }
+  })
+  const encode = (req) => Base64.encodeURI(JSON.stringify(req))
 
   describe('#parse', () => {
     it('Parses a login request string', async () => {
-      const result = loginService.parse(JSON.stringify(loginRequest))
+      const result = loginService.parse(encode(loginRequest))
       expect(result).toEqual(loginRequest)
     })
 
@@ -24,26 +28,17 @@ describe('loginService', () => {
       const malformed1 = {
         hest: 'pony',
       }
-      expect(() => loginService.parse(JSON.stringify(malformed1))).toThrow()
-
-      const invalidType = {
-        type: 'invalid_type',
-        clientId: 'https://cv.tld',
-        sessionId: '5479744949494949949',
-      }
-      expect(() => loginService.parse(JSON.stringify(invalidType))).toThrow()
+      expect(() => loginService.parse(encode(malformed1))).toThrow()
 
       const noClientId = {
-        type: 'LOGIN_REQUESTED',
         sessionId: '5479744949494949949',
       }
-      expect(() => loginService.parse(JSON.stringify(noClientId))).toThrow()
+      expect(() => loginService.parse(encode(noClientId))).toThrow()
 
       const noSessionId = {
-        type: 'LOGIN_REQUESTED',
         clientId: 'https://cv.tld',
       }
-      expect(() => loginService.parse(JSON.stringify(noSessionId))).toThrow()
+      expect(() => loginService.parse(encode(noSessionId))).toThrow()
     })
   })
 

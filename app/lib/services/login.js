@@ -1,13 +1,13 @@
 import Config from 'react-native-config'
 import axios from 'axios'
 import { getAccount } from './storage'
+import { Base64 } from 'js-base64'
 
-export function parse (dataString) {
-  const loginRequest = JSON.parse(dataString)
+export function parse (code) {
+  const loginRequest = JSON.parse(Base64.decode(code))
 
   try {
-    let validFormat = (loginRequest.type === 'LOGIN_REQUESTED' &&
-      typeof loginRequest.clientId === 'string' &&
+    let validFormat = (typeof loginRequest.clientId === 'string' &&
       typeof loginRequest.sessionId === 'string')
 
     if (!validFormat) {
@@ -26,7 +26,6 @@ export async function approve({ clientId, sessionId }) {
   const account = await getAccount()
   const accountId = encodeURIComponent(account.id)
   const url = `${operatorUrl}/accounts/${accountId}/login`
-  // todo: put actual data in POST
 
   let loginApproval = {
     clientId,
