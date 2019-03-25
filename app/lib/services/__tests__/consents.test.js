@@ -41,7 +41,7 @@ describe('consentService', () => {
     let consentId
     describe('register', () => {
       beforeEach(() => {
-        consentId = 'mydata://register/abc-123'
+        consentId = 'abc-123'
         getKey.mockResolvedValue(keyPair)
       })
       it('throws if account does not exist', async () => {

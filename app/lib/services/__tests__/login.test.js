@@ -9,7 +9,7 @@ describe('loginService', () => {
   const loginRequest = {
     type: 'LOGIN_REQUESTED',
     clientId: 'https://cv.tld',
-    sessionId: '5479744949494949949'
+    sessionId: '5479744949494949949',
   }
 
   describe('#parse', () => {
@@ -22,26 +22,26 @@ describe('loginService', () => {
       expect(() => loginService.parse('not_even_json')).toThrow()
 
       const malformed1 = {
-        hest: 'pony'
+        hest: 'pony',
       }
       expect(() => loginService.parse(JSON.stringify(malformed1))).toThrow()
 
       const invalidType = {
         type: 'invalid_type',
         clientId: 'https://cv.tld',
-        sessionId: '5479744949494949949'
+        sessionId: '5479744949494949949',
       }
       expect(() => loginService.parse(JSON.stringify(invalidType))).toThrow()
 
       const noClientId = {
         type: 'LOGIN_REQUESTED',
-        sessionId: '5479744949494949949'
+        sessionId: '5479744949494949949',
       }
       expect(() => loginService.parse(JSON.stringify(noClientId))).toThrow()
 
       const noSessionId = {
         type: 'LOGIN_REQUESTED',
-        clientId: 'https://cv.tld'
+        clientId: 'https://cv.tld',
       }
       expect(() => loginService.parse(JSON.stringify(noSessionId))).toThrow()
     })
@@ -53,8 +53,8 @@ describe('loginService', () => {
       id: 'c1949de3-6662-43c9-8cc1-578169ea817b',
       keys: {
         publicKey: 'dis my public key yeah',
-        privateKey: 'private keeeeeey'
-      }
+        privateKey: 'private keeeeeey',
+      },
     }
     getAccount.mockResolvedValue(account)
     /*
@@ -72,7 +72,7 @@ describe('loginService', () => {
       const desiredPayload = {
         timeStamp: 55555,
         clientId: 'https://cv.tld',
-        sessionId: '5479744949494949949'
+        sessionId: '5479744949494949949',
         // consentId: '31337', // todo: add
         // signature: <signed with accountKey> // todo: add
       }

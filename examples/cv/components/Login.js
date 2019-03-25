@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react'
 import { Box, Typography } from '@smooth-ui/core-sc'
 import axios from 'axios'
 import QRCode from 'qrcode.react'
+import copy from 'copy-to-clipboard'
 import { StoreContext } from '../services/StoreContext'
 import * as storage from '../services/storage'
 
@@ -42,7 +43,8 @@ export default () => {
       style={{ backgroundColor: 'white', boxShadow: '3px 3px 7px 7px rgba(0,0,0,0.1)', padding: 50 + 'px', marginTop: 50 + 'px', borderRadius: 2 + 'px' }}>
       {data && <Box>
         <Typography variant="h2">Scan this code to sign in</Typography>
-        <QRCode value={data.url} />
+        <QRCode value={data.url}
+          onClick={() => copy(data.url)} />
       </Box>}
     </Box>
   )

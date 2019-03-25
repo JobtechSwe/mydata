@@ -1,9 +1,6 @@
 import Config from 'react-native-config'
 import axios from 'axios'
-import { getKey } from './jwks'
-import { sign, verify } from './crypto'
 import { getAccount } from './storage'
-import { Base64 } from 'js-base64'
 
 export function parse (dataString) {
   const loginRequest = JSON.parse(dataString)
@@ -24,7 +21,7 @@ export function parse (dataString) {
   return loginRequest
 }
 
-export async function approve (loginRequest) {
+export async function approve({ clientId, sessionId }) {
   const operatorUrl = encodeURI(Config.OPERATOR_URL)
   const account = await getAccount()
   const accountId = encodeURIComponent(account.id)
@@ -32,34 +29,10 @@ export async function approve (loginRequest) {
   // todo: put actual data in POST
 
   let loginApproval = {
+    clientId,
+    sessionId,
     timeStamp: Date.now(),
-    clientId: loginRequest.clientId,
-    sessionId: loginRequest.sessionId
   }
 
   axios.post(url, loginApproval)
-  /*
-  const url = `${Config.OPERATOR_URL}/consents`
-  let payload
-  try {
-    const account = await getAccount()
-    const encryptionKey = await getKey(data.kid)
-
-    const consent = {
-      accountId: account.id,
-      accountKey: Base64.encode(account.keys.publicKey),
-      clientId: data.clientId,
-      consentRequestId: data.consentRequestId,
-      consentEncryptionKey: Base64.encode(encryptionKey.publicKey || encryptionKey.rsaPublicKey),
-      consentEncryptionKeyId: data.kid,
-      scope: data.scope
-    }
-    const signature = await sign(consent, 'account_key', account.keys.privateKey)
-    payload = { data: consent, signature }
-    await axios.post(url, payload)
-  } catch (error) {
-    console.error('POST', url, payload, error)
-    throw error
-  }
-  */
 }

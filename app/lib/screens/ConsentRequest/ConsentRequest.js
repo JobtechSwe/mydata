@@ -1,6 +1,7 @@
 import React from 'react'
 import EnterConsentCode from '../../components/EnterConsentCode'
 import ConsentRequest from '../../components/ConsentRequest'
+import Login from '../../components/Login'
 
 class ManageConsentsRequestScreen extends React.Component {
   state = {
@@ -13,8 +14,8 @@ class ManageConsentsRequestScreen extends React.Component {
   }
 
   // Events
-  onCode = code => {
-    this.setState({ code, view: 'getRequest' })
+  onCode = ({ type, code }) => {
+    this.setState({ code, view: type })
   }
   onApprove = () => {
     this.props.navigation.goBack()
@@ -22,7 +23,14 @@ class ManageConsentsRequestScreen extends React.Component {
 
   render() {
     switch (this.state.view) {
-      case 'getRequest':
+      case 'login':
+        return (
+          <Login
+            code={this.state.code}
+            onApprove={this.onApprove}
+          />
+        )
+      case 'register':
         return (
           <ConsentRequest
             consentRequestId={this.state.code}
