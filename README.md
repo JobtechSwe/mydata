@@ -1,5 +1,7 @@
 # JobTech MyData
 
+[![Build Status](https://travis-ci.com/JobtechSwe/mydata.svg?branch=master)](https://travis-ci.com/JobtechSwe/mydata)
+
 ## Bakgrund
 
 MyData är en rörelse som syftar till att individer själva ska ha kontroll på data om sig själv. Jobtech mydata utforskar ett koncept som åstadkommer det primärt för arbetsmarknaden. Målet är att se vad detta skapar för potentiella möjligheter för den svenska arbetsmarknaden. Därför har vi påbörjat ett experimenterande innovationsteam som vill testa hypotesen att det går att skapa en distribuerad och decentraliserad datalagring för information om individens CV-data och göra den tillgänglig för de aktörer som har intresse att läsa eller skriva i datat men med utgångspunkt att individen alltid har kontroll på informationen.
