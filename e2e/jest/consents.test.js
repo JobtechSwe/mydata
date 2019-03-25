@@ -30,7 +30,7 @@ describe('Client', () => {
     expect(res).toEqual({
       expires: expect.stringMatching(/^\d+$/),
       id: expect.stringMatching(v4Regexp),
-      link: expect.stringMatching(/^mydata:\/\/register\//)
+      url: expect.stringMatching(/^mydata:\/\/register\//)
     })
   })
 
@@ -46,8 +46,8 @@ describe('Client', () => {
       }
     })
 
-    const { id } = await client.consents.request(sampleRequest)
-    const { data } = await phone.getConsentRequest(id)
+    const { url } = await client.consents.request(sampleRequest)
+    const { data } = await phone.getConsentRequest(url)
     await phone.approveConsentRequest(data)
   })
 })

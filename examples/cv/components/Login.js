@@ -25,7 +25,8 @@ export default () => {
 
   const [data, setData] = useState(null)
   useEffect(() => {
-    axios.get('/api/loginRequest')
+    axios
+      .get('/api/loginRequest')
       .then(({ data }) => {
         console.log(data)
         setData(data)
@@ -39,12 +40,15 @@ export default () => {
   return (
     <Box
       ml={100 + 'px'}
-      mr="auto" maxWidth={550}
+      mr="auto"
+      maxWidth={550}
       style={{ backgroundColor: 'white', boxShadow: '3px 3px 7px 7px rgba(0,0,0,0.1)', padding: 50 + 'px', marginTop: 50 + 'px', borderRadius: 2 + 'px' }}>
       {data && <Box>
         <Typography variant="h2">Scan this code to sign in</Typography>
-        <QRCode value={data.url}
-          onClick={() => copy(data.url)} />
+        <QRCode
+          value={data.url}
+          onClick={() => copy(data.url)}
+        />
       </Box>}
     </Box>
   )
