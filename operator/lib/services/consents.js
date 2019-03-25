@@ -227,7 +227,7 @@ async function get (accountId, clientId) {
   return result.rows.map(row => ({
     consentId: row.consent_id,
     clientId: row.client_id,
-    approvedAt: row.processed.getTime()
+    processedAt: row.processed
   }))
 }
 

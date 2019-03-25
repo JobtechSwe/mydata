@@ -121,7 +121,7 @@ describe('routes api/clients', () => {
       {
         consentId: 'b2f5659f-6391-4068-9366-ae4803bd0a20',
         clientId: 'https://someservice.tld',
-        processedAt: '1551196280802'
+        processedAt: new Date('2019-03-25T14:24:44.317Z')
       }
     ]
     consentServiceGet.mockImplementation(() => consentServiceGetResult)
@@ -151,7 +151,12 @@ describe('routes api/clients', () => {
 
     it('returns result from consent service', async () => {
       const result = await api.get(`/api/clients/${clientId}/consents?accountId=${accountId}`)
-      expect(result.body).toEqual(consentServiceGetResult)
+      const consentItem = {
+        consentId: consentServiceGetResult[0].consentId,
+        clientId: consentServiceGetResult[0].clientId,
+        processedAt: consentServiceGetResult[0].processedAt.toISOString()
+      }
+      expect(result.body).toEqual([consentItem])
     })
   })
 })
