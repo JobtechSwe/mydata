@@ -9,11 +9,7 @@ jobs:
       name: "Ensure code maintains the linting rules"
       cache:
         directories:
-          - node_modules
-          - app/node_modules
-          - client/node_modules
-          - examples/cv/node_modules
-          - operator/node_modules
+          - "$HOME/.npm"
       language: node_js
       install:
         - npm run install-all
@@ -26,11 +22,7 @@ jobs:
       name: "Run end-to-end tests"
       cache:
         directories:
-          - node_modules
-          - app/node_modules
-          - client/node_modules
-          - examples/cv/node_modules
-          - operator/node_modules
+          - "$HOME/.npm"
       language: node_js
       services:
         # Require docker to be running in the build context
