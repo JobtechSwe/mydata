@@ -99,7 +99,7 @@ jobs:
 # This section defines the order in which stages are run and when to run certain stages
 stages:
   - name: lint
-    if: branch != master
+    if: branch != master AND tag IS NOT present
   - name: end-2-end
     if: branch != master
   - name: build
