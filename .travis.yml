@@ -7,7 +7,12 @@ jobs:
     # code linter
     - stage: "lint"
       name: "Ensure code maintains the linting rules"
-      cache: npm
+      cache:
+        directories:
+          - node_modules
+          - app/node_modules
+          - examples/cv/node_modules
+          - operator/node_modules
       language: node_js
       install:
         - npm run install-all
@@ -18,7 +23,12 @@ jobs:
     # end-to-end tests
     - stage: "end-2-end"
       name: "Run end-to-end tests"
-      cache: npm
+      cache:
+        directories:
+          - node_modules
+          - app/node_modules
+          - examples/cv/node_modules
+          - operator/node_modules
       language: node_js
       services:
         # Require docker to be running in the build context
