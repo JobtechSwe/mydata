@@ -13,8 +13,8 @@ class LoginRequest extends Component {
   }
 
   async componentDidMount() {
-    const loginRequest = await loginService.parse(this.props.code)
-    this.setState({ loginRequest, view: 'approve' })
+    const { consent, request } = await loginService.get(this.props.code)
+    this.setState({ consent, request, view: 'approve' })
   }
 
   approve = async () => {
@@ -38,12 +38,17 @@ class LoginRequest extends Component {
         )
       case 'approve':
         return (
-          <View>
+          <Wrap>
             <Text style={{ marginBottom: 5 }}>Would you like to log in to:</Text>
-            <Headline style={{ marginBottom: 5 }}>{this.state.loginRequest.clientId}</Headline>
+            <Headline style={{ marginBottom: 5 }}>
+              {this.state.request.client_id}
+            </Headline>
+            <Text style={{ marginBottom: 5 }}>
+              Description
+            </Text>
             <Button mode="contained" icon="check-circle" style={{ backgroundColor: this.props.theme.colors.accent, marginBottom: 5 }} onPress={this.approve}>Yes</Button>
             <Button mode="contained" icon="block" style={{ backgroundColor: this.props.theme.colors.error, marginBottom: 5 }} onPress={this.reject}>No</Button>
-          </View>
+          </Wrap>
         )
       case 'approving':
         return (<Text>Approving...</Text>)
