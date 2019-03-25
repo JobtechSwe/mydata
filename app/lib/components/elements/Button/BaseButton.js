@@ -13,7 +13,6 @@ export const BaseButtonText = styled.Text`
   font-family: ${({ theme }) => theme.typography.bold};
   font-size: ${({ theme }) => theme.fontSize.regular};
   font-weight: 700;
-  height: 56px;
   text-align: center;
   min-width: 264px;
   width: 100%;

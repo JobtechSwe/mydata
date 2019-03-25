@@ -20,7 +20,7 @@ export default class RegisterScreen extends React.Component {
   render() {
     return (
       <>
-        <H1 style={{ position: 'absolute', top: 128 }}>MyData</H1>
+        <H1>MyData</H1>
         <Input
           name="firstName"
           onChangeText={firstName => this.setState({ firstName })}
