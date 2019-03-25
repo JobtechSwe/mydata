@@ -1,5 +1,6 @@
 const express = require('express')
 const { createClient } = require('./helpers/index')
+const { clearOperatorDb } = require('./helpers/operatorPostgres')
 
 describe('Connect', () => {
   let server, client
@@ -24,10 +25,14 @@ describe('Connect', () => {
     server.close(done)
   })
 
+  afterAll(async () => {
+    await clearOperatorDb()
+  })
+
   it('Can connect to operator', async () => {
     await client.connect()
 
     // Should not throw
-    expect(true)
+    expect(true).toBe(true)
   })
 })

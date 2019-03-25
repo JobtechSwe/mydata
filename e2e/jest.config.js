@@ -6,5 +6,5 @@ module.exports = {
   testRegex: '\\.test\\.js$',
   testPathIgnorePatterns: ['<rootDir>/node_modules'],
   resetModules: true,
-  clearMocks: true,
+  clearMocks: true
 }
