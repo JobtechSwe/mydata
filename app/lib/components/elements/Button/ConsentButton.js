@@ -14,7 +14,6 @@ const StyledConsentText = styled(Text)`
   color: ${({ theme }) => theme.colors.primary};
   font-family: ${({ theme }) => theme.typography.bold};
   font-size: ${({ theme }) => theme.fontSize.regular};
-  font-weight: 700;
   padding: 28px 16px;
   text-align: center;
 `
