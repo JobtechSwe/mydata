@@ -4,9 +4,6 @@ const { clearOperatorDb } = require('./helpers/operatorPostgres')
 
 describe('Account', () => {
   beforeAll(async () => {
-    await phone.setConfig({
-      OPERATOR_URL: 'http://operator:3000/api'
-    })
   })
 
   afterAll(async () => {

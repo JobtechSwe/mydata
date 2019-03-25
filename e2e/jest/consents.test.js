@@ -9,7 +9,6 @@ describe('Client', () => {
 
   beforeAll(async () => {
     // Phone setup
-    await phone.setConfig({ OPERATOR_URL: 'http://operator:3000/api' })
     await phone.createAccount({ firstName: 'Einar', lastName: 'Pejnar' })
 
     // Get client going
