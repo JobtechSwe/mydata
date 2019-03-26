@@ -12,14 +12,22 @@ class LoginRequest extends Component {
   }
 
   async componentDidMount() {
-    const { consent, request } = await loginService.get(this.props.code)
-    this.setState({ consent, request, view: 'approve' })
+    try {
+      const { consent, request } = await loginService.get(this.props.code)
+      this.setState({ consent, request, view: 'approve' })
+    } catch (error) {
+      this.setState({ view: 'error', error })
+    }
   }
 
   approve = async () => {
     this.setState({ view: 'approving' })
     await loginService.approve({ ...this.state.request, ...this.state.consent })
     this.props.onApprove()
+  }
+
+  acceptSituation = () => {
+    this.props.onError()
   }
 
   reject = () => {
@@ -50,8 +58,16 @@ class LoginRequest extends Component {
         )
       case 'approving':
         return (<Text>Approving...</Text>)
-      case 'generating':
-        return (<View />)
+      case 'error':
+        return (
+          <Wrap>
+            <Text style={{ marginBottom: 5 }}>Error</Text>
+            <Headline style={{ marginBottom: 5 }}>
+              {this.state.error.message}
+            </Headline>
+            <Button mode="contained" icon="check-circle" style={{ backgroundColor: this.props.theme.colors.accent, marginBottom: 5 }} onPress={this.acceptSituation}>"OK"</Button>
+          </Wrap>
+        )
     }
   }
 }

@@ -29,10 +29,12 @@ export async function get(code) {
   const url = `${Config.OPERATOR_URL}/clients/${encodeURIComponent(clientId)}/consents?accountId=${account.id}`
   try {
     const { data } = await axios.get(url)
-    console.log(data)
+    if (!data.length) {
+      throw new Error('No consents found')
+    }
     return {
       request: { clientId, sessionId },
-      consent: data,
+      consent: data[0],
     }
   } catch(error) {
     console.error(url, error)
