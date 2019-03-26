@@ -31,6 +31,7 @@ class ManageConsentsRequestScreen extends React.Component {
           <LoginRequest
             code={this.state.code}
             onApprove={this.onApprove}
+            onError={this.onError}
           />
         )
       case 'register':

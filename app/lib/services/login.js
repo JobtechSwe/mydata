@@ -37,7 +37,7 @@ export async function get(code) {
       consent: data[0],
     }
   } catch(error) {
-    console.error(url, error)
+    console.log(url, error)
     throw error
   }
 }
