@@ -48,9 +48,12 @@ async function sendEventLoginApproved (payload, accessToken) {
 
   const loginEvent = {
     type: 'LOGIN_APPROVED',
-    accessToken,
-    payload
+    payload: {
+      ...payload,
+      accessToken
+    }
   }
+  console.log('clients', loginEvent)
   post(eventsUrl, loginEvent)
 }
 
