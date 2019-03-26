@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const router = Router()
-const { getConsentRequest } = require('../services/db')
+const { getConsentRequest, getLoginApproval } = require('../services/db')
 const { createDefaultRequest, domain, area } = require('../services/consents')
 const { loginRequest } = require('../services/login')
 
@@ -20,6 +20,24 @@ module.exports = operator => {
   // Instead, we should probably associate the consent request with a session and then log in that session once it's approved.
   router.get('/approved/:id', async (req, res, next) => {
     const result = getConsentRequest(req.params.id)
+    if (result) {
+      res.send({ accessToken: result.accessToken })
+    } else {
+      res.sendStatus(404)
+    }
+  })
+
+  router.get('/consentrequest/:id', async (req, res, next) => {
+    const result = getConsentRequest(req.params.id)
+    if (result) {
+      res.send({ accessToken: result.accessToken })
+    } else {
+      res.sendStatus(404)
+    }
+  })
+
+  router.get('/login/:id', async (req, res, next) => {
+    const result = getLoginApproval(req.params.id)
     if (result) {
       res.send({ accessToken: result.accessToken })
     } else {

@@ -13,7 +13,7 @@ export default () => {
 
   const poll = id => setInterval(async () => {
     try {
-      const { data } = await axios.get(`/api/approved/${id}`)
+      const { data } = await axios.get(`/api/consentrequest/${id}`)
       clearInterval(pollId)
       storage.setAccessToken(data.accessToken)
       dispatch({ type: 'SET_TOKEN', payload: data.accessToken })

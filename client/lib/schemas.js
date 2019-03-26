@@ -46,7 +46,7 @@ const loginPayload = Joi.object({
   clientId: Joi.string().uri({ allowRelative: false }).required(),
   consentId: Joi.string().uuid().required(),
   sessionId: Joi.string().required(),
-  timestamp: Joi.date().timestamp('javascript').required()
+  timestamp: Joi.date().iso().required()
 }).required()
 
 const dataUpdate = Joi.object({

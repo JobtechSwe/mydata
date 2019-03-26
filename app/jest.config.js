@@ -8,7 +8,7 @@ module.exports = {
   moduleFileExtensions: [
     'js'
   ],
-  testRegex: '(/__tests__/.*|\\.(test|spec))\\.js$',
+  testMatch: ['**/__tests__/**/*.test.js'],
   testPathIgnorePatterns: [
     '\\.snap$',
     '<rootDir>/node_modules/'

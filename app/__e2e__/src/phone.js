@@ -2,7 +2,6 @@ import * as account from '../../lib/services/account'
 import * as storage from '../../lib/services/storage'
 import * as crypto from '../../lib/services/crypto'
 import * as consents from '../../lib/services/consents'
-import * as login from '../../lib/services/login'
 import * as qrcode from '../../lib/utils/qrcode'
 import Config from 'react-native-config'
 
