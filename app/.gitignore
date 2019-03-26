@@ -22,6 +22,9 @@ DerivedData
 *.xcuserstate
 project.xcworkspace
 
+# iOS
+*.zip
+
 # Android/IntelliJ
 #
 build/
@@ -51,6 +54,8 @@ buck-out/
 */fastlane/report.xml
 */fastlane/Preview.html
 */fastlane/screenshots
+*/fastlane/Appfile
+*.zip
 
 # Bundle artifact
 *.jsbundle

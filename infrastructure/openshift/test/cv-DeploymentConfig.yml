@@ -45,7 +45,19 @@ spec:
             value: 'redis://:fubar@redis-test.mydata.svc:6379/'
           - name: CLIENT_ID
             value: https://cv-test.dev.services.jtech.se
-          image: cv:test
+          - name: NO_UPDATE_NOTIFIER
+            value: 'true'
+          - name: PUBLIC_KEY
+            valueFrom:
+              secretKeyRef:
+                name: cv
+                key: public.key
+          - name: PRIVATE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: cv
+                key: private.key
+          image: jobtechswe/mydata-cv:latest-tag
           imagePullPolicy: Always
           name: cv-test
           ports:
@@ -83,12 +95,3 @@ spec:
       terminationGracePeriodSeconds: 30
   triggers:
     - type: ConfigChange
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-          - cv-test
-        from:
-          kind: ImageStreamTag
-          name: 'cv:test'
-      
-      type: ImageChange

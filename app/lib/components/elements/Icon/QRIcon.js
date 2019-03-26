@@ -21,4 +21,5 @@ const QRIcon = () => (
     <StyledQRImage source={require('./img/qr_inactive.png')} />
   </StyledQRIcon>
 )
+
 export default QRIcon

@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
 import { Wrap } from '../components/View/Wrapper'
 import { Spinner } from '../components/elements/Spinner/Spinner'
-import { Headline, Button, List, Text, withTheme } from 'react-native-paper'
 import * as consentsService from '../services/consents'
+import { Paragraph } from '../components/typography/Typography'
+import ConsentModal from './ConsentModal'
 
 class ConsentRequest extends Component {
   state = {
     view: 'loading',
     consentRequest: null,
+    modalVisible: true,
   }
 
   async componentDidMount() {
@@ -23,7 +25,9 @@ class ConsentRequest extends Component {
     this.props.onApprove()
   }
 
-  reject = () => {}
+  reject = () => {
+    this.setState({ modalVisible: false })
+  }
 
   render() {
     switch (this.state.view) {
@@ -35,54 +39,34 @@ class ConsentRequest extends Component {
         )
       case 'approve':
         return (
-          <Wrap>
-            <Text style={{ marginBottom: 5 }}>This app:</Text>
-            <Headline style={{ marginBottom: 5 }}>
-              {this.state.consentRequest.client.display_name}
-            </Headline>
-            <Text style={{ marginBottom: 5 }}>
-              {this.state.consentRequest.client.description}
-            </Text>
-            <Text style={{ marginBottom: 5 }}>Wants these permissions</Text>
-            <List.Section style={{ marginBottom: 5 }}>
-              {this.state.consentRequest.data.scope.map(scope => (
-                <List.Item
-                  title={scope.area}
-                  description={scope.description}
-                  key={scope.area}
-                />
-              ))}
-            </List.Section>
-            <Button
-              mode="contained"
-              icon="check-circle"
-              style={{
-                backgroundColor: this.props.theme.colors.accent,
-                marginBottom: 5,
-              }}
-              onPress={this.approve}
-            >
-              I Approve!
-            </Button>
-            <Button
-              mode="contained"
-              icon="block"
-              style={{
-                backgroundColor: this.props.theme.colors.error,
-                marginBottom: 5,
-              }}
-              onPress={this.reject}
-            >
-              Nope!
-            </Button>
-          </Wrap>
+          <ConsentModal
+            onApprove={this.approve}
+            onReject={this.reject}
+            visible={this.state.modalVisible}
+            client={this.state.consentRequest.client}
+            scope={this.state.consentRequest.data.scope}
+          />
         )
       case 'approving':
-        return <Text>Approving...</Text>
+        return (
+          <Wrap>
+            <Spinner />
+            <Paragraph align="center" style={{ marginTop: 24 }}>
+              Godkänner...
+            </Paragraph>
+          </Wrap>
+        )
       case 'generating':
-        return <Wrap />
+        return (
+          <Wrap>
+            <Spinner />
+            <Paragraph align="center" style={{ marginTop: 24 }}>
+              Genererar...
+            </Paragraph>
+          </Wrap>
+        )
     }
   }
 }
 
-export default withTheme(ConsentRequest)
+export default ConsentRequest

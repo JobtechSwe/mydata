@@ -10,15 +10,21 @@ class ManageConsentsRequestScreen extends React.Component {
   }
 
   static navigationOptions = {
-    tabBarVisible: true,
+    tabBarVisible: false,
   }
 
   // Events
   onCode = ({ type, code }) => {
     this.setState({ code, view: type })
   }
+
+  onCancel = () => {
+    this.props.navigation.navigate('Hem')
+  }
+
   onApprove = () => {
-    this.props.navigation.goBack()
+    this.setState({ view: 'enter' })
+    this.props.navigation.navigate('Hem')
   }
   onError = () => {
     this.props.navigation.goBack()
@@ -44,9 +50,7 @@ class ManageConsentsRequestScreen extends React.Component {
       case 'enter':
       default:
         return (
-          <EnterConsentCode
-            onCode={this.onCode}
-          />
+          <EnterConsentCode onCancel={this.onCancel} onCode={this.onCode} />
         )
     }
   }

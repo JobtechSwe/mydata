@@ -1,6 +1,6 @@
 const os = require('os')
 
-function checkOs() {
+function checkOs () {
   return os.platform()
 }
 

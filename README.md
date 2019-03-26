@@ -1,5 +1,7 @@
 # JobTech MyData
 
+[![Build Status](https://travis-ci.com/JobtechSwe/mydata.svg?branch=master)](https://travis-ci.com/JobtechSwe/mydata)
+
 ## Bakgrund
 
 MyData är en rörelse som syftar till att individer själva ska ha kontroll på data om sig själv. Jobtech mydata utforskar ett koncept som åstadkommer det primärt för arbetsmarknaden. Målet är att se vad detta skapar för potentiella möjligheter för den svenska arbetsmarknaden. Därför har vi påbörjat ett experimenterande innovationsteam som vill testa hypotesen att det går att skapa en distribuerad och decentraliserad datalagring för information om individens CV-data och göra den tillgänglig för de aktörer som har intresse att läsa eller skriva i datat men med utgångspunkt att individen alltid har kontroll på informationen.
@@ -55,5 +57,6 @@ Data lagras krypterat i en s.k. PDS (Personal Data Storage). Just nu är Dropbox
 
 If you want to run the app on an actual phone it will of course not use your computer's hosts-file so you will need to use a proxy such as squidman.
 
-*Before pushing/PR:* `npm run e2e` in main repo. Also make sure you have run all (unit) test suites in the sub-projects you have edited. 
-
+**Before pushing/PR:** 
+1. Do `npm run lint-all`
+2. Do `npm run test-all` (this will run e2e/integration and unit tests)

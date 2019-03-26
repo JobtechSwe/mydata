@@ -14,7 +14,6 @@ jest.mock('react-native-config', () => ({
   Config: {},
 }))
 
-jest.mock('react-native-vector-icons/AntDesign', () => jest.fn())
-jest.mock('react-native-vector-icons/FontAwesome5', () => jest.fn())
+jest.mock('react-native-fontawesome', () => jest.fn())
 
 console.error = jest.fn()

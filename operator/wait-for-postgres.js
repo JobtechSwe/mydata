@@ -1,6 +1,6 @@
 const postgres = require('./lib/adapters/postgres')
 
-const q = postgres.query('SELECT NOW()')
+postgres.query('SELECT NOW()')
   .then(r => {
     process.exit(0)
   })

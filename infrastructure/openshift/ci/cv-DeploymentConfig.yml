@@ -57,7 +57,7 @@ spec:
               secretKeyRef:
                 name: cv
                 key: private.key
-          image: cv:latest
+          image: jobtechswe/mydata-cv:latest
           imagePullPolicy: Always
           name: cv-ci
           ports:
@@ -95,11 +95,3 @@ spec:
       terminationGracePeriodSeconds: 30
   triggers:
     - type: ConfigChange
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-          - cv-ci
-        from:
-          kind: ImageStreamTag
-          name: cv:latest
-      type: ImageChange

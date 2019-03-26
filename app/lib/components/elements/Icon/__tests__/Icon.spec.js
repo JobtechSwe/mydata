@@ -7,6 +7,7 @@ describe('elements/Icons', () => {
   let iconComponent
 
   beforeEach(() => {
+    /*eslint-disable */
     iconComponent = name => {
       return (
         <MockedProvider>
