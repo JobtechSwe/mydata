@@ -1,0 +1,13 @@
+@html.extend('layout', function(model) {
+    @html.block('content', function(model) {
+        <h2>Scan QR code</h2>
+        @html.raw(model.qr)
+        <br><br>
+        <p>Or paste this id: <strong>@model._id</strong></p>
+        <script language="javascript">
+          setTimeout(function () {
+              window.location.reload()
+          }, 2000)
+        </script>
+    })
+})

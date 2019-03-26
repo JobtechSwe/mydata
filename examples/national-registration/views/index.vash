@@ -1,0 +1,6 @@
+@html.extend('layout', function(model) {
+    @html.block('content', function(model) {
+        <h2>Connect with MyData</h2>
+        <button onClick="window.location.assign('/auth')">Connect</button>
+    })
+})
