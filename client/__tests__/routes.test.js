@@ -280,7 +280,7 @@ describe('routes', () => {
             clientId: 'http://someservice.tld',
             consentId: '566c9327-b1cb-4e5b-8633-3b1f1fbbe9ad',
             sessionId: 'fd9je9yu4e94h4hjhhh',
-            timestamp: 1552992329187
+            timestamp: '2019-03-26T14:00:47.214Z'
           }
         }
       })
@@ -320,8 +320,17 @@ describe('routes', () => {
           expect(response.status).toEqual(400)
           expect(response.body.message).toMatch('["timestamp" is required]')
         })
+        it('throws if `timestamp` is in the wrong format', async () => {
+          body.payload.timestamp = 1553608878758
+          const response = await request(app).post('/events').send(body)
+
+          expect(response.status).toEqual(400)
+          expect(response.body.message).toMatch('["timestamp" must be a valid ISO 8601 date]')
+        })
         it('triggers an event', async () => {
-          await request(app).post('/events').send(body)
+          const response = await request(app).post('/events').send(body)
+          expect(response.body.message).toBeUndefined()
+          expect(response.status).toEqual(200)
 
           expect(listener).toHaveBeenCalledWith(body.payload)
         })

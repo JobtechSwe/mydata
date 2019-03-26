@@ -85,8 +85,10 @@ describe('services/clients', () => {
       })
       const loginEvent = {
         type: 'LOGIN_APPROVED',
-        accessToken,
-        payload
+        payload: {
+          ...payload,
+          accessToken
+        }
       }
       await sendEventLoginApproved(payload, accessToken)
       expect(axiosPost).toHaveBeenCalledWith('some_event_url', loginEvent)
