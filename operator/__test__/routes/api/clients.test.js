@@ -119,9 +119,11 @@ describe('routes api/clients', () => {
     const clientId = encodeURIComponent('https://someservice.tld')
     const consentServiceGetResult = [
       {
-        consentId: 'b2f5659f-6391-4068-9366-ae4803bd0a20',
-        clientId: 'https://someservice.tld',
-        processedAt: new Date('2019-03-25T14:24:44.317Z')
+        some: 'value',
+        and: 'more'
+      }, {
+        stuff: 'from',
+        the: 'database'
       }
     ]
     consentServiceGet.mockImplementation(() => consentServiceGetResult)
@@ -151,12 +153,7 @@ describe('routes api/clients', () => {
 
     it('returns result from consent service', async () => {
       const result = await api.get(`/api/clients/${clientId}/consents?accountId=${accountId}`)
-      const consentItem = {
-        consentId: consentServiceGetResult[0].consentId,
-        clientId: consentServiceGetResult[0].clientId,
-        processedAt: consentServiceGetResult[0].processedAt.toISOString()
-      }
-      expect(result.body).toEqual([consentItem])
+      expect(result.body).toEqual(consentServiceGetResult)
     })
   })
 })

@@ -3,7 +3,7 @@ const redis = require('../adapters/redis')
 const { transaction, query } = require('../adapters/postgres')
 const { v4 } = require('uuid')
 const axios = require('axios')
-const { camelCase } = require('changecase-objects')
+const { camelCase } = require('changecase-objects') // Caveat! This function converts Date to {}
 const schemas = require('./schemas')
 const { createToken } = require('./jwt')
 
@@ -211,23 +211,31 @@ async function list (consentId, domain, area) {
 async function get (accountId, clientId) {
   // Only get from db and not redis since we only want approved consents
   const sql = `
-  SELECT 
-    consent_id,
-    client_id,
-    processed
-  FROM 
-    consent_requests 
-  WHERE 
-    account_id = $1
-  AND 
-    client_id = $2`
+  SELECT
+    consent_requests.consent_id,
+    consent_requests.client_id,
+    consent_requests.processed,
+    clients.display_name,
+    clients.description,
+    clients.client_key
+  FROM
+    consent_requests
+  JOIN CLIENTS ON
+    clients.client_id = consent_requests.client_id
+   WHERE
+    consent_requests.account_id = $1
+  AND
+    consent_requests.client_id = $2`
   const params = [accountId, clientId]
 
   let result = await query(sql, params)
   return result.rows.map(row => ({
     consentId: row.consent_id,
     clientId: row.client_id,
-    processedAt: row.processed
+    processedAt: row.processed,
+    clientDisplayName: row.display_name,
+    clientDescription: row.description,
+    clientKey: row.client_key
   }))
 }
 
