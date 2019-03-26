@@ -3,6 +3,7 @@ import axios from 'axios'
 import Config from 'react-native-config'
 import { getAccount } from '../../services/storage'
 import { Base64 } from 'js-base64'
+import lolex from 'lolex'
 
 jest.mock('../../services/storage')
 
@@ -43,33 +44,36 @@ describe('loginService', () => {
   })
 
   describe('#approve', () => {
-    Config.OPERATOR_URL = 'aTotallyLegitOperatorUrl'
-    const account = {
-      id: 'c1949de3-6662-43c9-8cc1-578169ea817b',
-      keys: {
-        publicKey: 'dis my public key yeah',
-        privateKey: 'private keeeeeey',
-      },
-    }
-    getAccount.mockResolvedValue(account)
-    /*
-    todo: get consent from operator, extract consentId
-    todo: sign
-     */
+    let account, clock
+    beforeEach(() => {
+      Config.OPERATOR_URL = 'aTotallyLegitOperatorUrl'
+      account = {
+        id: 'c1949de3-6662-43c9-8cc1-578169ea817b',
+        keys: {
+          publicKey: 'dis my public key yeah',
+          privateKey: 'private keeeeeey',
+        },
+      }
+      getAccount.mockResolvedValue(account)
+
+      const now = new Date('2019-03-25T14:27:43.815Z').getTime()
+      clock = lolex.install({
+        now,
+      })
+    })
+    afterEach(() => clock.uninstall())
+    
     it('Posts to operator', async () => {
       await loginService.approve(loginRequest)
       expect(axios.post).toBeCalledWith(`aTotallyLegitOperatorUrl/accounts/${account.id}/login`, expect.anything())
     })
 
     it('Posts correct payload format to operator', async () => {
-      Date.now = jest.fn(() => 55555)
       await loginService.approve(loginRequest)
       const desiredPayload = {
-        timeStamp: 55555,
+        timestamp: '2019-03-25T14:27:43.815Z',
         clientId: 'https://cv.tld',
         sessionId: '5479744949494949949',
-        // consentId: '31337', // todo: add
-        // signature: <signed with accountKey> // todo: add
       }
       expect(axios.post).toBeCalledWith(expect.anything(), desiredPayload)
     })

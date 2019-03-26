@@ -20,6 +20,9 @@ class ManageConsentsRequestScreen extends React.Component {
   onApprove = () => {
     this.props.navigation.goBack()
   }
+  onError = () => {
+    this.props.navigation.goBack()
+  }
 
   render() {
     switch (this.state.view) {

@@ -7,8 +7,10 @@ export function parse (code) {
   const loginRequest = JSON.parse(Base64.decode(code))
 
   try {
-    let validFormat = (typeof loginRequest.clientId === 'string' &&
-      typeof loginRequest.sessionId === 'string')
+    let validFormat = (
+      typeof loginRequest.clientId === 'string' &&
+      typeof loginRequest.sessionId === 'string'
+    )
 
     if (!validFormat) {
       throw new Error('Incorrect login request JSON format')
@@ -21,17 +23,36 @@ export function parse (code) {
   return loginRequest
 }
 
-export async function approve({ clientId, sessionId }) {
-  const operatorUrl = encodeURI(Config.OPERATOR_URL)
+export async function get(code) {
+  const { clientId, sessionId } = parse(code)
   const account = await getAccount()
-  const accountId = encodeURIComponent(account.id)
-  const url = `${operatorUrl}/accounts/${accountId}/login`
+  const url = `${Config.OPERATOR_URL}/clients/${encodeURIComponent(clientId)}/consents?accountId=${account.id}`
+  try {
+    const { data } = await axios.get(url)
+    if (!data.length) {
+      throw new Error('No consents found')
+    }
+    return {
+      request: { clientId, sessionId },
+      consent: data[0],
+    }
+  } catch(error) {
+    console.error(url, error)
+    throw error
+  }
+}
+
+export async function approve({ clientId, sessionId, consentId }) {
+  const account = await getAccount()
+  const url = `${Config.OPERATOR_URL}/accounts/${account.id}/login`
 
   let loginApproval = {
     clientId,
+    consentId,
     sessionId,
-    timeStamp: Date.now(),
+    timestamp: (new Date()).toISOString(),
   }
+  console.log(url, loginApproval)
 
   axios.post(url, loginApproval)
 }
