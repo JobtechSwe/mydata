@@ -37,7 +37,7 @@ describe('services/consents #get', () => {
 
   it('translates the column names', async () => {
     const result = await get('account-id', 'client-id')
-    expect(result.length).toEqual(2)
+    expect(result).toHaveLength(2)
     expect(result[0]).toEqual({
       consentId: 'b2f5659f-6391-4068-9366-ae4803bd0a20',
       clientId: 'https://someservice.tld',
