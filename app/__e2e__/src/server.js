@@ -1,6 +1,10 @@
 import express, { json } from 'express'
 import * as phone from './phone'
 
+if (!process.env.OPERATOR_URL) {
+  console.warn('OPERATOR_URL not set for app-server. SetConfig has to be used before app-server will be able to reach Operator')
+}
+
 phone.setConfig({
   OPERATOR_URL: process.env.OPERATOR_URL,
 })

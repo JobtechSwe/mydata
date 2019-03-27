@@ -6,7 +6,8 @@
   "scripts": {
     "cypress": "cypress run",
     "cypress:open": "cypress open",
-    "jest": "OPERATOR_URL='http://localhost:3001' jest --runInBand --verbose"
+    "jest": "OPERATOR_URL='http://localhost:3001' jest --runInBand --verbose",
+    "lint": "eslint '**/*.js'"
   },
   "repository": {
     "type": "git",
@@ -36,7 +37,9 @@
     "eslint-plugin-standard": "^4.0.0",
     "express": "^4.16.4",
     "jest": "^24.1.0",
-    "jsonwebtoken": "^8.5.0"
+    "jsonwebtoken": "^8.5.0",
+    "node-pg-migrate": "^3.18.1",
+    "pg": "^7.9.0"
   },
   "dependencies": {}
 }
