@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -50,9 +49,9 @@
 		C2B9D336CE8E4002A81CA6A6 /* libRNVectorIcons-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 88B5BC18D9644382B55F1B97 /* libRNVectorIcons-tvOS.a */; };
 		D095BA65E7B147E581193F66 /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C5AE43BE3E8741819D3BD6C4 /* libRNCamera.a */; };
 		D6C91B0AFA454379B0785C15 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 03A1285B15E0402E983737BC /* Rubik-Regular.ttf */; };
-		D75ECE3C2241250200576A42 /* FontAwesome5FreeRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D75ECE392241250200576A42 /* FontAwesome5FreeRegular.ttf */; };
-		D75ECE3D2241250200576A42 /* FontAwesome5FreeSolid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D75ECE3A2241250200576A42 /* FontAwesome5FreeSolid.ttf */; };
-		D75ECE3E2241250200576A42 /* FontAwesome5BrandsRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D75ECE3B2241250200576A42 /* FontAwesome5BrandsRegular.ttf */; };
+		D7216BEC22492327007FE686 /* fa-brands-400.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D75ECDDC22411EB700576A42 /* fa-brands-400.ttf */; };
+		D7216BED22492336007FE686 /* fa-regular-400.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D75ECDDE22411EB700576A42 /* fa-regular-400.ttf */; };
+		D7216BEE2249233B007FE686 /* fa-solid-900.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D75ECDDD22411EB700576A42 /* fa-solid-900.ttf */; };
 		EC8F162AE7D543A4AA1DFF3B /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 008B7F98B8CE49419652F17B /* libReactNativePermissions.a */; };
 		F53C80FFA9AD499EAE72493F /* Karla-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FC4E0E85E9744228B090976D /* Karla-Bold.ttf */; };
 		F63650BBD1B64EDD8AF14A4D /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 264109B70D7C48B294BBF532 /* Rubik-Medium.ttf */; };
@@ -474,9 +473,6 @@
 		D75ECDDD22411EB700576A42 /* fa-solid-900.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "fa-solid-900.ttf"; path = "../assets/fonts/fa-solid-900.ttf"; sourceTree = "<group>"; };
 		D75ECDDE22411EB700576A42 /* fa-regular-400.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "fa-regular-400.ttf"; path = "../assets/fonts/fa-regular-400.ttf"; sourceTree = "<group>"; };
 		D75ECE312241227500576A42 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = fonts; path = ../assets/fonts; sourceTree = "<group>"; };
-		D75ECE392241250200576A42 /* FontAwesome5FreeRegular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome5FreeRegular.ttf; path = ../assets/fonts/FontAwesome5FreeRegular.ttf; sourceTree = "<group>"; };
-		D75ECE3A2241250200576A42 /* FontAwesome5FreeSolid.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome5FreeSolid.ttf; path = ../assets/fonts/FontAwesome5FreeSolid.ttf; sourceTree = "<group>"; };
-		D75ECE3B2241250200576A42 /* FontAwesome5BrandsRegular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome5BrandsRegular.ttf; path = ../assets/fonts/FontAwesome5BrandsRegular.ttf; sourceTree = "<group>"; };
 		E53D46609E644C07822ED39B /* RNCamera.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RNCamera.xcodeproj"; sourceTree = "<group>"; };
 		ECE9A602540342BDB8789B4D /* ReactNativeConfig.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeConfig.xcodeproj; path = "../node_modules/react-native-config/ios/ReactNativeConfig.xcodeproj"; sourceTree = "<group>"; };
 		F7025A5EB072483592A671F3 /* libRNRSA.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNRSA.a; sourceTree = "<group>"; };
@@ -760,9 +756,6 @@
 		6D7F23A99B404644BD90732E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				D75ECE3B2241250200576A42 /* FontAwesome5BrandsRegular.ttf */,
-				D75ECE392241250200576A42 /* FontAwesome5FreeRegular.ttf */,
-				D75ECE3A2241250200576A42 /* FontAwesome5FreeSolid.ttf */,
 				FC4E0E85E9744228B090976D /* Karla-Bold.ttf */,
 				266B2EA229474AD3B8281DA6 /* Karla-Regular.ttf */,
 				264109B70D7C48B294BBF532 /* Rubik-Medium.ttf */,
@@ -1447,12 +1440,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D7216BEE2249233B007FE686 /* fa-solid-900.ttf in Resources */,
+				D7216BED22492336007FE686 /* fa-regular-400.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				D75ECE3E2241250200576A42 /* FontAwesome5BrandsRegular.ttf in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				D7216BEC22492327007FE686 /* fa-brands-400.ttf in Resources */,
 				F53C80FFA9AD499EAE72493F /* Karla-Bold.ttf in Resources */,
-				D75ECE3C2241250200576A42 /* FontAwesome5FreeRegular.ttf in Resources */,
-				D75ECE3D2241250200576A42 /* FontAwesome5FreeSolid.ttf in Resources */,
 				7966F21BD6EB41628CBE286D /* Karla-Regular.ttf in Resources */,
 				F63650BBD1B64EDD8AF14A4D /* Rubik-Medium.ttf in Resources */,
 				D6C91B0AFA454379B0785C15 /* Rubik-Regular.ttf in Resources */,
@@ -1650,7 +1643,7 @@
 				CODE_SIGN_ENTITLEMENTS = MyData/MyData.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 15;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = BSE2J6442R;
 				HEADER_SEARCH_PATHS = (
@@ -1685,7 +1678,7 @@
 				CODE_SIGN_ENTITLEMENTS = MyData/MyData.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_TEAM = BSE2J6442R;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
