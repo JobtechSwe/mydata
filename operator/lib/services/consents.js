@@ -8,7 +8,7 @@ const schemas = require('./schemas')
 const { createToken } = require('./jwt')
 
 async function createRequest (data, signature) {
-  await schemas.consentRequest().validate(data, schemas.defaultOptions)
+  await schemas.consentRequest.validate(data, schemas.defaultOptions)
 
   let id, link, result, expires
   let tries = 0
@@ -120,7 +120,7 @@ function buildScopeEntryKeyQueries (consentEncryptionKeyId, scope) {
 }
 
 async function create (body) {
-  await schemas.consent().validate(body, schemas.defaultOptions)
+  await schemas.consent.validate(body, schemas.defaultOptions)
 
   const {
     consentRequestId,

@@ -27,7 +27,7 @@ const createAccount = Joi.object({
 }).required().unknown(true)
 
 // Clients
-const registerClient = () => Joi.object({
+const registerClient = Joi.object({
   clientId: Joi.string().uri({ scheme: allowedSchemes() }).required(),
   displayName: Joi.string().required(),
   description: Joi.string().required().min(10),
@@ -36,7 +36,7 @@ const registerClient = () => Joi.object({
 }).required()
 
 // Consent
-const consentRequest = () => Joi.object({
+const consentRequest = Joi.object({
   clientId: Joi.string().uri({ scheme: allowedSchemes() }).required(),
   kid: Joi.string().uri({ scheme: allowedSchemes() }).required(),
   scope: Joi.array().items(Joi.object({
@@ -59,7 +59,7 @@ const scopeEntry = Joi.object({
   clientEncryptionDocumentKey: Joi.string().base64().optional()
 }).unknown(true)
 
-const consent = () => Joi.object({
+const consent = Joi.object({
   consentRequestId: Joi.string().guid().required(),
   consentEncryptionKey: Joi.string().base64().required(),
   consentEncryptionKeyId: Joi.string().required(),
@@ -90,6 +90,7 @@ const signedPayloadWithClientKey = Joi.object({
   signature
 }).required()
 
+// Is still function for testing purposes
 const signedPayloadWithKeyId = () => Joi.object({
   data: Joi.object({
     clientId: Joi.string().uri({ scheme: allowedSchemes() }).required()

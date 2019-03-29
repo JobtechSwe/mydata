@@ -9,7 +9,7 @@ const router = Router()
 // Register
 router.post('/', signed(), async ({ body, signature: { key } }, res, next) => {
   try {
-    await schemas.registerClient().validate(body, schemas.defaultOptions)
+    await schemas.registerClient.validate(body, schemas.defaultOptions)
     const result = await create({
       ...body,
       clientKey: key
