@@ -15,11 +15,15 @@ const allowedSchemes = () => isUnsafe() ? [ 'http', 'https' ] : [ 'https' ]
  * Schemas
  */
 
+// Fields
+const clientId = Joi.string().uri({ scheme: allowedSchemes() }).required()
+const accountKey = Joi.string().base64().required()
+
 // Accounts
 const accountId = Joi.string().uuid().required()
 
 const createAccount = Joi.object({
-  accountKey: Joi.string().required(),
+  accountKey,
   pds: Joi.object({
     provider: Joi.string().required(),
     access_token: Joi.string().required()
@@ -28,7 +32,7 @@ const createAccount = Joi.object({
 
 // Clients
 const registerClient = Joi.object({
-  clientId: Joi.string().uri({ scheme: allowedSchemes() }).required(),
+  clientId,
   displayName: Joi.string().required(),
   description: Joi.string().required().min(10),
   eventsUrl: Joi.string().uri({ scheme: allowedSchemes() }).required(),
@@ -37,7 +41,7 @@ const registerClient = Joi.object({
 
 // Consent
 const consentRequest = Joi.object({
-  clientId: Joi.string().uri({ scheme: allowedSchemes() }).required(),
+  clientId,
   kid: Joi.string().uri({ scheme: allowedSchemes() }).required(),
   scope: Joi.array().items(Joi.object({
     domain: Joi.string().required(),
@@ -64,8 +68,8 @@ const consent = Joi.object({
   consentEncryptionKey: Joi.string().base64().required(),
   consentEncryptionKeyId: Joi.string().required(),
   accountId: Joi.string().guid().required(),
-  accountKey: Joi.string().base64().required(),
-  clientId: Joi.string().uri({ scheme: allowedSchemes() }).required(),
+  accountKey,
+  clientId,
   scope: Joi.array().items(scopeEntry).min(1).required()
 }).required()
 
@@ -78,7 +82,7 @@ const signature = Joi.object({
 
 const signedPayloadWithAccountKey = Joi.object({
   data: Joi.object({
-    accountKey: Joi.string().required()
+    accountKey
   }).required().unknown(true),
   signature
 }).required()
@@ -90,10 +94,9 @@ const signedPayloadWithClientKey = Joi.object({
   signature
 }).required()
 
-// Is still function for testing purposes
-const signedPayloadWithKeyId = () => Joi.object({
+const signedPayloadWithKeyId = Joi.object({
   data: Joi.object({
-    clientId: Joi.string().uri({ scheme: allowedSchemes() }).required()
+    clientId
   }).required().unknown(true),
   signature
 }).required()
