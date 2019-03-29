@@ -6,7 +6,6 @@ export const H1 = styled(Text)`
   color: ${({ theme }) => theme.colors.primary};
   font-family: ${({ theme }) => theme.typography.contrast};
   font-size: ${({ theme }) => theme.fontSize.large};
-  font-weight: 500;
   text-align: center;
   width: 100%;
   margin-bottom: 32px;
@@ -15,9 +14,8 @@ export const H1 = styled(Text)`
 export const H3 = styled(Text)`
   align-self: stretch;
   color: ${({ theme }) => theme.colors.primary};
-  font-family: ${({ theme }) => theme.typography.regular};
+  font-family: ${({ theme }) => theme.typography.bold};
   font-size: ${({ theme }) => theme.fontSize.regular};
-  font-weight: 700;
   margin-bottom: 8px;
 `
 

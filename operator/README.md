@@ -4,10 +4,14 @@ Backend for managing consents and data flow
 ## Configuration
 Create a file named `.env` in the project directory, example for a developers machine:
 ```
-NODE_ENV=development                # development, test or production
-PORT=3000                           # optional, defaults to 3000
-APM_SERVER=http://localhost:8200    # optional, apm will not be used if APM_SERVER is not set
-APM_TOKEN=abc                       # optional, defaults to ''
+# development, test or production
+NODE_ENV=development
+# optional, defaults to 3000
+PORT=3000
+# optional, apm will not be used if APM_SERVER is not set
+APM_SERVER=http://localhost:8200
+# optional, defaults to ''
+APM_TOKEN=abc
 
 # For Postgres migrations
 DATABASE_URL=postgres://postgresuser:postgrespassword@localhost:5432/mydata
