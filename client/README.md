@@ -26,6 +26,8 @@ const config = {
 const client = create(config)
 ```
 
+[How do I generate my client keys?](#generate-a-keypair-using-openssl?)
+
 ## Provide routes
 
 ```javascript
@@ -84,3 +86,21 @@ where PAYLOAD is a base64url encoded (RFC4648) JSON string containing:
   sessionId: '84845151884' // This is any string with which you can uniquely identify this user session
 }
 ```
+
+## Generate a keypair using OpenSSL
+_Prerequisite:_ You will need to have [OpenSSL](http://www.openssl.org/) installed on your system.
+
+1. Generate a RSA keypair with a 2048 bit private key
+```
+$ openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048
+ ....................................................................+++
+ ....................................................+++
+```
+2. Extract the public key
+
+```
+$ openssl rsa -pubout -in private_key.pem -out public_key.pem
+writing RSA key
+```
+
+You will now have a suitable RSA keypair in the files `private_key.pem` and `public_key.pem`
