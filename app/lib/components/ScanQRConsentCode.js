@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { AppRegistry, Dimensions, Clipboard, Alert } from 'react-native'
+import { Dimensions, Clipboard, Alert } from 'react-native'
 import { theme } from '../theme'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 import { Mask, Svg, Rect, Circle, Path } from 'react-native-svg'
@@ -84,5 +84,3 @@ export default class ScanQRConsentCode extends Component {
     )
   }
 }
-
-AppRegistry.registerComponent('default', () => ScanQRConsentCode)

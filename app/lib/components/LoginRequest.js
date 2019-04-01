@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
-import { Text } from 'react-native'
 import { Wrap } from '../components/View/Wrapper'
 import { H1, Paragraph } from '../components/typography/Typography'
 import { PrimaryButton } from '../components/elements/Button/Button'
 import { Spinner } from '../components/elements/Spinner/Spinner'
-import FontAwesome, { Icons, IconTypes } from 'react-native-fontawesome'
 import * as loginService from '../services/login'
 
 class LoginRequest extends Component {
@@ -56,10 +54,10 @@ class LoginRequest extends Component {
                 marginBottom: 5,
               }}
               onPress={this.approve}
+              icon={{
+                name: 'check',
+              }}
             >
-              <Text style={{ fontSize: 20, color: 'white' }}>
-                <FontAwesome type={IconTypes.FAR}>{Icons.check}</FontAwesome>
-              </Text>
               Yes
             </PrimaryButton>
             <PrimaryButton
@@ -67,10 +65,10 @@ class LoginRequest extends Component {
                 marginBottom: 5,
               }}
               onPress={this.reject}
+              icon={{
+                name: 'ban',
+              }}
             >
-              <Text style={{ fontSize: 20, color: 'white' }}>
-                <FontAwesome type={IconTypes.FAR}>{Icons.ban}</FontAwesome>
-              </Text>
               No
             </PrimaryButton>
           </Wrap>
@@ -87,10 +85,10 @@ class LoginRequest extends Component {
                 marginBottom: 5,
               }}
               onPress={this.acceptSituation}
+              icon={{
+                name: 'ban',
+              }}
             >
-              <Text style={{ fontSize: 20, color: 'white' }}>
-                <FontAwesome type={IconTypes.FAR}>{Icons.check}</FontAwesome>
-              </Text>
               OK
             </PrimaryButton>
           </Wrap>

@@ -1,6 +1,8 @@
 import React from 'react'
 import { Image } from 'react-native'
+import SvgIcon from 'react-native-svg-icon'
 import styled from '../../../theme'
+import icons from './img/icons'
 
 const StyledNavbarIcon = styled(Image)`
   height: 21px;
@@ -56,3 +58,10 @@ const getNavbarIcon = (name, active) => {
 }
 
 export const NavbarIcon = ({ name, active }) => getNavbarIcon(name, active)
+
+export const Icon = props => (
+  <SvgIcon
+    {...props}
+    svgs={icons}
+  />
+)
