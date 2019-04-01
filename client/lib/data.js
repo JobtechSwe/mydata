@@ -21,8 +21,7 @@ const buildHeaders = accessToken => ({
   'Authorization': 'Bearer ' + accessToken
 })
 
-const encrypt = (keyProvider) => async (accessToken, domain, area, data) => {
-  const { data: { consentId } } = decode(accessToken)
+const encrypt = (keyProvider, consentId) => async (domain, area, data) => {
   let aesKey
   let documentKeys = await keyProvider.getDocumentKeys(consentId, domain, area)
   if (!documentKeys) {
@@ -39,7 +38,7 @@ const encrypt = (keyProvider) => async (accessToken, domain, area, data) => {
   return doc
 }
 
-const decrypt = (keyProvider) => async (data) => {
+const decrypt = (keyProvider, consentId) => async (data) => {
   if (!data) return {}
   const result = {}
   for (let domain of Object.keys(data)) {
@@ -49,7 +48,8 @@ const decrypt = (keyProvider) => async (data) => {
         result[domain][area] = {}
       } else {
         const [cipher, documentKeys] = data[domain][area].split('\n')
-        const aesKey = await keyProvider.getDocumentDecryptionKey(documentKeys)
+        const consentKeyId = await keyProvider.getConsentKeyId(consentId)
+        const aesKey = await keyProvider.getDocumentDecryptionKey(documentKeys, consentKeyId)
         result[domain][area] = decryptDocument(aesKey, cipher)
       }
     }
@@ -67,14 +67,17 @@ const read = (operatorUrl, accessToken, decrypt) => async ({ domain, area }) => 
 const write = (operatorUrl, accessToken, encrypt) => async ({ domain, area, data }) => {
   const url = buildUrl(operatorUrl, domain, area)
   const headers = buildHeaders(accessToken)
-  const encryptedData = await encrypt(accessToken, domain, area, data)
+  const encryptedData = await encrypt(domain, area, data)
   await axios.post(url, { data: encryptedData }, { headers })
 }
 
-const auth = (operatorUrl, keyProvider) => accessToken => ({
-  read: read(operatorUrl, accessToken, decrypt(keyProvider)),
-  write: write(operatorUrl, accessToken, encrypt(keyProvider))
-})
+const auth = (operatorUrl, keyProvider) => accessToken => {
+  const { data: { consentId } } = decode(accessToken)
+  return {
+    read: read(operatorUrl, accessToken, decrypt(keyProvider, consentId)),
+    write: write(operatorUrl, accessToken, encrypt(keyProvider, consentId))
+  }
+}
 
 module.exports = ({ config: { operator }, keyProvider }) => ({
   auth: auth(operator, keyProvider)

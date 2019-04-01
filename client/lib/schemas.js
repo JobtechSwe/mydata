@@ -1,9 +1,9 @@
 const Joi = require('joi')
 
 const keyValueStore = Joi.object({
-  load: Joi.func().arity(1).required(),
-  save: Joi.func().arity(3).required(),
-  remove: Joi.func().arity(1).required()
+  load: Joi.func().required(),
+  save: Joi.func().required(),
+  remove: Joi.func().required()
 }).unknown(true)
 
 const consentRequestScopeEntry = Joi.object({
