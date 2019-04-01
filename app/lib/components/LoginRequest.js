@@ -53,7 +53,6 @@ class LoginRequest extends Component {
 
             <PrimaryButton
               style={{
-                backgroundColor: this.props.theme.colors.accent,
                 marginBottom: 5,
               }}
               onPress={this.approve}
@@ -65,7 +64,6 @@ class LoginRequest extends Component {
             </PrimaryButton>
             <PrimaryButton
               style={{
-                backgroundColor: this.props.theme.colors.error,
                 marginBottom: 5,
               }}
               onPress={this.reject}
@@ -86,7 +84,6 @@ class LoginRequest extends Component {
             <H1 style={{ marginBottom: 5 }}>{this.state.error.message}</H1>
             <PrimaryButton
               style={{
-                backgroundColor: this.props.theme.colors.accent,
                 marginBottom: 5,
               }}
               onPress={this.acceptSituation}
