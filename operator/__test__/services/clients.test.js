@@ -1,5 +1,8 @@
-const { create, get } = require('../../lib/services/clients')
+const { create, get, sendEventLoginApproved } = require('../../lib/services/clients')
 const pg = require('../../__mocks__/pg')
+
+jest.mock('axios')
+const { post: axiosPost } = require('axios')
 
 describe('services/clients', () => {
   describe('#create', () => {
@@ -60,6 +63,35 @@ describe('services/clients', () => {
         eventsUrl: 'events',
         clientKey: 'my-public-key'
       })
+    })
+  })
+
+  describe('#sendEventLoginApproved', async () => {
+    const payload = {
+      clientId: 'https://cv.tld'
+    }
+    const accessToken = 't0k3n'
+
+    it('gets the event path from db', async () => {
+      await sendEventLoginApproved(payload, accessToken)
+      expect(pg.client.query).toHaveBeenCalledWith(expect.any(String), [ payload.clientId ])
+    })
+
+    it('posts data to event route', async () => {
+      pg.client.query.mockResolvedValueOnce({
+        rows: [{
+          events_url: 'some_event_url'
+        }]
+      })
+      const loginEvent = {
+        type: 'LOGIN_APPROVED',
+        payload: {
+          ...payload,
+          accessToken
+        }
+      }
+      await sendEventLoginApproved(payload, accessToken)
+      expect(axiosPost).toHaveBeenCalledWith('some_event_url', loginEvent)
     })
   })
 })

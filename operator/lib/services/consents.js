@@ -3,18 +3,18 @@ const redis = require('../adapters/redis')
 const { transaction, query } = require('../adapters/postgres')
 const { v4 } = require('uuid')
 const axios = require('axios')
-const { camelCase } = require('changecase-objects')
+const { camelCase } = require('changecase-objects') // Caveat! This function converts Date to {}
 const schemas = require('./schemas')
 const { createToken } = require('./jwt')
 
 async function createRequest (data, signature) {
   await schemas.consentRequest.validate(data, schemas.defaultOptions)
 
-  let id, link, result, expires
+  let id, url, result, expires
   let tries = 0
   do {
     id = v4()
-    link = `mydata://register/${id}`
+    url = `mydata://register/${id}`
     const redisData = JSON.stringify({ data, signature })
     const expireInSeconds = 3600
     result = await redis.set(`consentRequest:${id}`, redisData, 'NX', 'EX', expireInSeconds)
@@ -27,7 +27,7 @@ async function createRequest (data, signature) {
 
   return {
     id,
-    link,
+    url,
     expires
   }
 }
@@ -171,16 +171,6 @@ async function create (body) {
   }
 }
 
-async function get (id) {
-  const result = await query('SELECT * FROM consents WHERE id=$1', [id])
-
-  if (!result || !result.rows || !result.rows.length) {
-    throw new Error('No consent found')
-  }
-
-  return camelCase(result.rows[0])
-}
-
 async function list (consentId, domain, area) {
   let sql = `
     SELECT
@@ -218,10 +208,41 @@ async function list (consentId, domain, area) {
   })
 }
 
+async function get (accountId, clientId) {
+  // Only get from db and not redis since we only want approved consents
+  const sql = `
+  SELECT
+    consent_requests.consent_id,
+    consent_requests.client_id,
+    consent_requests.processed,
+    clients.display_name,
+    clients.description,
+    clients.client_key
+  FROM
+    consent_requests
+  JOIN CLIENTS ON
+    clients.client_id = consent_requests.client_id
+   WHERE
+    consent_requests.account_id = $1
+  AND
+    consent_requests.client_id = $2`
+  const params = [accountId, clientId]
+
+  let result = await query(sql, params)
+  return result.rows.map(row => ({
+    consentId: row.consent_id,
+    clientId: row.client_id,
+    processedAt: row.processed,
+    clientDisplayName: row.display_name,
+    clientDescription: row.description,
+    clientKey: row.client_key
+  }))
+}
+
 module.exports = {
   createRequest,
   getRequest,
   create,
-  get,
-  list
+  list,
+  get
 }

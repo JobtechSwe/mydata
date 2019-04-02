@@ -41,6 +41,14 @@ const consent = Joi.object({
   keys: Joi.object().required()
 }).required()
 
+const loginPayload = Joi.object({
+  accessToken: Joi.string().required(),
+  clientId: Joi.string().uri({ allowRelative: false }).required(),
+  consentId: Joi.string().uuid().required(),
+  sessionId: Joi.string().required(),
+  timestamp: Joi.date().iso().required()
+}).required()
+
 const dataUpdate = Joi.object({
   accountId: Joi.string().uuid().required(),
   data: Joi.object({})
@@ -48,12 +56,13 @@ const dataUpdate = Joi.object({
 
 const eventPayloads = {
   CONSENT_APPROVED: consent,
+  LOGIN_APPROVED: loginPayload,
   DATA_UPDATE: dataUpdate
 }
 
 const event = (type) => Joi.object({
   type: Joi.string().valid([
-    'CONSENT_APPROVED', 'DATA_UPDATE'
+    'CONSENT_APPROVED', 'LOGIN_APPROVED', 'DATA_UPDATE'
   ]).required(),
   payload: eventPayloads[type] || Joi.object().required()
 })

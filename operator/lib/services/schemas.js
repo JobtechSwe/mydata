@@ -39,14 +39,26 @@ const createAccount = Joi.object({
   }).required().unknown(true)
 }).required().unknown(true)
 
+const login = Joi.object({
+  timestamp: Joi.date().iso().required().strict(false), // allow conversion of string
+  clientId: Joi.string().uri({ scheme: allowedSchemes() }).required(),
+  sessionId: Joi.string().required(),
+  consentId: Joi.string().guid().required()
+}).required()
+
 // Clients
 const registerClient = Joi.object({
-  clientId: clientId.required(),
+  clientId: clientId.required().required(),
   displayName: Joi.string().required(),
   description: Joi.string().required().min(10),
   eventsUrl: Joi.string().uri({ scheme: allowedSchemes() }).required(),
   jwksUrl: Joi.string().uri({ scheme: allowedSchemes() }).required()
 }).required()
+
+const getClientConsents = Joi.object({
+  accountId: Joi.string().guid().required(),
+  clientId: Joi.string().uri({ scheme: allowedSchemes() }).required()
+})
 
 // Consent
 const consentRequest = Joi.object({
@@ -114,8 +126,10 @@ module.exports = {
 
   accountId,
   createAccount,
+  login,
 
   registerClient,
+  getClientConsents,
 
   consentRequest,
   consent,

@@ -267,5 +267,74 @@ describe('routes', () => {
         expect(listener).toHaveBeenCalledWith(body.payload)
       })
     })
+
+    describe('[LOGIN_APPROVED]', () => {
+      let listener
+      beforeEach(() => {
+        listener = jest.fn()
+        client.events.on('LOGIN_APPROVED', listener)
+        body = {
+          type: 'LOGIN_APPROVED',
+          payload: {
+            accessToken: '7yasd87ya9da98sdu98adsu',
+            clientId: 'http://someservice.tld',
+            consentId: '566c9327-b1cb-4e5b-8633-3b1f1fbbe9ad',
+            sessionId: 'fd9je9yu4e94h4hjhhh',
+            timestamp: '2019-03-26T14:00:47.214Z'
+          }
+        }
+      })
+      describe('validation', () => {
+        it('throws if `accessToken` is missing from payload', async () => {
+          body.payload.accessToken = undefined
+          const response = await request(app).post('/events').send(body)
+
+          expect(response.status).toEqual(400)
+          expect(response.body.message).toMatch('["accessToken" is required]')
+        })
+        it('throws if `clientId` is missing from payload', async () => {
+          body.payload.clientId = undefined
+          const response = await request(app).post('/events').send(body)
+
+          expect(response.status).toEqual(400)
+          expect(response.body.message).toMatch('["clientId" is required]')
+        })
+        it('throws if `consentId` is missing from payload', async () => {
+          body.payload.consentId = undefined
+          const response = await request(app).post('/events').send(body)
+
+          expect(response.status).toEqual(400)
+          expect(response.body.message).toMatch('["consentId" is required]')
+        })
+        it('throws if `sessionId` is missing from payload', async () => {
+          body.payload.sessionId = undefined
+          const response = await request(app).post('/events').send(body)
+
+          expect(response.status).toEqual(400)
+          expect(response.body.message).toMatch('["sessionId" is required]')
+        })
+        it('throws if `timestamp` is missing from payload', async () => {
+          body.payload.timestamp = undefined
+          const response = await request(app).post('/events').send(body)
+
+          expect(response.status).toEqual(400)
+          expect(response.body.message).toMatch('["timestamp" is required]')
+        })
+        it('throws if `timestamp` is in the wrong format', async () => {
+          body.payload.timestamp = 1553608878758
+          const response = await request(app).post('/events').send(body)
+
+          expect(response.status).toEqual(400)
+          expect(response.body.message).toMatch('["timestamp" must be a valid ISO 8601 date]')
+        })
+        it('triggers an event', async () => {
+          const response = await request(app).post('/events').send(body)
+          expect(response.body.message).toBeUndefined()
+          expect(response.status).toEqual(200)
+
+          expect(listener).toHaveBeenCalledWith(body.payload)
+        })
+      })
+    })
   })
 })

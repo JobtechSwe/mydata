@@ -37,13 +37,13 @@ describe('services/crypto', () => {
       it('throws if alg is unsupported', () => {
         return expect(
           verify(data, { alg: 'RSA-SHA256' }, keys.public)
-        ).rejects.toThrowError(
+        ).rejects.toThrow(
           'Unsupported algorithm [RSA-SHA256]. Only [RSA-SHA512] is supported.'
         )
       })
 
       it('throws if alg is omitted', () => {
-        return expect(verify(data, {}, keys.public)).rejects.toThrowError(
+        return expect(verify(data, {}, keys.public)).rejects.toThrow(
           'Signature algorithm must be specified. Only [RSA-SHA512] is supported.'
         )
       })
@@ -65,11 +65,5 @@ describe('services/crypto', () => {
         expect(result).toBe(false)
       })
     })
-  })
-  xdescribe('encrypt', () => {
-    it('works', () => {})
-  })
-  xdescribe('decrypt', () => {
-    it('works', () => {})
   })
 })

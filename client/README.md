@@ -20,7 +20,7 @@ const config = {
     publicKey: '-----BEGIN RSA PUBLIC KEY-----\nMIGJ...',
     privateKey: '-----BEGIN RSA PRIVATE KEY-----\nMIICX...'
   },
-  jwksPath '/jwks',     // endpoint for keys in jwks format
+  jwksPath: '/jwks',     // endpoint for keys in jwks format
   eventsPath: '/events'  // endpoint for events - webhook style
 }
 const client = create(config)
@@ -49,7 +49,11 @@ await client.connect()
 
 ```javascript
 client.events.on('CONSENT_APPROVED', consent => {
-  // store your consent here and take action (eg. redirect user)
+  // take action (eg. log in and redirect user)
+})
+
+client.events.on('LOGIN_APPROVED', consent => {
+  // log in and redirect the session which has the provided sessionId
 })
 ```
 
@@ -58,7 +62,28 @@ client.events.on('CONSENT_APPROVED', consent => {
 ```javascript
 {
   id: '78c2b714-222f-42fa-8ffa-ff0d6366c856', // uuid for consent
-  scope: ['something']
+  scope: [
+    {
+      domain: 'https://mycv.work', // Application domain with protocol
+      area: 'work_experience', // Name of the subset of data covered by this consent, something which makes sense in your domain
+      description: 'A list of your work experience with dates.', // Description of the contents of the data area
+      permissions: [ 'write' ], // Can be read or write
+      purpose: 'In order to create a CV using our website.',
+      lawfulBasis: 'CONSENT' // One of 'CONSENT', 'CONTRACT', 'LEGAL_OBLIGATION', 'VITAL_INTERESTS', 'PUBLIC_TASK', 'LEGITIMATE_INTERESTS' 
+    }
+  ]
+}
+```
+
+### Login request format
+User logs in by scanning a QR-code containing:
+`mydata://login/PAYLOAD`
+
+where PAYLOAD is a base64url encoded (RFC4648) JSON string containing:
+```javascript
+{
+  clientId: 'https://mycv.work',
+  sessionId: '84845151884' // This is any string with which you can uniquely identify this user session
 }
 ```
 

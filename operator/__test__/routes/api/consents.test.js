@@ -76,13 +76,13 @@ describe('routes /api/consents', () => {
       expect(result.body.message).toBeUndefined()
       expect(result.status).toEqual(201)
     })
-    it('returns id, link and expires if succesful', async () => {
+    it('returns id, url and expires if succesful', async () => {
       const reqPayload = payload(data)
       const result = await api.post('/api/consents/requests', reqPayload)
       expect(result.body).toEqual({
         data: {
           id: expect.any(String),
-          link: expect.stringMatching(/^mydata:\/\//),
+          url: expect.stringMatching(/^mydata:\/\/register\//),
           expires: expect.any(String)
         }
       })
