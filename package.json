@@ -12,7 +12,8 @@
     "start-all": "docker-compose -f docker-compose.dev.yml down && docker-compose down && docker-compose up -d && docker-compose -f docker-compose.dev.yml up -d",
     "test-all": "npm run test-all:unit && npm run test-all:e2e",
     "test-all:e2e": "sh -c 'cd ./e2e && ./script.sh'",
-    "test-all:unit": "npm --prefix ./app test ./app && npm --prefix ./client test ./client && npm --prefix ./examples/cv test ./examples/cv && npm --prefix ./operator test ./operator"
+    "test-all:unit": "npm --prefix ./app test ./app && npm --prefix ./client test ./client && npm --prefix ./examples/cv test ./examples/cv && npm --prefix ./operator test ./operator",
+    "test": "npm run lint-all && npm run test-all"
   },
   "dependencies": {},
   "devDependencies": {},
