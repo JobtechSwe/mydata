@@ -73,7 +73,7 @@ export default class HomeScreen extends React.Component {
       <Wrap>
         <ScrollViewWrap>
           <H1>MyData</H1>
-          <PrimaryButton onPress={this.clearAccount}>
+          <PrimaryButton icon={{ name: 'ban' }} onPress={this.clearAccount}>
             Clear account
           </PrimaryButton>
         </ScrollViewWrap>
