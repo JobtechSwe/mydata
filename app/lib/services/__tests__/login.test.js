@@ -65,7 +65,7 @@ describe('loginService', () => {
     
     it('Posts to operator', async () => {
       await loginService.approve(loginRequest)
-      expect(axios.post).toBeCalledWith(`aTotallyLegitOperatorUrl/accounts/${account.id}/login`, expect.anything())
+      expect(axios.post).toHaveBeenCalledWith(`aTotallyLegitOperatorUrl/accounts/${account.id}/login`, expect.anything())
     })
 
     it('Posts correct payload format to operator', async () => {
@@ -75,7 +75,7 @@ describe('loginService', () => {
         clientId: 'https://cv.tld',
         sessionId: '5479744949494949949',
       }
-      expect(axios.post).toBeCalledWith(expect.anything(), desiredPayload)
+      expect(axios.post).toHaveBeenCalledWith(expect.anything(), desiredPayload)
     })
   })
 })
