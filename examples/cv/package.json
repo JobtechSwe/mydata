@@ -37,8 +37,8 @@
     "morgan": "^1.9.1",
     "next": "^7.0.3",
     "qrcode.react": "^0.8.0",
-    "react": "next",
-    "react-dom": "next",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "react-spinners": "^0.4.8",
     "react-spring": "^6.1.10",
     "styled-components": "^4.1.3"
