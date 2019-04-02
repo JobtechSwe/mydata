@@ -2,7 +2,6 @@ const createClient = require('../lib/client')
 const { createMemoryStore } = require('../lib/memoryStore')
 const axios = require('axios')
 const { generateKeyPair, verifySignature } = require('./_helpers')
-const lolex = require('lolex')
 jest.mock('axios')
 
 describe('client', () => {
