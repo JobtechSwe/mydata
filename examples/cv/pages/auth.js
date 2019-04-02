@@ -27,7 +27,6 @@ export default () => {
   useEffect(() => {
     axios.post('/api/auth')
       .then(({ data }) => {
-        console.log(data)
         setData(data)
         pollId = poll(data.id)
       })

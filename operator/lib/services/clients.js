@@ -53,7 +53,6 @@ async function sendEventLoginApproved (payload, accessToken) {
       accessToken
     }
   }
-  console.log('clients', loginEvent)
   post(eventsUrl, loginEvent)
 }
 
