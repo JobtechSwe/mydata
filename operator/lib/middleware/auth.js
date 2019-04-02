@@ -12,7 +12,7 @@ const signed = ({ accountKey = false } = {}) => async (req, res, next) => {
     if (accountKey) {
       schema = schemas.signedPayloadWithAccountKey
     } else {
-      schema = schemas.signedPayloadWithKeyId()
+      schema = schemas.signedPayloadWithKeyId
     }
     await schema.validate(req.body, schemas.defaultOptions)
 
