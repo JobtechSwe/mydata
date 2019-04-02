@@ -22,7 +22,7 @@ describe('Consent request for example/cv', () => {
       .should('include', '/auth')
 
     cy
-      .get('#qr-code')
+      .get('#qrcode')
       .should(res => {
         expect(res[0].getAttribute('data-consent-request-id')).to.match(v4Regexp)
       })

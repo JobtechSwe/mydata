@@ -53,7 +53,7 @@ export default () => {
         <Box><QRCode
           size={256}
           value={data.url}
-          id="qr-code"
+          id="qrcode"
           data-consent-request-id={data.id}
           data-consent-request-url={data.url}
           onClick={() => copy(data.url)} /></Box>

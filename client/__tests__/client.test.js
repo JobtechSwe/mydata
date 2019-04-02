@@ -21,23 +21,19 @@ describe('client', () => {
       keyOptions: { modulusLength: 1024 }
     }
   })
-
   afterEach(() => {
     axios.post.mockClear()
   })
-
   describe('createClient', () => {
     let client
     beforeEach((done) => {
-      axios.post.mockResolvedValueOnce({})
+      axios.post.mockResolvedValue({ status: 200 })
       client = createClient(config)
       setTimeout(() => done(), 10)
     })
-
     it('does _not_ call the operator to register until told so', () => {
       expect(axios.post).not.toHaveBeenCalled()
     })
-
     it('sets sensible defaults', () => {
       const {
         displayName,
@@ -59,43 +55,35 @@ describe('client', () => {
       expect(client.config.eventsPath).toEqual('/events')
       expect(client.config.alg).toEqual('RSA-SHA512')
     })
-
     it('throws if clientId is missing', () => {
       config.clientId = undefined
       expect(() => createClient(config)).toThrow()
     })
-
     it('throws if displayName is missing', () => {
       config.displayName = undefined
       expect(() => createClient(config)).toThrow()
     })
-
     it('throws if operator is missing', () => {
       config.operator = undefined
       expect(() => createClient(config)).toThrow()
     })
-
     it('throws if operator is not a valid uri', () => {
       config.operator = 'fobara87as9duadh'
       expect(() => createClient(config)).toThrow()
     })
-
     it('throws if keyValueStore is missing', () => {
       config.keyValueStore = undefined
       expect(() => createClient(config)).toThrow()
     })
-
     it('throws if clientKeys is missing', () => {
       config.clientKeys = undefined
       expect(() => createClient(config)).toThrow()
     })
-
     describe('#connect()', () => {
       it('calls the operator to register the client service', async () => {
         await client.connect()
         expect(axios.post).toHaveBeenCalledWith('https://smoothoperator.work/api/clients', expect.any(Object))
       })
-
       it('sends correct parameters', async () => {
         await client.connect()
         expect(axios.post).toHaveBeenCalledWith(expect.any(String), {
@@ -113,13 +101,12 @@ describe('client', () => {
           }
         })
       })
-
       it('calls events.emit with payload', async () => {
-        client.events.emit = jest.fn()
+        const listener = jest.fn()
+        client.events.on('CONNECTED', listener)
         await client.connect()
-        expect(client.events.emit).toHaveBeenCalledTimes(1)
+        expect(listener).toHaveBeenCalledTimes(1)
       })
-
       it('signs the payload', async () => {
         await client.connect()
         const [, { data, signature }] = axios.post.mock.calls[0]

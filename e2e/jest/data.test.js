@@ -80,10 +80,10 @@ describe('Data', () => {
     })
 
     // Do request
-    const { id } = await client.consents.request(request)
+    const { url } = await client.consents.request(request)
 
     // User gets the request and approves it
-    const { data } = await phone.getConsentRequest(id)
+    const { data } = await phone.getConsentRequest(url)
     await phone.approveConsentRequest(data)
   })
 })
