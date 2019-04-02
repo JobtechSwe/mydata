@@ -52,7 +52,6 @@ export async function approve({ clientId, sessionId, consentId }) {
     sessionId,
     timestamp: (new Date()).toISOString(),
   }
-  console.log(url, loginApproval)
 
   axios.post(url, loginApproval)
 }

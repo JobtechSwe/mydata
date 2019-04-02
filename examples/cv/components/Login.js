@@ -28,7 +28,6 @@ export default () => {
     axios
       .get('/api/loginRequest')
       .then(({ data }) => {
-        console.log(data)
         setData(data)
         pollId = poll(data.sessionId)
       })

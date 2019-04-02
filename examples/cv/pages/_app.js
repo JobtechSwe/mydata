@@ -28,14 +28,12 @@ export default class MyDataCV extends App {
 
     const token = getAccessToken()
     if (token) {
-      console.log('found token in storage')
       if (Router.pathname === '/') {
         Router.push({
           pathname: '/profile'
         })
       }
     } else {
-      console.log('found no token in storage')
       if (Router.pathname === '/profile') {
         Router.push({
           pathname: '/'
