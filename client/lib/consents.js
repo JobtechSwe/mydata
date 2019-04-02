@@ -18,6 +18,7 @@ const fix = (consent) => ({
 })
 
 async function request (client, consentRequestDescription) {
+  await client.connect()
   consentRequestDescription = fix(consentRequestDescription)
   await schemas.consentRequest.validate(consentRequestDescription)
 
