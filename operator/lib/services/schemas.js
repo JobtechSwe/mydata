@@ -16,7 +16,7 @@ const allowedSchemes = () => isUnsafe() ? [ 'http', 'https' ] : [ 'https' ]
  */
 
 // Fields
-const clientId = Joi.string().uri({ scheme: allowedSchemes() }).required()
+const clientId = Joi.string().uri({ scheme: allowedSchemes() })
 const encryptionKey = Joi.string().base64()
 const consentLegalBasis = Joi.string().valid([
   'CONSENT',
@@ -41,7 +41,7 @@ const createAccount = Joi.object({
 
 // Clients
 const registerClient = Joi.object({
-  clientId,
+  clientId: clientId.required(),
   displayName: Joi.string().required(),
   description: Joi.string().required().min(10),
   eventsUrl: Joi.string().uri({ scheme: allowedSchemes() }).required(),
@@ -50,7 +50,7 @@ const registerClient = Joi.object({
 
 // Consent
 const consentRequest = Joi.object({
-  clientId,
+  clientId: clientId.required(),
   kid: Joi.string().uri({ scheme: allowedSchemes() }).required(),
   scope: Joi.array().items(Joi.object({
     domain: Joi.string().required(),
@@ -76,7 +76,7 @@ const consent = Joi.object({
   consentEncryptionKeyId: Joi.string().required(),
   accountId: Joi.string().guid().required(),
   accountKey: encryptionKey.required(),
-  clientId,
+  clientId: clientId.required(),
   scope: Joi.array().items(scopeEntry).min(1).required()
 }).required()
 
@@ -103,7 +103,7 @@ const signedPayloadWithClientKey = Joi.object({
 
 const signedPayloadWithKeyId = Joi.object({
   data: Joi.object({
-    clientId
+    clientId: clientId.required()
   }).required().unknown(true),
   signature
 }).required()
