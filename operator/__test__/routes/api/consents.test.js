@@ -44,9 +44,9 @@ describe('routes /api/consents', () => {
         kid: encryptionKeys.kid,
         expiry: 123143234,
         scope: [
-          { domain: 'cv.work', area: 'experience', purpose: 'För att kunna bygga ditt CV', description: 'this data contains....', permissions: [ 'write' ], lawfulBasis: 'CONSENT', required: true },
-          { domain: 'cv.work', area: 'education', purpose: 'För att kunna bygga ditt CV', description: 'this data contains....', permissions: [ 'write' ], lawfulBasis: 'CONSENT', required: true },
-          { domain: 'cv.work', area: 'languages', purpose: 'För att kunna bygga ditt CV', description: 'this data contains....', permissions: [ 'write' ], lawfulBasis: 'CONSENT', required: true }
+          { domain: 'cv.work', area: 'experience', purpose: 'För att kunna bygga ditt CV', description: 'this data contains....', permissions: [ 'WRITE' ], lawfulBasis: 'CONSENT', required: true },
+          { domain: 'cv.work', area: 'education', purpose: 'För att kunna bygga ditt CV', description: 'this data contains....', permissions: [ 'WRITE' ], lawfulBasis: 'CONSENT', required: true },
+          { domain: 'cv.work', area: 'languages', purpose: 'För att kunna bygga ditt CV', description: 'this data contains....', permissions: [ 'WRITE' ], lawfulBasis: 'CONSENT', required: true }
         ]
       }
     })

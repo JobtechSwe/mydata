@@ -299,6 +299,7 @@ describe('routes', () => {
         expect(listener).toHaveBeenCalledWith(body.payload)
       })
     })
+
     describe('[LOGIN_APPROVED]', () => {
       let listener
       beforeEach(() => {
