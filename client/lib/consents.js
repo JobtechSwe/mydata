@@ -40,7 +40,7 @@ async function onApprove (client, consent) {
 }
 
 async function saveKeys (consentId, keysObj, { keyProvider, config: { jwksUrl } }) {
-  let keys = Object
+  const keys = Object
     .entries(keysObj)
     .map(([kid, str]) => ({
       kid,
@@ -51,12 +51,12 @@ async function saveKeys (consentId, keysObj, { keyProvider, config: { jwksUrl } 
   const rxJwks = new RegExp(`^${jwksUrl}/`)
   const consentKeyId = keys.find(({ kid }) => rxJwks.test(kid)).kid
   const consentKey = await keyProvider.getKey(consentKeyId)
-  const extrenalKeys = keys.filter(({ kid }) => kid !== consentKeyId)
+  const externalKeys = keys.filter(({ kid }) => kid !== consentKeyId)
 
   return Promise.all([
     keyProvider.saveKey(consentKey),
     keyProvider.saveConsentKeyId(consentId, consentKeyId),
-    ...extrenalKeys.map(key => keyProvider.saveKey(key))
+    ...externalKeys.map(key => keyProvider.saveKey(key))
   ])
 }
 
