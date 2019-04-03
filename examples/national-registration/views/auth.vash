@@ -3,7 +3,7 @@
         <h2>Scan QR code</h2>
         @html.raw(model.qr)
         <br><br>
-        <p>Or paste this id: <strong>@model._id</strong></p>
+        <p>Or paste this id: <strong>@model._link</strong></p>
         <script language="javascript">
           setTimeout(function () {
               window.location.reload()

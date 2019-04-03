@@ -5,7 +5,7 @@ const auth = require('./auth')
 const config = {
   displayName: 'National registration',
   description: 'This is the national registration of the Kingdom of Sweden',
-  clientId: process.env.CLIENT_ID || 'http://localhost:2999', // Application domain with protocol
+  clientId: process.env.CLIENT_ID || 'http://5.35.191.60:2999', // Application domain with protocol
   operator: process.env.OPERATOR_URL || 'http://localhost:3000', // URL of Operator
   clientKeys: {
     publicKey: '-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv/MgNZvi0YRhA0FePG6t\ne32qMz37tD1t6mKeVolt6OZt6pblbCIfIW7J99jyKy3Zk2aZF/Eerr86qjKFwGro\nAmGT4VN7bEtHOFnpj4jFf3wvo7weyRHBIh9rc5LJtZ8k1MWYGDqxT/H835ZhxMrI\niUHPVLB6JKhEBk1h8gHSJdH574T8ZNc4jrMgapOgCJqzP7OSpOEus3nRfv9vKMD8\nRGESJukNwj0Vxf4FlkuqPGhsp6ImRPKnvdCPnfInx2IEcgS3UU7sV6B7k14lzepl\n313KzFpbrS1qXbuEhwLsvIthNKqA5C/YOpiJz7NlC+sOQw8QxMLfTq9WmSuQ4HKn\n6QIDAQAB\n-----END PUBLIC KEY-----\n',
@@ -20,6 +20,7 @@ const client = create(config)
 client.connect().then(() => {
   console.log('Connected to operator!')
 })
+.catch(error => console.log)
 
 const router = Router()
 

@@ -20,6 +20,7 @@ module.exports = client => {
       _id = req.cookies.consentRequest.id
       _link = req.cookies.consentRequest.link
 
+      console.log('check', !store.get(_id), store.get(_id).accessToken)
       if (!store.get(_id)) {
         res.clearCookie('consentRequest')
       } else if (store.get(_id).accessToken) {
@@ -31,6 +32,13 @@ module.exports = client => {
             area: 'city',
             data: 'Örebro'
           })
+        .then(r => {
+          console.log('data skriven', r)
+        })
+        .catch(e => {
+          console.log('data INTE skriven', e)
+        })
+        
 
         res.clearCookie('consentRequest')
         res.redirect('/done')
@@ -67,7 +75,8 @@ module.exports = client => {
 
     res.render('auth', {
       qr,
-      _id
+      _id,
+      _link
     })
   })
 
