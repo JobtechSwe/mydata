@@ -94,8 +94,6 @@ const StoreProvider = ({ ...props }) => {
 
   useEffect(() => {
     if (!data.token || !data.loaded || !data.dirty) { return }
-    console.log('SAVE')
-    console.log(data)
     const { token, baseData, experience, education, languages } = data
     write(token, { baseData, experience, education, languages })
       .then(() => {

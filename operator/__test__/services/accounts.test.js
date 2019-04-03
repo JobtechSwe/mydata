@@ -1,11 +1,16 @@
-const { create, get } = require('../../lib/services/accounts')
+const { create, get, login } = require('../../lib/services/accounts')
 const pg = require('../../__mocks__/pg')
 jest.mock('../../lib/adapters/redis')
+
+jest.mock('../../lib/services/clients')
+const { sendEventLoginApproved } = require('../../lib/services/clients')
+
+jest.mock('../../lib/services/jwt')
+const { createToken } = require('../../lib/services/jwt')
 
 describe('services/accounts', () => {
   afterEach(() => {
     pg.clearMocks()
-    pg.restoreDefaults()
   })
   describe('#create', () => {
     let account
@@ -67,6 +72,69 @@ describe('services/accounts', () => {
     it('returns the account', async () => {
       const result = await get(accountId)
       expect(result).toEqual({ id: accountId, pdsCredentials })
+    })
+  })
+  describe('#login', () => {
+    beforeEach(() => {
+      pg.client.query.mockResolvedValue({
+        rows: [{
+          count: 1
+        }]
+      })
+    })
+    const validAccountId = '22d2b385-d69e-4a46-b983-718a470ab302'
+    const validData = {
+      timestamp: '2019-03-25T14:02:22.223Z',
+      clientId: 'https://cv.tld',
+      sessionId: '84845151884',
+      consentId: '2b2a759e-8fac-49d0-a9d0-3ca9e7cb8e22'
+    }
+
+    it('throws if input is invalid', async () => {
+      await expect(login()).rejects.toThrow()
+      await expect(login(validAccountId, {})).rejects.toThrow()
+      await expect(login('', validData)).rejects.toThrow()
+    })
+
+    it('throws if time is not iso string', async () => {
+      const withJsString = Object.assign({}, validData)
+      withJsString.timestamp = '1551373858000'
+      await expect(login(validAccountId, withJsString)).rejects.toThrow()
+
+      const withUnixString = Object.assign({}, validData)
+      withUnixString.timestamp = '1551373858'
+      await expect(login(validAccountId, withUnixString)).rejects.toThrow()
+
+      const withJsNumber = Object.assign({}, validData)
+      withJsNumber.timestamp = 1551373858000
+      await expect(login(validAccountId, withJsNumber)).rejects.toThrow()
+    })
+
+    it('does not throw if input is valid', async () => {
+      await login(validAccountId, validData)
+    })
+
+    it('checks that consent belongs to user', async () => {
+      await login(validAccountId, validData)
+      expect(pg.client.query).toHaveBeenCalledWith(expect.any(String), [validAccountId, validData.consentId])
+    })
+
+    it('throws if consent does not belong to user', async () => {
+      pg.client.query.mockResolvedValueOnce({
+        rows: [{
+          count: '0'
+        }]
+      })
+      await expect(login(validAccountId, validData)).rejects.toThrowError(new Error('Login denied. Consent does not belong to user'))
+    })
+
+    it('generates and uses access token', async () => {
+      const accessToken = 'a token token'
+      createToken.mockReturnValue(accessToken)
+
+      await login(validAccountId, validData)
+      expect(createToken).toHaveBeenCalledWith({ consentId: validData.consentId })
+      expect(sendEventLoginApproved).toHaveBeenCalledWith(validData, accessToken)
     })
   })
 })

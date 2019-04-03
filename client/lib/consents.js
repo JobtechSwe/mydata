@@ -18,6 +18,7 @@ const fix = (consent) => ({
 })
 
 async function request (client, consentRequestDescription) {
+  await client.connect()
   consentRequestDescription = fix(consentRequestDescription)
   await schemas.consentRequest.validate(consentRequestDescription)
 
@@ -34,24 +35,29 @@ async function request (client, consentRequestDescription) {
 }
 
 async function onApprove (client, consent) {
-  await saveKeys(consent.keys, client)
+  await saveKeys(consent.consentId, consent.keys, client)
   await Promise.all(consent.scope.map(s => saveAccessKeyIds(consent.consentId, s, client)))
 }
 
-async function saveKeys (keysObj, { keyProvider, config: { jwksUrl } }) {
-  const keys = Object.entries(keysObj)
+async function saveKeys (consentId, keysObj, { keyProvider, config: { jwksUrl } }) {
+  const keys = Object
+    .entries(keysObj)
     .map(([kid, str]) => ({
       kid,
       use: 'enc',
       publicKey: Buffer.from(str, 'base64').toString('utf8')
     }))
+
   const rxJwks = new RegExp(`^${jwksUrl}/`)
-  const externalKeys = keys.filter(key => !rxJwks.test(key.kid))
-  const ownKeys = await Promise.all(keys
-    .filter(key => rxJwks.test(key.kid))
-    .map(async ({ kid }) => keyProvider.getKey(kid)))
-  const allKeys = ownKeys.concat(externalKeys)
-  return Promise.all(allKeys.map(key => keyProvider.saveKey(key)))
+  const consentKeyId = keys.find(({ kid }) => rxJwks.test(kid)).kid
+  const consentKey = await keyProvider.getKey(consentKeyId)
+  const externalKeys = keys.filter(({ kid }) => kid !== consentKeyId)
+
+  return Promise.all([
+    keyProvider.saveKey(consentKey),
+    keyProvider.saveConsentKeyId(consentId, consentKeyId),
+    ...externalKeys.map(key => keyProvider.saveKey(key))
+  ])
 }
 
 async function saveAccessKeyIds (consentId, scope, { keyProvider }) {

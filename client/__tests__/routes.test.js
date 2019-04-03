@@ -1,6 +1,7 @@
 const createClient = require('../lib/client')
 const { createMemoryStore } = require('../lib/memoryStore')
-const { generateKeyPairSync } = require('crypto')
+const { generateKeyPair } = require('crypto')
+const { promisify } = require('util')
 const request = require('supertest')
 const express = require('express')
 jest.mock('axios')
@@ -10,25 +11,29 @@ function base64 (txt) {
 }
 
 describe('routes', () => {
-  let clientKeys, client, app
+  let clientKeys, client, app, keyValueStore
 
-  beforeAll(() => {
-    clientKeys = generateKeyPairSync('rsa', {
+  beforeAll(async () => {
+    clientKeys = await promisify(generateKeyPair)('rsa', {
       modulusLength: 1024,
       publicKeyEncoding: { type: 'pkcs1', format: 'pem' },
       privateKeyEncoding: { type: 'pkcs1', format: 'pem' }
     })
   })
   beforeEach(() => {
+    keyValueStore = createMemoryStore()
+    jest.spyOn(keyValueStore, 'load')
+    jest.spyOn(keyValueStore, 'save')
+
     const config = {
       displayName: 'CV app',
       description: 'A CV app with a description that is at least 10 chars',
-      clientId: 'http://mycv.work',
+      clientId: 'https://cv.work',
       operator: 'https://smoothoperator.work',
       jwksPath: '/jwks',
       eventsPath: '/events',
       clientKeys: clientKeys,
-      keyValueStore: createMemoryStore(),
+      keyValueStore,
       keyOptions: { modulusLength: 1024 }
     }
     client = createClient(config)
@@ -46,7 +51,7 @@ describe('routes', () => {
       expect(res.body).toEqual({
         keys: [
           {
-            kid: 'http://mycv.work/jwks/client_key',
+            kid: 'https://cv.work/jwks/client_key',
             alg: 'RS256',
             kty: 'RSA',
             use: 'sig',
@@ -61,7 +66,7 @@ describe('routes', () => {
         const res = await request(app).get('/jwks/client_key')
 
         expect(res.body).toEqual({
-          kid: 'http://mycv.work/jwks/client_key',
+          kid: 'https://cv.work/jwks/client_key',
           alg: 'RS256',
           kty: 'RSA',
           use: 'sig',
@@ -75,7 +80,7 @@ describe('routes', () => {
         const res = await request(app).get('/jwks/test_key')
 
         expect(res.body).toEqual({
-          kid: 'http://mycv.work/jwks/test_key',
+          kid: 'https://cv.work/jwks/test_key',
           alg: 'RS256',
           kty: 'RSA',
           use: 'enc',
@@ -86,8 +91,22 @@ describe('routes', () => {
     })
   })
   describe('/events', () => {
-    let body
-    beforeEach(() => {
+    let body, consentKeys
+    beforeAll(async () => {
+      const { publicKey, privateKey } = await promisify(generateKeyPair)('rsa', {
+        modulusLength: 1024,
+        publicKeyEncoding: { type: 'pkcs1', format: 'pem' },
+        privateKeyEncoding: { type: 'pkcs1', format: 'pem' }
+      })
+      consentKeys = {
+        publicKey,
+        privateKey,
+        use: 'enc',
+        kid: 'https://cv.work/jwks/enc_20190128154632'
+      }
+    })
+    beforeEach(async () => {
+      client.keyProvider.saveKey(consentKeys)
       body = {
         type: 'CONSENT_APPROVED',
         payload: {
@@ -95,7 +114,7 @@ describe('routes', () => {
           consentRequestId: 'a75db04b-ed3a-47e4-bf6a-fa0eb1e61ed1',
           accessToken: '7yasd87ya9da98sdu98adsu',
           scope: [{
-            domain: 'cv.work',
+            domain: 'https://cv.work',
             area: 'education',
             description: 'Stuff',
             permissions: ['READ', 'WRITE'],
@@ -103,12 +122,12 @@ describe('routes', () => {
             lawfulBasis: 'CONSENT',
             accessKeyIds: [
               'mydata://566c9327-b1cb-4e5b-8633-3b1f1fbbe9ad',
-              'cv.work/jwks/enc_20190128154632'
+              'https://cv.work/jwks/enc_20190128154632'
             ]
           }],
           keys: {
             'mydata://566c9327-b1cb-4e5b-8633-3b1f1fbbe9ad': base64('foo'),
-            'cv.work/jwks/enc_20190128154632': base64('bar')
+            'https://cv.work/jwks/enc_20190128154632': base64('bar')
           }
         }
       }
@@ -261,10 +280,92 @@ describe('routes', () => {
           expect(response.body.message).toMatch('["keys" is required]')
         })
       })
+      it('saves keys', async () => {
+        await request(app).post('/events').send(body)
+        expect(keyValueStore.load)
+          .toHaveBeenCalledWith('key|>https://cv.work/jwks/enc_20190128154632')
+        expect(keyValueStore.save)
+          .toHaveBeenCalledWith('key|>https://cv.work/jwks/enc_20190128154632', expect.any(String), undefined)
+        expect(keyValueStore.save)
+          .toHaveBeenCalledWith('consentKeyId|>566c9327-b1cb-4e5b-8633-3b1f1fbbe9ad', base64('"https://cv.work/jwks/enc_20190128154632"'), undefined)
+        expect(keyValueStore.save)
+          .toHaveBeenCalledWith('key|>mydata://566c9327-b1cb-4e5b-8633-3b1f1fbbe9ad', expect.any(String), undefined)
+        expect(keyValueStore.save)
+          .toHaveBeenCalledWith('accessKeyIds|>566c9327-b1cb-4e5b-8633-3b1f1fbbe9ad|https://cv.work|education', expect.any(String), undefined)
+      })
       it('triggers an event', async () => {
         await request(app).post('/events').send(body)
 
         expect(listener).toHaveBeenCalledWith(body.payload)
+      })
+    })
+
+    describe('[LOGIN_APPROVED]', () => {
+      let listener
+      beforeEach(() => {
+        listener = jest.fn()
+        client.events.on('LOGIN_APPROVED', listener)
+        body = {
+          type: 'LOGIN_APPROVED',
+          payload: {
+            accessToken: '7yasd87ya9da98sdu98adsu',
+            clientId: 'http://someservice.tld',
+            consentId: '566c9327-b1cb-4e5b-8633-3b1f1fbbe9ad',
+            sessionId: 'fd9je9yu4e94h4hjhhh',
+            timestamp: '2019-03-26T14:00:47.214Z'
+          }
+        }
+      })
+      describe('validation', () => {
+        it('throws if `accessToken` is missing from payload', async () => {
+          body.payload.accessToken = undefined
+          const response = await request(app).post('/events').send(body)
+
+          expect(response.status).toEqual(400)
+          expect(response.body.message).toMatch('["accessToken" is required]')
+        })
+        it('throws if `clientId` is missing from payload', async () => {
+          body.payload.clientId = undefined
+          const response = await request(app).post('/events').send(body)
+
+          expect(response.status).toEqual(400)
+          expect(response.body.message).toMatch('["clientId" is required]')
+        })
+        it('throws if `consentId` is missing from payload', async () => {
+          body.payload.consentId = undefined
+          const response = await request(app).post('/events').send(body)
+
+          expect(response.status).toEqual(400)
+          expect(response.body.message).toMatch('["consentId" is required]')
+        })
+        it('throws if `sessionId` is missing from payload', async () => {
+          body.payload.sessionId = undefined
+          const response = await request(app).post('/events').send(body)
+
+          expect(response.status).toEqual(400)
+          expect(response.body.message).toMatch('["sessionId" is required]')
+        })
+        it('throws if `timestamp` is missing from payload', async () => {
+          body.payload.timestamp = undefined
+          const response = await request(app).post('/events').send(body)
+
+          expect(response.status).toEqual(400)
+          expect(response.body.message).toMatch('["timestamp" is required]')
+        })
+        it('throws if `timestamp` is in the wrong format', async () => {
+          body.payload.timestamp = 1553608878758
+          const response = await request(app).post('/events').send(body)
+
+          expect(response.status).toEqual(400)
+          expect(response.body.message).toMatch('["timestamp" must be a valid ISO 8601 date]')
+        })
+        it('triggers an event', async () => {
+          const response = await request(app).post('/events').send(body)
+          expect(response.body.message).toBeUndefined()
+          expect(response.status).toEqual(200)
+
+          expect(listener).toHaveBeenCalledWith(body.payload)
+        })
       })
     })
   })

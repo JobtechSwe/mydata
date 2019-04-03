@@ -6,7 +6,6 @@ import { getAccount } from './storage'
 import { Base64 } from 'js-base64'
 
 export async function get(id) {
-  id = id.substring(id.lastIndexOf('/') + 1)
   const account = await getAccount()
 
   if (!account || !account.id) {

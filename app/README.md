@@ -37,14 +37,7 @@ OPERATOR_URL=http://192.168.110.130:3000/api
 - Run
 
 ```bash
-react-native link react-native-config && \
-react-native link react-native-rsa-native && \
-react-native link react-native-vector-icons && \
-react-native link react-native-push-notification && \
-react-native link react-native-camera && \
-react-native link react-native-qrcode-scanner && \
-react-native link react-native-permissions \
-react-native link react-native-gesture-handler
+react-native link
 ```
 
 ## Run
@@ -93,3 +86,20 @@ brew cask install fastlane
 cd ios
 fastlane beta
 ```
+
+## Release Android (Google Play)
+
+1. Download the Google Play JSON-file (it's in LastPass)
+  - Place the `release.keystore` in `android/app`
+  - Place `gradle.properties` in `android`
+2. Open Android Studio
+  - Select "Build Variant" "release" under "Build Variants"
+  - Under "Build" press "Generate Signed Bundle / APK" then "Android App Bundle"
+  - Point to the "Key store path"
+  - Use the passwords for these files and "release" for key alias
+  - You can select both "debug" and "release" for build-variants here.
+3. Log in to Google Play-console and select the "MyData"-app
+  - Select an appropriate release-type and upload the exported .apk-file from the previous step.
+
+  
+
