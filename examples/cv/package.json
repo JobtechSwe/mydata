@@ -17,7 +17,7 @@
     "Johan Öbrink <johan.obrink@iteam.se>",
     "Alexander Czigler <alexander@iteam.se>"
   ],
-  "license": "MIT",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/JobtechSwe/mydata/issues"
   },
