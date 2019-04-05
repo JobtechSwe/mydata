@@ -5,7 +5,9 @@ function getUrl (client, sessionId) {
   })
   const base64urlPayload = Buffer.from(loginRequestPayload)
     .toString('base64')
-    .replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_')
+    .replace(/=/g, '')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
 
   return `mydata://login/${base64urlPayload}`
 }
