@@ -1,13 +1,110 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+/* a,abbr,acronym,address,applet,article,aside,audio,b,big,blockquote,body,canvas,caption,center,cite,code,dd,del,details,dfn,div,dl,dt,em,embed,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,html,i,iframe,img,ins,kbd,label,legend,li,mark,menu,nav,object,ol,output,p,pre,q,ruby,s,samp,section,small,span,strike,strong,sub,summary,sup,table,tbody,td,tfoot,th,thead,time,tr,tt,u,ul,var,video{margin:0;padding:0;border:0;font:inherit;vertical-align:baseline}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:after,blockquote:before,q:after,q:before{content:'';content:none}table{border-collapse:collapse;border-spacing:0} */
+* {
+  box-sizing: border-box;
 }
 
 a {
-  color: #00B7FF;
+
 }
 
 svg {
   width: 30%;
   height: 30%;
+}
+
+button {
+  background: linear-gradient(180deg, hsl(48, 100%, 67%) 80%, hsl(48, 100%, 40%) 140%);
+  box-shadow: 0px 1px 0px 0px hsl(48, 100%, 40%);
+
+  height: 40px;
+  min-width: 200px;
+  padding-left: 50px;
+  padding-right: 50px;
+  border-radius: 2px;
+
+  font-size: 15px;
+
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  margin: 0;
+  color: #333;
+}
+
+header {
+  margin-left: 20px;
+}
+
+.navbar {
+  height: 45px;
+  background: linear-gradient(180deg, hsl(48, 100%, 67%) 70%, hsl(48, 100%, 40%) 140%);
+
+  box-shadow: 0px 1px 0px 0px hsl(48, 100%, 40%);
+  margin-bottom: 1px;
+}
+
+.content {
+  margin-left: 100px;
+}
+
+.content-index {
+  background-color: hsl(0, 0%, 98%);
+  padding: 40px;
+
+  max-width: 500px;
+  height: 300px;
+}
+
+.content-account {
+  min-height: 70vh;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+@media all and (max-width: 768px) {
+  .content {
+    margin-left: 20px;
+  }
+
+  .content-account {
+    flex-direction: column;
+  }
+}
+
+.content-account-info {
+  width: 400px;
+}
+
+.content-account-mydata {
+  background-color: hsl(0, 0%, 98%);
+  padding: 40px;
+
+  max-width: 400px;
+}
+
+.pane {
+  border: 1px solid hsl(0, 0%, 85%);
+}
+
+.pane-header {
+  background-color: hsl(0, 0%, 98%);
+  padding: 10px 40px;
+}
+
+.pane-header-text {
+  margin: 0;
+}
+
+.pane-content {
+  padding: 20px 40px;
+}
+
+h1 {
+  font-size: 36px;
+  font-weight: 600;
+  color: hsl(210, 100%, 20%);
 }

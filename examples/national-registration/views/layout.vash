@@ -4,10 +4,16 @@
 		<meta charset="utf-8">
 		<title>@model.title</title>
 		<link rel="stylesheet" href="stylesheets/style.css" type="text/css" media="screen" charset="utf-8">
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600" rel="stylesheet">
 	</head>
 	<body>
-		<h1>National registration</h1>
-		@html.block('content')
+		<header>
+			<h1>National registration</h1>
+		</header>
+		<div class="navbar"></div>
+		<div class="content">
+			@html.block('content')
+		</div>
 
 		<footer>
 			@html.block('footer')

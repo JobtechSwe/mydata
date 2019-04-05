@@ -1,15 +1,25 @@
 const { Router } = require('express')
-const auth = require('./auth')
+const connect = require('./connect')
+const account = require('./account')
+const { v4 } = require('uuid')
 
 module.exports = client => {
   const router = Router()
 
-  router.use('/auth', auth(client))
-  router.get('/done', (req, res, next) => {
-    res.write('thank you')
+  router.use((req, res, next) => {
+    if (req.path !== '/' && !req.cookies.sessionId) {
+      return res.redirect('/')
+    }
+    next()
   })
 
+  router.use('/connect', connect(client))
+  router.use('/account', account)
+
   router.get('/', (req, res, next) => {
+    if (!req.cookies.sessionId) {
+      res.cookie('sessionId', v4(), { maxAge: 1000 * 3600 })
+    }
     res.render('index', {})
   })
 

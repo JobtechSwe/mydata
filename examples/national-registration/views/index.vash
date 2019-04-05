@@ -1,6 +1,9 @@
 @html.extend('layout', function(model) {
     @html.block('content', function(model) {
-        <h2>Connect with MyData</h2>
-        <button onClick="window.location.assign('/auth')">Connect</button>
+        <div class="content-index">
+            <h2>Login with e-legitimation</h2>
+            <p>Löksås ipsum hela blev tidigare blev så groda när ännu helt erfarenheter det bland, ser färdväg rännil ska kom själv vad tiden är häst sitt.</p>
+            <button onClick="window.location.assign('/account')">Login</button>
+        </div>
     })
 })
