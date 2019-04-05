@@ -17,8 +17,10 @@
     "Adam Näslund <adam.naslund@iteam.se>",
     "Einar Persson <einar.persson@iteam.se>",
     "Johan Öbrink <johan.obrink@iteam.se>",
-    "Alexander Czigler <alexander@iteam.se>"
+    "Alexander Czigler <alexander@iteam.se>",
+    "Tom Ekander <tom.ekander@iteam.se>"
   ],
+  "license": "Apache-2.0",
   "dependencies": {
     "@types/js-base64": "^2.3.1",
     "axios": "^0.18.0",
