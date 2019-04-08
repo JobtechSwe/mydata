@@ -103,3 +103,8 @@ getTags()
   
   console.log()
 })
+.catch(error => {
+  console.log()
+  console.log('Somethig went wrong')
+  console.log(error)
+})
