@@ -11,6 +11,15 @@ export const H1 = styled(Text)`
   margin-bottom: 32px;
 `
 
+export const H2 = styled(Text)`
+  color: ${({ theme }) => theme.colors.primary};
+  font-family: ${({ theme }) => theme.typography.contrast};
+  font-size: ${({ theme }) => theme.fontSize.medium};
+  text-align: left;
+  width: 100%;
+  margin-bottom: 32px;
+`
+
 export const H3 = styled(Text)`
   align-self: stretch;
   color: ${({ theme }) => theme.colors.primary};
