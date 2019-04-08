@@ -1,4 +1,5 @@
 import React from 'react'
+import SvgUri from 'react-native-svg-uri'
 import { Alert, View } from 'react-native'
 import { Spinner } from '../../components/elements/Spinner/Spinner'
 import { H2, H3, Paragraph } from '../../components/typography/Typography'
@@ -36,12 +37,21 @@ function Settings({ navigation }) {
     )
   }
 
+  if (!account) {
+    return (
+      <Wrap>
+        <ScrollViewWrap>
+          <Spinner />
+        </ScrollViewWrap>
+      </Wrap>
+    )
+  }
+
   return (
     <Wrap
       style={{
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
-        paddingTop: 64,
       }}
     >
       <ScrollViewWrap
@@ -51,28 +61,35 @@ function Settings({ navigation }) {
           flex: 1,
         }}
       >
-        {!account ? (
-          <Spinner />
-        ) : (
-          <View style={{ flex: 1 }}>
-            <H2 style={{ alignSelf: 'flex-start' }}>Inställningar</H2>
-            <Paragraph align="left">Förnamn: {account.firstName}</Paragraph>
-            <Paragraph align="left">Efternamn: {account.lastName}</Paragraph>
-            <H3 style={{ marginTop: 32 }}>PDS</H3>
-            <Paragraph align="left">
-              Leverantör: {account.pds.provider}
+        <View style={{ width: '100%' }}>
+          <H2 style={{ alignSelf: 'flex-start', marginTop: 64 }}>
+            Inställningar
+          </H2>
+          <Paragraph align="left">{`${account.firstName} ${
+            account.lastName
+          }`}</Paragraph>
+          <H3 style={{ marginTop: 32 }}>PDS</H3>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <SvgUri
+              width="22"
+              height="18"
+              style={{ marginRight: 12 }}
+              source={require('./img/check_circle.svg')}
+            />
+            <Paragraph align="left" style={{ textTransform: 'capitalize' }}>
+              {account.pds.provider}
             </Paragraph>
-            <View style={{ width: '100%', justifyContent: 'center' }}>
-              <PrimaryButton
-                style={{ marginTop: 32 }}
-                icon={{ name: 'ban' }}
-                onPress={clearAccount}
-              >
-                Radera konto
-              </PrimaryButton>
-            </View>
           </View>
-        )}
+          <View style={{ width: '100%', justifyContent: 'center' }}>
+            <PrimaryButton
+              style={{ marginTop: 32 }}
+              icon={{ name: 'ban' }}
+              onPress={clearAccount}
+            >
+              Radera konto
+            </PrimaryButton>
+          </View>
+        </View>
       </ScrollViewWrap>
     </Wrap>
   )

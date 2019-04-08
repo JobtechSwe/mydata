@@ -23,9 +23,9 @@ export const H2 = styled(Text)`
 export const H3 = styled(Text)`
   align-self: stretch;
   color: ${({ theme }) => theme.colors.primary};
-  font-family: ${({ theme }) => theme.typography.bold};
+  font-family: ${({ theme }) => theme.typography.contrast};
   font-size: ${({ theme }) => theme.fontSize.regular};
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 `
 
 export const StyledParagraph = styled(Text)`
