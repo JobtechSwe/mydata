@@ -19,6 +19,7 @@ class ManageConsentsRequestScreen extends React.Component {
   }
 
   onCancel = () => {
+    this.setState({ view: 'enter' })
     this.props.navigation.navigate('Hem')
   }
 
@@ -37,6 +38,7 @@ class ManageConsentsRequestScreen extends React.Component {
           <LoginRequest
             code={this.state.code}
             onApprove={this.onApprove}
+            onCancel={this.onCancel}
             onError={this.onError}
           />
         )
@@ -45,6 +47,7 @@ class ManageConsentsRequestScreen extends React.Component {
           <ConsentRequest
             consentRequestId={this.state.code}
             onApprove={this.onApprove}
+            onCancel={this.onCancel}
           />
         )
       case 'enter':
