@@ -1,10 +1,16 @@
-# #!/bin/sh
+#!/bin/sh
 echo '**** Running script for e2e & integration tests ****'
 
 # TODO: Lint, Test
 
 export DC_U=`id -u`
 export DC_G=`id -g`
+
+# Setup npm link for client package (cv)
+cd ../examples/cv
+npm install file:../../client
+cd -
+ls -la ../examples/cv/node_modules/\@mydata/
 
 # Tear down containers
 docker-compose down
@@ -33,3 +39,10 @@ npm run jest
 # Tear down
 docker-compose down
 echo 'Docker containers are down'
+
+# Restore cv package(s)
+cd ../examples/cv
+git checkout package.json
+git checkout package-lock.json
+npm ci
+cd -
