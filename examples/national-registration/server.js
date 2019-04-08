@@ -1,13 +1,29 @@
+require('dotenv').config()
 const express = require('express')
 const path = require('path')
 const logger = require('morgan')
 const cookieParser = require('cookie-parser')
-const client = require('./adapters/mydata')
+const client = require('./adapters/operator')
 
 const routes = require('./routes')
 const app = express()
 
-app.set('port', process.env.PORT || 2999)
+if (process.env.APM_SERVER) {
+  require('elastic-apm-node').start({
+    serviceName: process.env.APP_NAME || 'mydata-national-registration', // Allowed characters: a-z, A-Z, 0-9, -, _, and space
+    secretToken: process.env.APM_TOKEN || '', // Use if APM Server requires a token
+    serverUrl: process.env.APM_SERVER, // Set APM Server URL
+    captureBody: (process.env.NODE_ENV === 'production') // Don't save request body in production
+      ? 'off'
+      : 'errors'
+  })
+  console.log('APM instrumentation done')
+} else {
+  console.log('No APM instrumentation configured')
+}
+console.log(`NODE_ENV: ${process.env.NODE_ENV}`)
+
+app.set('port', process.env.PORT || 3999)
 app.set('views', path.join(__dirname, '/views')) // critical to use path.join on windows
 app.set('view engine', 'vash')
 app.use(logger('dev'))
