@@ -20,6 +20,9 @@ router.post('/', signed({ accountKey: true }), async ({ body }, res, next) => {
 
 router.post('/requests', signed(), async ({ body, signature }, res, next) => {
   try {
+    if (!signature.client) {
+      throw createError(500, 'Requesting consent before client is registered is not allowed')
+    }
     const consentRequestData = await consentService.createRequest(body, signature)
     if (!consentRequestData) {
       throw createError(404)

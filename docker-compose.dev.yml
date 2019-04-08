@@ -2,7 +2,7 @@ version: '3.5'
 services:
 
   operator:
-    image: node:11-alpine
+    image: node:10.15.3-alpine
     volumes:
       - ./operator:/app
     ports:
@@ -19,7 +19,7 @@ services:
     command: sh -c 'node wait-for-postgres && npm run migrate up && npm run start:watch'
 
   cv:
-    image: node:11-alpine
+    image: node:10.15.3-alpine
     volumes:
       - ./examples/cv:/app
     ports:

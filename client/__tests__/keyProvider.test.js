@@ -252,9 +252,48 @@ describe('KeyProvider', () => {
       // Expected: First get matching keyPair
       keyValueStore.load.mockResolvedValueOnce(jsonToBase64(consentKeyPair))
 
-      const result = await keyProvider.getDocumentDecryptionKey(b64DocumentKeys)
+      const result = await keyProvider.getDocumentDecryptionKey(b64DocumentKeys, consentKeyPair.kid)
       expect(keyValueStore.load).toHaveBeenNthCalledWith(1, `key|>${consentKeyPair.kid}`)
       expect(result).toEqual(aesDocumentKey)
+    })
+    it('it does not return decrypted aes document key if none exists for current account', async () => {
+      const consentId = '19e82885-abfc-4e43-b35c-6d3807b5ebeb'
+      const consentKeyPair = await generateKeyPair({ kid: `${jwksUrl}/enc_consent` })
+      const consentKeyPair2 = await generateKeyPair({ kid: `${jwksUrl}/enc_consent2` })
+      const accountKeyPair = await generateKeyPair({ kid: `mydata://${consentId}/account_key` })
+      const aesDocumentKey = await crypto.generateDocumentKey()
+      const documentKeys = {
+        [consentKeyPair.kid]: crypto.encryptDocumentKey(aesDocumentKey, consentKeyPair.publicKey, 'base64'),
+        [accountKeyPair.kid]: crypto.encryptDocumentKey(aesDocumentKey, accountKeyPair.publicKey, 'base64')
+      }
+      const b64DocumentKeys = jsonToBase64(documentKeys)
+
+      await expect(keyProvider.getDocumentDecryptionKey(b64DocumentKeys, consentKeyPair2.kid))
+        .rejects.toThrow('No matching decryption key found')
+    })
+  })
+  describe('#saveConsentKeyId', () => {
+    it('calls save with a correct key', async () => {
+      const consentId = 'consent-id'
+      const kid = 'http://foo/jwks/enc_1234'
+      await keyProvider.saveConsentKeyId(consentId, kid)
+      expect(keyValueStore.save).toHaveBeenCalledWith(
+        'consentKeyId|>consent-id',
+        jsonToBase64(kid),
+        undefined
+      )
+    })
+  })
+  describe('#getConsentKeyId', () => {
+    it('returns the correct id', async () => {
+      const kid = 'http://foo/jwks/enc_1234'
+
+      keyValueStore.load.mockResolvedValue(jsonToBase64(kid))
+
+      const result = await keyProvider.getConsentKeyId('consent-id')
+
+      expect(keyValueStore.load).toHaveBeenCalledWith('consentKeyId|>consent-id')
+      expect(result).toEqual(kid)
     })
   })
 })

@@ -1,4 +1,5 @@
 import React from 'react'
+import { Platform } from 'react-native'
 import {
   createAppContainer,
   createStackNavigator,
@@ -46,8 +47,9 @@ const AppStack = createBottomTabNavigator(
     tabBarOptions: {
       showIcon: true,
       showLabel: true,
-      tabStyle: { marginTop: 12, height: '100%' },
-      labelStyle: { fontFamily: 'Karla-Bold', fontSize: 12, marginTop: 4 },
+      style: { height: 56 },
+      tabStyle: { marginTop: Platform.OS === 'ios' ? 12 : 0, height: '100%' },
+      labelStyle: { fontFamily: 'Karla-Bold', fontSize: 12, marginTop: 0 },
       inactiveTintColor: myDataTheme.colors.lightGrey,
       activeTintColor: myDataTheme.colors.primary,
     },

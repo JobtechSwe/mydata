@@ -14,7 +14,7 @@ const createClient = port => create({
   operator: process.env.OPERATOR_URL,
   clientKeys: {
     publicKey: PUBLIC_KEY,
-    privateKey: PRIVATE_KEY,
+    privateKey: PRIVATE_KEY
   },
   jwksPath: '/jwks',
   eventsPath: '/events',
@@ -26,7 +26,7 @@ const createClientWithServer = () => {
     const app = express()
     const server = app.listen(0, () => {
       // Create client with the port that the current test server is using
-      client = createClient(server.address().port)
+      const client = createClient(server.address().port)
 
       // Very important!
       app.use(express.json())
@@ -38,9 +38,8 @@ const createClientWithServer = () => {
       client.server = server
 
       resolve(client)
-      })
-    }
-  )
+    })
+  })
 }
 
 const createSampleRequest = clientId => ({

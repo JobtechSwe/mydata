@@ -14,7 +14,7 @@ describe('Consent request for example/cv', () => {
 
     cy
       .get('button')
-      .contains('Log in')
+      .contains('Sign up')
       .click()
 
     cy
@@ -22,7 +22,7 @@ describe('Consent request for example/cv', () => {
       .should('include', '/auth')
 
     cy
-      .get('#qr-code')
+      .get('#qrcode')
       .should(res => {
         expect(res[0].getAttribute('data-consent-request-id')).to.match(v4Regexp)
       })
@@ -39,14 +39,14 @@ describe('Consent request for example/cv', () => {
 
     cy
       .get('button')
-      .contains('Log in')
+      .contains('Sign up')
       .click()
 
     cy
-      .get('#qr-code')
+      .get('#qrcode')
       .then(res => {
-        const id = res[0].getAttribute('data-consent-request-id')
-        return cy.getConsentRequest(id)
+        const url = res[0].getAttribute('data-consent-request-url')
+        return cy.getConsentRequest(url)
       })
       .then(consentReq => {
         return cy.approveConsentRequest(consentReq)
