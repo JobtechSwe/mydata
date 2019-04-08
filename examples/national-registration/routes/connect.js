@@ -34,39 +34,36 @@ module.exports = client => {
       'content-Type': 'text/event-stream'
     })
 
-    client.events.on('CONSENT_APPROVED', async function listener (event) {
+    const listener = async (event) => {
       // Check if consent is correct
       if (event.consentRequestId !== req.params.id) { return }
-
-      // Clear listener
       client.events.removeListener('CONSENT_APPROVED', listener)
+      await client.keyProvider.keyValueStore.save(`sessionId/${sessionId}`, event.consentId)
 
+      // Prepare payload to send to operator
       const person = getPerson(sessionId)
+      const payloadArray = Object.entries(person)
+        .map(([ key, data ]) => ({
+          domain: client.config.clientId,
+          area: key,
+          data
+        }))
 
-      // Use accessToken to write data
+      // Write data
       try {
-        await client.data.auth(event.accessToken).write({
-          domain: client.config.clientId,
-          area: 'firstName',
-          data: person.firstName
-        })
-
-        await client.data.auth(event.accessToken).write({
-          domain: client.config.clientId,
-          area: 'lastName',
-          data: person.lastName
-        })
-
+        await Promise.all(payloadArray.map(payload => client.data.auth(event.accessToken).write(payload)))
         res.write(`data: Done!\n\n`)
       } catch (error) {
         console.error(error)
         return res.end()
       }
-    })
+    }
+
+    client.events.on('CONSENT_APPROVED', listener)
 
     req.on('close', () => {
-      console.log('closed from client, discarding temporary request')
-      // TODO: client.events.removeListener('CONSENT_APPROVED', listener)
+      // closed from client, stop listening for consent approved
+      client.events.removeListener('CONSENT_APPROVED', listener)
     })
   })
 

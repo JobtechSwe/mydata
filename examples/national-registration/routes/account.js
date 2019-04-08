@@ -1,13 +1,19 @@
 const { Router } = require('express')
 const { getPerson } = require('./../services/person')
-const router = Router()
 
-router.get('/', (req, res, next) => {
-  const model = {
-    user: getPerson(req.cookies.sessionId)
-  }
+module.exports = client => {
+  const router = Router()
 
-  res.render('account', model)
-})
+  router.get('/', async (req, res, next) => {
+    const sessionId = req.cookies.sessionId
+    const consentIdForSessionId = await client.keyProvider.keyValueStore.load(`sessionId/${sessionId}`)
 
-module.exports = router
+    const model = {
+      user: getPerson(sessionId),
+      isConnected: !!consentIdForSessionId
+    }
+    res.render('account', model)
+  })
+
+  return router
+}

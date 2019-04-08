@@ -14,13 +14,4 @@ const client = create({
   keyValueStore: utils.createMemoryStore()
 })
 
-client.events.on('CONSENT_APPROVED', async event => {
-  console.log('GOT CONSENT APPROVED IN ADAPTER')
-  try {
-    await client.keyProvider.keyValueStore.save(`id/${event.id}`, { accessToken: event.accessToken })
-  } catch (error) {
-    console.error('Could not save to keyValueStore', error)
-  }
-})
-
 module.exports = client

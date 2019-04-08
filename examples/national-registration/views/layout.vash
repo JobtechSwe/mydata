@@ -10,7 +10,11 @@
 		<header>
 			<h1>National registration</h1>
 		</header>
-		<div class="navbar"></div>
+		<div class="navbar">
+			@if(!model.onIndexPage){
+				<button class="navbar-button" id="logout-btn">Logout</div>
+			}
+		</div>
 		<div class="content">
 			@html.block('content')
 		</div>
@@ -18,5 +22,14 @@
 		<footer>
 			@html.block('footer')
 		</footer>
+		<script>
+			const logoutBtn = document.getElementById('logout-btn')
+			if (logoutBtn) {
+				logoutBtn.addEventListener('click',() => {
+					document.cookie = 'sessionId=;expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+					window.location.assign('/')
+				})
+			}
+		</script>
 	</body>
 </html>

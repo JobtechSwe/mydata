@@ -14,13 +14,15 @@ module.exports = client => {
   })
 
   router.use('/connect', connect(client))
-  router.use('/account', account)
+  router.use('/account', account(client))
 
   router.get('/', (req, res, next) => {
     if (!req.cookies.sessionId) {
       res.cookie('sessionId', v4(), { maxAge: 1000 * 3600 })
     }
-    res.render('index', {})
+    res.render('index', {
+      onIndexPage: true
+    })
   })
 
   return router

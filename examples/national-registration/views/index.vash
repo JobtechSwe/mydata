@@ -3,7 +3,7 @@
         <div class="content-index">
             <h2>Login with e-legitimation</h2>
             <p>Löksås ipsum hela blev tidigare blev så groda när ännu helt erfarenheter det bland, ser färdväg rännil ska kom själv vad tiden är häst sitt.</p>
-            <button onClick="window.location.assign('/account')">Login</button>
+            <button class="button-primary" onClick="window.location.assign('/account')">Login</button>
         </div>
     })
 })
