@@ -15,7 +15,7 @@ function getVersionFromTag (tag) {
 
 function getTags () {
   return new Promise((resolve, reject) => {
-    exec('git fetch --all -p && git tag', (err, stdout, stderr) => {
+    exec('git fetch --tags -p && git tag', (err, stdout, stderr) => {
       if (err) {
         console.log('Unable to execute "git tag" to see existing tags')
         return reject(err)
