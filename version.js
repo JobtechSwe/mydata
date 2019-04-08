@@ -72,8 +72,6 @@ getTags()
   
   const versionString = `${version.major}.${version.minor}.${version.patch}`
   
-  fs.writeFileSync('.version.json', JSON.stringify(version, null, 2))
-  
   const locations = [
     './',
     './app',
