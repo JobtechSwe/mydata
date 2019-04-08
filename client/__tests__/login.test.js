@@ -3,7 +3,7 @@ const { createMemoryStore } = require('../lib/memoryStore')
 const { generateKeyPair } = require('./_helpers')
 
 describe('login', () => {
-  let clientKeys, config
+  let clientKeys, config, client
   beforeAll(async () => {
     clientKeys = await generateKeyPair()
     config = {
