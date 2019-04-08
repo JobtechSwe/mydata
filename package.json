@@ -21,8 +21,14 @@
     "type": "git",
     "url": "git+https://github.com/JobtechSwe/mydata.git"
   },
-  "author": "",
-  "license": "MIT",
+  "contributors": [
+    "Adam Näslund <adam.naslund@iteam.se>",
+    "Einar Persson <einar.persson@iteam.se>",
+    "Johan Öbrink <johan.obrink@iteam.se>",
+    "Alexander Czigler <alexander@iteam.se>",
+    "Tom Ekander <tom.ekander@iteam.se>"
+  ],
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/JobtechSwe/mydata/issues"
   },
