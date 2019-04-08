@@ -99,7 +99,7 @@ getTags()
   console.log('git add .version.json')
   console.log(`git commit -m "chore: preparing tag v${versionString}"`)
   console.log(`git tag v${versionString}`)
-  console.log(`git push v${versionString}`)
+  console.log(`git push origin v${versionString}`)
   
   console.log()
 })
