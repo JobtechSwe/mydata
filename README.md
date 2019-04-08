@@ -57,6 +57,24 @@ Data lagras krypterat i en s.k. PDS (Personal Data Storage). Just nu är Dropbox
 
 If you want to run the app on an actual phone it will of course not use your computer's hosts-file so you will need to use a proxy such as squidman.
 
-**Before pushing/PR:** 
+**Before pushing/PR:**
 1. Do `npm run lint-all`
 2. Do `npm run test-all` (this will run e2e/integration and unit tests)
+
+## Deploy (test)
+Do the following to deploy operator to test environment
+
+First:
+```
+git checkout master
+git pull
+git fetch --tags
+```
+Now, run `git tag` to see the latest tag available.
+
+Then:
+
+```
+git tag <next version>
+git push origin <next version>
+```
