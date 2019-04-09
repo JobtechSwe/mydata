@@ -4,20 +4,9 @@ env:
 # The jobs section declares jobs available in this build context
 jobs:
   include:
-    # code linter
-    - stage: "lint"
-      name: "Ensure code maintains the linting rules"
-      cache: npm
-      language: node_js
-      install:
-        - npm run install-all
-      test: skip
-      script:
-        - npm run lint-all
-
-    # end-to-end tests
-    - stage: "end-2-end"
-      name: "Run end-to-end tests"
+    # lint and run end-to-end tests
+    - stage: "lint-and-e2e"
+      name: "Lint and run end-to-end tests"
       cache: npm
       language: node_js
       services:
@@ -100,7 +89,7 @@ jobs:
 # Flow control
 # This section defines the order in which stages are run and when to run certain stages
 stages:
-  - name: end-2-end
+  - name: lint-and-e2e
     if: branch != master
   - name: build
     if: (branch = master AND type != pull_request) OR tag IS present
