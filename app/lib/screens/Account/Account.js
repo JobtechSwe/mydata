@@ -47,7 +47,7 @@ export default class AccountScreen extends React.Component {
     this.saveAccount({ ...this.state.account, keys })
   }
 
-  onDropboxConnect = pds => {
+  onConnectPDS = pds => {
     this.saveAccount({ ...this.state.account, pds })
   }
 
@@ -59,7 +59,7 @@ export default class AccountScreen extends React.Component {
         return <KeyPair onGenerate={this.onGenerateKeys} />
       case 'choosePds':
         return (
-          <PDS pds={this.state.account.pds} onConnect={this.onDropboxConnect} />
+          <PDS pds={this.state.account.pds} onConnect={this.onConnectPDS} />
         )
       case 'finished':
         return (

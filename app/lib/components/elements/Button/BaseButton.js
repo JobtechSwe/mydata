@@ -8,6 +8,7 @@ export const BaseButton = styled.View`
   justify-content: center;
   align-items: center;
   padding: 0 18px;
+  margin: 0 0 5px 0;
   max-width: 264px;
   width: 100%;
 `
