@@ -51,15 +51,14 @@ Data lagras krypterat i en s.k. PDS (Personal Data Storage). Just nu är Dropbox
 127.0.0.1 operator
 127.0.0.1 cv
 ```
-4. `npm run dev` (will start elasticsearch, kibana, apm-server, redis (x2) and postgres (x2))
+4. `docker-compose up` (will start elasticsearch, kibana, apm-server, redis (x2) and postgres (x2))
 5. Look in each subfolder for instructions on how to start each sub-project
 
 
 If you want to run the app on an actual phone it will of course not use your computer's hosts-file so you will need to use a proxy such as squidman.
 
 **Before pushing/PR:**
-1. Do `npm run lint-all`
-2. Do `npm run test-all` (this will run e2e/integration and unit tests)
+Do `npm test` (this will lint, run unit tests and run e2e/integration tests)
 
 ## Deploy (test)
 Do the following to deploy operator to test environment

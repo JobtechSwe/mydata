@@ -2,7 +2,7 @@ const runner = require('node-pg-migrate')
 const { Client } = require('pg')
 const path = require('path')
 
-const connectionString = 'postgres://postgresuser:postgrespassword@localhost:5435'
+const connectionString = `postgres://postgresuser:postgrespassword@localhost:${process.env.OPERATOR_PGPORT}`
 const dir = path.resolve(__dirname, '../../../operator/migrations')
 
 const clearOperatorDb = async () => {

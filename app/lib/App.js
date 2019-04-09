@@ -7,6 +7,7 @@ import {
   createBottomTabNavigator,
 } from 'react-navigation'
 import Home from './screens/Home/Home'
+import Settings from './screens/Settings/Settings'
 import Wizard from './screens/Account/Account'
 import ConsentRequest from './screens/ConsentRequest/ConsentRequest'
 import AuthLoading from './screens/AuthLoading/AuthLoading'
@@ -37,7 +38,7 @@ const AppStack = createBottomTabNavigator(
         },
       }),
     },
-    Konto: { screen: Wizard },
+    Konto: { screen: Settings },
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
