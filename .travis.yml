@@ -33,6 +33,7 @@ jobs:
         - npm run install-all
       test: skip
       script:
+        - npm run lint-all
         - npm run test-all:e2e
 
     # build docker image(s)
@@ -50,7 +51,7 @@ jobs:
         # Set the $TAG variable that controls the output docker image tag(s)
         - export TAG=latest
         - if [ ! -z "$TRAVIS_TAG" ]; then export TAG="latest-tag"; fi
-        
+
         # Pull old images to benefit from layer cache
         - docker pull jobtechswe/mydata-app:$TAG
         - docker pull jobtechswe/mydata-cv:$TAG
@@ -70,7 +71,7 @@ jobs:
         - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-cv:$TAG jobtechswe/mydata-cv:$TRAVIS_TAG && docker push jobtechswe/mydata-cv:$TRAVIS_TAG; fi
         - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-app:$TAG jobtechswe/mydata-app:$TRAVIS_TAG && docker push jobtechswe/mydata-app:$TRAVIS_TAG; fi
         - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-operator:$TAG jobtechswe/mydata-operator:$TRAVIS_TAG && docker push jobtechswe/mydata-operator:$TRAVIS_TAG; fi
-        
+
         # ...and finally remove cached credentials
         - docker logout
 
@@ -99,8 +100,6 @@ jobs:
 # Flow control
 # This section defines the order in which stages are run and when to run certain stages
 stages:
-  - name: lint
-    if: branch != master AND tag IS NOT present
   - name: end-2-end
     if: branch != master
   - name: build
