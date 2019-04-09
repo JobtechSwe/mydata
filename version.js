@@ -73,7 +73,7 @@ getTags()
   const versionString = `${version.major}.${version.minor}.${version.patch}`
   
   const locations = [
-    './',
+    '.',
     './app',
     './client',
     './examples/cv',
