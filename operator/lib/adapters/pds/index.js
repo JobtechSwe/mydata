@@ -26,7 +26,11 @@ function promiseFs (lib) {
       await fs.stat(path, ...rest)
     } catch (err) {
       await fs.mkdirp(dirname(path), ...rest)
-      await fs.mkdir(path, ...rest)
+      try {
+        await fs.mkdir(path, ...rest)
+      } catch (error) {
+        if (!error.message === 'file already exists') { throw error }
+      }
     }
   }
 

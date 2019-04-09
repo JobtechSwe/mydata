@@ -28,7 +28,7 @@ npm run cypress
 # Run jest integration tests
 # (has to be run _after_ cypress tests, since jest test suite will clean operator db including 'cv' client registration)
 echo 'Running jest integration tests'
-npm run jest
+OPERATOR_URL=http://localhost:3001 npm run jest:docker
 
 # Tear down
 docker-compose down
