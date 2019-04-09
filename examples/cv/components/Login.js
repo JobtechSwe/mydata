@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { Box, Typography } from '@smooth-ui/core-sc'
+import { Button, Box, Typography } from '@smooth-ui/core-sc'
 import axios from 'axios'
 import QRCode from 'qrcode.react'
 import copy from 'copy-to-clipboard'
@@ -43,11 +43,13 @@ export default () => {
       maxWidth={550}
       style={{ backgroundColor: 'white', boxShadow: '3px 3px 7px 7px rgba(0,0,0,0.1)', padding: 50 + 'px', marginTop: 50 + 'px', borderRadius: 2 + 'px' }}>
       {data && <Box>
-        <Typography variant="h2">Scan this code to sign in</Typography>
-        <QRCode
+        <Typography variant="h3">Scan this code to sign in</Typography>
+        <Box><QRCode
+          size={200}
           value={data.url}
           onClick={() => copy(data.url)}
-        />
+        /></Box>
+        <Button variant="dark" onClick={() => window.location.assign(data.url)} style={{ marginTop: 10 + 'px' }}>Open on this device</Button>
       </Box>}
     </Box>
   )

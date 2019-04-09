@@ -1,46 +1,23 @@
 import React from 'react'
-import { Alert, Linking } from 'react-native'
-import { getAccount, storeAccount } from '../../services/storage'
+import { Linking, Alert } from 'react-native'
 import { H1 } from '../../components/typography/Typography'
 import { Wrap, ScrollViewWrap } from '../../components/View/Wrapper'
 import { PrimaryButton } from '../../components/elements/Button/Button'
+import { storeAccount } from '../../services/storage'
 
 export default class HomeScreen extends React.Component {
-  state = {
-    account: {},
-  }
-
-  async componentDidMount() {
-    await this.readAccountFromStorage()
-
-    if (!this.state.account) {
-      const { navigate } = this.props.navigation
-      navigate('Account')
-    }
-
+  componentDidMount() {
     Linking.addEventListener('url', this.handleOpenURL)
   }
+
   componentWillUnmount() {
     Linking.removeEventListener('url', this.handleOpenURL)
   }
 
   handleOpenURL = event => {
-    this.navigate(event.url)
-  }
-
-  navigate = url => {
     const { navigate } = this.props.navigation
-    if (/mydata:\/\/callback/.test(url)) {
-      navigate('Account')
-    }
-  }
 
-  editAccount = () => {
-    this.props.navigation.navigate('Account')
-  }
-
-  manageConsentsRequest = () => {
-    this.props.navigation.navigate('ManageConsentsRequest')
+    navigate('QR-kod', { myDataUrl: event.url })
   }
 
   clearAccount = async () => {
@@ -56,16 +33,9 @@ export default class HomeScreen extends React.Component {
 
   doClearAccount = async () => {
     await storeAccount()
-    this.setState({ account: undefined })
+
     const { navigate } = this.props.navigation
     navigate('AuthLoading')
-  }
-
-  readAccountFromStorage = async () => {
-    const account = await getAccount()
-    this.setState({
-      account,
-    })
   }
 
   render() {

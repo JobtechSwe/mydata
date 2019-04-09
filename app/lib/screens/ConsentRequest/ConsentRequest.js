@@ -2,6 +2,7 @@ import React from 'react'
 import EnterConsentCode from '../../components/EnterConsentCode'
 import ConsentRequest from '../../components/ConsentRequest'
 import LoginRequest from '../../components/LoginRequest'
+import { parse } from '../../utils/qrcode'
 
 class ManageConsentsRequestScreen extends React.Component {
   state = {
@@ -11,6 +12,15 @@ class ManageConsentsRequestScreen extends React.Component {
 
   static navigationOptions = {
     tabBarVisible: false,
+  }
+
+  componentDidMount() {
+    const { params } = this.props.navigation.state
+
+    if (params && params.myDataUrl) {
+      const { code, type } = parse(params.myDataUrl)
+      this.onCode({ code, type })
+    }
   }
 
   // Events
@@ -53,7 +63,10 @@ class ManageConsentsRequestScreen extends React.Component {
       case 'enter':
       default:
         return (
-          <EnterConsentCode onCancel={this.onCancel} onCode={this.onCode} />
+          <EnterConsentCode
+            onCancel={this.onCancel}
+            onCode={this.onCode}
+          />
         )
     }
   }
