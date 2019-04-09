@@ -15,6 +15,7 @@ if (process.env.APM_SERVER) {
 console.log(`NODE_ENV: ${process.env.NODE_ENV}`)
 
 const next = require('next')
+const express = require('express')
 
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev, quiet: true })
@@ -24,6 +25,7 @@ const server = require('./api/app')
 const operator = require('./api/adapters/operator')
 
 app.prepare().then(() => {
+  server.use(express.static('static'))
   server.get('*', (req, res) => {
     handle(req, res)
   })
