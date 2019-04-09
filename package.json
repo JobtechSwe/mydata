@@ -13,9 +13,9 @@
     "test:e2e": "sh -c 'cd ./e2e && ./script.sh'",
     "test:unit": "lerna exec -- npm test",
     "update": "lerna exec -- npm i",
-    "version:patch": "lerna version -m \"chore(tag): %s\" patch",
-    "version:minor": "lerna version -m \"chore(tag): %s\" minor",
-    "version:major": "lerna version -m \"chore(tag): %s\" major"
+    "version:patch": "lerna version patch",
+    "version:minor": "lerna version minor",
+    "version:major": "lerna version major"
   },
   "devDependencies": {
     "lerna": "^3.13.2",
