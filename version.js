@@ -1,44 +1,13 @@
 const fs = require('fs')
 const { exec } = require('child_process')
 
-/*
- * Helpers
- */
-function getVersionFromTag (tag) {
-  const v = {}
-  v.major = parseInt(tag.split('v')[1].split('.')[0])
-  v.minor = parseInt(tag.split('v')[1].split('.')[1])
-  v.patch = parseInt(tag.split('v')[1].split('.')[2])
-
-  return v
-}
-
-function getTags () {
-  return new Promise((resolve, reject) => {
-    exec('git fetch --tags -p && git tag', (err, stdout, stderr) => {
-      if (err) {
-        console.log('Unable to execute "git tag" to see existing tags')
-        return reject(err)
-      }
-    
-      if (stderr) {
-        return reject(stderr)
-      }
-
-      // the *entire* stdout and stderr (buffered)
-      const tags = stdout.split('\n')
-      const versions = {}
-      tags.forEach(tag => {
-        if (/^v[0-9]+\.[0-9]+\.[0-9]+/.test(tag)) {
-          let v = getVersionFromTag(tag)
-          versions[v.major * 10000 + v.minor * 1000 + v.patch] = v
-        }
-      })
-      
-      return resolve(versions)
-    })
-  })
-}
+const PACKAGE_JSON_LOCATIONS = [
+  '.',
+  './app',
+  './client',
+  './examples/cv',
+  './operator'
+]
 
 /*
  * Program
@@ -72,15 +41,7 @@ getTags()
   
   const versionString = `${version.major}.${version.minor}.${version.patch}`
   
-  const locations = [
-    '.',
-    './app',
-    './client',
-    './examples/cv',
-    './operator'
-  ]
-  
-  locations.forEach(location => {
+  PACKAGE_JSON_LOCATIONS.forEach(location => {
     let path = `${location}/package.json`
     let package = require(path)
     package.version = versionString
@@ -89,20 +50,55 @@ getTags()
     console.log(`Set ${path} to v${package.version}`)
   })
   
-  console.log()
-  console.log('All done!')
-  console.log('If you are happy with this, run the following commands:')
-  console.log()
-  console.log('git add **/package.json')
-  console.log('git add .version.json')
-  console.log(`git commit -m "chore: preparing tag v${versionString}"`)
-  console.log(`git tag v${versionString}`)
-  console.log(`git push origin v${versionString}`)
-  
-  console.log()
+  console.log(`
+# To finish, run the following commands:
+git add **/package.json
+git add .version.json
+git commit -m "chore: preparing tag v${versionString}"
+git tag v${versionString}
+git push origin v${versionString}
+  `)
 })
 .catch(error => {
-  console.log()
-  console.log('Somethig went wrong')
+  console.log(`\nSomethig went wrong`)
   console.log(error)
 })
+
+/*
+ * Helpers
+ */
+function getVersionFromTag (tag) {
+  const v = {}
+  v.major = parseInt(tag.split('v')[1].split('.')[0])
+  v.minor = parseInt(tag.split('v')[1].split('.')[1])
+  v.patch = parseInt(tag.split('v')[1].split('.')[2])
+
+  return v
+}
+
+function getTags () {
+  return new Promise((resolve, reject) => {
+    exec('git fetch --tags -p && git tag', (err, stdout, stderr) => {
+      if (err) {
+        console.log('Unable to get git tags, exiting.')
+        return reject(err)
+      }
+    
+      if (stderr) {
+        return reject(stderr)
+      }
+
+      // the *entire* stdout and stderr (buffered)
+      const tags = stdout.split('\n')
+      const versions = {}
+      tags.forEach(tag => {
+        if (/^v[0-9]+\.[0-9]+\.[0-9]+/.test(tag)) {
+          let v = getVersionFromTag(tag)
+          versions[v.major * 10000 + v.minor * 1000 + v.patch] = v
+        }
+      })
+      
+      return resolve(versions)
+    })
+  })
+}
