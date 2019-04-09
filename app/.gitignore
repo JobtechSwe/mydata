@@ -33,6 +33,7 @@ build/
 local.properties
 gradle.properties
 *.iml
+*.aab
 
 # node.js
 #
