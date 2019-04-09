@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Image } from 'react-native'
+import { Image, View } from 'react-native'
 import { H1, Paragraph } from '../typography/Typography'
 import { PrimaryButton } from '../elements/Button/Button'
 
@@ -40,13 +40,14 @@ export default class PDS extends Component {
         >
           Dropbox
         </PrimaryButton>
+        <View style={{ marginBottom: 12 }} />
         <PrimaryButton
           onPress={this.useMem}
           icon={{
             name: 'memory',
           }}
         >
-          In memory (dev)
+          I minnet (DEV)
         </PrimaryButton>
       </>
     )
