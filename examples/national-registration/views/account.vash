@@ -1,0 +1,61 @@
+@html.extend('layout', function(model) {
+    @html.block('content', function(model) {
+      <div class="content-account">
+        <div class="content-account-info pane">
+          <div class="pane-header">
+            <h2 class="pane-header-text">Account</h2>
+          </div>
+          <div class="pane-content">
+            <h4>This is you</h4>
+            <p>@model.user.firstName @model.user.lastName</p>
+            <p>@model.user.streetAddress</p>
+            <p>@model.user.zipCode</p>
+            <p>@model.user.city @model.user.country</p>
+          </div>
+        </div>
+        <div class="content-account-mydata">
+          <h3>Connect to MyData</h3>
+          <p>You can export your registrated personal data using MyData. This makes it possible to use this data in other services, for your convenience.</p>
+          @if(model.isConnected) {
+            <button class="button-primary" id="connect-btn" disabled>Connected!</button>
+          } else {
+            <button class="button-primary" id="connect-btn">Connect</button>
+          }
+          <div id="qr"></div>
+          <p id="qr-message"></p>
+          <p id="url"></p>
+        </div>
+
+        <script>
+          const connectBtn = document.getElementById('connect-btn')
+          const qr = document.getElementById('qr')
+          const qrMessage = document.getElementById('qr-message')
+          const url = document.getElementById('url')
+
+          connectBtn.addEventListener('click', (e) => {
+            connectBtn.disabled = true
+            fetch(`http://${window.location.host}/connect`, { credentials: 'same-origin' })
+              .then(x => x.json())
+              .then(x => {
+                qrMessage.innerHTML = 'Scan this QR-code with your MyData app or use the link'
+                qr.innerHTML = x.qr
+                url.innerHTML = x.url
+
+                const source = new EventSource(`/connect/${x.id}`)
+                source.onmessage = ({ data }) => {
+                  connectBtn.innerHTML = 'Connected!'
+                  qr.innerHTML = ''
+                  qrMessage.innerHTML = ''
+                  url.innerHTML = ''
+                }
+                source.onerror = e => {
+                  console.log('error:', e)
+                  source.close()
+                }
+              })
+          })
+
+        </script>
+      </div>
+    })
+})
