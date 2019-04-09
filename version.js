@@ -1,5 +1,6 @@
 const fs = require('fs')
 const { exec } = require('child_process')
+const plist = require('plist')
 
 const PACKAGE_JSON_LOCATIONS = [
   '.',
@@ -49,6 +50,8 @@ getTags()
     
     console.log(`Set ${path} to v${package.version}`)
   })
+
+  updatePlist(versionString)
   
   console.log(`
 # To finish, run the following commands:
@@ -101,4 +104,12 @@ function getTags () {
       return resolve(versions)
     })
   })
+}
+
+function updatePlist(versionString) {
+  const appPlistFile = './app/ios/MyData/Info.plist'
+  const plistObject = plist.parseFileSync(appPlistFile);
+
+  plistObject.CFBundleShortVersionString = versionString
+  fs.writeFileSync(appPlistFile, plist.build(plistObject).toString())
 }

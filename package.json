@@ -18,7 +18,9 @@
     "major": "node version major"
   },
   "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "plist": "git+https://github.com/mishoo/node-plist.git"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/JobtechSwe/mydata.git"
