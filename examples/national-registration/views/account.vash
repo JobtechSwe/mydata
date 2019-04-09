@@ -39,7 +39,7 @@
               .then(x => {
                 qrMessage.innerHTML = 'Scan this QR-code with your MyData app or use the link'
                 qr.innerHTML = x.qr
-                url.innerHTML = x.url
+                url.innerHTML = `<a href="${x.url}">${x.url}</a>`
 
                 const source = new EventSource(`/connect/${x.id}`)
                 source.onmessage = ({ data }) => {

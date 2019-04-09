@@ -96,12 +96,14 @@ fastlane beta
   - Place the `release.keystore` in `android/app`
   - Place `gradle.properties` in `android`
 2. Open Android Studio
-  - Select "Build Variant" "release" under "Build Variants"
+  - Select "Build Variant" "release" for "app" under "Build Variants" (a tab on the left-most window, toward the lower left corner)
+  - Increment versionCode in android/app/build.gradle
   - Under "Build" press "Generate Signed Bundle / APK" then "Android App Bundle"
   - Point to the "Key store path"
-  - Use the passwords for these files and "release" for key alias
+  - Use the passwords from the previously downloaded gradle.properties file, and "upload" for key alias
   - You can select both "debug" and "release" for build-variants here.
 3. Log in to Google Play-console and select the "MyData"-app
+  - Under Release management -> App releases
   - Select an appropriate release-type and upload the exported .apk-file from the previous step.
 
   
