@@ -9,11 +9,11 @@ export DC_G=`id -g`
 # If the client is linked, replace with relative link which will work inside docker
 cv_client_dir='../examples/cv/node_modules/@mydata'
 if [ -L "$cv_client_dir/client" ]; then 
-  echo "$cv_client_dir/client is linked, making it point to ../client" && ln -srf ../client "$cv_client_dir"
+  echo "$cv_client_dir/client is linked, making it point to ../../../../client" && ln -sf ../../../../client "$cv_client_dir"
 fi
 natreg_client_dir='../examples/national-registration/node_modules/@mydata'
 if [ -L "$natreg_client_dir/client" ]; then 
-  echo "$natreg_client_dir/client is linked, making it point to ../client" && ln -srf ../client "$natreg_client_dir"
+  echo "$natreg_client_dir/client is linked, making it point to ../../../../client" && ln -sf ../../../../client "$natreg_client_dir"
 fi
 
 # Tear down containers
