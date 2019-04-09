@@ -69,7 +69,10 @@ function LoginRequest(props) {
     props.onError()
   }
 
-  const reject = () => {}
+  const reject = () => {
+    updateState({ ...currentState, view: 'loading' })
+    props.onCancel()
+  }
 
   switch (currentState.view) {
     case 'loading':
