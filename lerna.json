@@ -1,0 +1,10 @@
+{
+  "packages": [
+    "app",
+    "client",
+    "e2e",
+    "examples/*",
+    "operator"
+  ],
+  "version": "0.0.0"
+}

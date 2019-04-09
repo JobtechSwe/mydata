@@ -13,12 +13,24 @@
     "test-all": "npm run test-all:unit && npm run test-all:e2e",
     "test-all:e2e": "sh -c 'cd ./e2e && ./script.sh'",
     "test-all:unit": "npm --prefix ./app test ./app && npm --prefix ./client test ./client && npm --prefix ./examples/cv test ./examples/cv && npm --prefix ./operator test ./operator",
-    "patch": "node version patch",
-    "minor": "node version minor",
-    "major": "node version major"
+    
+    "audit": "lerna exec -- npm audit",
+    "audit:fix": "lerna exec -- npm audit fix",
+    "clean": "lerna clean",
+    "install": "lerna exec -- npm ci",
+    "lint": "lerna exec -- npm run lint",
+    "update": "lerna exec -- npm i",
+
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:e2e": "sh -c 'cd ./e2e && ./script.sh'",
+    "test:unit": "lerna exec -- npm test",
+
+    "version:patch": "node version patch",
+    "version:minor": "node version minor",
+    "version:major": "node version major"
   },
-  "dependencies": {},
   "devDependencies": {
+    "lerna": "^3.13.2",
     "plist": "git+https://github.com/mishoo/node-plist.git"
   },
   "repository": {
