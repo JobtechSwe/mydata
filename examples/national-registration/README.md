@@ -10,10 +10,10 @@ Create a file named `.env` in the project directory containing URLs needed for t
 # Environment: development, test or production
 NODE_ENV=development
 
-# PORT is optional and defaults to 3999
-PORT=3999
+# PORT is optional and defaults to 5000
+PORT=5000
 
-CLIENT_ID=http:localhost:3999
+CLIENT_ID=http://localhost:5000
 OPERATOR_URL=http://localhost:3000
 
 # APM_SERVER is optional, apm will not be used if APM_SERVER is not set

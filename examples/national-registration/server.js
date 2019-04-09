@@ -23,7 +23,7 @@ if (process.env.APM_SERVER) {
 }
 console.log(`NODE_ENV: ${process.env.NODE_ENV}`)
 
-app.set('port', process.env.PORT || 3999)
+app.set('port', process.env.PORT || 5000)
 app.set('views', path.join(__dirname, '/views')) // critical to use path.join on windows
 app.set('view engine', 'vash')
 app.use(logger('dev'))
