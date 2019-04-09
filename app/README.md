@@ -37,14 +37,7 @@ OPERATOR_URL=http://192.168.110.130:3000/api
 - Run
 
 ```bash
-react-native link react-native-config && \
-react-native link react-native-rsa-native && \
-react-native link react-native-vector-icons && \
-react-native link react-native-push-notification && \
-react-native link react-native-camera && \
-react-native link react-native-qrcode-scanner && \
-react-native link react-native-permissions \
-react-native link react-native-gesture-handler
+react-native link
 ```
 
 ## Run
@@ -89,6 +82,7 @@ brew cask install fastlane
 
 4. Release
 
+*NOTE: Remember to change `.env`-file (correct OPERATOR_URL etc.) before doing the steps below*
 ```
 cd ios
 fastlane beta
@@ -96,16 +90,20 @@ fastlane beta
 
 ## Release Android (Google Play)
 
+*NOTE: Remember to change `.env`-file (correct OPERATOR_URL etc.) before doing the steps below*
+
 1. Download the Google Play JSON-file (it's in LastPass)
   - Place the `release.keystore` in `android/app`
   - Place `gradle.properties` in `android`
 2. Open Android Studio
-  - Select "Build Variant" "release" under "Build Variants"
+  - Select "Build Variant" "release" for "app" under "Build Variants" (a tab on the left-most window, toward the lower left corner)
+  - Increment versionCode in android/app/build.gradle
   - Under "Build" press "Generate Signed Bundle / APK" then "Android App Bundle"
   - Point to the "Key store path"
-  - Use the passwords for these files and "release" for key alias
+  - Use the passwords from the previously downloaded gradle.properties file, and "upload" for key alias
   - You can select both "debug" and "release" for build-variants here.
 3. Log in to Google Play-console and select the "MyData"-app
+  - Under Release management -> App releases
   - Select an appropriate release-type and upload the exported .apk-file from the previous step.
 
   

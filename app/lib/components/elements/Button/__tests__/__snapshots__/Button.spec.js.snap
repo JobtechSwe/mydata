@@ -3,24 +3,16 @@
 exports[`elements/Button should render 1`] = `
 <TouchableOpacity
   activeOpacity={0.2}
->
-  <Styled(Styled(View))
-    style={
-      Object {
-        "marginBottom": 32,
-        "shadowColor": "#B1ACEC",
-        "shadowOffset": Object {
-          "height": 8,
-          "width": 0,
-        },
-        "shadowOpacity": 0.4,
-        "shadowRadius": 14,
-      }
+  style={
+    Object {
+      "flexDirection": "row",
     }
-  >
-    <Styled(Styled(Text))>
+  }
+>
+  <ForwardRef>
+    <ForwardRef>
       PrimaryButton
-    </Styled(Styled(Text))>
-  </Styled(Styled(View))>
+    </ForwardRef>
+  </ForwardRef>
 </TouchableOpacity>
 `;

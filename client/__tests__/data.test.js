@@ -37,6 +37,7 @@ describe('data', () => {
     accessToken = sign({ data: { consentId } }, 'secret')
 
     await keyProvider.saveKey(consentKeys)
+    await keyProvider.saveConsentKeyId(consentId, consentKeys.kid)
     await keyProvider.saveKey({ kid: accountKey.kid, publicKey: accountKey.publicKey })
     await keyProvider.saveKey({ kid: otherServiceKey.kid, publicKey: otherServiceKey.publicKey })
 
@@ -64,7 +65,6 @@ describe('data', () => {
       expect(axios.get).toHaveBeenCalledWith(`http://localhost:3000/api/data/`,
         { headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' } })
     })
-
     it('calls axios.get with correct url and header for domain', async () => {
       axios.get.mockResolvedValue({ data: '' })
       await read({ domain: 'cv.work:4000' })
@@ -73,7 +73,6 @@ describe('data', () => {
       expect(axios.get).toHaveBeenCalledWith(`http://localhost:3000/api/data/${encodeURIComponent('cv.work:4000')}`,
         { headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' } })
     })
-
     it('calls axios.get with correct url and header for domain and area', async () => {
       axios.get.mockResolvedValue({ data: '' })
       await read({ domain: 'cv.work:4000', area: 'cv' })
@@ -96,7 +95,6 @@ describe('data', () => {
       expect(result).toEqual({ [domain]: { [area1]: data } })
     })
   })
-
   describe('#write', () => {
     it('calls axios.post with correct url and header', async () => {
       const data = { foo: 'bar' }

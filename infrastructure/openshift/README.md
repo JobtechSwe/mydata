@@ -25,6 +25,9 @@ oc create secret generic github-webhook-secret --from-literal=WebHookSecretKey=a
 oc create secret generic tls --from-file=/tmp/jtech.se.crt
 
 # Certificates for examples/cv
+openssl genrsa -out /tmp/private.pem 4096
+openssl rsa -in /tmp/private.pem -outform PEM -pubout -out /tmp/public.key
+openssl rsa -in /tmp/private.pem -out /tmp/private.key -outform PEM
 oc create secret generic cv --from-file=/tmp/public.key --from-file=/tmp/private.key
 
 # Docker Hub credentials (use if you wish to push images to Docker's registry)

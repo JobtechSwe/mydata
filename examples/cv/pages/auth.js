@@ -13,7 +13,7 @@ export default () => {
 
   const poll = id => setInterval(async () => {
     try {
-      const { data } = await axios.get(`/api/approved/${id}`)
+      const { data } = await axios.get(`/api/consentrequest/${id}`)
       clearInterval(pollId)
       storage.setAccessToken(data.accessToken)
       dispatch({ type: 'SET_TOKEN', payload: data.accessToken })
@@ -27,7 +27,6 @@ export default () => {
   useEffect(() => {
     axios.post('/api/auth')
       .then(({ data }) => {
-        console.log(data)
         setData(data)
         pollId = poll(data.id)
       })
@@ -52,12 +51,12 @@ export default () => {
         <Typography variant="h6">Enter the code for this consent request:</Typography>
         <Box><QRCode
           size={256}
-          value={data.link}
-          id="qr-code"
+          value={data.url}
+          id="qrcode"
           data-consent-request-id={data.id}
-          data-consent-request-link={data.link}
-          onClick={() => copy(data.link)} /></Box>
-        <Button variant="dark" onClick={() => window.location.assign(data.link)} style={{ marginTop: 10 + 'px' }}>Open on this device</Button>
+          data-consent-request-url={data.url}
+          onClick={() => copy(data.url)} /></Box>
+        <Button variant="dark" onClick={() => window.location.assign(data.url)} style={{ marginTop: 10 + 'px' }}>Open on this device</Button>
       </Box>}
     </Box>
   )

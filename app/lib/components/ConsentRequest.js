@@ -26,7 +26,8 @@ class ConsentRequest extends Component {
   }
 
   reject = () => {
-    this.setState({ modalVisible: false })
+    this.setState({ view: 'loading', modalVisible: false })
+    this.props.onCancel()
   }
 
   render() {
