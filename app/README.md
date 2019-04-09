@@ -82,12 +82,15 @@ brew cask install fastlane
 
 4. Release
 
+*NOTE: Remember to change `.env`-file (correct OPERATOR_URL etc.) before doing the steps below*
 ```
 cd ios
 fastlane beta
 ```
 
 ## Release Android (Google Play)
+
+*NOTE: Remember to change `.env`-file (correct OPERATOR_URL etc.) before doing the steps below*
 
 1. Download the Google Play JSON-file (it's in LastPass)
   - Place the `release.keystore` in `android/app`
