@@ -17,6 +17,7 @@ exports[`elements/Icons should return appropriate icon based on name = "hem" 1`]
       },
       "fontSize": Object {
         "large": "48px",
+        "medium": "32px",
         "regular": "18px",
         "small": "14px",
       },
@@ -51,6 +52,7 @@ exports[`elements/Icons should return appropriate icon based on name = "konto" 1
       },
       "fontSize": Object {
         "large": "48px",
+        "medium": "32px",
         "regular": "18px",
         "small": "14px",
       },
@@ -85,6 +87,7 @@ exports[`elements/Icons should return appropriate icon based on name = "qr-kod" 
       },
       "fontSize": Object {
         "large": "48px",
+        "medium": "32px",
         "regular": "18px",
         "small": "14px",
       },
