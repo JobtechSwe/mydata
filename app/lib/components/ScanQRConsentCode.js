@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Dimensions, Clipboard, Alert } from 'react-native'
+import { Dimensions, Clipboard, Alert, Linking } from 'react-native'
 import { theme } from '../theme'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 import { Mask, Svg, Rect, Circle, Path } from 'react-native-svg'
@@ -8,6 +8,18 @@ import DeviceInfo from 'react-native-device-info'
 export default class ScanQRConsentCode extends Component {
   state = {
     code: '',
+  }
+
+  componentDidMount() {
+    Linking.addEventListener('url', this.handleOpenURL)
+  }
+
+  componentWillUnmount() {
+    Linking.removeEventListener('url', this.handleOpenURL)
+  }
+
+  handleOpenURL = event => {
+    this.props.onRead(event.url)
   }
 
   async pasteQR() {
