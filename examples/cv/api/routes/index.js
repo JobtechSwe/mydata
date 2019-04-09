@@ -67,7 +67,7 @@ module.exports = operator => {
   })
 
   router.get('/loginRequest', async (req, res, next) => {
-    res.send(loginRequest())
+    res.send(loginRequest(operator))
   })
 
   return router
