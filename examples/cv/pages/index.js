@@ -3,7 +3,7 @@ import { Box, Typography, Button, theme, styled } from '@smooth-ui/core-sc'
 import Login from '../components/Login'
 
 const Background = styled.div`
-  background-image: url('/static/landing-page.jpg');
+  background-image: url('/landing-page.jpg');
   background-size: cover;
   height: 100vh;
   width: 100vw;

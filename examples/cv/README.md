@@ -31,3 +31,7 @@ PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----\nMIICXgIBAAKBgQDIp5d0w4c8v4Wa/tma1D
 - `APM_SERVER` and `APM_TOKEN` is so that this service can reach [APM](https://www.npmjs.com/package/elastic-apm-node) for logging requests and errors
 
 Good luck.
+
+## Attributions
+
+**Favicon**: Icons made by [Freepik](https://www.freepik.com/) from [Flaticon](https://www.flaticon.com/) is licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)
