@@ -1,6 +1,6 @@
 {
   "name": "mydata-e2e",
-  "version": "0.0.1",
+  "version": "0.4.5",
   "description": "End-to-end testing for mydata",
   "main": "index.js",
   "scripts": {
@@ -40,6 +40,5 @@
     "jsonwebtoken": "^8.5.0",
     "node-pg-migrate": "^3.18.1",
     "pg": "^7.9.0"
-  },
-  "dependencies": {}
+  }
 }
