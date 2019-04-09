@@ -11,6 +11,7 @@ export const BaseButton = styled.View`
   margin: 0 0 5px 0;
   max-width: 264px;
   width: 100%;
+  margin: 0 auto;
 `
 
 export const BaseButtonText = styled.Text`
