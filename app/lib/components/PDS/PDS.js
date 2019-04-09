@@ -6,12 +6,19 @@ import { PrimaryButton } from '../elements/Button/Button'
 import dropbox from '../../services/dropbox'
 
 export default class PDS extends Component {
-  connect = async () => {
+  connectToDropbox = async () => {
     dropbox.once('connect', pds => {
       this.props.onConnect(pds)
     })
 
     await dropbox.connect()
+  }
+
+  useMem = () => {
+    this.props.onConnect({
+      provider: 'memory',
+      access_token: 'nope',
+    })
   }
 
   render() {
@@ -26,12 +33,20 @@ export default class PDS extends Component {
           Dags att välja var du vill lagra din data!
         </Paragraph>
         <PrimaryButton
-          onPress={this.connect}
+          onPress={this.connectToDropbox}
           icon={{
             name: 'dropbox',
           }}
         >
           Dropbox
+        </PrimaryButton>
+        <PrimaryButton
+          onPress={this.useMem}
+          icon={{
+            name: 'memory',
+          }}
+        >
+          In memory (dev)
         </PrimaryButton>
       </>
     )
