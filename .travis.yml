@@ -10,10 +10,10 @@ jobs:
       cache: npm
       language: node_js
       install:
-        - npm run install-all
+        - npm run install
       test: skip
       script:
-        - npm run lint-all
+        - npm run lint
 
     # end-to-end tests
     - stage: "end-2-end"
@@ -30,10 +30,10 @@ jobs:
         - chmod +x docker-compose
         - sudo mv docker-compose /usr/local/bin
       install:
-        - npm run install-all
+        - npm run install
       test: skip
       script:
-        - npm run test-all:e2e
+        - npm run test:e2e
 
     # build docker image(s)
     - stage: build
