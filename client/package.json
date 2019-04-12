@@ -1,6 +1,6 @@
 {
   "name": "@mydata/client",
-  "version": "0.0.24",
+  "version": "0.0.3",
   "description": "Client for MyData Operator",
   "main": "lib/index.js",
   "scripts": {
