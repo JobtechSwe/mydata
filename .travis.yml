@@ -53,7 +53,7 @@ jobs:
         # If this is not a tag, build images tagged :latest
         - export DOCKER_BUILD_SCRIPT=".docker-build.bash"
         # If this is a tag, build images tagged v<tag> and :latest-tag
-        - if [ ! -z "$TRAVIS_TAG" ]; export DOCKER_BUILD_SCRIPT=".docker-build-tag.bash"; fi
+        - if [ ! -z "$TRAVIS_TAG" ]; then export DOCKER_BUILD_SCRIPT=".docker-build-tag.bash"; fi
 
         - bash $DOCKER_BUILD_SCRIPT app/ jobtechswe/mydata-app
         - bash $DOCKER_BUILD_SCRIPT examples/cv/ jobtechswe/mydata-cv
