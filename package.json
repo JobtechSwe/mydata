@@ -6,6 +6,7 @@
     "audit": "lerna exec -- npm audit",
     "audit:fix": "lerna exec -- npm audit fix",
     "clean": "lerna clean",
+    "preinstall": "npm ci",
     "install": "lerna exec -- npm ci",
     "lint": "lerna exec -- npm run lint",
     "start": "docker-compose -f docker-compose.dev.yml down && docker-compose down && docker-compose up -d && docker-compose -f docker-compose.dev.yml up -d",
