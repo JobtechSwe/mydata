@@ -38,6 +38,7 @@ jobs:
     # build docker image(s)
     - stage: build
       name: "Build Docker images and push them to Docker Hub"
+      language: node_js
       install: skip
       test: skip
       services:
@@ -67,9 +68,12 @@ jobs:
         - docker push jobtechswe/mydata-operator:$TAG
 
         # If tag build, tag images as latest-tag
-        - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-cv:$TAG jobtechswe/mydata-cv:$TRAVIS_TAG && docker push jobtechswe/mydata-cv:$TRAVIS_TAG; fi
-        - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-app:$TAG jobtechswe/mydata-app:$TRAVIS_TAG && docker push jobtechswe/mydata-app:$TRAVIS_TAG; fi
-        - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-operator:$TAG jobtechswe/mydata-operator:$TRAVIS_TAG && docker push jobtechswe/mydata-operator:$TRAVIS_TAG; fi
+        - export CV_TAG=`node -e 'process.stdout.write(require(process.argv[1]).version)' ./examples/cv/package.json`
+        - export APP_TAG=`node -e 'process.stdout.write(require(process.argv[1]).version)' ./app/package.json`
+        - export OPERATOR_TAG=`node -e 'process.stdout.write(require(process.argv[1]).version)' ./operator/package.json`
+        - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-cv:$TAG jobtechswe/mydata-cv:$CV_TAG && docker push jobtechswe/mydata-cv:$CV_TAG; fi
+        - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-app:$TAG jobtechswe/mydata-app:$APP_TAG && docker push jobtechswe/mydata-app:$APP_TAG; fi
+        - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-operator:$TAG jobtechswe/mydata-operator:$OPERATOR_TAG && docker push jobtechswe/mydata-operator:$OPERATOR_TAG; fi
         
         # ...and finally remove cached credentials
         - docker logout
