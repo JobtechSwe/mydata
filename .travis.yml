@@ -10,6 +10,7 @@ jobs:
       cache: npm
       language: node_js
       install:
+        - npm i -g lerna
         - npm run install
       test: skip
       script:
@@ -30,6 +31,7 @@ jobs:
         - chmod +x docker-compose
         - sudo mv docker-compose /usr/local/bin
       install:
+        - npm i -g lerna
         - npm run install
       test: skip
       script:
