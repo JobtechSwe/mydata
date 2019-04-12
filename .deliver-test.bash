@@ -16,3 +16,6 @@ docker push $IMAGE:$TAG
 
 docker tag $IMAGE:$TAG $IMAGE:latest-tag
 docker push $IMAGE:latest-tag
+
+- oc rollout latest cv-test -n mydata
+- oc rollout latest operator-test -n mydata
