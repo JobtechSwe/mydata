@@ -1,13 +1,16 @@
 const express = require('express')
 const routes = require('./routes/index')
-const { saveConsent, saveConsentRequest } = require('./services/db')
+const { saveConsentRequest, saveLoginApproval } = require('./services/db')
 const operator = require('./adapters/operator')
 const logger = require('morgan')
 const health = require('./routes/health')
 
 operator.events.on('CONSENT_APPROVED', consent => {
-  saveConsent(consent)
   saveConsentRequest(consent)
+})
+
+operator.events.on('LOGIN_APPROVED', approval => {
+  saveLoginApproval(approval)
 })
 
 const app = express()

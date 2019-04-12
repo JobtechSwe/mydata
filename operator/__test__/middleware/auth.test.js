@@ -101,21 +101,6 @@ describe('/middleware/auth', () => {
         expect(res.body.message).toEqual('Invalid algorithm')
         expect(res.status).toEqual(403)
       })
-      describe('safe', () => {
-        beforeEach(() => {
-          process.env.NODE_ENV = 'production'
-        })
-        afterEach(() => {
-          process.env.NODE_ENV = 'test'
-        })
-        it('throws 403 and does not call route if in production and clientId is using http', async () => {
-          clientsService.get.mockResolvedValue()
-          const res = await api.post('/test', payload)
-          expect(route).not.toBeCalled()
-          expect(res.status).toEqual(403)
-          expect(res.body.message).toEqual('Unsafe (http) is not allowed')
-        })
-      })
 
       describe('verifying through calling jwks endpoint', () => {
         let server, signingKey

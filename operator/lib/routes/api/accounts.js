@@ -2,8 +2,7 @@ const { Router } = require('express')
 const createError = require('http-errors')
 const { basename } = require('path')
 
-const { create, get, del } = require('../../services/accounts')
-const consentService = require('../../services/consents')
+const { create, get, del, login } = require('../../services/accounts')
 const { signed } = require('../../middleware/auth')
 const pds = require('../../adapters/pds')
 
@@ -62,14 +61,19 @@ router.delete('/:accountId', async ({ params: { accountId } }, res, next) => {
   }
 })
 
-// Fetch to consents
-router.get('/:accountId/consents', async (req, res, next) => {
-  const consents = await consentService.getForAccount(req.params.accountId)
-
-  res.status(200).send(consents.map(c => ({
-    data: c,
-    links: { self: `/consents/${encodeURIComponent(c.id)}` }
-  })))
+// Log in to client
+router.post('/:accountId/login', async (req, res, next) => {
+  const { params: { accountId }, body } = req
+  try {
+    await login(accountId, body)
+    res.send('Login successful')
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      next(createError(400, error))
+    } else {
+      next(error)
+    }
+  }
 })
 
 // Get your mydata

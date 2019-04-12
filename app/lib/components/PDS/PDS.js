@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
-import { Image, Text } from 'react-native'
+import { Image, View } from 'react-native'
 import { H1, Paragraph } from '../typography/Typography'
 import { PrimaryButton } from '../elements/Button/Button'
-import FontAwesome, { Icons, IconTypes } from 'react-native-fontawesome'
 
 import dropbox from '../../services/dropbox'
 
 export default class PDS extends Component {
-  connect = async () => {
+  connectToDropbox = async () => {
     dropbox.once('connect', pds => {
       this.props.onConnect(pds)
     })
@@ -15,25 +14,40 @@ export default class PDS extends Component {
     await dropbox.connect()
   }
 
+  useMem = () => {
+    this.props.onConnect({
+      provider: 'memory',
+      access_token: 'nope',
+    })
+  }
+
   render() {
     return (
       <>
-        <H1 style={{ position: 'absolute', top: 128 }}>Lagring</H1>
+        <H1>Lagring</H1>
         <Image
           source={require('./img/storage.png')}
           style={{ marginBottom: 48, marginTop: 48, width: 264, height: 187 }}
         />
-        <Paragraph align="center" style={{ marginBottom: 32 }}>
+        <Paragraph align="center" style={{ marginBottom: 48 }}>
           Dags att välja var du vill lagra din data!
         </Paragraph>
         <PrimaryButton
-          onPress={this.connect}
-          style={{ position: 'absolute', bottom: 64 }}
+          onPress={this.connectToDropbox}
+          icon={{
+            name: 'dropbox',
+          }}
         >
-          <Text style={{ fontSize: 20, color: 'white' }}>
-            <FontAwesome type={IconTypes.FAB}>{Icons.dropbox}</FontAwesome>
-          </Text>
           Dropbox
+        </PrimaryButton>
+        <View style={{ marginBottom: 12 }} />
+        <PrimaryButton
+          onPress={this.useMem}
+          icon={{
+            name: 'memory',
+          }}
+        >
+          I minnet (DEV)
         </PrimaryButton>
       </>
     )

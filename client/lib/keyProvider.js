@@ -7,6 +7,7 @@ const Joi = require('joi')
 const KEY_PREFIX = 'key|>'
 const ACCESS_KEY_IDS_PREFIX = 'accessKeyIds|>'
 const DOCUMENT_KEYS_PREFIX = 'documentKeys|>'
+const CONSENT_KEY_ID_PREFIX = 'consentKeyId|>'
 
 const defaults = {
   modulusLength: 2048,
@@ -94,6 +95,16 @@ class KeyProvider {
   async removeKey (kid) {
     await this.keyValueStore.remove(`${KEY_PREFIX}${kid}`)
   }
+  async saveConsentKeyId (consentId, kid) {
+    return this.save(`${CONSENT_KEY_ID_PREFIX}${consentId}`, kid)
+  }
+  async getConsentKeyId (consentId) {
+    const consentKeyId = await this.load(`${CONSENT_KEY_ID_PREFIX}${consentId}`)
+    if (!consentKeyId) {
+      throw new Error('No key found for consent')
+    }
+    return consentKeyId
+  }
   async saveAccessKeyIds (consentId, domain, area, keys) {
     const key = [consentId, domain, area].join('|')
     return this.save(`${ACCESS_KEY_IDS_PREFIX}${key}`, keys)
@@ -125,12 +136,19 @@ class KeyProvider {
     const keyPair = await this.getKey(kid)
     return decryptDocumentKey(encDocumentKey, keyPair.privateKey)
   }
-  async getDocumentDecryptionKey (b64DocumentKeys) {
+  async getDocumentDecryptionKey (b64DocumentKeys, consentKid) {
+    if (!consentKid) {
+      throw new Error('No consent key id provided')
+    }
     const documentKeys = base64ToJson(b64DocumentKeys)
-    const [kid, encDocumentKey] = Object
-      .entries(documentKeys)
-      .find(([kid]) => kid.match(new RegExp(`^${this.jwksUrl}`)))
-    const keyPair = await this.getKey(kid)
+    if (!documentKeys) {
+      throw new Error('No document keys found')
+    }
+    const encDocumentKey = documentKeys[consentKid]
+    if (!encDocumentKey) {
+      throw new Error('No matching decryption key found')
+    }
+    const keyPair = await this.getKey(consentKid)
     return decryptDocumentKey(encDocumentKey, keyPair.privateKey)
   }
   async jwksKeyList () {

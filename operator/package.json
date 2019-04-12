@@ -8,6 +8,7 @@
     "dev": "npm run migrate up && NODE_ENV=development nodemon --inspect ./lib/server.js",
     "test": "jest -c jest.config.js",
     "test:watch": "jest -c jest.config.js --watchAll",
+    "test:debug": "node --inspect-brk node_modules/jest/bin/jest -c jest.config.js --runInBand",
     "integration": "jest -c jest.integration.config.js",
     "integration:watch": "jest -c jest.integration.config.js --watchAll",
     "lint": "eslint '**/*.js'",
@@ -19,7 +20,7 @@
     "Johan Öbrink <johan.obrink@iteam.se>",
     "Alexander Czigler <alexander@iteam.se>"
   ],
-  "license": "MIT",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/JobtechSwe/mydata/issues"
   },

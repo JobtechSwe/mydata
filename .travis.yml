@@ -4,9 +4,9 @@ env:
 # The jobs section declares jobs available in this build context
 jobs:
   include:
-    # code linter
-    - stage: "lint"
-      name: "Ensure code maintains the linting rules"
+    # lint and run end-to-end tests
+    - stage: "lint-and-e2e"
+      name: "Lint and run end-to-end tests"
       cache: npm
       language: node_js
       install:
@@ -15,26 +15,6 @@ jobs:
       test: skip
       script:
         - npm run lint
-
-    # end-to-end tests
-    - stage: "end-2-end"
-      name: "Run end-to-end tests"
-      cache: npm
-      language: node_js
-      services:
-        # Require docker to be running in the build context
-        - docker
-      before_install:
-        # Install a fresh version of docker-compose
-        - sudo rm /usr/local/bin/docker-compose
-        - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-        - chmod +x docker-compose
-        - sudo mv docker-compose /usr/local/bin
-      install:
-        - npm i -g lerna
-        - npm run install
-      test: skip
-      script:
         - npm run test:e2e
 
     # build and deploy things
@@ -73,9 +53,7 @@ jobs:
 # Flow control
 # This section defines the order in which stages are run and when to run certain stages
 stages:
-  - name: lint
-    if: branch != master AND tag IS NOT present
-  - name: end-2-end
+  - name: lint-and-e2e
     if: branch != master
   - name: deliver
     if: (branch = master AND type != pull_request) OR tag IS present

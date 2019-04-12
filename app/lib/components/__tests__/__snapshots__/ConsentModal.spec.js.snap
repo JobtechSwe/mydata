@@ -1,14 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`components/ConsentModal should render without errors 1`] = `
-<Styled(View)>
-  <Styled(ReactNativeModal)
+<ForwardRef>
+  <ForwardRef
     animationType="slide"
     backdropOpacity={0.6}
     isVisible={true}
   >
-    <Styled(View)>
-      <Styled(View)
+    <ForwardRef>
+      <ForwardRef
         style={
           Object {
             "marginBottom": 0,
@@ -16,17 +16,17 @@ exports[`components/ConsentModal should render without errors 1`] = `
           }
         }
       />
-      <Styled(View)>
-        <Styled(Text)>
+      <ForwardRef>
+        <ForwardRef>
           ACME
-        </Styled(Text)>
+        </ForwardRef>
         <Paragraph
           align="left"
         >
           En tjänst för att du enkelt skall kunna fylla i dina kompetenser på ett och samma ställe.
         </Paragraph>
-      </Styled(View)>
-      <Styled(View)
+      </ForwardRef>
+      <ForwardRef
         style={
           Object {
             "marginBottom": 0,
@@ -48,60 +48,60 @@ exports[`components/ConsentModal should render without errors 1`] = `
           }
         }
       >
-        <Styled(View)
+        <ForwardRef
           style={
             Object {
               "marginBottom": 24,
             }
           }
         >
-          <Styled(Text)>
+          <ForwardRef>
             Education
-          </Styled(Text)>
+          </ForwardRef>
           <Paragraph
             small={true}
           >
             För att du skall kunna hålla reda på dina utbildningar.
           </Paragraph>
-        </Styled(View)>
-        <Styled(View)
+        </ForwardRef>
+        <ForwardRef
           style={
             Object {
               "marginBottom": 24,
             }
           }
         >
-          <Styled(Text)>
+          <ForwardRef>
             Skills
-          </Styled(Text)>
+          </ForwardRef>
           <Paragraph
             small={true}
           >
             För att du skall kunna spara ner dina tidigare arbetserfarenheter.
           </Paragraph>
-        </Styled(View)>
-        <Styled(View)
+        </ForwardRef>
+        <ForwardRef
           style={
             Object {
               "marginBottom": 24,
             }
           }
         >
-          <Styled(Text)>
+          <ForwardRef>
             Language
-          </Styled(Text)>
+          </ForwardRef>
           <Paragraph
             small={true}
           >
             För att du skall kunna spara ner dina språkkunskaper.
           </Paragraph>
-        </Styled(View)>
+        </ForwardRef>
       </ScrollViewWrap>
-      <Styled(View)>
+      <ForwardRef>
         <AcceptConsentButton>
           Tillåt
         </AcceptConsentButton>
-        <Styled(View)
+        <ForwardRef
           style={
             Object {
               "marginBottom": 0,
@@ -113,8 +113,8 @@ exports[`components/ConsentModal should render without errors 1`] = `
         <DenyConsentButton>
           Neka
         </DenyConsentButton>
-      </Styled(View)>
-    </Styled(View)>
-  </Styled(ReactNativeModal)>
-</Styled(View)>
+      </ForwardRef>
+    </ForwardRef>
+  </ForwardRef>
+</ForwardRef>
 `;
