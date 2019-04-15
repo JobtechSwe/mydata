@@ -72,3 +72,8 @@ stages:
     if: branch != master
   - name: deliver
     if: (branch = master AND type != pull_request) OR tag IS present
+
+notifications:
+  email:
+    on_success: never
+    on_failure: change
