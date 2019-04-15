@@ -9,8 +9,8 @@ export const read = async (accessToken) => {
   return data
 }
 
-export const write = async (accessToken, data) => {
-  await axios.post('/api/data', data, {
+export const write = async (accessToken, data, area) => {
+  await axios.post(`/api/data/${area}`, data[area], {
     headers: {
       'Authorization': 'Bearer ' + accessToken,
       'Content-Type': 'application/json'
