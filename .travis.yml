@@ -22,15 +22,21 @@ jobs:
         - chmod +x docker-compose
         - sudo mv docker-compose /usr/local/bin
       install:
+      - docker load -i docker/node.tar
+      - docker load -i docker/redis.tar
+      - docker load -i docker/postgres.tar
       - docker images
       - npm i -g lerna
       - npm install file:client --prefix examples/cv
       - npm run install
       test: skip
       script:
-        - npm run lint
-        - npm run test:e2e
-        - docker images
+      - npm run lint
+      - npm run test:e2e
+      - docker images
+      - docker save node -o docker/node.tar
+      - docker save redis -o docker/redis.tar
+      - docker save postgres -o docker/postgres.tar
 
     # build and deploy things
     - stage: deliver
