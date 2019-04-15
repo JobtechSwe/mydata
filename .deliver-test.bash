@@ -11,11 +11,25 @@ if [ $? == 0 ]; then
   exit 0
 fi
 
-docker build -t $IMAGE:$TAG --cache-from $IMAGE:latest-tag $CONTEXT
+docker build -t $IMAGE:$TAG --cache-from $IMAGE:latest-tag $CONTEXT && \
+docker tag $IMAGE:$TAG $IMAGE:latest-tag
+
+if [ $? != 0 ]; then
+  EXIT_CODE=$?
+  echo "Docker build failed!"
+  exit $EXIT_CODE
+fi
+
+docker push $IMAGE:latest-tag && \
 docker push $IMAGE:$TAG
 
-docker tag $IMAGE:$TAG $IMAGE:latest-tag
-docker push $IMAGE:latest-tag
+if [ $? != 0 ]; then
+  EXIT_CODE=$?
+  echo "Docker push failed!"
+  exit $EXIT_CODE
+fi
 
-- oc rollout latest cv-test -n mydata
-- oc rollout latest operator-test -n mydata
+echo "Redeploying..."
+
+oc rollout latest operator-test -n mydata
+oc rollout latest cv-test -n mydata
