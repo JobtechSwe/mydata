@@ -1,6 +1,6 @@
 {
   "name": "mydata-cv",
-  "version": "0.0.26",
+  "version": "0.0.25",
   "description": "A Data Source/Data Sink offering a searchable CV",
   "main": "server.js",
   "scripts": {
@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/JobtechSwe/mydata/example#readme",
   "dependencies": {
-    "@mydata/client": "^0.0.26",
+    "@mydata/client": "0.25.0",
     "@smooth-ui/core-sc": "^7.1.1",
     "axios": "^0.18.0",
     "changecase-objects": "^1.1.0",

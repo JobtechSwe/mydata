@@ -1,6 +1,6 @@
 {
   "name": "mydata-national-registration",
-  "version": "0.0.26",
+  "version": "0.0.1",
   "scripts": {
     "dev": "nodemon server.js",
     "lint": "eslint '**/*.js'"
