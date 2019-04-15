@@ -7,7 +7,10 @@ jobs:
     # lint and run end-to-end tests
     - stage: "lint-and-e2e"
       name: "Lint and run end-to-end tests"
-      cache: npm
+      cache:
+      - npm
+      - directories:
+        - /var/lib/docker
       language: node_js
       services:
         # Require docker to be running in the build context
@@ -19,9 +22,10 @@ jobs:
         - chmod +x docker-compose
         - sudo mv docker-compose /usr/local/bin
       install:
-        - npm i -g lerna
-        - npm install file:client --prefix examples/cv
-        - npm run install
+      - docker images
+      - npm i -g lerna
+      - npm install file:client --prefix examples/cv
+      - npm run install
       test: skip
       script:
         - npm run lint
