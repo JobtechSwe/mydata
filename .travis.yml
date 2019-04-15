@@ -10,7 +10,7 @@ jobs:
       cache:
       - npm
       - directories:
-        - /var/lib/docker
+        - docker
       language: node_js
       services:
         # Require docker to be running in the build context
@@ -30,6 +30,7 @@ jobs:
       script:
         - npm run lint
         - npm run test:e2e
+        - docker images
 
     # build and deploy things
     - stage: deliver
