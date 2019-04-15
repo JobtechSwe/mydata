@@ -1,7 +1,7 @@
 const { Router } = require('express')
 const router = Router()
 const { getConsentRequest, getLoginApproval } = require('../services/db')
-const { createDefaultRequest, domain, area } = require('../services/consents')
+const { createDefaultRequest, domain } = require('../services/consents')
 const { loginRequest } = require('../services/login')
 
 module.exports = operator => {
@@ -36,28 +36,28 @@ module.exports = operator => {
     }
   })
 
-  router.get('/data', async (req, res, next) => {
-    const accessToken = req.headers.authorization.split('Bearer ')[1]
+  router.get('/data/:area?', async ({ headers, params: { area } }, res, next) => {
+    const accessToken = headers.authorization.split('Bearer ')[1]
     if (!accessToken) {
       return next(Error('Invalid authorization header'))
     }
 
     try {
-      const data = await operator.data.auth(accessToken).read({ domain, area })
-      res.send(data[domain][area])
+      const data = await operator.data.auth(accessToken).read({ domain })
+      res.send(data[domain])
     } catch (error) {
       next(error)
     }
   })
 
-  router.post('/data', async (req, res, next) => {
-    const accessToken = req.headers.authorization.split('Bearer ')[1]
+  router.post('/data/:area', async ({ headers, body, params: { area } }, res, next) => {
+    const accessToken = headers.authorization.split('Bearer ')[1]
     if (!accessToken) {
       return next(Error('Invalid authorization header'))
     }
 
     try {
-      const data = req.body
+      const data = body
       await operator.data.auth(accessToken).write({ domain, area, data })
 
       res.sendStatus(201)

@@ -81,6 +81,12 @@ describe('data', () => {
       expect(axios.get).toHaveBeenCalledWith(`http://localhost:3000/api/data/${encodeURIComponent('cv.work:4000')}/${encodeURIComponent('cv')}`,
         { headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' } })
     })
+    it('returns empty object for missing data', async () => {
+      axios.get.mockResolvedValue({ data: '' })
+      const result = await read({ domain: 'cv.work:4000', area: 'cv' })
+
+      expect(result).toEqual({})
+    })
     it('decrypts data', async () => {
       // Step 1: Use write to encrypt
       const data = { foo: 'bar' }
@@ -93,6 +99,19 @@ describe('data', () => {
       // Step 3: Profit!
       const result = await read({ domain: 'cv', area: '/foo' })
       expect(result).toEqual({ [domain]: { [area1]: data } })
+    })
+    it('returns null for missing data', async () => {
+      // Step 1: Use write to encrypt
+      const data = { foo: 'bar' }
+      await write({ domain, area: area1, data })
+      const doc = axios.post.mock.calls[0][1].data
+
+      // Step 2: Return the encrypted document
+      axios.get.mockResolvedValue({ data: { data: { [domain]: { [area1]: doc, [area2]: null } } } })
+
+      // Step 3: Profit!
+      const result = await read({ domain: 'cv' })
+      expect(result).toEqual({ [domain]: { [area1]: data, [area2]: null } })
     })
   })
   describe('#write', () => {
