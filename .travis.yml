@@ -11,7 +11,7 @@ jobs:
       language: node_js
       install:
         - npm i -g lerna
-        - lerna link
+        - npm install file:client --prefix examples/cv
         - npm run install
       test: skip
       script:
