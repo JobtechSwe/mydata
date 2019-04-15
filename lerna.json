@@ -11,7 +11,7 @@
     "examples/*",
     "operator"
   ],
-  "version": "individual",
+  "version": "independent",
   "ignoreChanges": [
     "**/__fixtures__/**",
     "**/__tests__/**",
