@@ -11,6 +11,7 @@ jobs:
       language: node_js
       install:
         - npm i -g lerna
+        - lerna link
         - npm run install
       test: skip
       script:
