@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/JobtechSwe/mydata/example#readme",
   "dependencies": {
-    "@mydata/client": "^0.25.1",
+    "@mydata/client": "file:../../client",
     "@smooth-ui/core-sc": "^7.1.1",
     "axios": "^0.18.0",
     "changecase-objects": "^1.1.0",
