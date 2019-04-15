@@ -12,9 +12,9 @@
     "test:e2e": "sh -c 'cd ./e2e && ./script.sh'",
     "test:unit": "lerna exec -- npm test",
     "update": "lerna exec -- npm i",
-    "version:patch": "lerna version --no-push patch",
-    "version:minor": "lerna version --no-push minor",
-    "version:major": "lerna version --no-push major"
+    "version:patch": "lerna version patch",
+    "version:minor": "lerna version minor",
+    "version:major": "lerna version major"
   },
   "devDependencies": {
     "lerna": "^3.13.2",
