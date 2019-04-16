@@ -4,7 +4,7 @@ CONTEXT=$1
 IMAGE=$2
 TAG=`node -e 'process.stdout.write(require(process.argv[1]).version)' ./$CONTEXT/package.json`
 
-docker load -i "docker/$IMAGE-$TAG.tar" || true
+docker load -i "docker/test/$IMAGE-$TAG.tar" || true
 docker pull $IMAGE:$TAG
 
 if [ $? == 0 ]; then
@@ -36,4 +36,5 @@ oc rollout latest operator-test -n mydata
 oc rollout latest cv-test -n mydata
 
 echo "Cache $IMAGE:$TAG"
-docker save $IMAGE:$TAG -o "docker/$IMAGE-$TAG.tar"
+rm -fr "docker/test/$IMAGE"
+docker save $IMAGE:$TAG -o "docker/test/$IMAGE-$TAG.tar"
