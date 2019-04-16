@@ -1,4 +1,9 @@
 {
+  "command": {
+    "version": {
+      "message": "Lerna publishing new version"
+    }
+  },
   "packages": [
     "app",
     "client",
