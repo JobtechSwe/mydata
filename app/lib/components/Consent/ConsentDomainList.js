@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
-import DomainCard from './DomainCard'
-import styled from '../theme'
+import DomainCard from '../DomainCard'
+import styled from '../../theme'
 
 const Wrap = styled(View)`
   width: 100%;

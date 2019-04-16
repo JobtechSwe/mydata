@@ -1,6 +1,5 @@
 import React from 'react'
-import EnterConsentCode from '../../components/EnterConsentCode'
-import ConsentRequest from '../../components/ConsentRequest'
+import { EnterConsentCode, ConsentRequest } from '../../components/Consent'
 import LoginRequest from '../../components/LoginRequest'
 import { parse } from '../../utils/qrcode'
 
