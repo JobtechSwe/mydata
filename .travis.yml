@@ -45,21 +45,25 @@ jobs:
         - docker pull jobtechswe/mydata-app:$TAG
         - docker pull jobtechswe/mydata-cv:$TAG
         - docker pull jobtechswe/mydata-operator:$TAG
+        - docker pull jobtechswe/mydata-natreg:$TAG
 
         # Build images
         - docker build app -t jobtechswe/mydata-app:$TAG --cache-from jobtechswe/mydata-app:$TAG --pull
         - docker build examples/cv -t jobtechswe/mydata-cv:$TAG --cache-from jobtechswe/mydata-cv:$TAG --pull
         - docker build operator -t jobtechswe/mydata-operator:$TAG --cache-from jobtechswe/mydata-operator:$TAG --pull
+        - docker build natreg -t jobtechswe/mydata-natreg:$TAG --cache-from jobtechswe/mydata-natreg:$TAG --pull
 
         # Push images to Docker Hub
         - docker push jobtechswe/mydata-cv:$TAG
         - docker push jobtechswe/mydata-app:$TAG
         - docker push jobtechswe/mydata-operator:$TAG
+        - docker push jobtechswe/mydata-natreg:$TAG
 
         # If tag build, tag images as latest-tag
         - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-cv:$TAG jobtechswe/mydata-cv:$TRAVIS_TAG && docker push jobtechswe/mydata-cv:$TRAVIS_TAG; fi
         - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-app:$TAG jobtechswe/mydata-app:$TRAVIS_TAG && docker push jobtechswe/mydata-app:$TRAVIS_TAG; fi
         - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-operator:$TAG jobtechswe/mydata-operator:$TRAVIS_TAG && docker push jobtechswe/mydata-operator:$TRAVIS_TAG; fi
+        - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-natreg:$TAG jobtechswe/mydata-natreg:$TRAVIS_TAG && docker push jobtechswe/mydata-natreg:$TRAVIS_TAG; fi
 
         # ...and finally remove cached credentials
         - docker logout
@@ -82,6 +86,7 @@ jobs:
         # Tell CV and Operator to deploy, making them pull the latest images from Docker Hub
         - oc rollout latest cv-$PHASE -n mydata
         - oc rollout latest operator-$PHASE -n mydata
+        - oc rollout latest natreg-$PHASE -n mydata
 
         # ...and finally remove cached credentials
         - oc logout
