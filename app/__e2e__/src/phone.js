@@ -33,6 +33,11 @@ export const getConsentRequest = (url) => {
 
 export const approveConsentRequest = consents.approve
 
+export const getAndApproveConsentRequest = (url) => getConsentRequest(url)
+  .then(res => approveConsentRequest(res))
+
+export const getAllConsents = consents.getAll
+
 export async function setConfig (config) {
   Object.entries(config).forEach(([key, val]) =>
     Object.assign(Config, { [key]: val }))

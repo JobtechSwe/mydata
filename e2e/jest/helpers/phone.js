@@ -15,5 +15,7 @@ module.exports = {
   clearAccount: call('clearAccount'),
   setConfig: call('setConfig'),
   getConsentRequest: call('getConsentRequest'),
-  approveConsentRequest: call('approveConsentRequest')
+  approveConsentRequest: call('approveConsentRequest'),
+  getAndApproveConsentRequest: call('getAndApproveConsentRequest'),
+  getAllConsents: call('getAllConsents')
 }
