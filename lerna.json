@@ -1,9 +1,4 @@
 {
-  "command": {
-    "version": {
-      "message": "chore(tag): %s"
-    }
-  },
   "packages": [
     "app",
     "client",
