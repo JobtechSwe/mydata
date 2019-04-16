@@ -4,6 +4,11 @@ CONTEXT=$1
 IMAGE=$2
 TAG=`node -e 'process.stdout.write(require(process.argv[1]).version)' ./$CONTEXT/package.json`
 
+DOCKERFILE=""
+if [ ! -z "$3" ]; then
+  DOCKERFILE="-f $3"
+fi
+
 docker load -i "docker/test/$IMAGE-$TAG.tar" || true
 docker pull $IMAGE:$TAG
 
@@ -12,7 +17,7 @@ if [ $? == 0 ]; then
   exit 0
 fi
 
-docker build -t $IMAGE:$TAG --cache-from $IMAGE:latest-tag $CONTEXT && \
+docker build -t $IMAGE:$TAG --cache-from $IMAGE:latest-tag $CONTEXT $DOCKERFILE && \
 docker tag $IMAGE:$TAG $IMAGE:latest-tag
 
 if [ $? != 0 ]; then

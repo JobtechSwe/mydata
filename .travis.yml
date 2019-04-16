@@ -67,7 +67,7 @@ jobs:
     - if [ ! -z "$TRAVIS_TAG" ]; then export PHASE="test"; fi
 
     - bash .deliver-$PHASE.bash app/ jobtechswe/mydata-app
-    - bash .deliver-$PHASE.bash examples/cv/ jobtechswe/mydata-cv
+    - bash .deliver-$PHASE.bash . jobtechswe/mydata-cv examples/cv/Dockerfile
     - bash .deliver-$PHASE.bash operator/ jobtechswe/mydata-operator
 
     # ...and finally remove cached credentials
