@@ -44,8 +44,7 @@ class ConsentRequest extends Component {
             onApprove={this.approve}
             onReject={this.reject}
             visible={this.state.modalVisible}
-            client={this.state.consentRequest.client}
-            scope={this.state.consentRequest.data.scope}
+            request={this.state.consentRequest}
           />
         )
       case 'approving':
