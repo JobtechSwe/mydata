@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { Wrap } from '../components/View/Wrapper'
-import { Spinner } from '../components/elements/Spinner/Spinner'
-import * as consentsService from '../services/consents'
-import { Paragraph } from '../components/typography/Typography'
+import { Wrap } from '../View/Wrapper'
+import { Spinner } from '../elements/Spinner/Spinner'
+import * as consentsService from '../../services/consents'
+import { Paragraph } from '../typography/Typography'
 import ConsentModal from './ConsentModal'
 
 class ConsentRequest extends Component {

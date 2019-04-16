@@ -1,6 +1,6 @@
 import React from 'react'
 import { shallow } from 'react-native-testing-library'
-import ConsentModal from '../ConsentModal'
+import ConsentModal from '../Consent/ConsentModal'
 
 const scopesMock = [
   {
@@ -24,7 +24,7 @@ const clientMock = {
     'En tjänst för att du enkelt skall kunna fylla i dina kompetenser på ett och samma ställe.',
 }
 
-describe('components/ConsentModal', () => {
+describe('components/Consent/ConsentModal', () => {
   it('should render without errors', () => {
     const { output } = shallow(
       <ConsentModal visible={true} client={clientMock} scope={scopesMock} />

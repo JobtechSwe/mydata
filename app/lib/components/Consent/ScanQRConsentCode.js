@@ -7,12 +7,12 @@ import {
   StatusBar,
   View,
 } from 'react-native'
-import { theme } from '../theme'
+import { theme } from '../../theme'
 import Modal from 'react-native-modal'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 import { Mask, Svg, Rect, Path } from 'react-native-svg'
-import { H3, Paragraph } from './typography/Typography'
-import { PrimaryButton } from './elements/Button/Button'
+import { H3, Paragraph } from '../typography/Typography'
+import { PrimaryButton } from '../elements/Button/Button'
 import DeviceInfo from 'react-native-device-info'
 
 export default class ScanQRConsentCode extends Component {

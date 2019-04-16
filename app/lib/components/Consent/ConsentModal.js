@@ -1,14 +1,14 @@
 import React from 'react'
 import { View } from 'react-native'
 import Modal from 'react-native-modal'
-import { Wrap, ScrollViewWrap } from './View/Wrapper'
-import styled, { theme } from '../theme'
-import { H3, Paragraph, Separator } from './typography/Typography'
+import { Wrap, ScrollViewWrap } from '../View/Wrapper'
+import styled, { theme } from '../../theme'
+import { H3, Paragraph, Separator } from '../typography/Typography'
 import {
   AcceptConsentButton,
   DenyConsentButton,
   ConsentButtonWrap,
-} from './elements/Button/ConsentButton'
+} from '../elements/Button/ConsentButton'
 
 const StyledModal = styled(Modal)`
   margin: 0;
