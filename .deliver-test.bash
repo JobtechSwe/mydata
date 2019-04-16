@@ -3,13 +3,14 @@
 CONTEXT=$1
 IMAGE=$2
 TAG=`node -e 'process.stdout.write(require(process.argv[1]).version)' ./$CONTEXT/package.json`
+CACHE_PATH="docker/test"
 
 DOCKERFILE=""
 if [ ! -z "$3" ]; then
   DOCKERFILE="-f $3"
 fi
 
-docker load -i "docker/test/$IMAGE-$TAG.tar" || true
+docker load -i "$CACHE_PATH/$IMAGE-$TAG.tar" || true
 docker pull $IMAGE:$TAG
 
 if [ $? == 0 ]; then
@@ -41,5 +42,6 @@ oc rollout latest operator-test -n mydata
 oc rollout latest cv-test -n mydata
 
 echo "Cache $IMAGE:$TAG"
-rm -fr "docker/test/$IMAGE"
-docker save $IMAGE:$TAG -o "docker/test/$IMAGE-$TAG.tar"
+rm -fr "$CACHE_PATH/$IMAGE"
+mkdir -p "$CACHE_PATH"
+docker save $IMAGE:$TAG -o "$CACHE_PATH/$IMAGE-$TAG.tar"
