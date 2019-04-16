@@ -1,6 +1,6 @@
 import React from 'react'
 import SvgUri from 'react-native-svg-uri'
-import { Alert, View, Platform } from 'react-native'
+import { Alert, View } from 'react-native'
 import { Spinner } from '../../components/elements/Spinner/Spinner'
 import { H2, H3, Paragraph } from '../../components/typography/Typography'
 import { PrimaryButton } from '../../components/elements/Button/Button'
