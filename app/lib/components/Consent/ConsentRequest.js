@@ -4,6 +4,7 @@ import { Spinner } from '../elements/Spinner/Spinner'
 import * as consentsService from '../../services/consents'
 import { Paragraph } from '../typography/Typography'
 import ConsentModal from './ConsentModal'
+import { toViewModel } from './parseData'
 
 class ConsentRequest extends Component {
   state = {
@@ -44,7 +45,7 @@ class ConsentRequest extends Component {
             onApprove={this.approve}
             onReject={this.reject}
             visible={this.state.modalVisible}
-            request={this.state.consentRequest}
+            data={toViewModel(this.state.consentRequest)}
           />
         )
       case 'approving':

@@ -30,7 +30,7 @@ const ScopeItemWrapper = styled(View)`
   margin-bottom: 24px;
 `
 
-const ConsentModal = ({ request: { data: { clientId, scope }, clients }, visible, onApprove, onReject }) => (
+const ConsentModal = ({ data: { client, externals }, visible, onApprove, onReject }) => (
   <Wrap>
     <StyledModal
       animationType="slide"
@@ -40,8 +40,8 @@ const ConsentModal = ({ request: { data: { clientId, scope }, clients }, visible
       <ModalWrapper>
         <Separator style={{ marginBottom: 0, marginTop: 0 }} />
         <ConsentHeader>
-          <H3>{clients[clientId].displayName}</H3>
-          <Paragraph align="left">{clients[clientId].description}</Paragraph>
+          <H3>{client.displayName}</H3>
+          <Paragraph align="left">{client.description}</Paragraph>
         </ConsentHeader>
         <Separator style={{ marginBottom: 0, marginTop: 0 }} />
         <ScrollViewWrap
@@ -52,10 +52,21 @@ const ConsentModal = ({ request: { data: { clientId, scope }, clients }, visible
           }}
           contentContainerStyle={{ alignItems: 'flex-start' }}
         >
-          {scope.map(scope => (
+          {client.areas.map(scope => (
             <ScopeItemWrapper key={scope.area} style={{ marginBottom: 24 }}>
               <Paragraph small>{scope.description}</Paragraph>
             </ScopeItemWrapper>
+          ))}
+          {externals.map(({ client }) => (
+            <View key={client.displayName}>
+              <H3>{client.displayName}</H3>
+              <Paragraph align="left">{client.description}</Paragraph>
+              {client.areas.map(scope => (
+                <ScopeItemWrapper key={scope.area} style={{ marginBottom: 24 }}>
+                  <Paragraph small>{scope.description}</Paragraph>
+                </ScopeItemWrapper>
+              ))}
+            </View>
           ))}
         </ScrollViewWrap>
         <ConsentButtonWrap>
