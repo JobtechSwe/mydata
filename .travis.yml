@@ -43,7 +43,6 @@ jobs:
     name: "Build and deploy code that has been updated"
     language: node_js
     cache:
-    - npm
     - directories:
       - docker
     install:
