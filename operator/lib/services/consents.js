@@ -38,6 +38,23 @@ async function getRequest (id) {
     return
   }
   const { data, signature } = JSON.parse(reqStr)
+  const domains = [...new Set([data.clientId].concat(data.scope.map(s => s.domain)))]
+  const params = domains.map((_, ix) => '$' + (ix + 1)).join(', ')
+  const { rows } = await query(`
+    SELECT
+      client_id, display_name, description, jwks_url
+    FROM
+      clients
+    WHERE client_id IN (${params})
+  `, domains)
+  const clients = rows.reduce((clients, row) => ({
+    ...clients,
+    [row.client_id]: {
+      displayName: row.display_name,
+      description: row.description,
+      jwksUrl: row.jwks_url
+    }
+  }), {})
   return {
     data,
     signature: {
@@ -45,11 +62,7 @@ async function getRequest (id) {
       kid: signature.kid,
       data: signature.data
     },
-    client: {
-      jwksUrl: signature.client.jwksUrl,
-      displayName: signature.client.displayName,
-      description: signature.client.description
-    }
+    clients
   }
 }
 

@@ -8,7 +8,6 @@ const defaultRequest = {
       purpose: 'In order to create a CV using our website.',
       lawfulBasis: 'CONSENT'
     },
-
     {
       domain: process.env.CLIENT_ID,
       area: 'experience',
@@ -17,7 +16,6 @@ const defaultRequest = {
       purpose: 'In order to create a CV using our website.',
       lawfulBasis: 'CONSENT'
     },
-
     {
       domain: process.env.CLIENT_ID,
       area: 'education',
@@ -26,12 +24,35 @@ const defaultRequest = {
       purpose: 'In order to create a CV using our website.',
       lawfulBasis: 'CONSENT'
     },
-
     {
       domain: process.env.CLIENT_ID,
       area: 'languages',
       description: 'A list of your language proficiencies.',
       permissions: ['read', 'write'],
+      purpose: 'In order to create a CV using our website.',
+      lawfulBasis: 'CONSENT'
+    },
+    {
+      domain: 'http://localhost:5000',
+      area: 'firstName',
+      description: 'Your first name.',
+      permissions: ['read'],
+      purpose: 'In order to create a CV using our website.',
+      lawfulBasis: 'CONSENT'
+    },
+    {
+      domain: 'http://localhost:5000',
+      area: 'lastName',
+      description: 'Your last name.',
+      permissions: ['read'],
+      purpose: 'In order to create a CV using our website.',
+      lawfulBasis: 'CONSENT'
+    },
+    {
+      domain: 'http://localhost:5000',
+      area: 'city',
+      description: 'Your city of residence.',
+      permissions: ['read'],
       purpose: 'In order to create a CV using our website.',
       lawfulBasis: 'CONSENT'
     }

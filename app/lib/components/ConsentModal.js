@@ -30,7 +30,7 @@ const ScopeItemWrapper = styled(View)`
   margin-bottom: 24px;
 `
 
-const ConsentModal = ({ client, scope, visible, onApprove, onReject }) => (
+const ConsentModal = ({ request: { data: { clientId, scope }, clients }, visible, onApprove, onReject }) => (
   <Wrap>
     <StyledModal
       animationType="slide"
@@ -40,8 +40,8 @@ const ConsentModal = ({ client, scope, visible, onApprove, onReject }) => (
       <ModalWrapper>
         <Separator style={{ marginBottom: 0, marginTop: 0 }} />
         <ConsentHeader>
-          <H3>{client.displayName}</H3>
-          <Paragraph align="left">{client.description}</Paragraph>
+          <H3>{clients[clientId].displayName}</H3>
+          <Paragraph align="left">{clients[clientId].description}</Paragraph>
         </ConsentHeader>
         <Separator style={{ marginBottom: 0, marginTop: 0 }} />
         <ScrollViewWrap
@@ -54,7 +54,6 @@ const ConsentModal = ({ client, scope, visible, onApprove, onReject }) => (
         >
           {scope.map(scope => (
             <ScopeItemWrapper key={scope.area} style={{ marginBottom: 24 }}>
-              <H3>{scope.area}</H3>
               <Paragraph small>{scope.description}</Paragraph>
             </ScopeItemWrapper>
           ))}

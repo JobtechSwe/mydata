@@ -55,9 +55,6 @@ exports[`components/ConsentModal should render without errors 1`] = `
             }
           }
         >
-          <ForwardRef>
-            Education
-          </ForwardRef>
           <Paragraph
             small={true}
           >
@@ -71,9 +68,6 @@ exports[`components/ConsentModal should render without errors 1`] = `
             }
           }
         >
-          <ForwardRef>
-            Skills
-          </ForwardRef>
           <Paragraph
             small={true}
           >
@@ -87,9 +81,6 @@ exports[`components/ConsentModal should render without errors 1`] = `
             }
           }
         >
-          <ForwardRef>
-            Language
-          </ForwardRef>
           <Paragraph
             small={true}
           >
