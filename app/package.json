@@ -31,6 +31,7 @@
     "react": "16.8.6",
     "react-native": "^0.59.2",
     "react-native-camera": "^2.2.0",
+    "react-native-collapsible": "^1.4.0",
     "react-native-config": "^0.11.7",
     "react-native-device-info": "^1.4.1",
     "react-native-gesture-handler": "^1.1.0",
