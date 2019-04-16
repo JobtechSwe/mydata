@@ -52,7 +52,7 @@ describe('components/Consent/parseData', () => {
           ],
           expiry: 1558078050,
           clientId: 'https://mycv.work',
-          kid: 'https://mycv.work/jwks/enc_66e8d07b3138c7483cf43b20a10c6c9ba55c11342d40ec2dfa457e6586829ed6'
+          kid: 'https://mycv.work/jwks/enc_66e8d07b3138c7483cf43b20a10c6c9ba55c11342d40ec2dfa457e6586829ed6',
         },
         clients: {
           'https://nationalregistry.gov': {
