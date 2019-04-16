@@ -1,6 +1,6 @@
 {
   "name": "mydata-e2e",
-  "version": "0.25.1",
+  "version": "0.25.2",
   "description": "End-to-end testing for mydata",
   "main": "index.js",
   "scripts": {
