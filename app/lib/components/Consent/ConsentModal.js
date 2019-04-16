@@ -78,9 +78,9 @@ const ScopeItem = ({ scope, lastItem }) => {
         </View>
       </TouchableOpacity>
       <Collapsible collapsed={collapsed}>
-        <H4 style={{ marginTop: 8 }}>Syfte</H4>
+        <H4 style={{ fontSize: 12, marginTop: 8 }}>Syfte</H4>
         <Paragraph small>{scope.purpose}</Paragraph>
-        <H4 style={{ marginTop: 8 }}>Rättigheter</H4>
+        <H4 style={{ fontSize: 12, marginTop: 8 }}>Rättigheter</H4>
         <Paragraph small>{readAndWriteHelper(scope.permissions)}</Paragraph>
       </Collapsible>
       {lastItem ? (
