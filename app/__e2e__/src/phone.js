@@ -33,8 +33,7 @@ export const getConsentRequest = (url) => {
 
 export const approveConsentRequest = consents.approve
 
-export const getAndApproveConsentRequest = (url) => getConsentRequest(url)
-  .then(res => approveConsentRequest(res))
+export const getAndApproveConsentRequest = (url) => getConsentRequest(url).then(approveConsentRequest)
 
 export const getAllConsents = consents.getAll
 
