@@ -46,8 +46,8 @@ describe('Client', () => {
     })
 
     const { url } = await client.consents.request(sampleRequest)
-    const { data } = await phone.getConsentRequest(url)
-    await phone.approveConsentRequest(data)
+    const consentRequest = await phone.getConsentRequest(url)
+    await phone.approveConsentRequest(consentRequest)
   })
 })
 
@@ -81,7 +81,7 @@ describe('Phone', () => {
     const firstResponse = await phone.getAllConsents()
 
     // First the list should be empty
-    expect(firstResponse.data).toEqual({ data: [] })
+    expect(firstResponse).toEqual([])
 
     // Do several consent requests from different clients
     const consentRequests = await Promise.all(clients.map(client => {
@@ -104,7 +104,7 @@ describe('Phone', () => {
 
     // Now check again
     const secondResponse = await phone.getAllConsents()
-    expect(secondResponse.data.data.length).toBe(3)
-    expect(secondResponse.data.data).toEqual(expectedArray)
+    expect(secondResponse.length).toBe(3)
+    expect(secondResponse).toEqual(expectedArray)
   })
 })
