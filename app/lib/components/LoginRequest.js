@@ -20,7 +20,8 @@ const StyledModal = styled(Modal)`
 `
 
 const ModalWrapper = styled(View)`
-  border-radius: 12px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
   margin-top: auto;
 `
 
