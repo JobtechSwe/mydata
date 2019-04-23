@@ -31,8 +31,6 @@ jobs:
     - command -v lerna || true
     - if ! [ -x "$(command -v lerna)" ]; then echo "lerna is NOT an executable!????"; fi
     - if ! [ -x "$(command -v lerna)" ]; then npm install -g lerna; fi
-    - cd docker
-    - pwd
     install:
     - docker load -i docker/node.tar || true
     - docker load -i docker/redis.tar || true
