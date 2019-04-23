@@ -22,15 +22,14 @@ jobs:
     - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
     - chmod +x docker-compose
     - sudo mv docker-compose /usr/local/bin
-    - NODE_VERSION=`node --version`
     - if ! [ -x "$(command -v lerna)" ]; then npm install -g lerna; fi
     install:
     - docker load -i ~/.cache/docker/node.tar || true
     - docker load -i ~/.cache/docker/redis.tar || true
     - docker load -i ~/.cache/docker/postgres.tar || true
     - docker images
-    - npm install file:client --prefix examples/cv
     - npm run install
+    - npm install file:client --prefix examples/cv
     test: skip
     script:
     - npm run lint
