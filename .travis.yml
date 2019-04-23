@@ -25,6 +25,8 @@ jobs:
     - NODE_VERSION=`node --version`
     - ln -s /home/travis/.nvm/versions/node/$NODE_VERSION/lib/node_modules/lerna/cli.js /home/travis/.nvm/versions/node/$NODE_VERSION/bin/lerna
     - ls -la /home/travis/.nvm/versions/node/$NODE_VERSION/bin/
+    - which lerna
+    - echo $PATH
     - command -v lerna
     - if ! [ -x "$(command -v lerna)" ]; then echo "lerna is NOT an executable!????"; fi
     - if ! [ -x "$(command -v lerna)" ]; then npm install -g lerna; fi
