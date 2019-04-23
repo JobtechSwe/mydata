@@ -27,6 +27,7 @@ jobs:
     - docker load -i docker/postgres.tar || true
     - docker images
     - npm i -g lerna
+    - npm install file:client --prefix examples/cv
     - npm run install
     test: skip
     script:
