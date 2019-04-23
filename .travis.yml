@@ -23,9 +23,9 @@ jobs:
     - sudo mv docker-compose /usr/local/bin
     - NODE_VERSION=`node --version`
     - ln -s /home/travis/.nvm/versions/node/$NODE_VERSION/lib/node_modules/lerna/cli.js /home/travis/.nvm/versions/node/$NODE_VERSION/bin/lerna
-    - ls -la /home/travis/.nvm/versions/node/$NODE_VERSION/bin/
-    - ls -la /home/travis/.nvm/versions/node/$NODE_VERSION/lib/node_modules/lerna/
-    - ls -la /home/travis/.nvm/versions/node/v10.15.3/lib/node_modules/lerna/
+    - ls -la /home/travis/.nvm/versions/node/$NODE_VERSION/bin/ || true
+    - ls -la /home/travis/.nvm/versions/node/$NODE_VERSION/lib/node_modules/lerna/ || true
+    - ls -la /home/travis/.nvm/versions/node/v10.15.3/lib/node_modules/lerna/ || true
     - echo $PATH || true
     - which lerna || true
     - command -v lerna || true
