@@ -28,8 +28,8 @@ jobs:
     - docker load -i ~/.cache/docker/redis.tar || true
     - docker load -i ~/.cache/docker/postgres.tar || true
     - docker images
-    - npm run install
     - npm install file:client --prefix examples/cv
+    - npm run install
     test: skip
     script:
     - npm run lint
