@@ -10,7 +10,8 @@ jobs:
     cache:
     - directories:
       - docker
-      - /home/travis/.nvm
+      - ~/.npm
+      - ~/.nvm
     language: node_js
     services:
     # Require docker to be running in the build context
