@@ -3,7 +3,7 @@
 CONTEXT=$1
 IMAGE=$2
 TAG=`node -e 'process.stdout.write(require(process.argv[1]).version)' ./$CONTEXT/package.json`
-CACHE_PATH="docker/test/${IMAGE/\//_}"
+CACHE_PATH="~/.cache/docker/test/${IMAGE/\//_}"
 
 DOCKERFILE=""
 if [ ! -z "$3" ]; then

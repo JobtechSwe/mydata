@@ -9,7 +9,7 @@ jobs:
     name: "Lint and run end-to-end tests"
     cache:
     - directories:
-      - docker
+      - ~/.cache/docker
       - ~/.npm
       - ~/.nvm
     language: node_js
@@ -25,9 +25,9 @@ jobs:
     - NODE_VERSION=`node --version`
     - if ! [ -x "$(command -v lerna)" ]; then npm install -g lerna; fi
     install:
-    - docker load -i docker/node.tar || true
-    - docker load -i docker/redis.tar || true
-    - docker load -i docker/postgres.tar || true
+    - docker load -i ~/.cache/docker/node.tar || true
+    - docker load -i ~/.cache/docker/redis.tar || true
+    - docker load -i ~/.cache/docker/postgres.tar || true
     - docker images
     - npm install file:client --prefix examples/cv
     - npm run install
@@ -36,9 +36,9 @@ jobs:
     - npm run lint
     - npm run test:e2e
     - docker images
-    - docker save node -o docker/node.tar
-    - docker save redis -o docker/redis.tar
-    - docker save postgres -o docker/postgres.tar
+    - docker save node -o ~/.cache/docker/node.tar
+    - docker save redis -o ~/.cache/docker/redis.tar
+    - docker save postgres -o ~/.cache/docker/postgres.tar
 
   # build and deploy things
   - stage: deliver
@@ -46,7 +46,7 @@ jobs:
     language: node_js
     cache:
     - directories:
-      - docker
+      - ~/.cache/docker
     install:
     # Install a fresh version of the openshift cli
     - mkdir -p /opt/openshift
