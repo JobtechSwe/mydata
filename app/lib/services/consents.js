@@ -89,3 +89,20 @@ export async function approve({ data }) {
     throw error
   }
 }
+
+export async function getAll () {
+  const account = await getAccount()
+  if (!account || !account.id) {
+    throw Error('Account is not set')
+  }
+
+  const url = `${Config.OPERATOR_URL}/consents?accountId=${account.id}`
+
+  try {
+    const response = await axios.get(url)
+    return response.data.data
+  } catch (error) {
+    console.error('GET', url, error)
+    throw error
+  }
+}

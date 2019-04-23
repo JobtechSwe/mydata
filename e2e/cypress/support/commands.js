@@ -63,3 +63,7 @@ Cypress.Commands.add('getConsentRequest', (args) => {
 Cypress.Commands.add('approveConsentRequest', (args) => {
   return callMethod('approveConsentRequest', args)
 })
+
+Cypress.Commands.add('getAndApproveConsentRequest', (args) => {
+  return callMethod('getAndApproveConsentRequest', args)
+})

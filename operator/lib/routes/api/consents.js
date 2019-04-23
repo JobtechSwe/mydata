@@ -18,6 +18,20 @@ router.post('/', signed({ accountKey: true }), async ({ body }, res, next) => {
   }
 })
 
+// TODO: Make this route safe. Currently it is not since anyone can get anyones consents.
+router.get('/', async ({ query }, res, next) => {
+  try {
+    const data = await consentService.getAll(query.accountId)
+    res.send({ data })
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      next(createError(400, error))
+    } else {
+      next(error)
+    }
+  }
+})
+
 router.post('/requests', signed(), async ({ body, signature }, res, next) => {
   try {
     if (!signature.client) {
