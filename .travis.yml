@@ -12,6 +12,13 @@ jobs:
       - ~/.cache/docker
       - ~/.npm
       - ~/.nvm
+      - ~/build/JobtechSwe/mydata/node_modules
+      - ~/build/JobtechSwe/mydata/app/node_modules
+      - ~/build/JobtechSwe/mydata/client/node_modules
+      - ~/build/JobtechSwe/mydata/e2e/node_modules
+      - ~/build/JobtechSwe/mydata/examples/cv/node_modules
+      - ~/build/JobtechSwe/mydata/examples/national-registration/node_modules
+      - ~/build/JobtechSwe/mydata/operator/node_modules
     language: node_js
     services:
     # Require docker to be running in the build context
