@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Image } from 'react-native'
-import { Paragraph } from './typography/Typography'
-import styled from '../theme'
+import { Paragraph } from '../typography/Typography'
+import styled from '../../theme'
 
 const CardWrap = styled(View)`
   width: 50%;
@@ -25,17 +25,17 @@ const Logo = styled(Image)`
   margin-bottom: 12px;
 `
 
-const DomainCard = ({ logo, domain }) => {
+const ConsentCard = ({ clientLogo, clientDisplayName }) => {
   return (
     <CardWrap>
       <Card>
-        <Logo source={{ uri: logo }} />
+        <Logo source={{ uri: clientLogo }} />
         <Paragraph small align="center">
-          {domain}
+          {clientDisplayName}
         </Paragraph>
       </Card>
     </CardWrap>
   )
 }
 
-export default DomainCard
+export default ConsentCard
