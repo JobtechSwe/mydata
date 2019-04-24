@@ -26,4 +26,5 @@ oc rollout latest cv-ci -n mydata
 oc rollout latest operator-ci -n mydata
 
 echo "Cache $IMAGE:latest"
+mkdir -p "~/.cache/docker"
 docker save $IMAGE:latest -o "~/.cache/docker/$IMAGE-latest.tar"
