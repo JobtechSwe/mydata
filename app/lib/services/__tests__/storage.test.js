@@ -1,5 +1,5 @@
 import * as storage from '../storage'
-import { AsyncStorage } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 
 describe('storage', () => {
   let account

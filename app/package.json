@@ -1,6 +1,6 @@
 {
   "name": "mydata-phone-app",
-  "version": "0.0.1",
+  "version": "0.25.3",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
@@ -22,6 +22,7 @@
   ],
   "license": "Apache-2.0",
   "dependencies": {
+    "@react-native-community/async-storage": "^1.2.4",
     "@types/js-base64": "^2.3.1",
     "axios": "^0.18.0",
     "buffer": "^5.2.1",

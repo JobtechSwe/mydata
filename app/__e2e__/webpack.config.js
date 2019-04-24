@@ -9,6 +9,7 @@ module.exports = {
       'react-native': resolve(__dirname, 'src/native/react-native'),
       'react-native-config': resolve(__dirname, 'src/native/react-native-config'),
       'react-native-rsa-native': resolve(__dirname, 'src/native/react-native-rsa-native'),
+      '@react-native-community/async-storage': resolve(__dirname, 'src/native/async-storage'),
     },
   },
   output: {
