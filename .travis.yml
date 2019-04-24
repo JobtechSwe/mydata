@@ -8,9 +8,10 @@ jobs:
   - stage: "lint-and-e2e"
     name: "Lint and run end-to-end tests"
     cache:
-    - npm
     - directories:
-      - docker
+      - ~/.cache/docker
+      - ~/.npm
+      - ~/.nvm
     language: node_js
     services:
     # Require docker to be running in the build context
@@ -21,12 +22,12 @@ jobs:
     - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
     - chmod +x docker-compose
     - sudo mv docker-compose /usr/local/bin
+    - if ! [ -x "$(command -v lerna)" ]; then npm install -g lerna; fi
     install:
-    - docker load -i docker/node.tar || true
-    - docker load -i docker/redis.tar || true
-    - docker load -i docker/postgres.tar || true
+    - docker load -i ~/.cache/docker/node.tar || true
+    - docker load -i ~/.cache/docker/redis.tar || true
+    - docker load -i ~/.cache/docker/postgres.tar || true
     - docker images
-    - npm i -g lerna
     - npm install file:client --prefix examples/cv
     - npm run install
     test: skip
@@ -34,9 +35,9 @@ jobs:
     - npm run lint
     - npm run test:e2e
     - docker images
-    - docker save node -o docker/node.tar
-    - docker save redis -o docker/redis.tar
-    - docker save postgres -o docker/postgres.tar
+    - docker save node -o ~/.cache/docker/node.tar
+    - docker save redis -o ~/.cache/docker/redis.tar
+    - docker save postgres -o ~/.cache/docker/postgres.tar
 
   # build and deploy things
   - stage: deliver
@@ -44,7 +45,7 @@ jobs:
     language: node_js
     cache:
     - directories:
-      - docker
+      - ~/.cache/docker
     install:
     # Install a fresh version of the openshift cli
     - mkdir -p /opt/openshift
