@@ -239,10 +239,30 @@ async function get (accountId, clientId) {
   }))
 }
 
+const getAll = async accountId => {
+  if (!accountId) { throw Error('AccountId is missing') }
+
+  const sql = `
+  SELECT
+    consent_requests.consent_id,
+    clients.client_id,
+    clients.display_name as client_display_name,
+    clients.description as client_description
+  FROM consent_requests
+    INNER JOIN clients ON
+      clients.client_id = consent_requests.client_id
+  WHERE consent_requests.account_id = $1`
+
+  const { rows } = await query(sql, [ accountId ])
+
+  return rows.map(camelCase)
+}
+
 module.exports = {
   createRequest,
   getRequest,
   create,
   list,
-  get
+  get,
+  getAll
 }

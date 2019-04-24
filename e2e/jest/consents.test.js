@@ -46,7 +46,65 @@ describe('Client', () => {
     })
 
     const { url } = await client.consents.request(sampleRequest)
-    const { data } = await phone.getConsentRequest(url)
-    await phone.approveConsentRequest(data)
+    const consentRequest = await phone.getConsentRequest(url)
+    await phone.approveConsentRequest(consentRequest)
+  })
+})
+
+describe('Phone', () => {
+  let clients
+
+  beforeAll(async () => {
+    // Phone setup
+    await phone.createAccount({ firstName: 'Einar', lastName: 'Pejnar' })
+
+    // Get client going
+    clients = await Promise.all([
+      createClientWithServer(),
+      createClientWithServer(),
+      createClientWithServer()
+    ])
+
+    await Promise.all(clients.map(client => client.connect()))
+  })
+
+  afterAll(async () => {
+    await clearOperatorDb()
+    await phone.clearAccount()
+
+    clients.forEach(c => {
+      c.server.close()
+    })
+  })
+
+  it('Can get all consents for the account', async () => {
+    const firstResponse = await phone.getAllConsents()
+
+    // First the list should be empty
+    expect(firstResponse).toEqual([])
+
+    // Do several consent requests from different clients
+    const consentRequests = await Promise.all(clients.map(client => {
+      const sampleRequest = createSampleRequest(client.config.clientId)
+      return client.consents.request(sampleRequest)
+    }))
+
+    // Get and approve all consent requests
+    await Promise.all(consentRequests
+      .map(x => x.url)
+      .map(url => phone.getAndApproveConsentRequest(url))
+    )
+
+    const expectedArray = Array(3).fill({
+      clientDescription: 'A nice description of your fantastic service',
+      clientDisplayName: 'The name of your service',
+      clientId: expect.stringMatching(/^http[s]?/),
+      consentId: expect.stringMatching(v4Regexp)
+    })
+
+    // Now check again
+    const secondResponse = await phone.getAllConsents()
+    expect(secondResponse.length).toBe(3)
+    expect(secondResponse).toEqual(expectedArray)
   })
 })

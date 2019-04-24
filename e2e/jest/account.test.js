@@ -9,8 +9,8 @@ describe('Account', () => {
   })
 
   it('Can create account', async () => {
-    const { data } = await phone.createAccount({ firstName: 'Foo', lastName: 'Barsson' })
+    const account = await phone.createAccount({ firstName: 'Foo', lastName: 'Barsson' })
 
-    expect(data.id).toMatch(v4Regexp)
+    expect(account.id).toMatch(v4Regexp)
   })
 })
