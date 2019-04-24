@@ -28,9 +28,6 @@ const createClientWithServer = () => {
       // Create client with the port that the current test server is using
       const client = createClient(server.address().port)
 
-      // Very important!
-      app.use(express.json())
-
       // Hook up routes
       app.use(client.routes)
 
