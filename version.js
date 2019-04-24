@@ -25,7 +25,7 @@ getTags()
 .then(versions => {
   const latestVersion = Math.max.apply(null, Object.keys(versions))
   const version = versions[latestVersion]
-  
+
   switch (action) {
     case 'major':
     version.major++
@@ -39,20 +39,20 @@ getTags()
     case 'patch':
     version.patch++
   }
-  
+
   const versionString = `${version.major}.${version.minor}.${version.patch}`
-  
+
   PACKAGE_JSON_LOCATIONS.forEach(location => {
     let path = `${location}/package.json`
     let package = require(path)
     package.version = versionString
     fs.writeFileSync(path, JSON.stringify(package, null, 2))
-    
+
     console.log(`Set ${path} to v${package.version}`)
   })
 
   updatePlist(versionString)
-  
+
   console.log(`
 # To finish, run the following commands:
 git add **/package.json
@@ -86,7 +86,7 @@ function getTags () {
         console.log('Unable to get git tags, exiting.')
         return reject(err)
       }
-    
+
       if (stderr) {
         return reject(stderr)
       }
@@ -100,7 +100,7 @@ function getTags () {
           versions[v.major * 10000 + v.minor * 1000 + v.patch] = v
         }
       })
-      
+
       return resolve(versions)
     })
   })
