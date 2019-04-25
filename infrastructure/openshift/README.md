@@ -29,6 +29,14 @@ openssl genrsa -out /tmp/private.pem 4096
 openssl rsa -in /tmp/private.pem -outform PEM -pubout -out /tmp/public.key
 openssl rsa -in /tmp/private.pem -out /tmp/private.key -outform PEM
 oc create secret generic cv --from-file=/tmp/public.key --from-file=/tmp/private.key
+rm /tmp/private.pem /tmp/private.key
+
+# Certificates for examples/national-registration
+openssl genrsa -out /tmp/private.pem 4096
+openssl rsa -in /tmp/private.pem -outform PEM -pubout -out /tmp/public.key
+openssl rsa -in /tmp/private.pem -out /tmp/private.key -outform PEM
+oc create secret generic natreg --from-file=/tmp/public.key --from-file=/tmp/private.key
+rm /tmp/private.pem /tmp/private.key
 
 # Docker Hub credentials (use if you wish to push images to Docker's registry)
 oc create secret docker-registry dockerhub --docker-server=docker.io --docker-username=mydata --docker-password="mydata" --docker-email=code@mydata
@@ -77,6 +85,7 @@ Replace `aVERYsecretSECRET` in the URL's below (see "Secrets" section above).
 
 - `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/mydata/buildconfigs/cv-ci/webhooks/AverySECRETtoken/github`
 - `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/mydata/buildconfigs/operator-ci/webhooks/AverySECRETtoken/github`
+- `https://console.dev.services.jtech.se:8443/oapi/v1/namespaces/mydata/buildconfigs/natreg-ci/webhooks/AverySECRETtoken/github`
 
 #### Docker Hub
 
@@ -95,6 +104,7 @@ oc apply -f test/
 
 oc start-build cv-ci -n mydata
 oc start-build operator-ci -n mydata
+oc start-build natreg-ci -n mydata
 
 # Destroy everything
 oc delete -f test/
