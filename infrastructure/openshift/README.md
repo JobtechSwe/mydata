@@ -15,13 +15,12 @@ Before you begin, this guide assumes that...
 
 ### Secrets
 
-First of all, let's create some secrets that will be used in your environment.
+First of all, let us create some secrets that will be used in your environment.
 
 ```bash
 # Replace AverySECRETtoken with your APM token
 oc create secret generic apm --from-literal=token=AverySECRETtoken
-# Replace aVERYsecretSECRET with your build secret
-oc create secret generic github-webhook-secret --from-literal=WebHookSecretKey=aVERYsecretSECRET
+
 # Replace the path below with a path to your TLS certificate file
 oc create secret generic tls --from-file=/tmp/jtech.se.crt
 
