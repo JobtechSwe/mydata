@@ -1,6 +1,6 @@
 {
   "name": "mydata-cv",
-  "version": "0.0.1",
+  "version": "0.25.4",
   "description": "A Data Source/Data Sink offering a searchable CV",
   "main": "server.js",
   "scripts": {
@@ -23,14 +23,14 @@
   },
   "homepage": "https://github.com/JobtechSwe/mydata/example#readme",
   "dependencies": {
-    "@mydata/client": "0.25.0",
+    "@mydata/client": "file:../../client",
     "@smooth-ui/core-sc": "^7.1.1",
     "axios": "^0.18.0",
     "changecase-objects": "^1.1.0",
     "copy-to-clipboard": "^3.0.8",
     "dotenv": "^6.2.0",
-    "elastic-apm-js-base": "^1.0.0",
-    "elastic-apm-node": "^1.14.5",
+    "elastic-apm-js-base": "^3.0.0",
+    "elastic-apm-node": "^2.9.0",
     "express": "^4.16.3",
     "ioredis": "^4.6.2",
     "jsonwebtoken": "^8.3.0",

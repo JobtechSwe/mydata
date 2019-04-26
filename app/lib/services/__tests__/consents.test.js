@@ -59,6 +59,25 @@ describe('consentService', () => {
       })
     })
   })
+
+  describe('#getAll', () => {
+    describe('register', () => {
+      beforeEach(() => {
+      })
+      it('throws if account does not exist', async () => {
+        getAccount.mockResolvedValue()
+        await expect(consentService.getAll()).rejects.toThrow('Account is not set')
+      })
+      it('throws if account lacks id', async () => {
+        account.id = undefined
+        await expect(consentService.getAll()).rejects.toThrow('Account is not set')
+      })
+      it('does get request', async () => {
+        await consentService.getAll()
+        expect(axios.get).toHaveBeenCalled()
+      })
+    })
+  })
   describe('#approve', () => {
     it('works', () => {})
   })
