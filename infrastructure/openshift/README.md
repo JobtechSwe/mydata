@@ -50,13 +50,15 @@ oc apply -f shared/
 
 There are currently two environments; __CI__ and __TEST__. The yaml files describing these are found in the `./ci` and `./test` folders respectively. Deploying or tearing down the environments are done like so:
 
-__DEPLOY__
+#### Deploy
+
 ```bash
 oc apply -f ci/
 oc apply -f test/
 ```
 
-__TEAR DOWN__
+#### Tear down
+
 ```bash
 oc delete -f ci/
 oc delete -f test/
