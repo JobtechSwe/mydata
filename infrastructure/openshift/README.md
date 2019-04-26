@@ -37,7 +37,7 @@ oc create secret docker-registry dockerhub --docker-server=docker.io --docker-us
 
 ### Shared resources
 
-MyData uses `PostgreSQL` and `Redis`. Inside the `./shared` folder you will find the yaml files that describes how to deploy these.
+MyData uses __PostgreSQL__ and __Redis__. Inside the `./shared` folder you will find the yaml files that describes how to deploy these.
 
 ```bash
 # Deploy everything specified inside ./shared (ImageStreams + ephemeral databases)
@@ -50,12 +50,14 @@ oc apply -f shared/
 
 There are currently two environments; __CI__ and __TEST__. The yaml files describing these are found in the `./ci` and `./test` folders respectively. Deploying or tearing down the environments are done like so:
 
+__DEPLOY__
 ```bash
-# Deploy
 oc apply -f ci/
 oc apply -f test/
+```
 
-# Tear down
+__TEAR DOWN__
+```bash
 oc delete -f ci/
 oc delete -f test/
 ```
@@ -64,7 +66,7 @@ oc delete -f test/
 
 #### Docker Hub
 
-The docker images are built with __TRAVIS__ and stored in __DOCKER HUB__.
+The docker images are built with __Travis__ and stored in __Docker Hub__.
 
 - https://hub.docker.com/r/jobtechswe/mydata-app
 - https://hub.docker.com/r/jobtechswe/mydata-cv
