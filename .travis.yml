@@ -71,6 +71,11 @@ jobs:
     - bash .deliver-$PHASE.bash . jobtechswe/mydata-cv examples/cv/Dockerfile
     - bash .deliver-$PHASE.bash . jobtechswe/mydata-natreg examples/national-registration/Dockerfile
 
+    - echo "Redeploying..."
+    - oc rollout latest operator-$PHASE -n mydata
+    - oc rollout latest cv-$PHASE -n mydata
+    - oc rollout latest natreg-$PHASE -n mydata
+
     # ...and finally remove cached credentials
     - oc logout
     - docker logout

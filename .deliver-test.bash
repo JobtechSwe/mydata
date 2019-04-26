@@ -36,12 +36,6 @@ if [ $? != 0 ]; then
   exit $EXIT_CODE
 fi
 
-echo "Redeploying..."
-
-oc rollout latest operator-test -n mydata
-oc rollout latest cv-test -n mydata
-oc rollout latest natreg-test -n mydata
-
 echo "Cache $IMAGE:$TAG"
 rm -fr "$CACHE_PATH/*"
 mkdir -p "$CACHE_PATH"

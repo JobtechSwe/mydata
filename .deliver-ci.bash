@@ -20,12 +20,6 @@ if [ $? != 0 ]; then
   exit $EXIT_CODE
 fi
 
-echo "Redeploying..."
-
-oc rollout latest operator-ci -n mydata
-oc rollout latest cv-ci -n mydata
-oc rollout latest natreg-ci -n mydata
-
 echo "Cache $IMAGE:latest"
 mkdir -p "~/.cache/docker/jobtechswe"
 docker save $IMAGE:latest -o "~/.cache/docker/$IMAGE-latest.tar"
