@@ -46,10 +46,7 @@ describe('Consent request for example/cv', () => {
       .get('#qrcode')
       .then(res => {
         const url = res[0].getAttribute('data-consent-request-url')
-        return cy.getConsentRequest(url)
-      })
-      .then(consentReq => {
-        return cy.approveConsentRequest(consentReq)
+        return cy.getAndApproveConsentRequest(url)
       })
 
     cy

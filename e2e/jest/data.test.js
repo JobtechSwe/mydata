@@ -83,8 +83,7 @@ describe('Data', () => {
     const { url } = await client.consents.request(request)
 
     // User gets the request and approves it
-    const { data } = await phone.getConsentRequest(url)
-    await phone.approveConsentRequest(data)
+    await phone.getAndApproveConsentRequest(url)
   })
 
   it('Can perform simultaneous writes', async done => {
@@ -213,7 +212,6 @@ describe('Data', () => {
     const { url } = await client.consents.request(request)
 
     // User gets the request and approves it
-    const { data } = await phone.getConsentRequest(url)
-    await phone.approveConsentRequest(data)
+    await phone.getAndApproveConsentRequest(url)
   })
 })

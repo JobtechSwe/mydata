@@ -1,6 +1,6 @@
 {
   "name": "mydata-national-registration",
-  "version": "0.0.1",
+  "version": "0.25.1",
   "scripts": {
     "dev": "nodemon server.js",
     "lint": "eslint '**/*.js'"
@@ -9,7 +9,7 @@
     "@mydata/client": "0.24.1",
     "cookie-parser": "^1.4.4",
     "dotenv": "^7.0.0",
-    "elastic-apm-node": "^2.8.0",
+    "elastic-apm-node": "^2.9.0",
     "express": "^4.16.4",
     "faker": "^4.1.0",
     "morgan": "^1.9.1",
