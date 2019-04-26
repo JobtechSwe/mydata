@@ -1,14 +1,14 @@
 #!/bin/bash
 
 CONTEXT=$1
-IMAGE="$2:latest"
+IMAGE="$2"
 
 DOCKERFILE=""
 if [ ! -z "$3" ]; then
   DOCKERFILE="-f $3"
 fi
 
-docker load -i "docker/$IMAGE-latest.tar" || true
+docker load -i "~/.cache/docker/$IMAGE-latest.tar" || true
 docker pull $IMAGE
 
 docker build -t $IMAGE --cache-from $IMAGE $CONTEXT $DOCKERFILE && \
@@ -26,4 +26,5 @@ oc rollout latest cv-ci -n mydata
 oc rollout latest operator-ci -n mydata
 
 echo "Cache $IMAGE:latest"
-docker save $IMAGE:latest -o "docker/$IMAGE-latest.tar"
+mkdir -p "~/.cache/docker/jobtechswe"
+docker save $IMAGE:latest -o "~/.cache/docker/$IMAGE-latest.tar"
