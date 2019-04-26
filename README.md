@@ -45,7 +45,7 @@ Data lagras krypterat i en s.k. PDS (Personal Data Storage). Just nu är Dropbox
 ## Install and develop (english)
 
 1. Clone this repo
-2. `npm run install-all`
+2. `npm run install`
 3. Add the following to your host file (probably /etc/hosts) 
 ```
 127.0.0.1 operator
