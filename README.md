@@ -69,11 +69,9 @@ git checkout master
 git pull
 git fetch --tags
 ```
-Now, run `git tag` to see the latest tag available.
 
 Then:
 
 ```
-git tag <next version>
-git push origin <next version>
+npm run version:<pathch|minor|major>
 ```
