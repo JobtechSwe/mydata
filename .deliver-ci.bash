@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CONTEXT=$1
-IMAGE="$2:latest"
+IMAGE="$2"
 
 DOCKERFILE=""
 if [ ! -z "$3" ]; then
@@ -26,4 +26,5 @@ oc rollout latest cv-ci -n mydata
 oc rollout latest operator-ci -n mydata
 
 echo "Cache $IMAGE:latest"
+mkdir -p "~/.cache/docker/jobtechswe"
 docker save $IMAGE:latest -o "~/.cache/docker/$IMAGE-latest.tar"
