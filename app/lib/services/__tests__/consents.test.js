@@ -95,6 +95,7 @@ describe('consentService', () => {
           clients: consentRequest.clients,
         })
       })
+<<<<<<< HEAD
     })
   })
 
@@ -114,6 +115,8 @@ describe('consentService', () => {
         await consentService.getAll()
         expect(axios.get).toHaveBeenCalled()
       })
+=======
+>>>>>>> 348734f2a165910402af41d5379f2ab902afdc8e
     })
   })
   describe('#approve', () => {
