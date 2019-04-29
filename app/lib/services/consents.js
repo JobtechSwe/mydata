@@ -57,7 +57,7 @@ export async function get(consentRequestId) {
   }
 }
 
-export async function approve({ data }) {
+export async function approve({ data, consentRequestId }) {
   const url = `${Config.OPERATOR_URL}/consents`
   let payload
   try {
@@ -68,7 +68,7 @@ export async function approve({ data }) {
       accountId: account.id,
       accountKey: Base64.encode(account.keys.publicKey),
       clientId: data.clientId,
-      consentRequestId: data.consentRequestId,
+      consentRequestId,
       consentEncryptionKey: Base64.encode(
         encryptionKey.publicKey || encryptionKey.rsaPublicKey
       ),

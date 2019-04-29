@@ -92,7 +92,6 @@ const StoreProvider = ({ ...props }) => {
 
     read(data.token)
       .then(retrievedData => {
-        console.log(retrievedData)
         dispatch({ type: 'LOAD_DATA', payload: retrievedData })
       })
       .catch(error => {
