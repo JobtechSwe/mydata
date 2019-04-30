@@ -23,7 +23,7 @@ docker tag $IMAGE:$TAG $IMAGE:latest-tag
 
 if [ $? != 0 ]; then
   EXIT_CODE=$?
-  echo "Docker build failed!"
+  echo >&2 "Docker build failed!"
   exit $EXIT_CODE
 fi
 
@@ -32,7 +32,7 @@ docker push $IMAGE:$TAG
 
 if [ $? != 0 ]; then
   EXIT_CODE=$?
-  echo "Docker push failed!"
+  echo >&2 "Docker push failed!"
   exit $EXIT_CODE
 fi
 

@@ -16,7 +16,7 @@ docker push $IMAGE
 
 if [ $? != 0 ]; then
   EXIT_CODE=$?
-  echo "Docker build or push failed!"
+  echo >&2 "Docker build or push failed!"
   exit $EXIT_CODE
 fi
 
