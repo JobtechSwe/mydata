@@ -1,5 +1,5 @@
 const createError = require('http-errors')
-const { Router } = require('express')
+const { Router, json } = require('express')
 const { event } = require('./schemas')
 
 const keyListHandler = ({ keyProvider }) => async (req, res, next) => {
@@ -28,6 +28,8 @@ const eventsHandler = client => async ({ body }, res, next) => {
 
 module.exports = client => {
   const router = new Router()
+
+  router.use(json())
 
   router.get(client.config.jwksPath, keyListHandler(client))
   router.get(`${client.config.jwksPath}/:kid`, keyHandler(client))
