@@ -8,49 +8,49 @@ const reducer = (state, action) => {
   switch (action.type) {
     case 'ADD_EXPERIENCE':
       return { ...state,
-        dirty: true,
         experience: state.experience
           ? state.experience.concat(action.payload.entry)
-          : [action.payload.entry]
+          : [action.payload.entry],
+        dirty: { ...state.dirty, experience: true }
       }
     case 'UPDATE_EXPERIENCE':
       return { ...state,
-        dirty: true,
-        experience: state.experience.map((x, i) => action.payload.index !== i ? x : Object.assign({}, x, action.payload.entry))
+        experience: state.experience.map((x, i) => action.payload.index !== i ? x : Object.assign({}, x, action.payload.entry)),
+        dirty: { ...state.dirty, experience: true }
       }
     case 'ADD_LANGUAGE':
       return { ...state,
-        dirty: true,
         languages: state.languages
           ? state.languages.concat(action.payload.entry)
-          : [action.payload.entry]
+          : [action.payload.entry],
+        dirty: { ...state.dirty, languages: true }
       }
     case 'UPDATE_LANGUAGE':
       return { ...state,
-        dirty: true,
-        languages: state.languages.map((x, i) => action.payload.index !== i ? x : Object.assign({}, x, action.payload.entry))
+        languages: state.languages.map((x, i) => action.payload.index !== i ? x : Object.assign({}, x, action.payload.entry)),
+        dirty: { ...state.dirty, languages: true }
       }
     case 'ADD_EDUCATION':
       return { ...state,
-        dirty: true,
         education: state.education
           ? state.education.concat(action.payload.entry)
-          : [action.payload.entry]
+          : [action.payload.entry],
+        dirty: { ...state.dirty, education: true }
       }
     case 'UPDATE_EDUCATION':
       return { ...state,
-        dirty: true,
-        education: state.education.map((x, i) => action.payload.index !== i ? x : Object.assign({}, x, action.payload.entry))
+        education: state.education.map((x, i) => action.payload.index !== i ? x : Object.assign({}, x, action.payload.entry)),
+        dirty: { ...state.dirty, education: true }
       }
     case 'UPDATE_BASEDATA':
       return { ...state,
-        dirty: true,
-        baseData: action.payload
+        baseData: action.payload,
+        dirty: { ...state.dirty, baseData: true }
       }
     case 'LOAD_DATA':
       return { ...state, loaded: true, ...action.payload }
     case 'SAVE_DATA':
-      return { ...state, dirty: false }
+      return { ...state, dirty: { ...state.dirty, [action.area]: false } }
     case 'CLEAR':
       return { loaded: false }
     case 'SET_TOKEN':
@@ -66,13 +66,19 @@ const reducer = (state, action) => {
 const StoreProvider = ({ ...props }) => {
   const [data, dispatch] = useReducer(reducer, {
     loaded: false,
-    dirty: false,
+    dirty: {
+      baseData: false,
+      experience: false,
+      education: false,
+      languages: false
+    },
     baseData: {},
     experience: [],
     education: [],
     languages: []
   })
 
+  // Get token
   useEffect(() => {
     const tokenFromStorage = storage.getAccessToken()
     if (tokenFromStorage && !data.token) {
@@ -80,6 +86,7 @@ const StoreProvider = ({ ...props }) => {
     }
   }, [])
 
+  // Load data
   useEffect(() => {
     if (!data.token) { return }
 
@@ -92,17 +99,17 @@ const StoreProvider = ({ ...props }) => {
       })
   }, [data.token])
 
-  useEffect(() => {
-    if (!data.token || !data.loaded || !data.dirty) { return }
-    const { token, baseData, experience, education, languages } = data
-    write(token, { baseData, experience, education, languages })
-      .then(() => {
-        dispatch({ type: 'SAVE_DATA' })
-      })
-      .catch(error => {
-        dispatch({ type: 'ERROR', error: new Error('SAVE_DATA', error) })
-      })
-  }, [JSON.stringify([data.baseData, data.experience, data.education, data.languages])])
+  const saveEffect = (area) => useEffect(() => {
+    if (!data.token || !data[area]) { return }
+    write(data.token, data, area)
+      .then(() => dispatch({ type: 'SAVE_DATA', area }))
+      .catch(error => dispatch({ type: 'ERROR', area, error: new Error('SAVE_DATA', error) }))
+  }, [data.dirty[area]])
+
+  saveEffect('baseData')
+  saveEffect('experience')
+  saveEffect('education')
+  saveEffect('languages')
 
   return <StoreContext.Provider value={[data, dispatch]}>{props.children}</StoreContext.Provider>
 }

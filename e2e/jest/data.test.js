@@ -44,7 +44,7 @@ describe('Data', () => {
         })
         expect(initialData).toEqual({
           [client.config.clientId]: {
-            'test-data': {}
+            'test-data': null
           }
         })
 
@@ -127,7 +127,7 @@ describe('Data', () => {
         })
         expect(initialData).toEqual({
           [client.config.clientId]: {
-            'test-data-1': {}
+            'test-data-1': null
           }
         })
 

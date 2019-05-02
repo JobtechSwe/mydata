@@ -28,6 +28,14 @@ export const H3 = styled(Text)`
   margin-bottom: 12px;
 `
 
+export const H4 = styled(Text)`
+  align-self: stretch;
+  color: ${({ theme }) => theme.colors.primary};
+  font-family: ${({ theme }) => theme.typography.contrast};
+  font-size: ${({ theme }) => theme.fontSize.small};
+  margin-bottom: 6px;
+`
+
 export const StyledParagraph = styled(Text)`
   align-self: stretch;
   color: ${({ theme }) => theme.colors.primary};

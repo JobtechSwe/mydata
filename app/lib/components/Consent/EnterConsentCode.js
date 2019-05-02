@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { Wrap } from '../components/View/Wrapper'
-import { Paragraph } from '../components/typography/Typography'
-import { PrimaryButton } from '../components/elements/Button/Button'
-import { parse } from '../utils/qrcode'
+import { Wrap } from '../View/Wrapper'
+import { Paragraph } from '../typography/Typography'
+import { PrimaryButton } from '../elements/Button/Button'
+import { parse } from '../../utils/qrcode'
 import ScanQRConsentCode from './ScanQRConsentCode'
 
 class EnterConsentCode extends Component {

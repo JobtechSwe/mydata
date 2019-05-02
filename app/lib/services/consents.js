@@ -5,7 +5,7 @@ import { sign, verify } from './crypto'
 import { getAccount } from './storage'
 import { Base64 } from 'js-base64'
 
-export async function get(id) {
+export async function get(consentRequestId) {
   const account = await getAccount()
 
   if (!account || !account.id) {
@@ -13,8 +13,8 @@ export async function get(id) {
   }
 
   const url = `${Config.OPERATOR_URL}/consents/requests/${encodeURIComponent(
-    id
-  )}?accountId=${account.id}`
+    consentRequestId
+  )}?accountId=${encodeURIComponent(account.id)}`
 
   let response
   try {
@@ -24,7 +24,7 @@ export async function get(id) {
     throw error
   }
   const {
-    data: { data, signature, client },
+    data: { data, signature, clients },
   } = response
 
   let signingKey
@@ -47,11 +47,9 @@ export async function get(id) {
     }
 
     return {
-      data: {
-        ...data,
-        consentRequestId: id,
-      },
-      client,
+      consentRequestId,
+      data,
+      clients,
     }
   } catch (error) {
     console.error(error)
@@ -59,7 +57,7 @@ export async function get(id) {
   }
 }
 
-export async function approve({ data }) {
+export async function approve({ data, consentRequestId }) {
   const url = `${Config.OPERATOR_URL}/consents`
   let payload
   try {
@@ -70,7 +68,7 @@ export async function approve({ data }) {
       accountId: account.id,
       accountKey: Base64.encode(account.keys.publicKey),
       clientId: data.clientId,
-      consentRequestId: data.consentRequestId,
+      consentRequestId,
       consentEncryptionKey: Base64.encode(
         encryptionKey.publicKey || encryptionKey.rsaPublicKey
       ),

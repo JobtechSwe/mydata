@@ -105,7 +105,7 @@ describe('routes /api/consents', () => {
     })
   })
 
-  describe('GET: /requests/:id', () => {
+  describe.skip('GET: /requests/:id', () => {
     let consentRequest, signature
     beforeEach(() => {
       consentRequest = {
