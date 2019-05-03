@@ -38,7 +38,7 @@ describe('routes api/clients', () => {
   afterEach(() => {
     pg.clearMocks()
   })
-  describe('POST /', () => {
+  describe.skip('POST /', () => {
     let data, clients
     beforeEach(() => {
       getKey.mockResolvedValue({ rsaPublicKey: clientKeys.publicKey })

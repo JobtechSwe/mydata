@@ -1,6 +1,5 @@
 import React from 'react'
 import { Box, Typography, Button, theme, styled } from '@smooth-ui/core-sc'
-import Login from '../components/Login'
 
 const Background = styled.div`
   background-image: url('/landing-page.jpg');
@@ -35,9 +34,8 @@ export default () => {
             <li>Share your CV with whoever you want</li>
             <li>And more</li>
           </ul>
-          <Button variant="success" onClick={() => window.location.assign('/auth')} style={{ marginTop: 10 + 'px' }}>Sign up with Mydata</Button>
+          <Button variant="success" onClick={() => window.location.assign('/auth')} style={{ marginTop: 10 + 'px' }}>Login with MyData</Button>
         </Box>
-        <Login />
       </Box>
     </React.Fragment>
   )

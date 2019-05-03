@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Wrap } from '../View/Wrapper'
 import { Paragraph } from '../typography/Typography'
 import { PrimaryButton } from '../elements/Button/Button'
-import { parse } from '../../utils/qrcode'
+import { parse } from '../../utils/code'
 import ScanQRConsentCode from './ScanQRConsentCode'
 
 class EnterConsentCode extends Component {
@@ -17,10 +17,10 @@ class EnterConsentCode extends Component {
 
   onScanQRCode = qr => {
     try {
-      const { code, type } = parse(qr)
-      this.props.onCode({ code, type })
+      const { type, jwt } = parse(qr)
+      this.props.onCode({ jwt, type })
     } catch (error) {
-      this.setState({ view: 'error', code: qr, error })
+      this.setState({ view: 'error', error })
     }
   }
 

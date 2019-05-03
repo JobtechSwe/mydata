@@ -1,7 +1,9 @@
 const createError = require('http-errors')
 const { createVerify } = require('crypto')
-const { getKey } = require('jwks-manager')
+const jwksManager = require('jwks-manager')
+const { getKey } = require('../services/getKey')
 const schemas = require('../services/schemas')
+const { verify, decode } = require('jwt-lite')
 
 const clientsService = require('../services/clients')
 
@@ -35,7 +37,7 @@ const signed = ({ accountKey = false } = {}) => async (req, res, next) => {
       verifyKey = Buffer.from(data.accountKey, 'base64').toString('utf8')
     } else {
       try {
-        const { publicKey, rsaPublicKey } = await getKey(signature.kid)
+        const { publicKey, rsaPublicKey } = await jwksManager.getKey(signature.kid)
         verifyKey = publicKey || rsaPublicKey
       } catch (err) {
         throw createError(401, `Could not retrieve key [${signature.kid}]`)
@@ -72,6 +74,26 @@ const signed = ({ accountKey = false } = {}) => async (req, res, next) => {
   }
 }
 
+const jwtVerifier = async ({ body }, res, next) => {
+  const { jwt } = body
+
+  if (!jwt) {
+    throw Error('JWT missing on request')
+  }
+  const { header } = await decode(jwt)
+  const publicKey = await getKey(header.kid)
+
+  try {
+    const claimsSet = await verify(jwt, publicKey)
+    body.claimsSet = claimsSet
+    next()
+  } catch (error) {
+    console.error('could not verify jwt', error)
+    next(error)
+  }
+}
+
 module.exports = {
-  signed
+  signed,
+  jwtVerifier
 }

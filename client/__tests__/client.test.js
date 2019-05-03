@@ -1,7 +1,8 @@
 const createClient = require('../lib/client')
 const { createMemoryStore } = require('../lib/memoryStore')
 const axios = require('axios')
-const { generateKeyPair, verifySignature } = require('./_helpers')
+const { generateKeyPair } = require('./_helpers')
+const { decode } = require('jwt-lite')
 jest.mock('axios')
 
 describe('client', () => {
@@ -53,7 +54,7 @@ describe('client', () => {
       })
       expect(client.config.jwksPath).toEqual('/jwks')
       expect(client.config.eventsPath).toEqual('/events')
-      expect(client.config.alg).toEqual('RSA-SHA512')
+      expect(client.config.alg).toEqual('RSA-SHA256')
     })
     it('throws if clientId is missing', () => {
       config.clientId = undefined
@@ -86,19 +87,19 @@ describe('client', () => {
       })
       it('sends correct parameters', async () => {
         await client.connect()
-        expect(axios.post).toHaveBeenCalledWith(expect.any(String), {
-          data: {
-            displayName: 'CV app',
-            description: 'A CV app with a description which is at least 10 chars',
-            clientId: 'https://mycv.work',
-            jwksUrl: 'https://mycv.work/jwks',
-            eventsUrl: 'https://mycv.work/events'
-          },
-          signature: {
-            data: expect.any(String),
-            alg: 'RSA-SHA512',
-            kid: 'https://mycv.work/jwks/client_key'
-          }
+        const { jwt } = axios.post.mock.calls[0][1]
+
+        const { claimsSet } = decode(jwt)
+
+        expect(claimsSet).toEqual({
+          type: 'CLIENT_REGISTRATION',
+          aud: 'https://smoothoperator.work',
+          displayName: 'CV app',
+          description: 'A CV app with a description which is at least 10 chars',
+          eventsUrl: 'https://mycv.work/events',
+          jwksUrl: 'https://mycv.work/jwks',
+          exp: expect.any(Number),
+          iss: 'https://mycv.work'
         })
       })
       it('calls events.emit with payload', async () => {
@@ -109,8 +110,9 @@ describe('client', () => {
       })
       it('signs the payload', async () => {
         await client.connect()
-        const [, { data, signature }] = axios.post.mock.calls[0]
-        expect(verifySignature({ data, signature }, clientKeys.publicKey)).toEqual(true)
+        const { jwt } = axios.post.mock.calls[0][1]
+        const { signature } = decode(jwt)
+        expect(signature).toEqual(expect.any(Uint8Array))
       })
     })
   })

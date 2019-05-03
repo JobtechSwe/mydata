@@ -2,18 +2,29 @@ const { Router } = require('express')
 const { create } = require('../../services/clients')
 const { get: getConsent } = require('../../services/consents')
 const createError = require('http-errors')
-const { signed } = require('../../middleware/auth')
+const { jwtVerifier } = require('../../middleware/auth')
 const schemas = require('../../services/schemas')
+const { schemas: { clientRegistration } } = require('../../../../client/lib/messaging')
 
 const router = Router()
 
 // Register
-router.post('/', signed(), async ({ body, signature: { key } }, res, next) => {
+router.post('/', jwtVerifier, async ({ body }, res, next) => {
   try {
-    await schemas.registerClient.validate(body, schemas.defaultOptions)
+    console.log('* * * * * /clients * * * * *')
+    const { claimsSet } = body
+    clientRegistration.validate(claimsSet)
+    console.log(claimsSet)
+    const { displayName, description, eventsUrl, jwksUrl } = claimsSet
+    const clientId = claimsSet.iss
+
     const result = await create({
-      ...body,
-      clientKey: key
+      displayName,
+      description,
+      eventsUrl,
+      jwksUrl,
+      clientId,
+      clientKey: 'remove-this-column'
     })
 
     res.send(result)

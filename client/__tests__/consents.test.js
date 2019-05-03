@@ -94,7 +94,7 @@ describe('consents', () => {
           kid: expect.stringMatching(new RegExp('^http://localhost:4000/jwks/enc_'))
         },
         signature: {
-          alg: 'RSA-SHA512',
+          alg: 'RSA-SHA256',
           kid: 'http://localhost:4000/jwks/client_key',
           data: expect.any(String)
         }
