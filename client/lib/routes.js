@@ -1,6 +1,7 @@
 const createError = require('http-errors')
 const { Router, json } = require('express')
 const { event } = require('./schemas')
+const { JWT } = require('@panva/jose')
 
 const keyListHandler = ({ keyProvider }) => async (req, res, next) => {
   const keys = await keyProvider.jwksKeyList()
@@ -34,6 +35,11 @@ module.exports = client => {
   router.get(client.config.jwksPath, keyListHandler(client))
   router.get(`${client.config.jwksPath}/:kid`, keyHandler(client))
   router.post(client.config.eventsPath, eventsHandler(client))
+  router.get(client.config.eventsPath, (req, res, next) => {
+    console.log(req.headers.jwt)
+    const payload = JWT.decode(req.headers.jwt)
+    console.log(payload)
+  })
 
   return router
 }

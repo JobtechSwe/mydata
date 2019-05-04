@@ -23,7 +23,7 @@ const createAuthenticationRequest = async (client, id) => {
   }, privateKey, {
     algorithm: alg,
     kid: true,
-    expiresIn: '120 s'
+    expiresIn: '5 m'
   })
 
   // return sign({

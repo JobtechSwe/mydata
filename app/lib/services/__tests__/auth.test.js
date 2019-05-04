@@ -1,4 +1,4 @@
-import { handleJwt } from '../auth'
+import { handleJwt, createConnectionInfoRequest } from '../auth'
 
 jest.mock('../getKey', () => ({
   getKey: () => {
@@ -32,6 +32,22 @@ describe('auth', () => {
         name: 'My CV',
         type: 'AUTHENTICATION_REQUEST',
       })
+    })
+  })
+
+  describe('#createConnectionInfoRequest', () => {
+    it('runs', () => {
+      const res = createConnectionInfoRequest({
+        aud: 'mydata://auth',
+        description: 'An app for your CV online',
+        events: 'http://localhost:4000/events',
+        exp: 1556946770839,
+        iss: 'http://localhost:4000',
+        jti: '8228a45c-736e-483f-927a-b81f01081740',
+        name: 'My CV',
+        type: 'AUTHENTICATION_REQUEST',
+      })
+      expect(res).toBe('eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJ0eXBlIjoiQ09OTkVDVElPTl9JTkZPX1JFUVVFU1QiLCJhdWQiOiJteWRhdGE6Ly9hdXRoIn0.')
     })
   })
 })

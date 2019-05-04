@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { EnterAuthCode } from '../../components/Consent'
-import { handleJwt } from '../../services/auth'
+import { handleJwt, hasConnection, createConnectionInfoRequest } from '../../services/auth'
+import axios from 'axios'
 
 const AuthRequestScreen = () => {
   const [state, setState] = useState({
@@ -11,23 +12,28 @@ const AuthRequestScreen = () => {
   const [authReq, setAuthReq] = useState()
 
   const onCode = async (jwt) => {
-    try {
       try {
         const verifiedAuthReq = await handleJwt(jwt)
         console.log('verifiedAuthReq', verifiedAuthReq)
-        setAuthReq(verifiedAuthReq)
-      } catch (error) {
-        console.error(error)
-      }
-    } catch (error) {
-      console.error('could not get key for jwt', jwt, error)
-    }
 
-    /*
-      3. Now, check in asyncStorage if we already got a connection for that clientId and if the hash of the permissions is the same
-      4a: If already got a connection, then do LOGIN
-      4b: If not, then do REGISTRATION_INITIALIZATION
-     */
+        if (await hasConnection(verifiedAuthReq)) {
+          console.log(`Has connection for ${verifiedAuthReq.iss}!`)
+          // Send LOGIN to operator
+        } else {
+          console.log(`No existing connection for ${verifiedAuthReq.iss}`)
+          // Send CONNECTION_INFO_REQUEST to client
+          const connectionInfoRequest = createConnectionInfoRequest(verifiedAuthReq)
+
+          await axios.get(verifiedAuthReq.events, { headers: { jwt: connectionInfoRequest } })
+
+          // If ok, then store connection and send CONNECTION to operator
+
+          // If not, do nothing..?
+      }
+    }
+       catch (error) {
+        console.error('foo', error)
+      }
   }
 
   return <EnterAuthCode onCancel={() => ({})} onCode={onCode}/>
