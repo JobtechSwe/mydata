@@ -15,7 +15,7 @@ import { H3, Paragraph } from '../typography/Typography'
 import { PrimaryButton } from '../elements/Button/Button'
 import DeviceInfo from 'react-native-device-info'
 
-export default class ScanQRConsentCode extends Component {
+export default class ScanQRCode extends Component {
   state = {
     code: '',
     helpVisible: false,

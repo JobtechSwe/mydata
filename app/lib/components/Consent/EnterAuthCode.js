@@ -3,9 +3,9 @@ import { Wrap } from '../View/Wrapper'
 import { Paragraph } from '../typography/Typography'
 import { PrimaryButton } from '../elements/Button/Button'
 import { parse } from '../../utils/code'
-import ScanQRConsentCode from './ScanQRConsentCode'
+import ScanQRCode from './ScanQRCode'
 
-class EnterConsentCode extends Component {
+class EnterAuthCode extends Component {
   state = {
     view: 'scan',
     validated: false,
@@ -42,7 +42,7 @@ class EnterConsentCode extends Component {
       default:
         return (
           <Wrap>
-            <ScanQRConsentCode
+            <ScanQRCode
               onCancel={this.props.onCancel}
               onRead={this.onScanQRCode}
             />
@@ -52,4 +52,4 @@ class EnterConsentCode extends Component {
   }
 }
 
-export default EnterConsentCode
+export default EnterAuthCode

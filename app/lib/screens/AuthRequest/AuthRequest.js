@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { EnterConsentCode } from '../../components/Consent'
+import { EnterAuthCode } from '../../components/Consent'
 import { verify, decode } from 'jwt-lite'
 import { getKey } from '../../services/getKey'
 
@@ -32,7 +32,7 @@ const AuthRequestScreen = () => {
      */
   }
 
-  return <EnterConsentCode onCancel={() => ({})} onCode={onCode}/>
+  return <EnterAuthCode onCancel={() => ({})} onCode={onCode}/>
 }
 
 // class ManageConsentsRequestScreen extends React.Component {
@@ -94,7 +94,7 @@ const AuthRequestScreen = () => {
 //       case 'enter':
 //       default:
 //         return (
-//           <EnterConsentCode
+//           <EnterAuthCode
 //             onCancel={this.onCancel}
 //             onCode={this.onCode}
 //           />

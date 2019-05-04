@@ -1,11 +1,11 @@
 import ConsentModal from './ConsentModal'
 import ConsentRequest from './ConsentRequest'
-import EnterConsentCode from './EnterConsentCode'
-import ScanQRConsentCode from './ScanQRConsentCode'
+import EnterAuthCode from './EnterAuthCode'
+import ScanQRCode from './ScanQRCode'
 
 export {
   ConsentModal,
   ConsentRequest,
-  EnterConsentCode,
-  ScanQRConsentCode,
+  EnterAuthCode,
+  ScanQRCode,
 }
