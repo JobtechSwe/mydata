@@ -3,6 +3,7 @@ const { decryptDocumentKey } = require('./crypto')
 const { promisify } = require('util')
 const { serialize } = require('jwks-provider')
 const Joi = require('joi')
+const { JWK } = require('@panva/jose')
 
 const KEY_PREFIX = 'key|>'
 const ACCESS_KEY_IDS_PREFIX = 'accessKeyIds|>'
@@ -157,19 +158,7 @@ class KeyProvider {
 
   async jwksKey (kid) {
     if (kid === 'client_key') {
-      const publicKey = {
-        alg: 'RS256',
-        e: 'AQAB',
-        ext: true,
-        key_ops: ['verify'],
-        kty: 'RSA',
-        n: 'p0V6QDPjsjB2CddNxzjUVXKpGAODmqjS0QPMGSDXD_bR_kTyA2zwt2bKOyIyuOvmy8kp7En7hEebopKH9codgGnlZBV47xeyk24NaqI9ZTelrXjXOBjhNF13vTCaVTEI4a9-YFZhi_y07I-QJRU1k6c8vWLEQ6HljboX7YCtN6T1tUzu9-ZZ7qwbHZhZHN4YbbGQfmXJMflzzJ6FnT1qKmtt9zwrMgqhm_KXVuGq9G1LzWFo06nCZD3xJSwFT5d8qbG9gC3jHFaGF_1Vr3ywMAzkO2xGuOuuG0Rq1Nbl_n0yFCgBzYG6q7wEnMc1FUTfOBwj0Cj9CmT_VGSfTPjDoQ',
-      }
-      return {
-        ...publicKey,
-        kid: `${this.jwksUrl}/client_key`,
-        use: 'sig'
-      }
+      return JWK.importKey(this.clientKeys.publicKey, { kid: `${this.jwksUrl}/client_key` })
     } else {
       const key = await this.getKey(kid)
       return key ? serialize([key]).keys[0] : null

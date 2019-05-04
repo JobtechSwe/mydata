@@ -17,8 +17,8 @@ class EnterAuthCode extends Component {
 
   onScanQRCode = qr => {
     try {
-      const { type, jwt } = parse(qr)
-      this.props.onCode({ jwt, type })
+      const jwt = parse(qr)
+      this.props.onCode(jwt)
     } catch (error) {
       this.setState({ view: 'error', error })
     }

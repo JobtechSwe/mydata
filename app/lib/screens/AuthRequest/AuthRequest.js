@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { EnterAuthCode } from '../../components/Consent'
-import { verify, decode } from 'jwt-lite'
-import { getKey } from '../../services/getKey'
+import { handleJwt } from '../../services/auth'
 
 const AuthRequestScreen = () => {
   const [state, setState] = useState({
@@ -9,20 +8,19 @@ const AuthRequestScreen = () => {
     code: '',
   })
 
-  const onCode = async ({ jwt }) => {
-    try {
-      const { header } = await decode(jwt)
-      const publicKey = await getKey(header.kid)
+  const [authReq, setAuthReq] = useState()
 
+  const onCode = async (jwt) => {
+    try {
       try {
-        const claimsSet = await verify(jwt, publicKey)
-        console.log('verified claimsSet', claimsSet)
+        const verifiedAuthReq = await handleJwt(jwt)
+        console.log('verifiedAuthReq', verifiedAuthReq)
+        setAuthReq(verifiedAuthReq)
       } catch (error) {
         console.error(error)
       }
     } catch (error) {
-      console.error('could not verify jwt', jwt, error)
-      throw Error('could not verify jwt')
+      console.error('could not get key for jwt', jwt, error)
     }
 
     /*
