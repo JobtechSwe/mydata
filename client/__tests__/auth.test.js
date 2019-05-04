@@ -1,7 +1,7 @@
 const createClient = require('../lib/client')
 const { createMemoryStore } = require('../lib/memoryStore')
 const { generateKeyPair } = require('./_helpers')
-const { decode } = require('jwt-lite')
+const { JWT } = require('@panva/jose')
 const { createAuthenticationRequest } = require('./../lib/auth')
 const { schemas } = require('./../lib/messaging')
 const { v4 } = require('uuid')
@@ -29,15 +29,15 @@ describe('auth', () => {
       const id = 'some_id'
       const authReq = await createAuthenticationRequest(client, id)
 
-      const decodedJwt = decode(authReq)
-      expect(decodedJwt).not.toBe(null)
+      const payload = JWT.decode(authReq)
+      expect(payload).not.toBe(null)
     })
 
     it('creates the correct jwt header', async () => {
       const id = 'some_id'
       const authReq = await createAuthenticationRequest(client, id)
 
-      const { header } = decode(authReq, { complete: true })
+      const { header } = JWT.decode(authReq, { complete: true })
 
       expect(header.kid).toEqual('http://localhost:4000/jwks/client_key')
       expect(schemas.header.validate(header).error).toEqual(null)
@@ -47,15 +47,15 @@ describe('auth', () => {
       const id = v4()
       const authReq = await createAuthenticationRequest(client, id)
 
-      const { claimsSet } = decode(authReq)
+      const payload = JWT.decode(authReq)
 
-      expect(schemas.authenticationRequest.validate(claimsSet).error).toBe(null)
+      expect(schemas.authenticationRequest.validate(payload).error).toBe(null)
 
-      expect(claimsSet.aud).toBe('mydata://auth')
-      expect(claimsSet.iss).toBe('http://localhost:4000')
-      expect(claimsSet.name).toBe('CV app')
-      expect(claimsSet.description).toBe('A CV app with a description which is longer than 10 chars')
-      expect(claimsSet.events).toBe('http://localhost:4000/events')
+      expect(payload.aud).toBe('mydata://auth')
+      expect(payload.iss).toBe('http://localhost:4000')
+      expect(payload.name).toBe('CV app')
+      expect(payload.description).toBe('A CV app with a description which is longer than 10 chars')
+      expect(payload.events).toBe('http://localhost:4000/events')
     })
   })
 })

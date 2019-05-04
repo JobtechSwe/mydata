@@ -19,11 +19,11 @@ const createAuthenticationRequest = async (client, id) => {
     ...payload,
     iss: client.config.clientId,
     aud: 'mydata://auth',
-    exp: Date.now() + AUTHENTICATION_REQUEST_LIFETIME,
     jti: id
   }, privateKey, {
     algorithm: alg,
-    kid: true
+    kid: true,
+    expiresIn: '120 s'
   })
 
   // return sign({
@@ -39,8 +39,6 @@ const createAuthenticationUrl = jwt => {
   const base64urlPayload = encodeURIComponent(Buffer.from(jwt)
     .toString('base64')
   )
-
-  console.info(base64urlPayload)
 
   return `mydata://auth/${base64urlPayload}`
 }

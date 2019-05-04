@@ -2,7 +2,7 @@ const createClient = require('../lib/client')
 const { createMemoryStore } = require('../lib/memoryStore')
 const axios = require('axios')
 const { generateKeyPair } = require('./_helpers')
-const { decode } = require('jwt-lite')
+const { JWT } = require('@panva/jose')
 jest.mock('axios')
 
 describe('client', () => {
@@ -89,9 +89,9 @@ describe('client', () => {
         await client.connect()
         const { jwt } = axios.post.mock.calls[0][1]
 
-        const { claimsSet } = decode(jwt)
+        const payload = JWT.decode(jwt)
 
-        expect(claimsSet).toEqual({
+        expect(payload).toEqual({
           type: 'CLIENT_REGISTRATION',
           aud: 'https://smoothoperator.work',
           displayName: 'CV app',
@@ -99,6 +99,7 @@ describe('client', () => {
           eventsUrl: 'https://mycv.work/events',
           jwksUrl: 'https://mycv.work/jwks',
           exp: expect.any(Number),
+          iat: expect.any(Number),
           iss: 'https://mycv.work'
         })
       })
@@ -108,11 +109,14 @@ describe('client', () => {
         await client.connect()
         expect(listener).toHaveBeenCalledTimes(1)
       })
+
       it('signs the payload', async () => {
         await client.connect()
         const { jwt } = axios.post.mock.calls[0][1]
-        const { signature } = decode(jwt)
-        expect(signature).toEqual(expect.any(Uint8Array))
+        const { signature } = JWT.decode(jwt, { complete: true })
+
+        expect(signature).toEqual(expect.any(String))
+        expect(signature).not.toBe('')
       })
     })
   })

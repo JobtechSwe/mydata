@@ -21,8 +21,7 @@ const createClientRegistration = async (client) => {
   }, privateKey, {
     algorithm: alg,
     kid: true,
-    expiresIn: '60 s',
-    iat: false
+    expiresIn: '60 s'
   })
 }
 

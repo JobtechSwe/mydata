@@ -9,28 +9,28 @@ const header = Joi.object({
 })
 
 const jwtSpec = {
-  aud: Joi.string(),
-  exp: Joi.number(),
-  iat: Joi.number(),
-  iss: Joi.string().uri(),
+  aud: Joi.string().required(),
+  exp: Joi.number().required(),
+  iat: Joi.number().required(),
+  iss: Joi.string().uri().required(),
   jti: Joi.string().uuid({ version: 'uuidv4' })
 }
 
 const authenticationRequest = Joi.object({
   ...jwtSpec,
   type: 'AUTHENTICATION_REQUEST',
-  name: Joi.string(),
-  description: Joi.string(),
-  events: Joi.string().uri()
+  name: Joi.string().required(),
+  description: Joi.string().required(),
+  events: Joi.string().uri().required()
 })
 
 const clientRegistration = Joi.object({
   ...jwtSpec,
   type: 'CLIENT_REGISTRATION',
-  displayName: Joi.string(),
-  description: Joi.string(),
-  eventsUrl: Joi.string().uri(),
-  jwksUrl: Joi.string().uri()
+  displayName: Joi.string().required(),
+  description: Joi.string().required(),
+  eventsUrl: Joi.string().uri().required(),
+  jwksUrl: Joi.string().uri().required()
 })
 
 module.exports = {
