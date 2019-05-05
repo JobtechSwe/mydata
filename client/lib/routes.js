@@ -17,19 +17,25 @@ const keyHandler = ({ keyProvider }) => async (req, res, next) => {
 const eventsHandler = client => async ({ body }, res, next) => {
   try {
     if (!body.jwt) {
+      // TODO: Make all messages use the JWT format (and remove this block)
       await event(body.type).validate(body)
       client.events.emit(body.type, body.payload)
+      res.sendStatus(200)
     } else {
-      const payload = JWT.decode(body.jwt)
-      await validateMessage(payload)
-      if (!unsecuredMessages.includes(payload.type)) {
+      const message = JWT.decode(body.jwt)
+      await validateMessage(message)
+
+      if (!unsecuredMessages.includes(message.type)) {
         // TODO: Get key
         // TODO: Verify signature
       }
-      console.log(payload)
-      client.events.emit(payload.type, payload)
+
+      client.events.emit(message.type, message)
+
+      // TODO: Handle messages here
+
+      res.sendStatus(200)
     }
-    res.sendStatus(200)
   } catch (error) {
     if (error.name === 'ValidationError') {
       next(createError(400, error))

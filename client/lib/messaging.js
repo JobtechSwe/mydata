@@ -33,15 +33,18 @@ const CLIENT_REGISTRATION = Joi.object({
   jwksUrl: Joi.string().uri().required()
 })
 
+// const PERMISSIONS = Joi.object({
+// }).unknown
+
 const CONNECTION_INFO_REQUEST = Joi.object({
   type: 'CONNECTION_INFO_REQUEST',
-  aud: Joi.string().required(),
-  permissions: Joi.array().required()
+  aud: Joi.string().required()
 })
 
 const CONNECTION_INFO = Joi.object({
   ...JWT_DEFAULTS,
-  type: 'CONNECTION_INFO'
+  type: 'CONNECTION_INFO',
+  permissions: Joi.array().required()
 })
 
 const schemas = {
