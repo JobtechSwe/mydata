@@ -3,7 +3,7 @@ const { generateKeyPair } = require('./_helpers')
 const { createMemoryStore } = require('../lib/memoryStore')
 const createClient = require('../lib/client')
 const { JWT } = require('@panva/jose')
-const { schemas } = require('../lib/messaging')
+const { validateHeader, validateMessage } = require('../lib/messaging')
 
 describe('#createClientRegistration', () => {
   let clientKeys, config, client
@@ -33,9 +33,9 @@ describe('#createClientRegistration', () => {
     const clientRegistration = await createClientRegistration(client)
 
     const { header } = JWT.decode(clientRegistration, { complete: true })
+    await validateHeader(header)
 
     expect(header.kid).toEqual('http://localhost:4000/jwks/client_key')
-    expect(schemas.header.validate(header).error).toEqual(null)
   })
 
   it('creates the correct jwt payload', async () => {
@@ -43,7 +43,7 @@ describe('#createClientRegistration', () => {
 
     const payload = JWT.decode(clientRegistration)
 
-    expect(schemas.clientRegistration.validate(payload).error).toBe(null)
+    await validateMessage(payload)
 
     expect(payload.aud).toBe('https://smoothoperator.work')
     expect(payload.iss).toBe('http://localhost:4000')

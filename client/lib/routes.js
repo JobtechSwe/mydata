@@ -2,6 +2,7 @@ const createError = require('http-errors')
 const { Router, json } = require('express')
 const { event } = require('./schemas')
 const { JWT } = require('@panva/jose')
+const { validateMessage, unsecuredMessages } = require('./messaging')
 
 const keyListHandler = ({ keyProvider }) => async (req, res, next) => {
   const keys = await keyProvider.jwksKeyList()
@@ -15,8 +16,19 @@ const keyHandler = ({ keyProvider }) => async (req, res, next) => {
 
 const eventsHandler = client => async ({ body }, res, next) => {
   try {
-    await event(body.type).validate(body)
-    client.events.emit(body.type, body.payload)
+    if (!body.jwt) {
+      await event(body.type).validate(body)
+      client.events.emit(body.type, body.payload)
+    } else {
+      const payload = JWT.decode(body.jwt)
+      await validateMessage(payload)
+      if (!unsecuredMessages.includes(payload.type)) {
+        // TODO: Get key
+        // TODO: Verify signature
+      }
+      console.log(payload)
+      client.events.emit(payload.type, payload)
+    }
     res.sendStatus(200)
   } catch (error) {
     if (error.name === 'ValidationError') {
@@ -35,11 +47,6 @@ module.exports = client => {
   router.get(client.config.jwksPath, keyListHandler(client))
   router.get(`${client.config.jwksPath}/:kid`, keyHandler(client))
   router.post(client.config.eventsPath, eventsHandler(client))
-  router.get(client.config.eventsPath, (req, res, next) => {
-    console.log(req.headers.jwt)
-    const payload = JWT.decode(req.headers.jwt)
-    console.log(payload)
-  })
 
   return router
 }

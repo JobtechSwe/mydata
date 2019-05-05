@@ -24,7 +24,7 @@ const AuthRequestScreen = () => {
           // Send CONNECTION_INFO_REQUEST to client
           const connectionInfoRequest = createConnectionInfoRequest(verifiedAuthReq)
 
-          await axios.get(verifiedAuthReq.events, { headers: { jwt: connectionInfoRequest } })
+          await axios.post(verifiedAuthReq.events, { jwt: connectionInfoRequest } )
 
           // If ok, then store connection and send CONNECTION to operator
 
