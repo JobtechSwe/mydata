@@ -3,6 +3,7 @@ const { Router, json } = require('express')
 const { event } = require('./schemas')
 const { JWT } = require('@panva/jose')
 const { validateMessage, unsecuredMessages } = require('@mydata/messaging')
+const { registrationHandler } = require('./registration')
 
 const keyListHandler = ({ keyProvider }) => async (req, res, next) => {
   const keys = await keyProvider.jwksKeyList()
@@ -14,15 +15,16 @@ const keyHandler = ({ keyProvider }) => async (req, res, next) => {
   res.send(key)
 }
 
-const eventsHandler = client => async ({ body, headers, header }, res, next) => {
+const messageHandler = client => async (req, res, next) => {
   try {
-    if (headers['content-type'] === 'application/json') {
+    const contentType = req.headers['content-type']
+    if (contentType === 'application/json') {
       // TODO: Make all messages use the JWT format (and remove this block)
-      await event(body.type).validate(body)
-      client.events.emit(body.type, body.payload)
+      await event(req.body.type).validate(req.body)
+      client.events.emit(req.body.type, req.body.payload)
       res.sendStatus(200)
-    } else if (headers['content-type'] === 'application/jwt') {
-      const message = JWT.decode(body)
+    } else if (contentType === 'application/jwt') {
+      const message = JWT.decode(req.body)
       await validateMessage(message)
 
       if (!unsecuredMessages.includes(message.type)) {
@@ -30,13 +32,13 @@ const eventsHandler = client => async ({ body, headers, header }, res, next) => 
         // TODO: Verify signature
       }
 
+      req.message = message
+
+      console.log('EVENT', message)
       client.events.emit(message.type, message)
-
-      // TODO: Handle messages here
-
-      res.sendStatus(200)
+      next()
     } else {
-      throw createError(400, `Unhandled content-type ${headers['content-type']}`)
+      throw createError(400, `Unhandled content-type ${contentType}`)
     }
   } catch (error) {
     if (error.name === 'ValidationError') {
@@ -47,6 +49,10 @@ const eventsHandler = client => async ({ body, headers, header }, res, next) => 
   }
 }
 
+const handlers = {
+  REGISTRATION_INIT: registrationHandler
+}
+
 module.exports = client => {
   const router = new Router()
 
@@ -54,7 +60,13 @@ module.exports = client => {
 
   router.get(client.config.jwksPath, keyListHandler(client))
   router.get(`${client.config.jwksPath}/:kid`, keyHandler(client))
-  router.post(client.config.eventsPath, eventsHandler(client))
+  router.post(client.config.eventsPath, messageHandler(client), (req, res, next) => {
+    if (!handlers[req.message.type]) {
+      throw Error(`Missing handler for ${req.message.type}`)
+    }
+
+    handlers[req.message.type](req, res)
+  })
 
   return router
 }

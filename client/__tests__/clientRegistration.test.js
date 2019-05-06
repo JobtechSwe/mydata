@@ -1,4 +1,4 @@
-const { createClientRegistration } = require('../lib/register')
+const { createClientRegistration } = require('../lib/clientRegistration')
 const { generateKeyPair } = require('./_helpers')
 const { createMemoryStore } = require('../lib/memoryStore')
 const createClient = require('../lib/client')
