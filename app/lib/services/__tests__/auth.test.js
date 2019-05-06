@@ -51,9 +51,7 @@ describe('auth', () => {
 
       await initRegistration(authRequest)
 
-      expect(axios.post).toHaveBeenCalledWith('http://localhost:4000/events', {
-        jwt: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJ0eXBlIjoiUkVHSVNUUkFUSU9OX0lOSVQiLCJhdWQiOiJteWRhdGE6Ly9hdXRoIn0.',
-      })
+      expect(axios.post).toHaveBeenCalledWith('http://localhost:4000/events', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJ0eXBlIjoiUkVHSVNUUkFUSU9OX0lOSVQiLCJhdWQiOiJteWRhdGE6Ly9hdXRoIn0.', { headers: { contentType: 'application/jwt' } })
     })
   })
 })
