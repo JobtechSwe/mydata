@@ -1,7 +1,7 @@
 export function toViewModel ({ data: { clientId, scope }, clients }) {
   const client = clients[clientId]
   client.areas = scope.filter(scope => scope.domain === clientId)
-  
+
   const externals = scope
     .filter(scope => scope.domain !== clientId)
     .reduce((external, scope) => {

@@ -5,7 +5,7 @@ import { PrimaryButton } from '../elements/Button/Button'
 import { parse } from '../../utils/code'
 import ScanQRCode from './ScanQRCode'
 
-class EnterAuthCode extends Component {
+class Scan extends Component {
   state = {
     view: 'scan',
     validated: false,
@@ -52,4 +52,4 @@ class EnterAuthCode extends Component {
   }
 }
 
-export default EnterAuthCode
+export default Scan

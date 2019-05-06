@@ -1,26 +1,20 @@
 import React, { useState } from 'react'
-import { EnterAuthCode, LoginRequest, ConsentRequest } from '../../components/Consent'
-import { verifyAndParseAuthRequest, initRegistration, hasConnection } from '../../services/auth'
+import { Scan, Login, Register } from '../../components/Auth'
+import { verifyAndParseAuthRequest, hasConnection } from '../../services/auth'
 
-const AuthRequestScreen = ({ props }) => {
+const AuthScreen = ({ props }) => {
   const [state, setState] = useState({
-    view: 'enter',
+    view: (props && props.view) || 'scan',
     authenticationRequest: undefined,
   })
 
-  const onCode = async (jwt) => {
+  const onScan = async (jwt) => {
     try {
       const verifiedAuthRequest = await verifyAndParseAuthRequest(jwt)
-      console.log(verifiedAuthRequest)
-      if (await hasConnection(verifiedAuthRequest)) {
-        setState({ view: 'login', name: verifiedAuthRequest.name })
-      } else {
-        const registrationRequest = await initRegistration(verifiedAuthRequest)
-        setState({
-          view: 'register',
-          registrationRequest,
-        })
-      }
+      const view = await hasConnection(verifiedAuthRequest) ? 'login' : 'register'
+
+      console.log('setting view', view)
+      setState({ view, request: verifiedAuthRequest })
     }
     catch (error) {
       console.error('foo', error)
@@ -43,7 +37,7 @@ const AuthRequestScreen = ({ props }) => {
   switch (state.view) {
     case 'login':
       return (
-        <LoginRequest
+        <Login
           code={state.code}
           onApprove={onApprove}
           onCancel={onCancel}
@@ -52,21 +46,21 @@ const AuthRequestScreen = ({ props }) => {
       )
     case 'register':
       return (
-        <ConsentRequest
+        <Register
           consentRequestId={state.code}
           onApprove={onApprove}
           onCancel={onCancel}
         />
       )
-    case 'enter':
+    case 'scan':
     default:
       return (
-        <EnterAuthCode
+        <Scan
           onCancel={onCancel}
-          onCode={onCode}
+          onScan={onScan}
         />
       )
   }
 }
 
-export default AuthRequestScreen
+export default AuthScreen

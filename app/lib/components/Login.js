@@ -9,7 +9,7 @@ import {
   DenyConsentButton,
   ConsentButtonWrap,
 } from './elements/Button/ConsentButton'
-import { Spinner } from '../components/elements/Spinner/Spinner'
+import { Spinner } from './elements/Spinner/Spinner'
 import * as loginService from '../services/login'
 
 const StyledModal = styled(Modal)`
