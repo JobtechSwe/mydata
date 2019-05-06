@@ -86,7 +86,7 @@ stages:
 - name: lint-and-e2e
   if: branch != master
 - name: deliver
-  if: branch != master # TODO: for testing on CI! make sure to change this back before merging with master!
+  if: (branch = master AND type != pull_request) OR tag IS present
 
 notifications:
   email:
