@@ -12,6 +12,7 @@ const JWT = Joi.string()
 const AUTHENTICATION_REQUEST = Joi.object({
   ...JWT_DEFAULTS,
   type: 'AUTHENTICATION_REQUEST',
+  jti: Joi.string().required(),
   name: Joi.string().required(),
   description: Joi.string().required(),
   events: Joi.string().uri().required()

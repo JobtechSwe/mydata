@@ -14,14 +14,14 @@ const keyHandler = ({ keyProvider }) => async (req, res, next) => {
   res.send(key)
 }
 
-const eventsHandler = client => async ({ body, header }, res, next) => {
+const eventsHandler = client => async ({ body, headers, header }, res, next) => {
   try {
-    if (header('Content-Type') === 'application/json') {
+    if (headers['content-type'] === 'application/json') {
       // TODO: Make all messages use the JWT format (and remove this block)
       await event(body.type).validate(body)
       client.events.emit(body.type, body.payload)
       res.sendStatus(200)
-    } else if (header('Content-Type') === 'application/jwt') {
+    } else if (headers['content-type'] === 'application/jwt') {
       const message = JWT.decode(body)
       await validateMessage(message)
 
@@ -36,7 +36,7 @@ const eventsHandler = client => async ({ body, header }, res, next) => {
 
       res.sendStatus(200)
     } else {
-      throw createError(400, `Unhandled Content-Type ${header('Content-Type')}`)
+      throw createError(400, `Unhandled content-type ${headers['content-type']}`)
     }
   } catch (error) {
     if (error.name === 'ValidationError') {
