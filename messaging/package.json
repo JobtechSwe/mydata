@@ -28,9 +28,13 @@
   },
   "homepage": "https://github.com/JobtechSwe/mydata/messaging#readme",
   "dependencies": {
-    "joi": "^14.3.1"
+    "axios": "^0.18.0",
+    "joi": "^14.3.1",
+    "js-base64": "^2.5.1"
   },
   "devDependencies": {
+    "@panva/jose": "^1.0.1",
+    "@types/axios": "^0.14.0",
     "eslint": "^5.12.1",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-import": "^2.16.0",

@@ -10,15 +10,15 @@ const JWT_DEFAULTS = {
 
 const JWT = Joi.string()
 const JWK = Joi.object({
-  kty: 'RSA',
+  kid: Joi.string(),
+  kty: Joi.string().valid('RSA').required(),
   use: Joi.string().valid(['sig', 'enc']).required(),
-  e: 'AQAB',
-  n: Joi.string().base64()
+  e: Joi.string().valid('AQAB').required(),
+  n: Joi.string().required()
 })
 
 const JOSE_HEADER = Joi.object({
-  typ: 'JWT',
-  alg,
+  alg: Joi.string().valid([alg]).required(),
   kid: Joi.string().uri(),
   jwk: JWK
 })
@@ -44,6 +44,7 @@ const AUTHENTICATION_REQUEST = Joi.object({
 
 // device -> service
 const REGISTRATION_INIT = Joi.object({
+  ...JWT_DEFAULTS,
   type: 'REGISTRATION_INIT',
   jti: Joi.string().required(),
   aud: Joi.string().required()
@@ -90,8 +91,11 @@ const LOGIN_EVENT = Joi.object({
   payload: JWT.required() // LOGIN
 })
 
+const deviceSchemas = [REGISTRATION_INIT, REGISTRATION, LOGIN]
+
 module.exports = {
   alg,
+  deviceSchemas,
   JOSE_HEADER,
   CLIENT_REGISTRATION,
   AUTHENTICATION_REQUEST,
