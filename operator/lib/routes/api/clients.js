@@ -4,7 +4,7 @@ const { get: getConsent } = require('../../services/consents')
 const createError = require('http-errors')
 const { jwtVerifier } = require('../../middleware/auth')
 const schemas = require('../../services/schemas')
-const { schemas: { clientRegistration } } = require('../../../../client/lib/messaging')
+const { validateMessage } = require('@mydata/messaging')
 
 const router = Router()
 
@@ -13,7 +13,9 @@ router.post('/', jwtVerifier, async ({ body }, res, next) => {
   try {
     console.log('* * * * * /clients * * * * *')
     const { claimsSet } = body
-    clientRegistration.validate(claimsSet)
+
+    await validateMessage(claimsSet)
+
     console.log(claimsSet)
     const { displayName, description, eventsUrl, jwksUrl } = claimsSet
     const clientId = claimsSet.iss

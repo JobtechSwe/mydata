@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/JobtechSwe/mydata#readme",
   "dependencies": {
+    "@mydata/messaging": "file:../messaging",
     "axios": "^0.18.0",
     "change-case": "^3.1.0",
     "changecase-objects": "^1.1.0",
