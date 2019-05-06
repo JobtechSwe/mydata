@@ -1,4 +1,4 @@
-const { alg } = require('./messaging')
+const { alg } = require('@mydata/messaging')
 const { JWT, JWK } = require('@panva/jose')
 
 const createAuthenticationRequest = async (client, id) => {

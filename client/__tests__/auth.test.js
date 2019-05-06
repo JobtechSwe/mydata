@@ -3,7 +3,7 @@ const { createMemoryStore } = require('../lib/memoryStore')
 const { generateKeyPair } = require('./_helpers')
 const { JWT } = require('@panva/jose')
 const { createAuthenticationRequest } = require('./../lib/auth')
-const { validateHeader, validateMessage } = require('./../lib/messaging')
+const { validateHeader, validateMessage } = require('@mydata/messaging')
 const { v4 } = require('uuid')
 
 describe('auth', () => {

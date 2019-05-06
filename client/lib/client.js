@@ -7,7 +7,6 @@ const KeyProvider = require('./keyProvider')
 const { EventEmitter } = require('events')
 const { configSchema } = require('./schemas')
 const { v4 } = require('uuid')
-const messaging = require('./messaging')
 const { createAuthenticationRequest, createAuthenticationUrl } = require('./auth')
 const { createClientRegistration } = require('./register')
 
@@ -58,7 +57,8 @@ class Client {
     const url = createAuthenticationUrl(authReq)
 
     const AUTHENTICATION_REQUEST_ID_PREFIX = 'authenticationRequest|>'
-    this.keyValueStore.save(`${AUTHENTICATION_REQUEST_ID_PREFIX}${id}`, authReq, messaging.LIFETIME_IN_MILLISECONDS)
+    const seconds = 5 * 60
+    this.keyValueStore.save(`${AUTHENTICATION_REQUEST_ID_PREFIX}${id}`, authReq, seconds)
 
     return {
       id,

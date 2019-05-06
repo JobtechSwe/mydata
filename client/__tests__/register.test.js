@@ -3,7 +3,7 @@ const { generateKeyPair } = require('./_helpers')
 const { createMemoryStore } = require('../lib/memoryStore')
 const createClient = require('../lib/client')
 const { JWT } = require('@panva/jose')
-const { validateHeader, validateMessage } = require('../lib/messaging')
+const { validateHeader, validateMessage } = require('@mydata/messaging')
 
 describe('#createClientRegistration', () => {
   let clientKeys, config, client

@@ -2,7 +2,7 @@ const createError = require('http-errors')
 const { Router, json } = require('express')
 const { event } = require('./schemas')
 const { JWT } = require('@panva/jose')
-const { validateMessage, unsecuredMessages } = require('./messaging')
+const { validateMessage, unsecuredMessages } = require('@mydata/messaging')
 
 const keyListHandler = ({ keyProvider }) => async (req, res, next) => {
   const keys = await keyProvider.jwksKeyList()

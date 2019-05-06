@@ -1,5 +1,5 @@
 const { JWT, JWK } = require('@panva/jose')
-const { alg } = require('./messaging')
+const { alg } = require('@mydata/messaging')
 
 const createClientRegistration = async (client) => {
   const claimsSet = {
