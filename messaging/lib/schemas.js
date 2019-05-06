@@ -1,4 +1,5 @@
 const Joi = require('joi')
+const alg = 'RS256'
 
 const JWT_DEFAULTS = {
   aud: Joi.string().required(),
@@ -44,7 +45,6 @@ const AUTHENTICATION_REQUEST = Joi.object({
 // device -> service
 const REGISTRATION_INIT = Joi.object({
   type: 'REGISTRATION_INIT',
-  jwk: JWK,
   jti: Joi.string().required(),
   aud: Joi.string().required()
 })
@@ -59,16 +59,10 @@ const REGISTRATION_REQUEST = Joi.object({
   jti: Joi.string().uuid({ version: 'uuidv4' }).required()
 })
 
-{
-  kid: '',
-  key: {}
-}
-
 // device -> operator
 const REGISTRATION = Joi.object({
   ...JWT_DEFAULTS,
   type: 'REGISTRATION',
-  jwk: JWK,
   jti: Joi.string().required(),
   sub: Joi.string().uuid({ version: 'uuidv4' }).required(),
   permissions: PERMISSIONS.required()
@@ -97,6 +91,7 @@ const LOGIN_EVENT = Joi.object({
 })
 
 module.exports = {
+  alg,
   JOSE_HEADER,
   CLIENT_REGISTRATION,
   AUTHENTICATION_REQUEST,

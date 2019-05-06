@@ -1,8 +1,6 @@
 const Joi = require('joi')
 const schemas = require('./schemas')
 
-const alg = 'RS256'
-
 // Does not have a signature. Read more: https://tools.ietf.org/html/rfc7519#section-6
 const unsecuredMessages = [ 'CONNECTION_INFO_REQUEST' ]
 
@@ -18,7 +16,7 @@ const validateHeader = async header => {
 }
 
 module.exports = {
-  alg,
+  alg: schemas.alg,
   validateMessage,
   validateHeader,
   unsecuredMessages
