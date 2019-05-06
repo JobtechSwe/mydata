@@ -1,8 +1,6 @@
 const { alg } = require('./messaging')
 const { JWT, JWK } = require('@panva/jose')
 
-const AUTHENTICATION_REQUEST_LIFETIME = 1000 * 60 * 5
-
 const createAuthenticationRequest = async (client, id) => {
   const payload = {
     type: 'AUTHENTICATION_REQUEST',
@@ -25,14 +23,6 @@ const createAuthenticationRequest = async (client, id) => {
     kid: true,
     expiresIn: '5 m'
   })
-
-  // return sign({
-  //   ...payload,
-  //   iss: client.config.clientId,
-  //   aud: 'mydata://auth',
-  //   exp: Date.now() + AUTHENTICATION_REQUEST_LIFETIME,
-  //   jti: id
-  // }, privateKey, header)
 }
 
 const createAuthenticationUrl = jwt => {
@@ -45,6 +35,5 @@ const createAuthenticationUrl = jwt => {
 
 module.exports = {
   createAuthenticationRequest,
-  createAuthenticationUrl,
-  AUTHENTICATION_REQUEST_LIFETIME
+  createAuthenticationUrl
 }

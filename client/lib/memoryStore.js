@@ -5,7 +5,8 @@ const createMemoryStore = () => {
       store.set(key, value)
 
       if (ttl) {
-        setInterval(() => store.delete(key), ttl)
+        const ttlMilliseconds = ttl * 1000
+        setTimeout(() => store.delete(key), ttlMilliseconds)
       }
     },
     load: async (key) => {
