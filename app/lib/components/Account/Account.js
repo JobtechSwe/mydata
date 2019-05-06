@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { Input } from './elements/Input/Input'
-import { PrimaryButton } from './elements/Button/Button'
+import { Input } from '../elements/Input/Input'
+import { PrimaryButton } from '../elements/Button/Button'
 import { View } from 'react-native'
 
 export default class Account extends Component {

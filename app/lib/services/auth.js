@@ -26,5 +26,5 @@ const createRegistrationInit = ({ aud }) => {
 
 export const initRegistration = async authRequest => {
   const registrationInit = createRegistrationInit(authRequest)
-  await axios.post(authRequest.events, registrationInit, { headers: { contentType: 'application/jwt' } })
+  await axios.post(authRequest.events, registrationInit, { headers: { 'content-type': 'application/jwt' } })
 }

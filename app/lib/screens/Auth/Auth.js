@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Scan, Login, Register } from '../../components/Auth'
+import { Scan, Register, Login } from '../../components/Auth'
 import { verifyAndParseAuthRequest, hasConnection } from '../../services/auth'
 
 const AuthScreen = ({ props }) => {
@@ -10,11 +10,9 @@ const AuthScreen = ({ props }) => {
 
   const onScan = async (jwt) => {
     try {
-      const verifiedAuthRequest = await verifyAndParseAuthRequest(jwt)
-      const view = await hasConnection(verifiedAuthRequest) ? 'login' : 'register'
-
-      console.log('setting view', view)
-      setState({ view, request: verifiedAuthRequest })
+      const authenticationRequest = await verifyAndParseAuthRequest(jwt)
+      const view = await hasConnection(authenticationRequest) ? 'login' : 'register'
+      setState({ view, authenticationRequest })
     }
     catch (error) {
       console.error('foo', error)
@@ -47,7 +45,7 @@ const AuthScreen = ({ props }) => {
     case 'register':
       return (
         <Register
-          consentRequestId={state.code}
+          authenticationRequest={state.authenticationRequest}
           onApprove={onApprove}
           onCancel={onCancel}
         />

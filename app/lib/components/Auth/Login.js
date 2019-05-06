@@ -1,16 +1,15 @@
 import React from 'react'
 import { View } from 'react-native'
 import Modal from 'react-native-modal'
-import { Wrap, ScrollViewWrap } from './View/Wrapper'
-import styled, { theme } from '../theme'
-import { H3, Paragraph, Separator } from './typography/Typography'
+import { Wrap, ScrollViewWrap } from '../View/Wrapper'
+import styled, { theme } from '../../theme'
+import { H3, Paragraph, Separator } from '../typography/Typography'
 import {
   AcceptConsentButton,
   DenyConsentButton,
   ConsentButtonWrap,
-} from './elements/Button/ConsentButton'
-import { Spinner } from './elements/Spinner/Spinner'
-import * as loginService from '../services/login'
+} from '../elements/Button/ConsentButton'
+import { Spinner } from '../elements/Spinner/Spinner'
 
 const StyledModal = styled(Modal)`
   margin: 0;
@@ -46,7 +45,7 @@ function LoginRequest(props) {
 
   const login = async () => {
     try {
-      const { consent, request } = await loginService.get(props.code)
+      // const { consent, request } = await loginService.get(props.code)
       updateState({ consent, request, view: 'approve', modalVisible: true })
     } catch (error) {
       updateState({ view: 'error', error })
@@ -59,10 +58,10 @@ function LoginRequest(props) {
 
   const approve = async () => {
     updateState({ ...currentState, view: 'approving' })
-    await loginService.approve({
-      ...currentState.request,
-      ...currentState.consent,
-    })
+    // await loginService.approve({
+    //   ...currentState.request,
+    //   ...currentState.consent,
+    // })
     props.onApprove()
   }
 

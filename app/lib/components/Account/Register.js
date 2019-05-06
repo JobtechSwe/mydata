@@ -1,7 +1,7 @@
 import React from 'react'
-import { H1 } from '../../components/typography/Typography'
-import { PrimaryButton } from '../../components/elements/Button/Button'
-import { Input } from '../../components/elements/Input/Input'
+import { H1 } from '../typography/Typography'
+import { PrimaryButton } from '../elements/Button/Button'
+import { Input } from '../elements/Input/Input'
 
 export default class RegisterScreen extends React.Component {
   state = {

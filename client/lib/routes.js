@@ -4,6 +4,7 @@ const { event } = require('./schemas')
 const { JWT } = require('@panva/jose')
 const { validateMessage, unsecuredMessages } = require('@mydata/messaging')
 const { registrationHandler } = require('./registration')
+const bodyParser = require('body-parser')
 
 const keyListHandler = ({ keyProvider }) => async (req, res, next) => {
   const keys = await keyProvider.jwksKeyList()
@@ -57,6 +58,7 @@ module.exports = client => {
   const router = new Router()
 
   router.use(json())
+  router.use(bodyParser.text({ type: 'application/jwt' }))
 
   router.get(client.config.jwksPath, keyListHandler(client))
   router.get(`${client.config.jwksPath}/:kid`, keyHandler(client))

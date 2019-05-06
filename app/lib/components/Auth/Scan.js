@@ -18,8 +18,9 @@ class Scan extends Component {
   onScanQRCode = qr => {
     try {
       const jwt = parse(qr)
-      this.props.onCode(jwt)
+      this.props.onScan(jwt)
     } catch (error) {
+      console.error('could not parse jwt', error)
       this.setState({ view: 'error', error })
     }
   }
