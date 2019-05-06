@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { EnterAuthCode, LoginRequest, ConsentRequest } from '../../components/Consent'
-import { verifyAndParseAuthRequest, getConnectionInfo, hasConnection } from '../../services/auth'
+import { verifyAndParseAuthRequest, initRegistration, hasConnection } from '../../services/auth'
 
 const AuthRequestScreen = ({ props }) => {
   const [state, setState] = useState({
@@ -10,14 +10,15 @@ const AuthRequestScreen = ({ props }) => {
 
   const onCode = async (jwt) => {
     try {
-      const verifiedAuthReq = await verifyAndParseAuthRequest(jwt)
-      if (await hasConnection(verifiedAuthReq)) {
-        setState({ view: 'login', name: verifiedAuthReq.name })
+      const verifiedAuthRequest = await verifyAndParseAuthRequest(jwt)
+      console.log(verifiedAuthRequest)
+      if (await hasConnection(verifiedAuthRequest)) {
+        setState({ view: 'login', name: verifiedAuthRequest.name })
       } else {
-        const connectionInfo = await getConnectionInfo(verifiedAuthReq)
+        const registrationRequest = await initRegistration(verifiedAuthRequest)
         setState({
           view: 'register',
-          connectionInfo,
+          registrationRequest,
         })
       }
     }

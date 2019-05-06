@@ -1,4 +1,5 @@
-import { verifyAndParseAuthRequest, createConnectionInfoRequest } from '../auth'
+import { verifyAndParseAuthRequest, initRegistration } from '../auth'
+import axios from 'axios'
 
 jest.mock('../getKey', () => ({
   getKey: () => {
@@ -35,9 +36,9 @@ describe('auth', () => {
     })
   })
 
-  describe('#createConnectionInfoRequest', () => {
-    it('returns correct jwt', () => {
-      const res = createConnectionInfoRequest({
+  describe('#initRegistration', () => {
+    it('returns correct jwt', async () => {
+      const authRequest = {
         aud: 'mydata://auth',
         description: 'An app for your CV online',
         events: 'http://localhost:4000/events',
@@ -46,10 +47,13 @@ describe('auth', () => {
         jti: '8228a45c-736e-483f-927a-b81f01081740',
         name: 'My CV',
         type: 'AUTHENTICATION_REQUEST',
-      })
+      }
 
-      // TODO: Validate message with @mydata/messaging
-      expect(res).toBe('eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJ0eXBlIjoiQ09OTkVDVElPTl9JTkZPX1JFUVVFU1QiLCJhdWQiOiJteWRhdGE6Ly9hdXRoIn0.')
+      await initRegistration(authRequest)
+
+      expect(axios.post).toHaveBeenCalledWith('http://localhost:4000/events', {
+        jwt: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJ0eXBlIjoiUkVHSVNUUkFUSU9OX0lOSVQiLCJhdWQiOiJteWRhdGE6Ly9hdXRoIn0.',
+      })
     })
   })
 })

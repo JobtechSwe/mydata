@@ -28,8 +28,9 @@ const CLIENT_REGISTRATION = Joi.object({
 // const PERMISSIONS = Joi.object({
 // }).unknown
 
-const CONNECTION_INFO_REQUEST = Joi.object({
-  type: 'CONNECTION_INFO_REQUEST',
+const REGISTRATION_INIT = Joi.object({
+  type: 'REGISTRATION_INIT',
+  jti: Joi.string().uuid({ version: 'uuidv4' }),
   aud: Joi.string().required()
 })
 
@@ -42,6 +43,6 @@ const CONNECTION_INFO = Joi.object({
 module.exports = {
   AUTHENTICATION_REQUEST,
   CLIENT_REGISTRATION,
-  CONNECTION_INFO_REQUEST,
+  REGISTRATION_INIT,
   CONNECTION_INFO
 }

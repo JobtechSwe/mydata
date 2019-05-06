@@ -16,16 +16,16 @@ export const hasConnection = async authReq => {
   return connections.includes(authReq.iss)
 }
 
-export const createConnectionInfoRequest = ({ aud }) => {
+const createRegistrationInit = ({ aud }) => {
   const header = { typ: 'JWT', alg: 'none' }
-  const payload = { type: 'CONNECTION_INFO_REQUEST', aud }
+  const payload = { type: 'REGISTRATION_INIT', aud }
   const signature = ''
 
   return `${Base64.encodeURI(JSON.stringify(header))}.${Base64.encodeURI(JSON.stringify(payload))}.${Base64.encodeURI(signature)}`
 }
 
-export const getConnectionInfo = async authRequest => {
-  const connectionInfoRequest = createConnectionInfoRequest(authRequest)
-  const { data } = await axios.post(authRequest.events, { jwt: connectionInfoRequest } )
+export const initRegistration = async authRequest => {
+  const registrationInit = createRegistrationInit(authRequest)
+  const { data } = await axios.post(authRequest.events, registrationInit, { headers: { contentType: 'application/jwt' } })
   return data
 }
