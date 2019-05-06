@@ -3,7 +3,7 @@ const { createVerify } = require('crypto')
 const jwksManager = require('jwks-manager')
 const { getKey } = require('../services/getKey')
 const schemas = require('../services/schemas')
-const { verify, decode } = require('jwt-lite')
+const { JWT, JWK } = require('@panva/jose')
 
 const clientsService = require('../services/clients')
 
@@ -80,11 +80,11 @@ const jwtVerifier = async ({ body }, res, next) => {
   if (!jwt) {
     throw Error('JWT missing on request')
   }
-  const { header } = await decode(jwt)
+  const { header } = await JWT.decode(jwt, { complete: true })
   const publicKey = await getKey(header.kid)
 
   try {
-    const claimsSet = await verify(jwt, publicKey)
+    const claimsSet = await JWT.verify(jwt, JWK.importKey(publicKey))
     body.claimsSet = claimsSet
     next()
   } catch (error) {
