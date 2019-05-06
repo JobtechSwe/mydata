@@ -65,3 +65,6 @@ buck-out/
 
 # VS code
 .vscode
+
+# vim
+.*.swp

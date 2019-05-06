@@ -20,26 +20,21 @@ fi
 
 docker build -t $IMAGE:$TAG --cache-from $IMAGE:latest-tag $CONTEXT $DOCKERFILE && \
 docker tag $IMAGE:$TAG $IMAGE:latest-tag
+EXIT_CODE=$?
 
-if [ $? != 0 ]; then
-  EXIT_CODE=$?
-  echo "Docker build failed!"
+if [ $EXIT_CODE != 0 ]; then
+  echo >&2 "Docker build failed!"
   exit $EXIT_CODE
 fi
 
 docker push $IMAGE:latest-tag && \
 docker push $IMAGE:$TAG
+EXIT_CODE=$?
 
-if [ $? != 0 ]; then
-  EXIT_CODE=$?
-  echo "Docker push failed!"
+if [ $EXIT_CODE != 0 ]; then
+  echo >&2 "Docker push failed!"
   exit $EXIT_CODE
 fi
-
-echo "Redeploying..."
-
-oc rollout latest operator-test -n mydata
-oc rollout latest cv-test -n mydata
 
 echo "Cache $IMAGE:$TAG"
 rm -fr "$CACHE_PATH/*"

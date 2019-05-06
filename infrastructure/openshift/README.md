@@ -29,6 +29,14 @@ openssl genrsa -out /tmp/private.pem 4096
 openssl rsa -in /tmp/private.pem -outform PEM -pubout -out /tmp/public.key
 openssl rsa -in /tmp/private.pem -out /tmp/private.key -outform PEM
 oc create secret generic cv --from-file=/tmp/public.key --from-file=/tmp/private.key
+rm /tmp/private.pem /tmp/private.key
+
+# Certificates for examples/national-registration
+openssl genrsa -out /tmp/private.pem 4096
+openssl rsa -in /tmp/private.pem -outform PEM -pubout -out /tmp/public.key
+openssl rsa -in /tmp/private.pem -out /tmp/private.key -outform PEM
+oc create secret generic natreg --from-file=/tmp/public.key --from-file=/tmp/private.key
+rm /tmp/private.pem /tmp/private.key
 
 # Docker Hub credentials (use if you wish to push images to Docker's registry)
 oc create secret docker-registry dockerhub --docker-server=docker.io --docker-username=mydata --docker-password="mydata" --docker-email=code@mydata
@@ -64,11 +72,11 @@ oc delete -f test/
 ```
 
 ### Other information
-
 #### Docker Hub
 
 The docker images are built with __Travis__ and stored in __Docker Hub__.
 
 - https://hub.docker.com/r/jobtechswe/mydata-app
 - https://hub.docker.com/r/jobtechswe/mydata-cv
+- https://hub.docker.com/r/jobtechswe/mydata-natreg
 - https://hub.docker.com/r/jobtechswe/mydata-operator

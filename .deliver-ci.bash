@@ -14,16 +14,11 @@ docker pull $IMAGE
 docker build -t $IMAGE --cache-from $IMAGE $CONTEXT $DOCKERFILE && \
 docker push $IMAGE
 
-if [ $? != 0 ]; then
-  EXIT_CODE=$?
-  echo "Docker build or push failed!"
+EXIT_CODE=$?
+if [ $EXIT_CODE != 0 ]; then
+  echo >&2 "Docker build or push failed!"
   exit $EXIT_CODE
 fi
-
-echo "Redeploying..."
-
-oc rollout latest cv-ci -n mydata
-oc rollout latest operator-ci -n mydata
 
 echo "Cache $IMAGE:latest"
 mkdir -p "~/.cache/docker/jobtechswe"
