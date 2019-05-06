@@ -45,7 +45,7 @@ const decrypt = (keyProvider, consentId) => async (data) => {
     result[domain] = {}
     for (let area of Object.keys(data[domain])) {
       if (!data[domain][area]) {
-        result[domain][area] = {}
+        result[domain][area] = null
       } else {
         const [cipher, documentKeys] = data[domain][area].split('\n')
         const consentKeyId = await keyProvider.getConsentKeyId(consentId)

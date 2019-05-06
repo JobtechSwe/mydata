@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { Wrap } from '../components/View/Wrapper'
-import { Spinner } from '../components/elements/Spinner/Spinner'
-import * as consentsService from '../services/consents'
-import { Paragraph } from '../components/typography/Typography'
+import { Wrap } from '../View/Wrapper'
+import { Spinner } from '../elements/Spinner/Spinner'
+import * as consentsService from '../../services/consents'
+import { Paragraph } from '../typography/Typography'
 import ConsentModal from './ConsentModal'
+import { toViewModel } from './parseData'
 
 class ConsentRequest extends Component {
   state = {
@@ -44,8 +45,7 @@ class ConsentRequest extends Component {
             onApprove={this.approve}
             onReject={this.reject}
             visible={this.state.modalVisible}
-            client={this.state.consentRequest.client}
-            scope={this.state.consentRequest.data.scope}
+            data={toViewModel(this.state.consentRequest)}
           />
         )
       case 'approving':
