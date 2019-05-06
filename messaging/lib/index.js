@@ -14,14 +14,7 @@ const validateMessage = async msg => {
 }
 
 const validateHeader = async header => {
-  const JOSE_HEADER = Joi.object({
-    typ: 'JWT',
-    alg,
-    kid: Joi.string().uri(),
-    foo: 'bar'
-  })
-
-  await JOSE_HEADER.validate(header)
+  await schemas.JOSE_HEADER.validate(header)
 }
 
 module.exports = {

@@ -8,14 +8,18 @@ const JWT_DEFAULTS = {
 }
 
 const JWT = Joi.string()
+const JWK = Joi.object({
+  kty: 'RSA',
+  use: Joi.string().valid(['sig', 'enc']).required(),
+  e: 'AQAB',
+  n: Joi.string().base64()
+})
 
-const AUTHENTICATION_REQUEST = Joi.object({
-  ...JWT_DEFAULTS,
-  type: 'AUTHENTICATION_REQUEST',
-  jti: Joi.string().required(),
-  name: Joi.string().required(),
-  description: Joi.string().required(),
-  events: Joi.string().uri().required()
+const JOSE_HEADER = Joi.object({
+  typ: 'JWT',
+  alg,
+  kid: Joi.string().uri(),
+  jwk: JWK
 })
 
 const CLIENT_REGISTRATION = Joi.object({
@@ -27,15 +31,27 @@ const CLIENT_REGISTRATION = Joi.object({
   jwksUrl: Joi.string().uri().required()
 })
 
+// service -> device
+const AUTHENTICATION_REQUEST = Joi.object({
+  ...JWT_DEFAULTS,
+  type: 'AUTHENTICATION_REQUEST',
+  jti: Joi.string().required(),
+  name: Joi.string().required(),
+  description: Joi.string().required(),
+  events: Joi.string().uri().required()
+})
+
+// device -> service
 const REGISTRATION_INIT = Joi.object({
   type: 'REGISTRATION_INIT',
+  jwk: JWK,
   jti: Joi.string().required(),
   aud: Joi.string().required()
 })
 
 const PERMISSIONS = Joi.array()
 
-// From client to operator
+// service -> device
 const REGISTRATION_REQUEST = Joi.object({
   ...JWT_DEFAULTS,
   type: 'REGISTRATION_REQUEST',
@@ -43,14 +59,22 @@ const REGISTRATION_REQUEST = Joi.object({
   jti: Joi.string().uuid({ version: 'uuidv4' }).required()
 })
 
+{
+  kid: '',
+  key: {}
+}
+
+// device -> operator
 const REGISTRATION = Joi.object({
   ...JWT_DEFAULTS,
   type: 'REGISTRATION',
+  jwk: JWK,
   jti: Joi.string().required(),
   sub: Joi.string().uuid({ version: 'uuidv4' }).required(),
   permissions: PERMISSIONS.required()
 })
 
+// operator -> service
 const REGISTRATION_EVENT = Joi.object({
   ...JWT_DEFAULTS,
   type: 'REGISTRATION_EVENT',
@@ -73,6 +97,7 @@ const LOGIN_EVENT = Joi.object({
 })
 
 module.exports = {
+  JOSE_HEADER,
   CLIENT_REGISTRATION,
   AUTHENTICATION_REQUEST,
   REGISTRATION_INIT,
