@@ -6,7 +6,7 @@ jobs:
   include:
   # lint and run end-to-end tests
   - stage: "lint-and-test"
-    name: "Lint, run unit, end-to-end and integration tests"
+    name: "Lint, run end-to-end and integration tests"
     cache:
     - directories:
       - ~/.cache/docker
@@ -31,7 +31,8 @@ jobs:
     - npm install file:client --prefix examples/national-registration
     - npm run install
     script:
-    - npm run test
+    - npm run lint
+    - npm run test:e2e
     after_script:
     - docker save node -o ~/.cache/docker/node.tar
     - docker save redis -o ~/.cache/docker/redis.tar
