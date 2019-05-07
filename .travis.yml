@@ -8,9 +8,9 @@ jobs:
   - stage: "lint-and-test"
     name: "Lint, run end-to-end and integration tests"
     cache:
-    - directories:
+      npm: true
+      directories:
       - ~/.cache/docker
-      - ~/.npm
       - ~/.nvm
     language: node_js
     services:
@@ -43,7 +43,7 @@ jobs:
     name: "Build and deploy code that has been updated"
     language: node_js
     cache:
-    - directories:
+      directories:
       - ~/.cache/docker
     install:
     # Install a new version of the openshift cli
