@@ -85,8 +85,8 @@ stages:
 - name: lint-and-test
   if: branch != master
 - name: deliver
-  # if: (branch = master AND type != pull_request) OR tag IS present
   if: branch != master # temporary for testing
+  # if: (branch = master AND type != pull_request) OR tag IS present
 
 notifications:
   email:
