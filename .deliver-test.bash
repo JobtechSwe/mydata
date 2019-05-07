@@ -3,14 +3,14 @@
 CONTEXT=$1
 IMAGE=$2
 TAG=`node -e 'process.stdout.write(require(process.argv[1]).version)' ./$CONTEXT/package.json`
-CACHE_PATH="~/.cache/docker/test/${IMAGE/\//_}"
+CACHE_DIR="$HOME/.cache/docker/${IMAGE/\//_}"
 
 DOCKERFILE=""
 if [ ! -z "$3" ]; then
   DOCKERFILE="-f $3"
 fi
 
-docker load -i "$CACHE_PATH/$TAG.tar" || true
+docker load -i "$CACHE_DIR/latest.tar" || true
 docker pull $IMAGE:$TAG
 
 if [ $? == 0 ]; then
@@ -36,7 +36,6 @@ if [ $EXIT_CODE != 0 ]; then
   exit $EXIT_CODE
 fi
 
-echo "Cache $IMAGE:$TAG"
-rm -fr "$CACHE_PATH/*"
-mkdir -p "$CACHE_PATH"
-docker save $IMAGE:$TAG -o "$CACHE_PATH/$TAG.tar"
+echo "Save cache $CACHE_DIR/latest.tar"
+mkdir -p "$CACHE_DIR"
+docker save $IMAGE:latest -o "$CACHE_DIR/latest.tar"
