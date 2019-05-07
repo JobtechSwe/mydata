@@ -5,8 +5,8 @@ env:
 jobs:
   include:
   # lint and run end-to-end tests
-  - stage: "lint-and-e2e"
-    name: "Lint and run end-to-end tests"
+  - stage: "lint-and-test"
+    name: "Lint, run unit, end-to-end and integration tests"
     cache:
     - directories:
       - ~/.cache/docker
@@ -31,8 +31,8 @@ jobs:
     - npm install file:client --prefix examples/national-registration
     - npm run install
     script:
-    - npm run lint
-    - npm run test:e2e
+    - npm run test
+    after_script:
     - docker save node -o ~/.cache/docker/node.tar
     - docker save redis -o ~/.cache/docker/redis.tar
     - docker save postgres -o ~/.cache/docker/postgres.tar
@@ -73,7 +73,7 @@ jobs:
     - oc rollout latest operator-$PHASE -n mydata
     - oc rollout latest cv-$PHASE -n mydata
     - oc rollout latest natreg-$PHASE -n mydata
-
+    after_script:
     # ...and finally remove cached credentials
     - oc logout
     - docker logout
@@ -81,7 +81,7 @@ jobs:
 # Flow control
 # This section defines the order in which stages are run and when to run certain stages
 stages:
-- name: lint-and-e2e
+- name: lint-and-test
   if: branch != master
 - name: deliver
   if: (branch = master AND type != pull_request) OR tag IS present
