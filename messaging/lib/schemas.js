@@ -46,8 +46,7 @@ const AUTHENTICATION_REQUEST = Joi.object({
 const REGISTRATION_INIT = Joi.object({
   ...JWT_DEFAULTS,
   type: 'REGISTRATION_INIT',
-  jti: Joi.string().required(),
-  aud: Joi.string().required()
+  jti: Joi.string().required()
 })
 
 const PERMISSIONS = Joi.array()
