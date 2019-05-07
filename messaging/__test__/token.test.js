@@ -158,7 +158,8 @@ describe('token', () => {
         kid: false,
         issuer: 'mydata://account',
         audience: 'https://mycv.work',
-        header: { jwk: key }
+        header: { jwk: key },
+        algorithm: 'RS256'
       }
       key = await JWK.generate('RSA', 1024, {
         kid: 'mydata://account/jwks/account_key',
@@ -174,7 +175,8 @@ describe('token', () => {
       await expect(sign(payload)).rejects.toThrow('Unknown schema foo')
     })
     it('throws if schema validation fails', async () => {
-      await expect(sign(payload, key)).rejects.toThrow('Unknown schema foo')
+      options.issuer = undefined
+      await expect(sign(payload, key, options)).rejects.toThrow()
     })
     it('returns a token', async () => {
       const token = await signed(payload, key, options)

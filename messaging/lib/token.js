@@ -44,6 +44,11 @@ async function verifyToken ({ decode, verify, importKey }, token) {
   return verify(token, key, { complete: true })
 }
 
+const defaultOptions = {
+  typ: 'JWT',
+  algorithm: schemas.algs[0],
+  expiresIn: '1 hour'
+}
 async function createToken ({ sign, decode }, data, key, options) {
   if (!data.type) {
     throw new Error('Payload must have a type')
@@ -51,10 +56,11 @@ async function createToken ({ sign, decode }, data, key, options) {
   if (!schemas[data.type]) {
     throw new Error(`Unknown schema ${data.type}`)
   }
+  options = Object.assign({}, defaultOptions, options)
   const token = await sign(data, key, options)
   const { header, payload } = decode(token, { complete: true })
   await schemas.JOSE_HEADER.validate(header)
-  await schemas.validate(payload)
+  await schemas[data.type].validate(payload)
 
   return token
 }
