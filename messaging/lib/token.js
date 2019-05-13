@@ -41,7 +41,14 @@ async function verifyToken ({ decode, verify, importKey }, token) {
   if (!key) {
     throw Error('No signing key')
   }
-  return verify(token, key, { complete: true })
+  const result = verify(token, key, { complete: true })
+  return {
+    header: {
+      ...result.header,
+      jwk: key.toJWK(false)
+    },
+    payload: result.payload
+  }
 }
 
 const defaultOptions = {

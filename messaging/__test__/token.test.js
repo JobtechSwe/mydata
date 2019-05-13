@@ -35,7 +35,7 @@ describe('token', () => {
       kid = 'https://mycv.work/jwks/abcdef0123456789'
       key = await JWK.generate('RSA', 1024, { kid, use: 'sig' })
       wrongKey = await JWK.generate('RSA', 1024, { kid, use: 'sig' })
-      axios.get.mockResolvedValue({ status: 200, data: JSON.parse(JSON.stringify(key)) })
+      axios.get.mockResolvedValue({ status: 200, data: key.toJWK(false) })
       payload = {
         type: 'AUTHENTICATION_REQUEST',
         jti: 'f0b5bef5-c137-4211-adaf-a0d6a37be8b1',
@@ -89,12 +89,13 @@ describe('token', () => {
         const token = await signed(payload, key, { kid: false })
         await expect(verify(token)).rejects.toThrow('No signing key (kid)')
       })
-      it('can verify token', async () => {
+      it('verifies token and adds jwk', async () => {
         const token = await signed(payload, key)
         const result = await verify(token)
         expect(result.header).toEqual({
           alg: 'RS256',
-          kid: 'https://mycv.work/jwks/abcdef0123456789'
+          kid: 'https://mycv.work/jwks/abcdef0123456789',
+          jwk: key.toJWK(false)
         })
         expect(result.payload).toEqual({
           aud: 'mydata://auth',
@@ -133,7 +134,7 @@ describe('token', () => {
         const result = await verify(token)
         expect(result.header).toEqual({
           alg: 'RS256',
-          jwk: JSON.parse(JSON.stringify(deviceKey))
+          jwk: deviceKey.toJWK(false)
         })
         expect(result.payload).toEqual({
           type: 'REGISTRATION_INIT',
