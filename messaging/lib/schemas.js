@@ -16,6 +16,7 @@ const JWK = Joi.object({
   e: Joi.string().valid('AQAB').required(),
   n: Joi.string().required()
 })
+const JWE = Joi.string()
 
 const JOSE_HEADER = Joi.object({
   alg: Joi.string().valid(algs).required(),
@@ -36,7 +37,11 @@ const SERVICE_REGISTRATION = Joi.object({
 // device -> operator
 const ACCOUNT_REGISTRATION = Joi.object({
   ...JWT_DEFAULTS,
-  type: 'ACCOUNT_REGISTRATION'
+  type: 'ACCOUNT_REGISTRATION',
+  pds: Joi.object({
+    provider: Joi.string().required(),
+    access_token: Joi.string()
+  }).required()
 })
 
 // service -> device
@@ -108,6 +113,23 @@ const ACCESS_TOKEN = Joi.object({
   sub: Joi.string().uuid({ version: 'uuidv4' }).required()
 })
 
+// service -> operator
+const DATA_READ = Joi.object({
+  ...JWT_DEFAULTS,
+  type: 'DATA_READ',
+  sub: Joi.string().uuid({ version: 'uuidv4' }).required(),
+  path: Joi.string().required()
+})
+
+// service -> operator
+const DATA_WRITE = Joi.object({
+  ...JWT_DEFAULTS,
+  type: 'DATA_READ',
+  sub: Joi.string().uuid({ version: 'uuidv4' }).required(),
+  path: Joi.string().required(),
+  data: JWE.required()
+})
+
 const deviceSchemas = [ACCOUNT_REGISTRATION, REGISTRATION_INIT, REGISTRATION, LOGIN]
 
 module.exports = {
@@ -123,5 +145,7 @@ module.exports = {
   REGISTRATION_EVENT,
   LOGIN,
   LOGIN_EVENT,
-  ACCESS_TOKEN
+  ACCESS_TOKEN,
+  DATA_READ,
+  DATA_WRITE
 }
