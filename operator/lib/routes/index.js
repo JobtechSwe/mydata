@@ -1,36 +1,27 @@
 const { Router } = require('express')
-const api = require('./api')
-const health = require('./health')
 const signed = require('../middleware/signed')
+const health = require('./health')
+const messages = require('../messages')
 
 const router = Router()
 
-router.use('/api', api)
-router.use('/health', health)
-
-/* GET home page. */
+/* home page. */
 router.get('/', (req, res, next) => {
   res.send({ name: 'Smooth Operator' })
 })
 
-router.post('/services', signed('SERVICE_REGISTRATION'), () => {
+/* health route */
+router.use('/health', health)
 
-})
-
-router.post('/accounts', signed('ACCOUNT_REGISTRATION'), () => {
-
-})
-
-router.post('/?', signed('REGISTRATION', 'LOGIN'), () => {
-
-})
-
-router.get('/data/:domain?/:area?', signed('ACCESS_TOKEN'), () => {
-
-})
-
-router.post('/data/:domain?/:area?', signed('ACCESS_TOKEN'), () => {
-
+/* communication */
+router.use('/api', signed(), async (req, res, next) => {
+  try {
+    const response = await messages.handle(req.payload)
+    res.write(response)
+    next()
+  } catch (error) {
+    next(error)
+  }
 })
 
 module.exports = router

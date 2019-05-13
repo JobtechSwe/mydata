@@ -66,7 +66,7 @@ describe('services/clients', () => {
     })
   })
 
-  describe('#sendEventLoginApproved', async () => {
+  describe('#sendEventLoginApproved', () => {
     const payload = {
       clientId: 'https://cv.tld'
     }

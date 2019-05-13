@@ -1,5 +1,6 @@
 const { JWT, JWK } = require('@panva/jose')
 const { token } = require('@mydata/messaging')
+const { keys, host } = require('./config')
 const { sign, verify } = token({
   sign: JWT.sign,
   decode: JWT.decode,
@@ -7,46 +8,31 @@ const { sign, verify } = token({
   importKey: JWK.importKey
 })
 
-const operatorKeys = {
-  publicKey: JWK.importKey(process.env.publicKey),
-  privateKey: JWK.importKey(process.env.privateKey)
-}
-
-async function accessToken (audience, subject) {
+async function loginEventToken (audience, payload) {
   return sign({
-    type: 'ACCESS_TOKEN'
-  }, operatorKeys.privateKey, {
-    audience,
-    subject,
-    issuer: 'https://smoothoperator.org'
+    type: 'LOGIN_EVENT',
+    payload
+  }, keys.privateKey, {
+    issuer: host,
+    audience
   })
 }
 
-async function registrationEvent (registrationToken) {
-  const { payload } = await verify(registrationToken)
+async function registrationEventToken (audience, payload) {
   return sign({
     type: 'REGISTRATION_EVENT',
-    accessToken: await accessToken(payload.aud[1], payload.sub),
-    payload: registrationToken
-  }, operatorKeys.privateKey, {
-    issuer: 'https://smoothoperator.org',
-    audience: payload.aud[1]
+    payload
+  }, keys.privateKey, {
+    issuer: host,
+    audience
   })
-}
-
-// TODO: remove
-function createToken (data) {
-  const secret = JWK.importKey(process.env.JWT_SECRET || 'sdfkjshkfjsdofdsj')
-  return JWT.sign({ data }, secret)
 }
 
 module.exports = {
   sign,
   verify,
-  accessToken,
-  registrationEvent,
+  loginEventToken,
+  registrationEventToken,
 
-  operatorKeys,
-
-  createToken
+  keys
 }

@@ -4,12 +4,9 @@ const { transaction, query } = require('../adapters/postgres')
 const { v4 } = require('uuid')
 const axios = require('axios')
 const { camelCase } = require('changecase-objects') // Caveat! This function converts Date to {}
-const schemas = require('./schemas')
 const { createToken } = require('./jwt')
 
 async function createRequest (data, signature) {
-  await schemas.consentRequest.validate(data, schemas.defaultOptions)
-
   let id, url, result, expires
   let tries = 0
   do {
@@ -133,8 +130,6 @@ function buildScopeEntryKeyQueries (consentEncryptionKeyId, scope) {
 }
 
 async function create (body) {
-  await schemas.consent.validate(body, schemas.defaultOptions)
-
   const {
     consentRequestId,
     consentEncryptionKeyId,

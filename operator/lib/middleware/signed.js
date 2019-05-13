@@ -1,27 +1,31 @@
 const createError = require('http-errors')
 const { verify } = require('../services/jwt')
 
-function signed (...types) {
-  return async function (req, res, next) {
+function signed () {
+  return async function (req, _res, next) {
     try {
-      const token = req.method === 'POST'
-        ? req.body
-        : req.headers['Authorization'].split('Bearer ')[1]
-      const { header, payload } = verify(token)
-      if (!types.includes(payload.type)) {
+      let token
+      if (req.method === 'POST') {
+        token = req.body
+      } else {
+        if (req.header('authorization')) {
+          token = req.header('authorization').split('Bearer ')[1]
+        }
+      }
+      if (!token) {
         throw createError(400)
       }
-      req.signed = {
-        header,
-        payload
+      try {
+        const { header, payload } = verify(token)
+        req.token = token
+        req.payload = payload
+        req.header = header
+      } catch (err) {
+        throw createError(401, err)
       }
       next()
     } catch (err) {
-      if (!err.status) {
-        next(createError(401))
-      } else {
-        next(err)
-      }
+      next(err)
     }
   }
 }

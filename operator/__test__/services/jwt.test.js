@@ -1,25 +1,24 @@
 const { JWT, JWK } = require('@panva/jose')
-const { sign, registrationEvent } = require('../../lib/services/jwt')
+const {
+  registrationEventToken,
+  sign
+} = require('../../lib/services/jwt')
 
 describe('services/jwt', () => {
-  describe('#registrationEvent', () => {
-    let operatorKey, deviceKey, registrationToken
+  describe('#registrationEventToken', () => {
+    let payload, options, deviceKey, registrationToken
     beforeEach(async () => {
-      operatorKey = await JWK.generate('RSA', 1024, {
-        kid: 'https://smooth_operator.org/jwks/master_key',
-        use: 'sig'
-      })
       deviceKey = await JWK.generate('RSA', 1024, {
         kid: 'mydata://account/jwks/account_key',
         use: 'sig'
       })
-      const payload = {
+      payload = {
         type: 'REGISTRATION',
         jti: 'f0b5bef5-c137-4211-adaf-a0d6a37be8b1',
         aud: 'https://mycv.work',
         permissions: []
       }
-      const options = {
+      options = {
         kid: false,
         issuer: 'mydata://account',
         audience: ['https://smooth_operator.org', 'https://mycv.work'],
@@ -30,7 +29,7 @@ describe('services/jwt', () => {
       registrationToken = await sign(payload, deviceKey, options)
     })
     it('creates valid registration event token', async () => {
-      const token = await registrationEvent(registrationToken, operatorKey)
+      const token = await registrationEventToken(options.audience[1], registrationToken)
       const { payload } = JWT.decode(token, { complete: true })
       expect(payload.type).toEqual('REGISTRATION_EVENT')
       expect(payload.payload).toEqual(registrationToken)
