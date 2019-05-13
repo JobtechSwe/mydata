@@ -124,7 +124,7 @@ const DATA_READ = Joi.object({
 // service -> operator
 const DATA_WRITE = Joi.object({
   ...JWT_DEFAULTS,
-  type: 'DATA_READ',
+  type: 'DATA_WRITE',
   sub: Joi.string().uuid({ version: 'uuidv4' }).required(),
   path: Joi.string().required(),
   data: JWE.required()
