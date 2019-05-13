@@ -3,15 +3,16 @@ const dfs = require('../../../__mocks__/dropbox-fs')()
 const { createApi } = require('../../helpers')
 
 const app = require('../../../lib/app')
-const jwt = require('../../../lib/services/jwt')
+const { accessToken } = require('../../../lib/services/jwt')
 
 describe('routes /api/data', () => {
   let api, dbRows, authHeader, consentId
   beforeEach(() => {
+
     // JWT
     process.env.JWT_SECRET = 'some secret'
     consentId = '53360f91-6de2-47f2-98b6-b3f6aa333dd0'
-    const accessToken = jwt.createToken({ consentId })
+    const accessToken = accessToken('', '')
     authHeader = { 'Authorization': `Bearer ${accessToken}` }
 
     // DB

@@ -3,8 +3,8 @@ package work.mydata;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import net.rhogan.rnsecurerandom.RNSecureRandomPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
+import net.rhogan.rnsecurerandom.RNSecureRandomPackage;
 import com.horcrux.svg.SvgPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
@@ -32,6 +32,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+            new AsyncStoragePackage(),
             new RNSecureRandomPackage(),
         new AsyncStoragePackage(),
         new SvgPackage(),

@@ -151,8 +151,8 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-securerandom')
     implementation project(':@react-native-community_async-storage')
+    implementation project(':react-native-securerandom')
     compile project(':react-native-svg')
     compile project(':react-native-device-info')
     compile project(':react-native-gesture-handler')

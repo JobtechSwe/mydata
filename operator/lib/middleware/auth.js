@@ -1,9 +1,9 @@
 const createError = require('http-errors')
 const { createVerify } = require('crypto')
 const jwksManager = require('jwks-manager')
-const { getKey } = require('../services/getKey')
 const schemas = require('../services/schemas')
-const { JWT, JWK } = require('@panva/jose')
+const { validate } = require('@mydata/messaging')
+const { verify } = require('../services/jwt')
 
 const clientsService = require('../services/clients')
 
@@ -74,22 +74,14 @@ const signed = ({ accountKey = false } = {}) => async (req, res, next) => {
   }
 }
 
-const jwtVerifier = async ({ body }, res, next) => {
-  const { jwt } = body
-
-  if (!jwt) {
-    throw Error('JWT missing on request')
-  }
-  const { header } = await JWT.decode(jwt, { complete: true })
-  const publicKey = await getKey(header.kid)
-
+const jwtVerifier = async (req, _, next) => {
   try {
-    const claimsSet = await JWT.verify(jwt, JWK.importKey(publicKey))
-    body.claimsSet = claimsSet
-    next()
+    const { header, payload } = verify(req.body)
+    req.header = header
+    req.body = payload
+    return next()
   } catch (error) {
-    console.error('could not verify jwt', error)
-    next(error)
+    return next(error)
   }
 }
 

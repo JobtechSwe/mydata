@@ -151,8 +151,7 @@ describe('token', () => {
     beforeEach(async () => {
       payload = {
         type: 'REGISTRATION_INIT',
-        jti: 'f0b5bef5-c137-4211-adaf-a0d6a37be8b1',
-        aud: 'https://mycv.work'
+        jti: 'f0b5bef5-c137-4211-adaf-a0d6a37be8b1'
       }
       options = {
         kid: false,
