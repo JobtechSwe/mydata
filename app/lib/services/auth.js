@@ -1,8 +1,8 @@
-import { verify, decode } from 'jwt-lite'
+import { verify, decode, sign } from 'jwt-lite'
 import { getKey } from './getKey'
-import { getConnections } from './storage'
-import { Base64 } from 'js-base64'
+import { getConnections, getAccount } from './storage'
 import axios from 'axios'
+import pem2jwk from 'simple-pem2jwk'
 
 export const verifyAndParseAuthRequest = async jwt => {
   // TODO: Validate message with @mydata/messaging
@@ -16,15 +16,29 @@ export const hasConnection = async authReq => {
   return connections.includes(authReq.iss)
 }
 
-const createRegistrationInit = ({ aud }) => {
-  const header = { typ: 'JWT', alg: 'none' }
-  const payload = { type: 'REGISTRATION_INIT', aud }
-  const signature = ''
+const nowSeconds = () => Math.round(Date.now() / 1000)
 
-  return `${Base64.encodeURI(JSON.stringify(header))}.${Base64.encodeURI(JSON.stringify(payload))}.${Base64.encodeURI(signature)}`
+const createRegistrationInit = async ({ aud, iss, jti }) => {
+  const { keys } = await getAccount()
+
+  const privateJwk = await pem2jwk(keys.privateKey)
+  const publicJwk = await pem2jwk(keys.publicKey, { use: 'sig' })
+
+  const now = nowSeconds()
+
+  const jwt = await sign({
+    type: 'REGISTRATION_INIT',
+    aud: iss,
+    iss: aud,
+    jti,
+    iat: now,
+    exp: now + 60,
+  }, privateJwk, { jwk: publicJwk, alg: 'RS256' })
+
+  return jwt
 }
 
 export const initRegistration = async authRequest => {
-  const registrationInit = createRegistrationInit(authRequest)
+  const registrationInit = await createRegistrationInit(authRequest)
   await axios.post(authRequest.events, registrationInit, { headers: { 'content-type': 'application/jwt' } })
 }

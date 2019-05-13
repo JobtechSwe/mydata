@@ -1,4 +1,3 @@
-const { alg } = require('@mydata/messaging')
 const { JWT, JWK } = require('@panva/jose')
 
 const createAuthenticationRequest = async (client, id) => {
@@ -19,7 +18,7 @@ const createAuthenticationRequest = async (client, id) => {
     aud: 'mydata://auth',
     jti: id
   }, privateKey, {
-    algorithm: alg,
+    algorithm: 'RS256',
     kid: true,
     expiresIn: '5 m'
   })

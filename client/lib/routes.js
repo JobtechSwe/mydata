@@ -1,10 +1,12 @@
 const createError = require('http-errors')
 const { Router, json } = require('express')
 const { event } = require('./schemas')
-const { JWT } = require('@panva/jose')
-const { validateMessage, unsecuredMessages } = require('@mydata/messaging')
+const { JWT, JWK } = require('@panva/jose')
+const { token } = require('@mydata/messaging')
 const { registrationHandler } = require('./registration')
 const bodyParser = require('body-parser')
+
+const verify = token({ ...JWT, importKey: JWK.importKey }).verify
 
 const keyListHandler = ({ keyProvider }) => async (req, res, next) => {
   const keys = await keyProvider.jwksKeyList()
@@ -25,18 +27,12 @@ const messageHandler = client => async (req, res, next) => {
       client.events.emit(req.body.type, req.body.payload)
       res.sendStatus(200)
     } else if (contentType === 'application/jwt') {
-      const message = JWT.decode(req.body)
-      await validateMessage(message)
+      const { payload } = await verify(req.body)
 
-      if (!unsecuredMessages.includes(message.type)) {
-        // TODO: Get key
-        // TODO: Verify signature
-      }
+      req.message = payload
 
-      req.message = message
-
-      console.log('EVENT', message)
-      client.events.emit(message.type, message)
+      console.log('EVENT', req.message)
+      client.events.emit(req.message.type, req.message)
       next()
     } else {
       throw createError(400, `Unhandled content-type ${contentType}`)
