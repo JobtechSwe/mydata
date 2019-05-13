@@ -22,7 +22,7 @@ const createRegistrationInit = async ({ aud, iss, jti }) => {
   const { keys } = await getAccount()
 
   const privateJwk = await pem2jwk(keys.privateKey)
-  const publicJwk = await pem2jwk(keys.publicKey)
+  const publicJwk = await pem2jwk(keys.publicKey, { use: 'sig' })
 
   const now = nowSeconds()
 
@@ -34,8 +34,6 @@ const createRegistrationInit = async ({ aud, iss, jti }) => {
     iat: now,
     exp: now + 60,
   }, privateJwk, { jwk: publicJwk, alg: 'RS256' })
-
-  console.log('REGISTRATION_INIT jwt', jwt)
 
   return jwt
 }
