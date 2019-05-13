@@ -30,8 +30,9 @@ const SERVICE_REGISTRATION = Joi.object({
   type: 'SERVICE_REGISTRATION',
   displayName: Joi.string().required(),
   description: Joi.string().required(),
-  eventsUrl: Joi.string().uri().required(),
-  jwksUrl: Joi.string().uri().required()
+  iconURI: Joi.string().required(),
+  jwksURI: Joi.string().uri().required(),
+  eventsURI: Joi.string().uri().required()
 })
 
 // device -> operator
@@ -85,7 +86,6 @@ const REGISTRATION = Joi.object({
 const REGISTRATION_EVENT = Joi.object({
   ...JWT_DEFAULTS,
   type: 'REGISTRATION_EVENT',
-  accessToken: JWT.required(),
   payload: JWT.required() // REGISTRATION
 })
 
@@ -94,15 +94,13 @@ const LOGIN = Joi.object({
   ...JWT_DEFAULTS,
   type: 'LOGIN',
   jti: Joi.string().required(),
-  aud: Joi.array().items(Joi.string().uri()),
-  sub: Joi.string().uuid({ version: 'uuidv4' }).required()
+  aud: Joi.array().items(Joi.string().uri())
 })
 
 // operator -> service
 const LOGIN_EVENT = Joi.object({
   ...JWT_DEFAULTS,
   type: 'LOGIN_EVENT',
-  accessToken: JWT.required(),
   payload: JWT.required() // LOGIN
 })
 
