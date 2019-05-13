@@ -1,41 +1,36 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { H1 } from '../typography/Typography'
 import { PrimaryButton } from '../elements/Button/Button'
 import { Input } from '../elements/Input/Input'
 
-export default class RegisterScreen extends React.Component {
-  state = {
-    firstName: '',
-    lastName: '',
-  }
+const Register = ({ onSubmit }) => {
+  const [ firstName, setFirstName ] = useState('')
+  const [ lastName, setLastName ] = useState('')
 
-  handleSubmit = () => {
-    const { firstName, lastName } = this.state
-
+  const handleSubmit = () => {
     if (firstName !== '' && lastName !== '') {
-      this.props.onSubmit(this.state)
+      onSubmit({ firstName, lastName })
     }
   }
 
-  render() {
-    return (
-      <>
-        <H1>MyData</H1>
-        <Input
-          name="firstName"
-          onChangeText={firstName => this.setState({ firstName })}
-          placeholder="Förnamn"
-          style={{ marginTop: 64 }}
-          value={this.state.firstName}
-        />
-        <Input
-          name="lastName"
-          onChangeText={lastName => this.setState({ lastName })}
-          placeholder="Efternamn"
-          value={this.state.lastName}
-        />
-        <PrimaryButton onPress={this.handleSubmit}>Registrera</PrimaryButton>
-      </>
-    )
-  }
+  return (
+    <>
+    <H1>MyData</H1>
+    <Input
+      name="firstName"
+      onChangeText={firstName => setFirstName(firstName)}
+      placeholder="Förnamn"
+      style={{ marginTop: 64 }}
+      value={firstName}
+    />
+    <Input
+      name="lastName"
+      onChangeText={lastName => setLastName(lastName)}
+      placeholder="Efternamn"
+      value={lastName}
+    />
+    <PrimaryButton onPress={handleSubmit}>Registrera</PrimaryButton>
+  </>)
 }
+
+export default Register
