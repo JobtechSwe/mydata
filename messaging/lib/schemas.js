@@ -1,5 +1,5 @@
 const Joi = require('joi')
-const alg = 'RS256'
+const algs = ['RS256', 'RS384', 'RS512']
 
 const JWT_DEFAULTS = {
   aud: Joi.string().required(),
@@ -18,7 +18,7 @@ const JWK = Joi.object({
 })
 
 const JOSE_HEADER = Joi.object({
-  alg: Joi.string().valid([alg]).required(),
+  alg: Joi.string().valid(algs).required(),
   kid: Joi.string().uri(),
   jwk: JWK
 })
@@ -46,8 +46,7 @@ const AUTHENTICATION_REQUEST = Joi.object({
 const REGISTRATION_INIT = Joi.object({
   ...JWT_DEFAULTS,
   type: 'REGISTRATION_INIT',
-  jti: Joi.string().required(),
-  aud: Joi.string().required()
+  jti: Joi.string().required()
 })
 
 const PERMISSIONS = Joi.array()
@@ -94,7 +93,7 @@ const LOGIN_EVENT = Joi.object({
 const deviceSchemas = [REGISTRATION_INIT, REGISTRATION, LOGIN]
 
 module.exports = {
-  alg,
+  algs,
   deviceSchemas,
   JOSE_HEADER,
   CLIENT_REGISTRATION,
