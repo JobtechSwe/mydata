@@ -1,6 +1,6 @@
 {
   "name": "mydata-phone-app",
-  "version": "0.25.3",
+  "version": "0.26.0",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
