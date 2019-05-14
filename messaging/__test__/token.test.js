@@ -115,7 +115,7 @@ describe('token', () => {
       beforeEach(async () => {
         deviceKey = await JWK.generate('RSA', 1024, { kid: 'mydata://account/jwks/account_key', use: 'sig' })
         payload = {
-          type: 'REGISTRATION_INIT',
+          type: 'CONNECTION_INIT',
           jti: 'f0b5bef5-c137-4211-adaf-a0d6a37be8b1',
           aud: 'https://mycv.work'
         }
@@ -137,7 +137,7 @@ describe('token', () => {
           jwk: deviceKey.toJWK(false)
         })
         expect(result.payload).toEqual({
-          type: 'REGISTRATION_INIT',
+          type: 'CONNECTION_INIT',
           jti: 'f0b5bef5-c137-4211-adaf-a0d6a37be8b1',
           aud: 'https://mycv.work',
           iss: 'mydata://account',
@@ -151,7 +151,7 @@ describe('token', () => {
     let payload, options, key
     beforeEach(async () => {
       payload = {
-        type: 'REGISTRATION_INIT',
+        type: 'CONNECTION_INIT',
         jti: 'f0b5bef5-c137-4211-adaf-a0d6a37be8b1'
       }
       options = {

@@ -56,26 +56,26 @@ const AUTHENTICATION_REQUEST = Joi.object({
 })
 
 // device -> service
-const REGISTRATION_INIT = Joi.object({
+const CONNECTION_INIT = Joi.object({
   ...JWT_DEFAULTS,
-  type: 'REGISTRATION_INIT',
+  type: 'CONNECTION_INIT',
   jti: Joi.string().required()
 })
 
 const PERMISSIONS = Joi.array()
 
 // service -> device
-const REGISTRATION_REQUEST = Joi.object({
+const CONNECTION_REQUEST = Joi.object({
   ...JWT_DEFAULTS,
-  type: 'REGISTRATION_REQUEST',
+  type: 'CONNECTION_REQUEST',
   permissions: PERMISSIONS.required(),
   jti: Joi.string().uuid({ version: 'uuidv4' }).required()
 })
 
 // device -> operator
-const REGISTRATION = Joi.object({
+const CONNECTION = Joi.object({
   ...JWT_DEFAULTS,
-  type: 'REGISTRATION',
+  type: 'CONNECTION',
   jti: Joi.string().required(),
   aud: Joi.array().items(Joi.string().uri()),
   sub: Joi.string().uuid({ version: 'uuidv4' }).required(),
@@ -83,10 +83,10 @@ const REGISTRATION = Joi.object({
 })
 
 // operator -> service
-const REGISTRATION_EVENT = Joi.object({
+const CONNECTION_EVENT = Joi.object({
   ...JWT_DEFAULTS,
-  type: 'REGISTRATION_EVENT',
-  payload: JWT.required() // REGISTRATION
+  type: 'CONNECTION_EVENT',
+  payload: JWT.required() // CONNECTION
 })
 
 // device -> operator
@@ -128,7 +128,7 @@ const DATA_WRITE = Joi.object({
   data: JWE.required()
 })
 
-const deviceSchemas = [ACCOUNT_REGISTRATION, REGISTRATION_INIT, REGISTRATION, LOGIN]
+const deviceSchemas = [ACCOUNT_REGISTRATION, CONNECTION_INIT, CONNECTION, LOGIN]
 
 module.exports = {
   algs,
@@ -137,10 +137,10 @@ module.exports = {
   SERVICE_REGISTRATION,
   ACCOUNT_REGISTRATION,
   AUTHENTICATION_REQUEST,
-  REGISTRATION_INIT,
-  REGISTRATION_REQUEST,
-  REGISTRATION,
-  REGISTRATION_EVENT,
+  CONNECTION_INIT,
+  CONNECTION_REQUEST,
+  CONNECTION,
+  CONNECTION_EVENT,
   LOGIN,
   LOGIN_EVENT,
   ACCESS_TOKEN,
