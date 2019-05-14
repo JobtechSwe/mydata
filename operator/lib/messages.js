@@ -2,23 +2,20 @@ const accounts = require('./accounts')
 const data = require('./data')
 const services = require('./services')
 
-async function handle ({ header, payload, token }, res) {
-  switch (payload.type) {
-    case 'ACCOUNT_REGISTRATION':
-      return accounts.registerAccount({ header, payload, token }, res)
-    case 'DATA_READ':
-      return data.read({ header, payload, token }, res)
-    case 'DATA_WRITE':
-      return data.write({ header, payload, token }, res)
-    case 'LOGIN':
-      return services.accountLogin({ header, payload, token }, res)
-    case 'CONNECT':
-      return services.accountConnect({ header, payload, token }, res)
-    case 'SERVICE_REGISTRATION':
-      return services.registerService({ header, payload, token }, res)
-    default:
-      throw new Error('Unknown type')
+const handlers = {
+  ACCOUNT_REGISTRATION: accounts.registerAccount,
+  DATA_READ: data.read,
+  DATA_WRITE: data.write,
+  LOGIN: services.accountLogin,
+  CONNECTION: services.accountConnect,
+  SERVICE_REGISTRATION: services.registerService
+}
+
+async function handle (req, res) {
+  if (!handlers[req.payload.type]) {
+    throw new Error('Unknown type')
   }
+  return handlers[req.payload.type](req, res)
 }
 
 module.exports = { handle }

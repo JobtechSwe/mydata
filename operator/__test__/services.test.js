@@ -13,7 +13,14 @@ jest.mock('../lib/services/jwt', () => ({
 }))
 
 describe('services', () => {
-  let header, payload, token
+  let header, payload, token, res
+
+  beforeEach(() => {
+    res = {
+      sendStatus: jest.fn()
+    }
+  })
+
   describe('#registerService', () => {
     it('calls postgres with the correct parameters', async () => {
       token = 'register.token'
@@ -36,7 +43,7 @@ describe('services', () => {
         jwksURI: 'https://mycv.work/events',
         eventsURI: 'https://mycv.work/jwks'
       }
-      await services.registerService({ header, payload, token })
+      await services.registerService({ header, payload, token }, res)
       expect(query).toHaveBeenCalledWith(expect.any(String), [
         'https://mycv.work',
         JSON.stringify(header.jwk),
