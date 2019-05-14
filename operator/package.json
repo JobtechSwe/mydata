@@ -29,6 +29,7 @@
     "@mydata/messaging": "file:../messaging",
     "@panva/jose": "1.0.2",
     "axios": "0.18.0",
+    "body-parser": "^1.19.0",
     "change-case": "3.1.0",
     "changecase-objects": "1.1.0",
     "cookie-parser": "1.4.4",

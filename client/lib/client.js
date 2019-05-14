@@ -86,10 +86,10 @@ class Client {
     }
     this.connecting = true
 
-    const clientRegistration = await createServiceRegistration(this)
+    const serviceRegistration = await createServiceRegistration(this)
     try {
       this.events.emit('CONNECTING', retry)
-      const result = await axios.post(`${this.config.operator}/api`, { jwt: clientRegistration })
+      const result = await axios.post(`${this.config.operator}/api`, serviceRegistration, { headers: { 'content-type': 'application/jwt' } })
       this.connected = true
       this.connecting = false
       this.events.emit('CONNECTED', result)

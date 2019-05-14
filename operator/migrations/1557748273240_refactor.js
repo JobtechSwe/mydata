@@ -9,14 +9,14 @@ exports.up = (pgm) => {
   pgm.dropTable('clients', { ifExists: true })
 
   pgm.createTable('accounts', {
-    account_id: { type: 'text', notNull: true, primary: true },
+    account_id: { type: 'text', notNull: true, primaryKey: true },
     account_key: { type: 'text', notNull: true },
     pds_provider: { type: 'text', notNull: true },
     pds_credentials: { type: 'text', notNull: true },
     created: { type: 'timestamp', notNull: true, default: pgm.func('current_timestamp') }
   })
   pgm.createTable('services', {
-    service_id: { type: 'text', notNull: true, primary: true },
+    service_id: { type: 'text', notNull: true, primaryKey: true },
     service_key: { type: 'text', notNull: true },
     display_name: { type: 'text', notNull: true },
     description: { type: 'text', notNull: true },
@@ -26,13 +26,13 @@ exports.up = (pgm) => {
     created: { type: 'timestamp', notNull: true, default: pgm.func('current_timestamp') }
   })
   pgm.createTable('connections', {
-    connection_id: { type: 'uuid', notNull: true, primary: true },
+    connection_id: { type: 'uuid', notNull: true, primaryKey: true },
     account_id: { type: 'text', notNull: true },
     service_id: { type: 'text', notNull: true },
     created: { type: 'timestamp', notNull: true, default: pgm.func('current_timestamp') }
   })
   pgm.createTable('permissions', {
-    permission_id: { type: 'uuid', notNull: true, primary: true },
+    permission_id: { type: 'uuid', notNull: true, primaryKey: true },
     connection_id: { type: 'uuid', notNull: true },
     domain: { type: 'text', notNull: true },
     area: { type: 'text', notNull: true },

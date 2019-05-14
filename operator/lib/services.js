@@ -6,7 +6,7 @@ const headers = {
   'Content-Type': 'application/jwt'
 }
 
-async function registerService ({ header, payload }) {
+async function registerService ({ header, payload }, res) {
   await query(`INSERT INTO services(
     service_id,
     service_key,
@@ -16,15 +16,14 @@ async function registerService ({ header, payload }) {
     jwks_uri,
     events_uri
   ) VALUES($1, $2, $3, $4, $5, $6, $7)
-  ON CONFLICT ON CONSTRAINT service_id DO
+  ON CONFLICT (service_id) DO
   UPDATE SET
     service_key = $2,
     display_name = $3,
     description = $4,
     icon_uri = $5,
     jwks_uri = $6,
-    events_uri = $7
-  WHERE service_id = $1`, [
+    events_uri = $7`, [
     payload.iss,
     JSON.stringify(header.jwk),
     payload.displayName,
@@ -33,6 +32,8 @@ async function registerService ({ header, payload }) {
     payload.jwksURI,
     payload.eventsURI
   ])
+
+  res.sendStatus(200)
 }
 
 async function accountLogin ({ payload, token }) {

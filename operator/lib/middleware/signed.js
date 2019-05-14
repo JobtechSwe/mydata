@@ -16,7 +16,7 @@ function signed () {
         throw createError(400)
       }
       try {
-        const { header, payload } = verify(token)
+        const { header, payload } = await verify(token)
         req.token = token
         req.payload = payload
         req.header = header
