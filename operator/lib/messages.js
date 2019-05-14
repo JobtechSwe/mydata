@@ -13,7 +13,7 @@ async function handle ({ header, payload, token }) {
     case 'LOGIN':
       return services.accountLogin({ header, payload, token })
     case 'CONNECTION':
-      return services.accountConnection({ header, payload, token })
+      return services.accountConnect({ header, payload, token })
     case 'SERVICE_REGISTRATION':
       return services.registerService({ header, payload, token })
     default:

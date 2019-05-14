@@ -15,8 +15,7 @@ describe('services/jwt', () => {
       payload = {
         type: 'CONNECTION',
         jti: 'f0b5bef5-c137-4211-adaf-a0d6a37be8b1',
-        aud: 'https://mycv.work',
-        permissions: []
+        aud: 'https://mycv.work'
       }
       options = {
         kid: false,

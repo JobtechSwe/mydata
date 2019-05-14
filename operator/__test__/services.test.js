@@ -8,7 +8,8 @@ jest.mock('../lib/adapters/postgres', () => ({
   multiple: jest.fn().mockResolvedValue([])
 }))
 jest.mock('../lib/services/jwt', () => ({
-  loginEventToken: jest.fn().mockResolvedValue('login.event.token')
+  loginEventToken: jest.fn().mockResolvedValue('login.event.token'),
+  connectionEventToken: jest.fn().mockResolvedValue('connection.event.token')
 }))
 
 describe('services', () => {
@@ -45,6 +46,74 @@ describe('services', () => {
         'https://mycv.work/events',
         'https://mycv.work/jwks'
       ])
+    })
+  })
+  describe('#accountConnect', () => {
+    let accountResponse, serviceResponse, connectionResponse
+    beforeEach(() => {
+      header = {}
+      payload = {
+        type: 'CONNECT',
+        iss: 'mydata://account/abcdef',
+        aud: ['https://smoothoperator.work', 'https://mycv.work'],
+        sub: 'd5502d22-cc18-4c3d-be38-d76ede4e78da',
+        jti: 'abcdef',
+        permissions: {}
+      }
+      accountResponse = { account_key: 'foo' }
+      serviceResponse = { events_uri: 'https://mycv.work/events' }
+      connectionResponse = { connection_id: 'ceca7b41-96ab-4439-82e1-7aa487fa2e4d' }
+      multiple.mockResolvedValue([
+        { rows: [accountResponse] },
+        { rows: [serviceResponse] },
+        { rows: [] }
+      ])
+    })
+    it('gets account, service and existing connection from db', async () => {
+      await services.accountConnect({ header, payload, token })
+      expect(multiple).toHaveBeenCalledWith([
+        [expect.any(String), ['mydata://account/abcdef']],
+        [expect.any(String), ['https://mycv.work']],
+        [expect.any(String), ['mydata://account/abcdef', 'https://mycv.work']]
+      ])
+    })
+    it('throws if account is missing', async () => {
+      multiple.mockResolvedValueOnce([
+        { rows: [] },
+        { rows: [serviceResponse] },
+        { rows: [] }
+      ])
+      await expect(services.accountConnect({ header, payload, token }))
+        .rejects.toThrow('No such account')
+    })
+    it('throws if service is missing', async () => {
+      multiple.mockResolvedValueOnce([
+        { rows: [accountResponse] },
+        { rows: [] },
+        { rows: [] }
+      ])
+      await expect(services.accountConnect({ header, payload, token }))
+        .rejects.toThrow('No such service')
+    })
+    it('throws if connection exists', async () => {
+      multiple.mockResolvedValueOnce([
+        { rows: [accountResponse] },
+        { rows: [serviceResponse] },
+        { rows: [connectionResponse] }
+      ])
+      await expect(services.accountConnect({ header, payload, token }))
+        .rejects.toThrow('Connection already exists')
+    })
+    it('calls jwt.connectionEventToken with correct arguments', async () => {
+      await services.accountConnect({ header, payload, token })
+      expect(jwt.connectionEventToken).toHaveBeenCalledWith(payload.aud[1], token)
+    })
+    it('sends a LOGIN_EVENT to service', async () => {
+      await services.accountConnect({ header, payload, token })
+      expect(axios.post)
+        .toHaveBeenCalledWith('https://mycv.work/events', 'connection.event.token', {
+          headers: { 'Content-Type': 'application/jwt' }
+        })
     })
   })
   describe('#accountLogin', () => {

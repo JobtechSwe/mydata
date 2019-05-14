@@ -13,7 +13,7 @@ jest.mock('../lib/data', () => ({
 jest.mock('../lib/services', () => ({
   registerService: jest.fn(),
   accountLogin: jest.fn(),
-  accountConnection: jest.fn()
+  accountConnect: jest.fn()
 }))
 
 describe('messages', () => {
@@ -58,12 +58,12 @@ describe('messages', () => {
       })
     })
     describe('CONNECTION', () => {
-      it('calls services.accountConnection', async () => {
+      it('calls services.accountConnect', async () => {
         const header = {}
         const payload = { type: 'CONNECTION' }
         const token = 'sdhsdjhfgsjhfg'
         await handle({ header, payload, token })
-        expect(services.accountConnection).toHaveBeenCalledWith({ header, payload, token })
+        expect(services.accountConnect).toHaveBeenCalledWith({ header, payload, token })
       })
     })
     describe('SERVICE_REGISTRATION', () => {

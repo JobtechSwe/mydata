@@ -57,12 +57,30 @@ async function accountLogin ({ payload, token }) {
   return axios.post(url, loginEventToken, { headers })
 }
 
-async function accountConnection ({ header, payload }) {
+async function accountConnect ({ payload, token }) {
+  const { iss, aud: [, aud] } = payload
+  const [resAccount, resService, resConnection] = await multiple([
+    ['SELECT account_key FROM accounts WHERE account_id = $1', [iss]],
+    ['SELECT events_uri FROM services WHERE service_id = $1', [aud]],
+    ['SELECT * FROM connections WHERE account_id = $1 AND service_id = $2', [iss, aud]]
+  ])
 
+  if (!resAccount.rows.length) {
+    throw new Error('No such account')
+  }
+  if (!resService.rows.length) {
+    throw new Error('No such service')
+  }
+  if (resConnection.rows.length) {
+    throw new Error('Connection already exists')
+  }
+  const connectionEventToken = await jwt.connectionEventToken(aud, token)
+  const url = resService.rows[0].events_uri
+  return axios.post(url, connectionEventToken, { headers })
 }
 
 module.exports = {
   registerService,
-  accountConnection,
+  accountConnect,
   accountLogin
 }
