@@ -1,26 +1,23 @@
 const { JWT, JWK } = require('@panva/jose')
+const { token } = require('@mydata/messaging')
 
 const createAuthenticationRequest = async (client, id) => {
+  const { sign } = token({ ...JWT, importKey: JWK.importKey })
+
   const payload = {
     type: 'AUTHENTICATION_REQUEST',
-    name: client.config.displayName,
-    description: client.config.description,
-    events: client.config.eventsUrl
+    jti: id
   }
 
   const privateKey = JWK.importKey(client.config.clientKeys.privateKey, {
     kid: `${client.config.jwksUrl}/client_key`
   })
 
-  return JWT.sign({
-    ...payload,
-    iss: client.config.clientId,
-    aud: 'mydata://auth',
-    jti: id
+  return sign({
+    ...payload
   }, privateKey, {
-    algorithm: 'RS256',
-    kid: true,
-    expiresIn: '5 m'
+    audience: 'mydata://auth',
+    issuer: client.config.clientId
   })
 }
 

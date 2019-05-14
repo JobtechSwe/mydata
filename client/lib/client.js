@@ -8,7 +8,7 @@ const { EventEmitter } = require('events')
 const { configSchema } = require('./schemas')
 const { v4 } = require('uuid')
 const { createAuthenticationRequest, createAuthenticationUrl } = require('./auth')
-const { createClientRegistration } = require('./clientRegistration')
+const { createServiceRegistration } = require('./serviceRegistration')
 
 const defaults = {
   jwksPath: '/jwks',
@@ -86,10 +86,10 @@ class Client {
     }
     this.connecting = true
 
-    const clientRegistration = await createClientRegistration(this)
+    const clientRegistration = await createServiceRegistration(this)
     try {
       this.events.emit('CONNECTING', retry)
-      const result = await axios.post(`${this.config.operator}/api/clients`, { jwt: clientRegistration })
+      const result = await axios.post(`${this.config.operator}/api`, { jwt: clientRegistration })
       this.connected = true
       this.connecting = false
       this.events.emit('CONNECTED', result)

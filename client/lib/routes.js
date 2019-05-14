@@ -21,12 +21,7 @@ const keyHandler = ({ keyProvider }) => async (req, res, next) => {
 const messageHandler = client => async (req, res, next) => {
   try {
     const contentType = req.headers['content-type']
-    if (contentType === 'application/json') {
-      // TODO: Make all messages use the JWT format (and remove this block)
-      await event(req.body.type).validate(req.body)
-      client.events.emit(req.body.type, req.body.payload)
-      res.sendStatus(200)
-    } else if (contentType === 'application/jwt') {
+    if (contentType === 'application/jwt') {
       const { payload } = await verify(req.body)
 
       req.message = payload

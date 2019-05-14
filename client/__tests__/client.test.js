@@ -83,26 +83,9 @@ describe('client', () => {
     describe('#connect()', () => {
       it('calls the operator to register the client service', async () => {
         await client.connect()
-        expect(axios.post).toHaveBeenCalledWith('https://smoothoperator.work/api/clients', expect.any(Object))
+        expect(axios.post).toHaveBeenCalledWith('https://smoothoperator.work/api', expect.any(Object))
       })
-      it('sends correct parameters', async () => {
-        await client.connect()
-        const { jwt } = axios.post.mock.calls[0][1]
 
-        const payload = JWT.decode(jwt)
-
-        expect(payload).toEqual({
-          type: 'CLIENT_REGISTRATION',
-          aud: 'https://smoothoperator.work',
-          displayName: 'CV app',
-          description: 'A CV app with a description which is at least 10 chars',
-          eventsUrl: 'https://mycv.work/events',
-          jwksUrl: 'https://mycv.work/jwks',
-          exp: expect.any(Number),
-          iat: expect.any(Number),
-          iss: 'https://mycv.work'
-        })
-      })
       it('calls events.emit with payload', async () => {
         const listener = jest.fn()
         client.events.on('CONNECTED', listener)

@@ -3,7 +3,6 @@ const { createMemoryStore } = require('../lib/memoryStore')
 const { generateKeyPair } = require('./_helpers')
 const { JWT } = require('@panva/jose')
 const { createAuthenticationRequest } = require('./../lib/auth')
-const { validateHeader, validateMessage } = require('@mydata/messaging')
 const { v4 } = require('uuid')
 
 describe('auth', () => {
@@ -33,12 +32,11 @@ describe('auth', () => {
       expect(payload).not.toBe(null)
     })
 
-    it('creates the correct jwt header', async () => {
+    it('creates header with correct kid', async () => {
       const id = 'some_id'
       const authReq = await createAuthenticationRequest(client, id)
 
       const { header } = JWT.decode(authReq, { complete: true })
-      await validateHeader(header)
 
       expect(header.kid).toEqual('http://localhost:4000/jwks/client_key')
     })
@@ -49,13 +47,8 @@ describe('auth', () => {
 
       const payload = JWT.decode(authReq)
 
-      await validateMessage(payload)
-
       expect(payload.aud).toBe('mydata://auth')
       expect(payload.iss).toBe('http://localhost:4000')
-      expect(payload.name).toBe('CV app')
-      expect(payload.description).toBe('A CV app with a description which is longer than 10 chars')
-      expect(payload.events).toBe('http://localhost:4000/events')
     })
   })
 })
