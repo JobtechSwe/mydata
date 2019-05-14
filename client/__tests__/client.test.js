@@ -83,7 +83,7 @@ describe('client', () => {
     describe('#connect()', () => {
       it('calls the operator to register the client service', async () => {
         await client.connect()
-        expect(axios.post).toHaveBeenCalledWith('https://smoothoperator.work/api', expect.any(Object))
+        expect(axios.post).toHaveBeenCalledWith('https://smoothoperator.work/api', expect.any(String), { headers: { 'content-type': 'application/jwt' } })
       })
 
       it('calls events.emit with payload', async () => {
@@ -95,7 +95,7 @@ describe('client', () => {
 
       it('signs the payload', async () => {
         await client.connect()
-        const { jwt } = axios.post.mock.calls[0][1]
+        const jwt = axios.post.mock.calls[0][1]
         const { signature } = JWT.decode(jwt, { complete: true })
 
         expect(signature).toEqual(expect.any(String))
