@@ -18,9 +18,9 @@ async function loginEventToken (audience, payload) {
   })
 }
 
-async function registrationEventToken (audience, payload) {
+async function connectionEventToken (audience, payload) {
   return sign({
-    type: 'REGISTRATION_EVENT',
+    type: 'CONNECTION_EVENT',
     payload
   }, keys.privateKey, {
     issuer: host,
@@ -32,7 +32,7 @@ module.exports = {
   sign,
   verify,
   loginEventToken,
-  registrationEventToken,
+  connectionEventToken,
 
   keys
 }

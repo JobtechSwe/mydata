@@ -1,19 +1,19 @@
 const { JWT, JWK } = require('@panva/jose')
 const {
-  registrationEventToken,
+  connectionEventToken,
   sign
 } = require('../../lib/services/jwt')
 
 describe('services/jwt', () => {
-  describe('#registrationEventToken', () => {
-    let payload, options, deviceKey, registrationToken
+  describe('#connectionEventToken', () => {
+    let payload, options, deviceKey, connectionToken
     beforeEach(async () => {
       deviceKey = await JWK.generate('RSA', 1024, {
         kid: 'mydata://account/jwks/account_key',
         use: 'sig'
       })
       payload = {
-        type: 'REGISTRATION',
+        type: 'CONNECTION',
         jti: 'f0b5bef5-c137-4211-adaf-a0d6a37be8b1',
         aud: 'https://mycv.work',
         permissions: []
@@ -26,13 +26,13 @@ describe('services/jwt', () => {
         header: { jwk: deviceKey },
         algorithm: 'RS256'
       }
-      registrationToken = await sign(payload, deviceKey, options)
+      connectionToken = await sign(payload, deviceKey, options)
     })
-    it('creates valid registration event token', async () => {
-      const token = await registrationEventToken(options.audience[1], registrationToken)
+    it('creates valid connection event token', async () => {
+      const token = await connectionEventToken(options.audience[1], connectionToken)
       const { payload } = JWT.decode(token, { complete: true })
-      expect(payload.type).toEqual('REGISTRATION_EVENT')
-      expect(payload.payload).toEqual(registrationToken)
+      expect(payload.type).toEqual('CONNECTION_EVENT')
+      expect(payload.payload).toEqual(connectionToken)
     })
   })
 })

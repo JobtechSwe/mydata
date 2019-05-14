@@ -12,8 +12,8 @@ async function handle ({ header, payload, token }) {
       return data.write({ header, payload, token })
     case 'LOGIN':
       return services.accountLogin({ header, payload, token })
-    case 'REGISTRATION':
-      return services.accountRegistration({ header, payload, token })
+    case 'CONNECTION':
+      return services.accountConnection({ header, payload, token })
     case 'SERVICE_REGISTRATION':
       return services.registerService({ header, payload, token })
     default:

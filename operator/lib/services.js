@@ -57,12 +57,12 @@ async function accountLogin ({ payload, token }) {
   return axios.post(url, loginEventToken, { headers })
 }
 
-async function accountRegistration ({ header, payload }) {
+async function accountConnection ({ header, payload }) {
 
 }
 
 module.exports = {
   registerService,
-  accountLogin,
-  accountRegistration
+  accountConnection,
+  accountLogin
 }
