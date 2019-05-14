@@ -1,7 +1,7 @@
 import * as consentService from '../consents'
 import Config from 'react-native-config'
 import axios from 'axios'
-import { getAccount } from '../storage'
+import { getAccount } from '../account'
 import { getKey } from '../jwks'
 import { generateKeys, sign } from '../crypto'
 
@@ -9,7 +9,7 @@ jest.mock('axios', () => ({
   get: jest.fn(),
   post: jest.fn(),
 }))
-jest.mock('../storage', () => ({
+jest.mock('../account', () => ({
   getAccount: jest.fn(),
 }))
 jest.mock('../jwks', () => ({

@@ -2,6 +2,7 @@ import axios from 'axios'
 import Config from 'react-native-config'
 import { sign } from './crypto'
 import { Base64 } from 'js-base64'
+import AsyncStorage from '@react-native-community/async-storage'
 
 async function pluckAndSign(account) {
   const data = pluck(account)
@@ -65,5 +66,15 @@ export async function save(account) {
     return account
   } catch (err) {
     throw err
+  }
+}
+
+export const getAccount = async () => {
+  try {
+    const result = await AsyncStorage.getItem('account')
+    return result ? JSON.parse(result) : undefined
+  } catch (error) {
+    console.error('Error while getting account-id from AsyncStorage:', error)
+    return undefined
   }
 }

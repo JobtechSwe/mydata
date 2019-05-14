@@ -3,9 +3,9 @@ package work.mydata;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import org.reactnative.camera.RNCameraPackage;
 import net.rhogan.rnsecurerandom.RNSecureRandomPackage;
-import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import net.rhogan.rnsecurerandom.RNSecureRandomPackage;
 import com.horcrux.svg.SvgPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
@@ -33,6 +33,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+            new AsyncStoragePackage(),
         new RNCameraPackage(),
         new RNSecureRandomPackage(),
         new AsyncStoragePackage(),

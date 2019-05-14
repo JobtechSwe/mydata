@@ -47,7 +47,7 @@
     "react-native-svg-icon": "^0.8.1",
     "react-native-svg-uri": "^1.2.3",
     "react-navigation": "3.6.0",
-    "simple-pem2jwk": "^0.2.1",
+    "simple-pem2jwk": "^0.2.2",
     "styled-components": "^4.2.0"
   },
   "devDependencies": {
