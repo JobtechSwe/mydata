@@ -17,7 +17,6 @@ router.use('/health', health)
 router.use('/api', signed(), async (req, res, next) => {
   try {
     await messages.handle(req, res)
-    next()
   } catch (error) {
     next(error)
   }
