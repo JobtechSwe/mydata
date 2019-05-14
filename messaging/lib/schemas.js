@@ -67,7 +67,8 @@ const LAWFUL_BASIS = Joi.string()
 const READ = Joi.object({
   id: Joi.string().uuid().required(),
   purpose: Joi.string().required(),
-  lawfulBasis: LAWFUL_BASIS.required()
+  lawfulBasis: LAWFUL_BASIS.required(),
+  jwk: JWK.required()
 })
 
 const WRITE = Joi.object({
@@ -89,7 +90,7 @@ const ANSWERED_READ = Joi.object({
   id: Joi.string().uuid().required(),
   purpose: Joi.string().required(),
   lawfulBasis: LAWFUL_BASIS.required(),
-  keys: Joi.array().allow(JWK)
+  jwks: Joi.array().allow(JWK).min(1)
 })
 
 const ANSWERED_WRITE = Joi.object({
@@ -136,7 +137,7 @@ const CONNECTION = Joi.object({
   ...JWT_DEFAULTS,
   type: 'CONNECTION',
   jti: Joi.string().required(),
-  aud: Joi.array().items(Joi.string().uri()),
+  aud: Joi.array().items(Joi.string().uri()).min(1),
   sub: Joi.string().uuid({ version: 'uuidv4' }).required(),
   permissions: ANSWERED_PERMISSIONS
 })
