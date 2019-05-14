@@ -85,7 +85,7 @@ describe('schemas', () => {
                 read: {
                   id: 'ccec677d-09d1-489a-a3da-e4758134f2fa',
                   purpose: 'Good stuff',
-                  jwks: [jwk(), jwk()],
+                  jwks: [jwk(), jwk(), jwk()],
                   lawfulBasis: 'CONSENT'
                 }
               }

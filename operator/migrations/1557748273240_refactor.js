@@ -15,6 +15,7 @@ exports.up = (pgm) => {
     pds_credentials: { type: 'text', notNull: true },
     created: { type: 'timestamp', notNull: true, default: pgm.func('current_timestamp') }
   })
+
   pgm.createTable('services', {
     service_id: { type: 'text', notNull: true, primaryKey: true },
     service_key: { type: 'text', notNull: true },
@@ -25,15 +26,20 @@ exports.up = (pgm) => {
     events_uri: { type: 'text', notNull: true },
     created: { type: 'timestamp', notNull: true, default: pgm.func('current_timestamp') }
   })
+
   pgm.createTable('connections', {
     connection_id: { type: 'uuid', notNull: true, primaryKey: true },
-    account_id: { type: 'text', notNull: true },
-    service_id: { type: 'text', notNull: true },
+    account_id: { type: 'text', notNull: true, references: 'accounts' },
+    service_id: { type: 'text', notNull: true, references: 'services' },
     created: { type: 'timestamp', notNull: true, default: pgm.func('current_timestamp') }
   })
+  pgm.createIndex('connections', ['account_id', 'service_id'], {
+    unique: true
+  })
+
   pgm.createTable('permissions', {
     permission_id: { type: 'uuid', notNull: true, primaryKey: true },
-    connection_id: { type: 'uuid', notNull: true },
+    connection_id: { type: 'uuid', notNull: true, references: 'connections' },
     domain: { type: 'text', notNull: true },
     area: { type: 'text', notNull: true },
     type: { type: 'text', notNull: true },
@@ -45,11 +51,32 @@ exports.up = (pgm) => {
     expires: { type: 'timestamp' },
     revoked: { type: 'timestamp' }
   })
+  pgm.createIndex('permissions', [
+    'connection_id',
+    'domain',
+    'area',
+    'type',
+    'accepted',
+    'rejected',
+    'expires',
+    'revoked'
+  ], { unique: true })
 }
 
 exports.down = (pgm) => {
   pgm.dropTable('accounts', { ifExists: true })
   pgm.dropTable('services', { ifExists: true })
+  pgm.dropIndex('connections', ['account_id', 'service_id'], { ifExists: true })
   pgm.dropTable('connections', { ifExists: true })
+  pgm.dropIndex('permissions', [
+    'connection_id',
+    'domain',
+    'area',
+    'type',
+    'accepted',
+    'rejected',
+    'expires',
+    'revoked'
+  ], { ifExists: true })
   pgm.dropTable('permissions', { ifExists: true })
 }

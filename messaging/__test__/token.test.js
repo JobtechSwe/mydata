@@ -39,9 +39,6 @@ describe('token', () => {
       payload = {
         type: 'AUTHENTICATION_REQUEST',
         jti: 'f0b5bef5-c137-4211-adaf-a0d6a37be8b1',
-        name: 'Mitt CV',
-        description: 'Ditt CV',
-        events: 'https://mycv.work/events'
       }
     })
     it('fails if incorrect format', async () => {
@@ -99,13 +96,10 @@ describe('token', () => {
         })
         expect(result.payload).toEqual({
           aud: 'mydata://auth',
-          description: 'Ditt CV',
-          events: 'https://mycv.work/events',
           exp: expect.any(Number),
           iat: expect.any(Number),
           iss: 'https://mycv.work',
           jti: 'f0b5bef5-c137-4211-adaf-a0d6a37be8b1',
-          name: 'Mitt CV',
           type: 'AUTHENTICATION_REQUEST'
         })
       })
