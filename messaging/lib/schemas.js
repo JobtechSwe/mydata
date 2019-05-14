@@ -62,13 +62,72 @@ const CONNECTION_INIT = Joi.object({
   jti: Joi.string().required()
 })
 
-const PERMISSIONS = Joi.array()
+const LAWFUL_BASIS = Joi.string()
+
+const READ = Joi.object({
+  id: Joi.string().uuid().required(),
+  purpose: Joi.string().required(),
+  lawfulBasis: LAWFUL_BASIS.required()
+})
+
+const WRITE = Joi.object({
+  id: Joi.string().uuid().required(),
+  description: Joi.string().required(),
+  lawfulBasis: LAWFUL_BASIS.required()
+})
+
+const LOCAL_ENTRY = Joi.object({
+  read: READ,
+  write: WRITE
+})
+
+const EXTERNAL_ENTRY = Joi.object({
+  read: READ
+})
+
+const ANSWERED_READ = Joi.object({
+  id: Joi.string().uuid().required(),
+  purpose: Joi.string().required(),
+  lawfulBasis: LAWFUL_BASIS.required(),
+  keys: Joi.array().allow(JWK)
+})
+
+const ANSWERED_WRITE = Joi.object({
+  id: Joi.string().uuid().required(),
+  description: Joi.string().required(),
+  lawfulBasis: LAWFUL_BASIS.required()
+})
+
+const ANSWERED_LOCAL_ENTRY = Joi.object({
+  read: ANSWERED_READ,
+  write: ANSWERED_WRITE
+})
+
+const ANSWERED_EXTERNAL_ENTRY = Joi.object({
+  read: ANSWERED_READ
+})
+
+const PERMISSIONS = Joi.object({
+  local: Joi.object()
+    .pattern(/.*/, LOCAL_ENTRY),
+  external: Joi.object()
+    .pattern(Joi.string().uri(), Joi.object()
+      .pattern(/.*/, EXTERNAL_ENTRY))
+})
+
+const ANSWERED_PERMISSIONS = Joi.object({
+  local: Joi.object()
+    .pattern(/.*/, ANSWERED_LOCAL_ENTRY),
+  external: Joi.object()
+    .pattern(Joi.string().uri(), Joi.object()
+      .pattern(/.*/, ANSWERED_EXTERNAL_ENTRY))
+})
 
 // service -> device
 const CONNECTION_REQUEST = Joi.object({
   ...JWT_DEFAULTS,
   type: 'CONNECTION_REQUEST',
-  permissions: PERMISSIONS.required(),
+  permissions: PERMISSIONS,
   jti: Joi.string().uuid({ version: 'uuidv4' }).required()
 })
 
@@ -79,7 +138,7 @@ const CONNECTION = Joi.object({
   jti: Joi.string().required(),
   aud: Joi.array().items(Joi.string().uri()),
   sub: Joi.string().uuid({ version: 'uuidv4' }).required(),
-  permissions: PERMISSIONS.required()
+  permissions: ANSWERED_PERMISSIONS
 })
 
 // operator -> service
