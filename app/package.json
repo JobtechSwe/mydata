@@ -23,7 +23,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@mydata/messaging": "file:../messaging",
-    "@react-native-community/async-storage": "1.2.4",
+    "@react-native-community/async-storage": "1.4.0",
     "@types/js-base64": "^2.3.1",
     "axios": "^0.18.0",
     "buffer": "^5.2.1",
