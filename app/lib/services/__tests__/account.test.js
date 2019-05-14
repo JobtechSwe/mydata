@@ -2,6 +2,7 @@ import * as accountService from '../account'
 import axios from 'axios'
 import { RSA } from 'react-native-rsa-native'
 import Config from 'react-native-config'
+import AsyncStorage from '@react-native-community/async-storage'
 
 Config.OPERATOR_URL = 'aTotallyLegitOperatorUrl'
 
@@ -169,6 +170,25 @@ describe('account', () => {
 
         expect(result).toEqual(account)
       })
+    })
+  })
+
+  describe('#getAccount', () => {
+    it('calls AsyncStorage.getItem', async () => {
+      await accountService.getAccount()
+      expect(AsyncStorage.getItem).toHaveBeenCalledWith('account')
+    })
+
+    it('resolves if AsyncStorage resolves', async () => {
+      AsyncStorage.getItem.mockResolvedValue(JSON.stringify(account))
+      const result = await accountService.getAccount()
+      expect(result).toEqual(account)
+    })
+
+    it('resolves with undefined if AsyncStorage rejects', async () => {
+      AsyncStorage.getItem.mockRejectedValue('could not find any account')
+      const result = await accountService.getAccount()
+      expect(result).toEqual(undefined)
     })
   })
 })

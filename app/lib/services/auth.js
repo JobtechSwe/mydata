@@ -1,6 +1,7 @@
 import { verify, decode, sign } from 'jwt-lite'
 import { getKey } from './getKey'
-import { getConnections, getAccount } from './storage'
+import { getConnections } from './storage'
+import { getAccount } from './account'
 import axios from 'axios'
 import pem2jwk from 'simple-pem2jwk'
 

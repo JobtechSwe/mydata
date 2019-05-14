@@ -17,12 +17,13 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     Linking.addEventListener('url', handleOpenURL)
-    const subscription = navigation.addListener('willFocus', updateConsents)
-    updateConsents()
+    // TODO: Uncomment =)
+    // const subscription = navigation.addListener('willFocus', updateConsents)
+    // updateConsents()
 
     return () => {
       Linking.removeEventListener('url', handleOpenURL)
-      subscription.remove()
+      // subscription.remove()
     }
   }, [])
 
