@@ -6,13 +6,11 @@ import com.facebook.react.ReactApplication;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import org.reactnative.camera.RNCameraPackage;
 import net.rhogan.rnsecurerandom.RNSecureRandomPackage;
-import net.rhogan.rnsecurerandom.RNSecureRandomPackage;
 import com.horcrux.svg.SvgPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.RNRSA.RNRSAPackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
-import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -33,8 +31,6 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
-            new AsyncStoragePackage(),
-        new RNCameraPackage(),
         new RNSecureRandomPackage(),
         new AsyncStoragePackage(),
         new SvgPackage(),
@@ -42,8 +38,7 @@ public class MainApplication extends Application implements ReactApplication {
         new RNGestureHandlerPackage(),
         new RNCameraPackage(),
         new RNRSAPackage(),
-        new ReactNativeConfigPackage(),
-        new ReactNativePushNotificationPackage()
+        new ReactNativeConfigPackage()
       );
     }
 

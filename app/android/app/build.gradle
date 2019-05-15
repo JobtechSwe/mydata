@@ -160,7 +160,6 @@ dependencies {
     compile project(':react-native-gesture-handler')
     compile project(':react-native-rsa-native')
     compile project(':react-native-config')
-    compile project(':react-native-push-notification')
     compile ("com.android.support:support-v4:28.0.0")
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
