@@ -61,13 +61,23 @@ exports.up = (pgm) => {
     'expires',
     'revoked'
   ], { unique: true })
+
+  pgm.createTable('account_keys', {
+    account_key_id: { type: 'string', notNull: true, primaryKey: true },
+    account_id: { type: 'text', notNull: true, references: 'accounts' },
+    domain: { type: 'text', notNull: true },
+    area: { type: 'text', notNull: true },
+    read_key: { type: 'text' },
+    created: { type: 'timestamp', default: pgm.func('current_timestamp') }
+  })
+  pgm.createIndex('account_keys', [
+    'account_id',
+    'domain',
+    'area'
+  ], { unique: true })
 }
 
 exports.down = (pgm) => {
-  pgm.dropTable('accounts', { ifExists: true })
-  pgm.dropTable('services', { ifExists: true })
-  pgm.dropIndex('connections', ['account_id', 'service_id'], { ifExists: true })
-  pgm.dropTable('connections', { ifExists: true })
   pgm.dropIndex('permissions', [
     'connection_id',
     'domain',
@@ -79,4 +89,17 @@ exports.down = (pgm) => {
     'revoked'
   ], { ifExists: true })
   pgm.dropTable('permissions', { ifExists: true })
+
+  pgm.dropIndex('account_keys', [
+    'account_id',
+    'domain',
+    'area'
+  ], { ifExists: true })
+  pgm.dropTable('account_keys', { ifExists: true })
+
+  pgm.dropIndex('connections', ['account_id', 'service_id'], { ifExists: true })
+  pgm.dropTable('connections', { ifExists: true })
+
+  pgm.dropTable('accounts', { ifExists: true })
+  pgm.dropTable('services', { ifExists: true })
 }

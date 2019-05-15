@@ -1,5 +1,12 @@
-const { query, multiple } = require('./adapters/postgres')
+const { query, multiple, transaction } = require('./adapters/postgres')
 const jwt = require('./services/jwt')
+const {
+  accountKeyInsert,
+  checkConnection,
+  connectionInsert,
+  permissionInsert,
+  serviceInsert
+} = require('./sqlStatements')
 const axios = require('axios')
 
 const headers = {
@@ -7,42 +14,28 @@ const headers = {
 }
 
 async function registerService ({ header, payload }, res) {
-  await query(`INSERT INTO services(
-    service_id,
-    service_key,
-    display_name,
-    description,
-    icon_uri,
-    jwks_uri,
-    events_uri
-  ) VALUES($1, $2, $3, $4, $5, $6, $7)
-  ON CONFLICT (service_id) DO
-  UPDATE SET
-    service_key = $2,
-    display_name = $3,
-    description = $4,
-    icon_uri = $5,
-    jwks_uri = $6,
-    events_uri = $7`, [
-    payload.iss,
-    JSON.stringify(header.jwk),
-    payload.displayName,
-    payload.description,
-    payload.iconURI,
-    payload.jwksURI,
-    payload.eventsURI
-  ])
+  const params = {
+    serviceId: payload.iss,
+    serviceKey: JSON.stringify(header.jwk),
+    displayName: payload.displayName,
+    description: payload.description,
+    iconURI: payload.iconURI,
+    jwksURI: payload.jwksURI,
+    eventsURI: payload.eventsURI
+  }
+  await query(...serviceInsert(params))
 
   res.sendStatus(200)
 }
 
-async function accountLogin ({ payload, token }) {
-  const { iss, aud: [, aud] } = payload
-  const [resAccount, resService, resConnection] = await multiple([
-    ['SELECT account_key FROM accounts WHERE account_id = $1', [iss]],
-    ['SELECT events_uri FROM services WHERE service_id = $1', [aud]],
-    ['SELECT * FROM connections WHERE account_id = $1 AND service_id = $2', [iss, aud]]
-  ])
+async function accountLogin ({ header, payload, token }) {
+  const { jwk: { kid } } = header
+  const { aud: [, aud] } = payload
+  const params = {
+    accountId: kid,
+    serviceId: aud
+  }
+  const [resAccount, resService, resConnection] = await multiple(checkConnection(params))
 
   if (!resAccount.rows.length) {
     throw new Error('No such account')
@@ -58,13 +51,14 @@ async function accountLogin ({ payload, token }) {
   return axios.post(url, loginEventToken, { headers })
 }
 
-async function accountConnect ({ payload, token }) {
-  const { iss, aud: [, aud] } = payload
-  const [resAccount, resService, resConnection] = await multiple([
-    ['SELECT account_key FROM accounts WHERE account_id = $1', [iss]],
-    ['SELECT events_uri FROM services WHERE service_id = $1', [aud]],
-    ['SELECT * FROM connections WHERE account_id = $1 AND service_id = $2', [iss, aud]]
-  ])
+async function accountConnect ({ header, payload, token }) {
+  const { jwk: { kid } } = header
+  const { aud: [, aud], sub } = payload
+
+  const [resAccount, resService, resConnection] = await multiple(checkConnection({
+    accountId: kid,
+    serviceId: aud
+  }))
 
   if (!resAccount.rows.length) {
     throw new Error('No such account')
@@ -77,7 +71,56 @@ async function accountConnect ({ payload, token }) {
   }
   const connectionEventToken = await jwt.connectionEventToken(aud, token)
   const url = resService.rows[0].events_uri
-  return axios.post(url, connectionEventToken, { headers })
+
+  const response = axios.post(url, connectionEventToken, { headers })
+
+  // Add connection to db
+  const connection = connectionInsert({
+    connectionId: sub,
+    accountId: kid,
+    serviceId: aud
+  })
+
+  const local = permissions(payload, payload.permissions.local || {}, payload.aud[1])
+  await transaction([connection].concat(local))
+  return response
+}
+
+function permissions (payload, block, domain) {
+  return Object.entries(block)
+    .reduce((statements, [area, permissions]) => {
+
+      // Add account key to db
+      const params = {
+        accountKeyId: '',
+        accountId: '',
+        domain,
+        area,
+        readKey: ''
+      }
+      statements.push(accountKeyInsert(params))
+
+      Object.entries(permissions)
+        .forEach(([type, permission]) => {
+          const params = {
+            permissionId: permission.id,
+            connectionId: payload.sub,
+            domain,
+            area,
+            type,
+            purpose: permission.purpose,
+            legalBasis: permission.legalBasis,
+            readKey: null
+          }
+
+          if (type.toUpperCase() === 'READ') {
+            const key = permission.jwks.find(jwk => jwk.kid.match(new RegExp(`^${domain}`)))
+            params.readKey = key
+          }
+          statements.push(permissionInsert(params))
+        })
+      return statements
+    }, [])
 }
 
 module.exports = {
