@@ -1,4 +1,4 @@
-const Joi = require('joi')
+const Joi = require('joi-browser')
 const algs = ['RS256', 'RS384', 'RS512']
 
 const JWT_DEFAULTS = {
