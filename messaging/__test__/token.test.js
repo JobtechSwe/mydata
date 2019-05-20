@@ -38,7 +38,7 @@ describe('token', () => {
       axios.get.mockResolvedValue({ status: 200, data: key.toJWK(false) })
       payload = {
         type: 'AUTHENTICATION_REQUEST',
-        jti: 'f0b5bef5-c137-4211-adaf-a0d6a37be8b1',
+        sid: 'f0b5bef5-c137-4211-adaf-a0d6a37be8b1',
       }
     })
     it('fails if incorrect format', async () => {
@@ -63,7 +63,7 @@ describe('token', () => {
       await expect(verify(token)).rejects.toThrow()
     })
     it('fails if schema validation for payload fails', async () => {
-      payload.jti = undefined
+      payload.sid = undefined
       const token = await signed(payload, key)
       await expect(verify(token)).rejects.toThrow()
     })
@@ -99,7 +99,7 @@ describe('token', () => {
           exp: expect.any(Number),
           iat: expect.any(Number),
           iss: 'https://mycv.work',
-          jti: 'f0b5bef5-c137-4211-adaf-a0d6a37be8b1',
+          sid: 'f0b5bef5-c137-4211-adaf-a0d6a37be8b1',
           type: 'AUTHENTICATION_REQUEST'
         })
       })
@@ -110,7 +110,7 @@ describe('token', () => {
         deviceKey = await JWK.generate('RSA', 1024, { kid: 'mydata://account/jwks/account_key', use: 'sig' })
         payload = {
           type: 'CONNECTION_INIT',
-          jti: 'f0b5bef5-c137-4211-adaf-a0d6a37be8b1',
+          sid: 'f0b5bef5-c137-4211-adaf-a0d6a37be8b1',
           aud: 'https://mycv.work'
         }
       })
@@ -132,7 +132,7 @@ describe('token', () => {
         })
         expect(result.payload).toEqual({
           type: 'CONNECTION_INIT',
-          jti: 'f0b5bef5-c137-4211-adaf-a0d6a37be8b1',
+          sid: 'f0b5bef5-c137-4211-adaf-a0d6a37be8b1',
           aud: 'https://mycv.work',
           iss: 'mydata://account',
           exp: expect.any(Number),
@@ -146,7 +146,7 @@ describe('token', () => {
     beforeEach(async () => {
       payload = {
         type: 'CONNECTION_INIT',
-        jti: 'f0b5bef5-c137-4211-adaf-a0d6a37be8b1'
+        sid: 'f0b5bef5-c137-4211-adaf-a0d6a37be8b1'
       }
       options = {
         kid: false,

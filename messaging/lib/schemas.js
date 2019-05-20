@@ -16,12 +16,27 @@ const JWK = Joi.object({
   e: Joi.string().valid('AQAB').required(),
   n: Joi.string().required()
 })
-const JWE = Joi.string()
 
 const JOSE_HEADER = Joi.object({
   alg: Joi.string().valid(algs).required(),
   kid: Joi.string().uri(),
   jwk: JWK
+})
+
+const JWE_RECIPIENT = Joi.object({
+  encrypted_key: Joi.string().required(),
+  header: Joi.object({
+    alg: Joi.string().valid('RSA1_5').required(),
+    kid: Joi.string().uri(),
+    jwk: JWK
+  }).or('kid', 'jwk')
+}).required()
+const JWE = Joi.object({
+  recipients: Joi.array().items(JWE_RECIPIENT).min(1),
+  protected: Joi.string(),
+  iv: Joi.string().required(),
+  ciphertext: Joi.string().required(),
+  tag: Joi.string()
 })
 
 // service -> operator
@@ -49,108 +64,103 @@ const ACCOUNT_REGISTRATION = Joi.object({
 const AUTHENTICATION_REQUEST = Joi.object({
   ...JWT_DEFAULTS,
   type: 'AUTHENTICATION_REQUEST',
-  jti: Joi.string().required()
+  sid: Joi.string().required()
 })
 
 // device -> service
 const CONNECTION_INIT = Joi.object({
   ...JWT_DEFAULTS,
   type: 'CONNECTION_INIT',
-  jti: Joi.string().required()
+  sid: Joi.string().required()
 })
 
-const LAWFUL_BASIS = Joi.string()
+const LAWFUL_BASIS = Joi.string().valid('CONSENT')
 
-const READ = Joi.object({
+const CONTENT_PATH = {
+  domain: Joi.string().uri().required(),
+  area: Joi.string().required(),
+}
+
+const PERMISSION = {
+  ...CONTENT_PATH,
   id: Joi.string().uuid().required(),
-  purpose: Joi.string().required(),
-  lawfulBasis: LAWFUL_BASIS.required(),
-  jwk: JWK.required()
-})
+  type: Joi.string().valid('READ', 'WRITE').required(),
+  purpose: Joi.string(),
+  description: Joi.string(),
+  lawfulBasis: LAWFUL_BASIS
+}
 
-const WRITE = Joi.object({
-  id: Joi.string().uuid().required(),
-  description: Joi.string().required(),
-  lawfulBasis: LAWFUL_BASIS.required()
-})
-
-const LOCAL_ENTRY = Joi.object({
-  read: READ,
-  write: WRITE
-})
-
-const EXTERNAL_ENTRY = Joi.object({
-  read: READ
-})
-
-const ANSWERED_READ = Joi.object({
-  id: Joi.string().uuid().required(),
-  purpose: Joi.string().required(),
-  lawfulBasis: LAWFUL_BASIS.required(),
-  jwks: Joi.array().allow(JWK).min(1)
-})
-
-const ANSWERED_WRITE = Joi.object({
-  id: Joi.string().uuid().required(),
-  description: Joi.string().required(),
-  lawfulBasis: LAWFUL_BASIS.required()
-})
-
-const ANSWERED_LOCAL_ENTRY = Joi.object({
-  read: ANSWERED_READ,
-  write: ANSWERED_WRITE
-})
-
-const ANSWERED_EXTERNAL_ENTRY = Joi.object({
-  read: ANSWERED_READ
-})
-
-const PERMISSIONS = Joi.object({
-  local: Joi.object()
-    .pattern(/.*/, LOCAL_ENTRY),
-  external: Joi.object()
-    .pattern(Joi.string().uri(), Joi.object()
-      .pattern(/.*/, EXTERNAL_ENTRY))
-})
-
-const ANSWERED_PERMISSIONS = Joi.object({
-  local: Joi.object()
-    .pattern(/.*/, ANSWERED_LOCAL_ENTRY),
-  external: Joi.object()
-    .pattern(Joi.string().uri(), Joi.object()
-      .pattern(/.*/, ANSWERED_EXTERNAL_ENTRY))
+// service -> operator
+const PERMISSION_REQUEST = Joi.object({
+  ...JWT_DEFAULTS,
+  type: 'PERMISSION_REQUEST',
+  permissions: Joi.array().items(Joi.object({
+    ...PERMISSION,
+    key: JWK
+  })).min(1).required(),
+  sub: Joi.string().uuid(),
+  sid: Joi.string().uuid({ version: 'uuidv4' }).required()
 })
 
 // service -> device
 const CONNECTION_REQUEST = Joi.object({
   ...JWT_DEFAULTS,
   type: 'CONNECTION_REQUEST',
-  permissions: PERMISSIONS,
-  jti: Joi.string().uuid({ version: 'uuidv4' }).required()
+  permissions: Joi.array().items(Joi.object({
+    ...PERMISSION,
+    key: JWK
+  })).min(1).optional(),
+  sid: Joi.string().uuid({ version: 'uuidv4' }).required()
 })
 
 // device -> operator
-const CONNECTION = Joi.object({
+const CONTENT_REQUEST = Joi.object({
   ...JWT_DEFAULTS,
-  type: 'CONNECTION',
-  jti: Joi.string().required(),
-  aud: Joi.array().items(Joi.string().uri()).min(1),
-  sub: Joi.string().uuid({ version: 'uuidv4' }).required(),
-  permissions: ANSWERED_PERMISSIONS
+  type: 'CONTENT_REQUEST',
+  contentPaths: Joi.array()
+    .items(Joi.object({ ...CONTENT_PATH }))
+    .min(1).required()
+})
+
+// operator -> device
+const CONTENT = Joi.object({
+  ...JWT_DEFAULTS,
+  type: 'CONTENT',
+  content: Joi.array().items(Joi.object({
+    ...CONTENT_PATH,
+    data: JWE
+  }))
 })
 
 // operator -> service
 const CONNECTION_EVENT = Joi.object({
   ...JWT_DEFAULTS,
   type: 'CONNECTION_EVENT',
-  payload: JWT.required() // CONNECTION
+  sid: Joi.string().required(),
+  sub: Joi.string().uuid({ version: 'uuidv4' }).required(),
+  permissions: Joi.array().items(Joi.object({
+    ...PERMISSION,
+    kid: Joi.string().uri(),
+    keys: Joi.array().items(JWK)
+  })).min(1).required()
+})
+
+// device -> operator
+const CONNECTION = Joi.object({
+  ...JWT_DEFAULTS,
+  type: 'CONNECTION',
+  content: Joi.array().items(Joi.object({
+    ...CONTENT_PATH,
+    data: JWE
+  })),
+  event: CONNECTION_EVENT
 })
 
 // device -> operator
 const LOGIN = Joi.object({
   ...JWT_DEFAULTS,
   type: 'LOGIN',
-  jti: Joi.string().required(),
+  sid: Joi.string().required(),
   aud: Joi.array().items(Joi.string().uri())
 })
 
@@ -198,8 +208,11 @@ module.exports = {
   CONNECTION_REQUEST,
   CONNECTION,
   CONNECTION_EVENT,
+  CONTENT_REQUEST,
+  CONTENT,
   LOGIN,
   LOGIN_EVENT,
+  PERMISSION_REQUEST,
   ACCESS_TOKEN,
   DATA_READ,
   DATA_WRITE
