@@ -6,8 +6,8 @@ const handlers = {
   ACCOUNT_REGISTRATION: accounts.registerAccount,
   DATA_READ: data.read,
   DATA_WRITE: data.write,
-  LOGIN: services.accountLogin,
-  CONNECTION: services.accountConnect,
+  LOGIN_APPROVAL: services.approveLogin,
+  CONNECTION_APPROVAL: services.approveConnection,
   SERVICE_REGISTRATION: services.registerService
 }
 

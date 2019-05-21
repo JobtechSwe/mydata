@@ -12,8 +12,8 @@ jest.mock('../lib/data', () => ({
 }))
 jest.mock('../lib/services', () => ({
   registerService: jest.fn(),
-  accountLogin: jest.fn(),
-  accountConnect: jest.fn()
+  approveLogin: jest.fn(),
+  approveConnection: jest.fn()
 }))
 
 describe('messages', () => {
@@ -52,22 +52,22 @@ describe('messages', () => {
         expect(data.write).toHaveBeenCalledWith({ header, payload, token }, res)
       })
     })
-    describe('LOGIN', () => {
-      it('calls services.accountLogin', async () => {
+    describe('LOGIN_APPROVAL', () => {
+      it('calls services.approveLogin', async () => {
         const header = {}
-        const payload = { type: 'LOGIN' }
+        const payload = { type: 'LOGIN_APPROVAL' }
         const token = 'sdhsdjhfgsjhfg'
         await handle({ header, payload, token }, res)
-        expect(services.accountLogin).toHaveBeenCalledWith({ header, payload, token }, res)
+        expect(services.approveLogin).toHaveBeenCalledWith({ header, payload, token }, res)
       })
     })
-    describe('CONNECTION', () => {
-      it('calls services.accountConnect', async () => {
+    describe('CONNECTION_APPROVAL', () => {
+      it('calls services.approveConnection', async () => {
         const header = {}
-        const payload = { type: 'CONNECTION' }
+        const payload = { type: 'CONNECTION_APPROVAL' }
         const token = 'sdhsdjhfgsjhfg'
         await handle({ header, payload, token }, res)
-        expect(services.accountConnect).toHaveBeenCalledWith({ header, payload, token }, res)
+        expect(services.approveConnection).toHaveBeenCalledWith({ header, payload, token }, res)
       })
     })
     describe('SERVICE_REGISTRATION', () => {
