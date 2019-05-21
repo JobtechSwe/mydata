@@ -96,7 +96,7 @@ describe('schemas', () => {
               }
             }
           ],
-          connection: 'asadasdas'
+          payload: 'asadasdas'
         }
         await expect(schemas.CONNECTION_APPROVAL.validate(payload))
           .resolves.not.toThrow()

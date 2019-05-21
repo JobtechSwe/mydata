@@ -152,14 +152,14 @@ const CONNECTION_APPROVAL = Joi.object({
     ...CONTENT_PATH,
     data: JWE
   })),
-  connection: Joi.string().required()
+  payload: Joi.string().required()
 })
 
 // operator -> service
 const CONNECTION_EVENT = Joi.object({
   ...JWT_DEFAULTS,
   type: 'CONNECTION_EVENT',
-  connection: Joi.string().required()
+  payload: Joi.string().required()
 })
 
 // device -> (operator) -> service
@@ -173,14 +173,14 @@ const LOGIN = Joi.object({
 const LOGIN_APPROVAL = Joi.object({
   ...JWT_DEFAULTS,
   type: 'LOGIN_APPROVAL',
-  login: Joi.string().required()
+  payload: Joi.string().required()
 })
 
 // operator -> service
 const LOGIN_EVENT = Joi.object({
   ...JWT_DEFAULTS,
   type: 'LOGIN_EVENT',
-  login: Joi.string().required()
+  payload: Joi.string().required()
 })
 
 // operator -> service
