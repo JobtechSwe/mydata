@@ -162,19 +162,25 @@ const CONNECTION_EVENT = Joi.object({
   connection: Joi.string().required()
 })
 
-// device -> operator -> service
-const LOGIN_EVENT = Joi.object({
+// device -> (operator) -> service
+const LOGIN = Joi.object({
   ...JWT_DEFAULTS,
-  type: 'LOGIN_EVENT',
+  type: 'LOGIN',
   sid: Joi.string().required()
 })
 
 // device -> operator
-const LOGIN = Joi.object({
+const LOGIN_APPROVAL = Joi.object({
   ...JWT_DEFAULTS,
-  type: 'LOGIN',
-  aud: Joi.string().required(),
-  event: LOGIN_EVENT.required()
+  type: 'LOGIN_APPROVAL',
+  login: Joi.string().required()
+})
+
+// operator -> service
+const LOGIN_EVENT = Joi.object({
+  ...JWT_DEFAULTS,
+  type: 'LOGIN_EVENT',
+  login: Joi.string().required()
 })
 
 // operator -> service
@@ -218,6 +224,7 @@ module.exports = {
   CONTENT_REQUEST,
   CONTENT,
   LOGIN,
+  LOGIN_APPROVAL,
   LOGIN_EVENT,
   PERMISSION_REQUEST,
   ACCESS_TOKEN,
