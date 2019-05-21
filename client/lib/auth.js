@@ -6,7 +6,7 @@ const createAuthenticationRequest = async (client, id) => {
 
   const payload = {
     type: 'AUTHENTICATION_REQUEST',
-    jti: id
+    sid: id
   }
 
   const privateKey = JWK.importKey(client.config.clientKeys.privateKey, {

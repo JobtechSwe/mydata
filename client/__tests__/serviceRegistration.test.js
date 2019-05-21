@@ -21,13 +21,11 @@ describe('#createServiceRegistration', () => {
     }
     client = createClient(config)
   })
-
   it('creates a valid jwt', async () => {
     const clientRegistration = await createServiceRegistration(client)
 
     expect(JWT.decode(clientRegistration)).not.toBe(null)
   })
-
   it('creates a jwt', async () => {
     const clientRegistration = await createServiceRegistration(client)
 
