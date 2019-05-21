@@ -8,7 +8,6 @@ const JWT_DEFAULTS = {
   iss: Joi.string().uri().required()
 }
 
-const JWT = Joi.string()
 const JWK = Joi.object({
   kid: Joi.string(),
   kty: Joi.string().valid('RSA').required(),
@@ -132,10 +131,10 @@ const CONTENT = Joi.object({
   }))
 })
 
-// operator -> service
-const CONNECTION_EVENT = Joi.object({
+// device -> (operator) -> service
+const CONNECTION = Joi.object({
   ...JWT_DEFAULTS,
-  type: 'CONNECTION_EVENT',
+  type: 'CONNECTION',
   sid: Joi.string().required(),
   sub: Joi.string().uuid({ version: 'uuidv4' }).required(),
   permissions: Joi.array().items(Joi.object({
@@ -146,29 +145,36 @@ const CONNECTION_EVENT = Joi.object({
 })
 
 // device -> operator
-const CONNECTION = Joi.object({
+const CONNECTION_APPROVAL = Joi.object({
   ...JWT_DEFAULTS,
-  type: 'CONNECTION',
+  type: 'CONNECTION_APPROVAL',
   content: Joi.array().items(Joi.object({
     ...CONTENT_PATH,
     data: JWE
   })),
-  event: CONNECTION_EVENT
+  connection: Joi.string().required()
+})
+
+// operator -> service
+const CONNECTION_EVENT = Joi.object({
+  ...JWT_DEFAULTS,
+  type: 'CONNECTION_EVENT',
+  connection: Joi.string().required()
+})
+
+// device -> operator -> service
+const LOGIN_EVENT = Joi.object({
+  ...JWT_DEFAULTS,
+  type: 'LOGIN_EVENT',
+  sid: Joi.string().required()
 })
 
 // device -> operator
 const LOGIN = Joi.object({
   ...JWT_DEFAULTS,
   type: 'LOGIN',
-  sid: Joi.string().required(),
-  aud: Joi.array().items(Joi.string().uri())
-})
-
-// operator -> service
-const LOGIN_EVENT = Joi.object({
-  ...JWT_DEFAULTS,
-  type: 'LOGIN_EVENT',
-  payload: JWT.required() // LOGIN
+  aud: Joi.string().required(),
+  event: LOGIN_EVENT.required()
 })
 
 // operator -> service
@@ -207,6 +213,7 @@ module.exports = {
   CONNECTION_INIT,
   CONNECTION_REQUEST,
   CONNECTION,
+  CONNECTION_APPROVAL,
   CONNECTION_EVENT,
   CONTENT_REQUEST,
   CONTENT,
