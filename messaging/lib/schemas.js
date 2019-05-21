@@ -77,7 +77,7 @@ const LAWFUL_BASIS = Joi.string().valid('CONSENT')
 
 const CONTENT_PATH = {
   domain: Joi.string().uri().required(),
-  area: Joi.string().required(),
+  area: Joi.string().required()
 }
 
 const PERMISSION = {
