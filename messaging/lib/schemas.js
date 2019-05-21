@@ -141,7 +141,7 @@ const CONNECTION = Joi.object({
     ...PERMISSION,
     kid: Joi.string().uri(),
     keys: Joi.array().items(JWK)
-  })).min(1).required()
+  })).min(1).optional()
 })
 
 // device -> operator
