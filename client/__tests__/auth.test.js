@@ -47,7 +47,7 @@ describe('auth', () => {
 
       const payload = JWT.decode(authReq)
 
-      expect(payload.aud).toBe('mydata://auth')
+      expect(payload.aud).toBe('mydata://account')
       expect(payload.iss).toBe('http://localhost:4000')
     })
   })
