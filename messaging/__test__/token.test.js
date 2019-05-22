@@ -15,7 +15,7 @@ const defaultOptions = {
   algorithm: 'RS256',
   expiresIn: '1 hour',
   issuer: 'https://mycv.work',
-  audience: 'mydata://auth'
+  audience: 'mydata://account'
 }
 
 async function signed (payload, key, options = {}) {
@@ -95,7 +95,7 @@ describe('token', () => {
           jwk: key.toJWK(false)
         })
         expect(result.payload).toEqual({
-          aud: 'mydata://auth',
+          aud: 'mydata://account',
           exp: expect.any(Number),
           iat: expect.any(Number),
           iss: 'https://mycv.work',

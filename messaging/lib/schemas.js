@@ -63,7 +63,8 @@ const ACCOUNT_REGISTRATION = Joi.object({
 const AUTHENTICATION_REQUEST = Joi.object({
   ...JWT_DEFAULTS,
   type: 'AUTHENTICATION_REQUEST',
-  sid: Joi.string().required()
+  sid: Joi.string().required(),
+  eventsURI: Joi.string().uri().required()
 })
 
 // device -> service
@@ -109,7 +110,10 @@ const CONNECTION_REQUEST = Joi.object({
     ...PERMISSION,
     key: JWK
   })).min(1).optional(),
-  sid: Joi.string().uuid({ version: 'uuidv4' }).required()
+  sid: Joi.string().uuid({ version: 'uuidv4' }).required(),
+  displayName: Joi.string().required(),
+  description: Joi.string().required(),
+  iconURI: Joi.string().required()
 })
 
 // device -> operator
