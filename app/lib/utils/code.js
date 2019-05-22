@@ -1,6 +1,6 @@
 import { Base64 } from 'js-base64'
 
-const authenticationUrlRegex = /^mydata:\/\/auth\/(.*)$/
+const authenticationUrlRegex = /^mydata:\/\/account\/(.*)$/
 
 export const parse = (url) => {
   try {

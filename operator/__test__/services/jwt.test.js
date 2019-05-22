@@ -6,29 +6,26 @@ const {
 
 describe('services/jwt', () => {
   describe('#connectionEventToken', () => {
-    let payload, options, deviceKey, connectionToken
+    let payloadFromDevice, header, deviceKey, connectionToken
     beforeEach(async () => {
       deviceKey = await JWK.generate('RSA', 1024, {
         kid: 'mydata://account/jwks/account_key',
         use: 'sig'
       })
-      payload = {
+      payloadFromDevice = {
         type: 'CONNECTION',
         sid: 'f0b5bef5-c137-4211-adaf-a0d6a37be8b1',
-        aud: 'https://mycv.work'
+        aud: 'https://mycv.work',
+        iss: 'mydata://account',
+        sub: 'b09b4355-8c95-40a4-a3dd-e176c4baab73'
       }
-      options = {
-        kid: false,
-        issuer: 'mydata://account',
-        audience: 'https://mycv.work',
-        subject: 'b09b4355-8c95-40a4-a3dd-e176c4baab73',
-        header: { jwk: deviceKey },
-        algorithm: 'RS256'
+      header = {
+        jwk: deviceKey
       }
-      connectionToken = await sign(payload, deviceKey, options)
+      connectionToken = await sign(payloadFromDevice, deviceKey, header)
     })
     it('creates valid connection event token', async () => {
-      const token = await connectionEventToken(options.audience, connectionToken)
+      const token = await connectionEventToken(payloadFromDevice.aud, connectionToken)
       const { payload } = JWT.decode(token, { complete: true })
       expect(payload.type).toEqual('CONNECTION_EVENT')
       expect(payload.payload).toEqual(connectionToken)

@@ -1,33 +1,29 @@
-const { JWT, JWK } = require('@panva/jose')
-const { token } = require('@mydata/messaging')
+const { JWK } = require('@panva/jose')
+const { sign } = require('./jwt')
 
 const createAuthenticationRequest = async (client, id) => {
-  const { sign } = token({ ...JWT, importKey: JWK.importKey })
-
   const payload = {
     type: 'AUTHENTICATION_REQUEST',
-    sid: id
+    sid: id,
+    aud: 'mydata://account',
+    iss: client.config.clientId,
+    eventsURI: client.config.jwksUrl
   }
 
+  const kid = `${client.config.jwksUrl}/client_key`
+
   const privateKey = JWK.importKey(client.config.clientKeys.privateKey, {
-    kid: `${client.config.jwksUrl}/client_key`
+    kid
   })
 
   return sign({
     ...payload
   }, privateKey, {
-    audience: 'mydata://auth',
-    issuer: client.config.clientId
+    kid
   })
 }
 
-const createAuthenticationUrl = jwt => {
-  const base64urlPayload = encodeURIComponent(Buffer.from(jwt)
-    .toString('base64')
-  )
-
-  return `mydata://auth/${base64urlPayload}`
-}
+const createAuthenticationUrl = jwt => `mydata://account/${jwt}`
 
 module.exports = {
   createAuthenticationRequest,

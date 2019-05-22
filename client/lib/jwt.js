@@ -3,7 +3,10 @@ const { JWT, JWK } = require('@panva/jose')
 
 const { sign, verify } = token({
   sign: (payload, key, header) => JWT.sign(payload, key, { header }),
-  decode: JWT.decode,
+  decode: (tok, opts) => {
+    const { payload, header, signature } = JWT.decode(tok, opts)
+    return { claimsSet: payload, header, signature }
+  },
   verify: JWT.verify,
   importKey: JWK.importKey
 })
@@ -34,5 +37,7 @@ const createServiceRegistration = async (client) => {
 }
 
 module.exports = {
-  createServiceRegistration
+  createServiceRegistration,
+  verify,
+  sign
 }

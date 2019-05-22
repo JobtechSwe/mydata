@@ -4,7 +4,7 @@ import { importKey } from 'jwk-lite'
 import pem2jwk from 'simple-pem2jwk'
 import Config from 'react-native-config'
 
-const { sign, verify } = token({
+export const { sign, verify } = token({
   sign: jwt.sign,
   decode: jwt.decode,
   verify: jwt.verify,

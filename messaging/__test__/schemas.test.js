@@ -21,6 +21,9 @@ describe('schemas', () => {
         ...jwtDefaults,
         type: 'CONNECTION_REQUEST',
         sid: 'ccec677d-09d1-489a-a3da-e4758134f2fa',
+        displayName: 'My CV',
+        description: 'This is a good CV site',
+        iconURI: 'https://cv.work/icon.png',
         permissions: [
           {
             id: '91910133-4024-4641-a7c7-91fb6e11588e',

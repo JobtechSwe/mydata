@@ -38,7 +38,7 @@ describe('account', () => {
     it('returns id axios.post resolves', async () => {
       const id = await accountService.register(account)
 
-      expect(id).toEqual('abc123')
+      expect(id).toEqual(expect.any(String))
     })
   })
 

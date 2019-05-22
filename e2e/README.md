@@ -12,4 +12,4 @@ Setup:
 - In `/operator`run `npm run dev`
 - In `/app` run `OPERATOR_URL=http://localhost:3000/api npm run e2e:server`
 
-Then: In this folder run `npm run test:local`
+Then: In this folder run `npm run jest:local`

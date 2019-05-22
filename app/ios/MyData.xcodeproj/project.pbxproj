@@ -53,7 +53,7 @@
 		F53C80FFA9AD499EAE72493F /* Karla-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FC4E0E85E9744228B090976D /* Karla-Bold.ttf */; };
 		F63650BBD1B64EDD8AF14A4D /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 264109B70D7C48B294BBF532 /* Rubik-Medium.ttf */; };
 		27FE2C871B484749A895E58B /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 400627A6CA914C05990B6A25 /* libRNCamera.a */; };
-		301B1DE4EFB04C87B78E29A7 /* libRNCAsyncStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 243B57E24BCB43C68E6FA8C2 /* libRNCAsyncStorage.a */; };
+		F3DF16E5F885476483CB1E3A /* libRNCAsyncStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B72F8FFA6EF7476BBE46D97B /* libRNCAsyncStorage.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -486,8 +486,8 @@
 		FC4E0E85E9744228B090976D /* Karla-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Karla-Bold.ttf"; path = "../assets/fonts/Karla-Bold.ttf"; sourceTree = "<group>"; };
 		2C8ABAEEB724429DAA20EAD8 /* RNCamera.xcodeproj */ = {isa = PBXFileReference; name = "RNCamera.xcodeproj"; path = "../node_modules/react-native-camera/ios/RNCamera.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		400627A6CA914C05990B6A25 /* libRNCamera.a */ = {isa = PBXFileReference; name = "libRNCamera.a"; path = "libRNCamera.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
-		AB99EE8097DE429A8238BD59 /* RNCAsyncStorage.xcodeproj */ = {isa = PBXFileReference; name = "RNCAsyncStorage.xcodeproj"; path = "../node_modules/@react-native-community/async-storage/ios/RNCAsyncStorage.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		243B57E24BCB43C68E6FA8C2 /* libRNCAsyncStorage.a */ = {isa = PBXFileReference; name = "libRNCAsyncStorage.a"; path = "libRNCAsyncStorage.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		600E58CD608D4DB6BD7CF108 /* RNCAsyncStorage.xcodeproj */ = {isa = PBXFileReference; name = "RNCAsyncStorage.xcodeproj"; path = "../node_modules/@react-native-community/async-storage/ios/RNCAsyncStorage.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		B72F8FFA6EF7476BBE46D97B /* libRNCAsyncStorage.a */ = {isa = PBXFileReference; name = "libRNCAsyncStorage.a"; path = "libRNCAsyncStorage.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -525,7 +525,7 @@
 				33D1031480CF429C988CB7B6 /* libRNSVG.a in Frameworks */,
 				A5D67ACD9B5449B184331A42 /* libRNSecureRandom.a in Frameworks */,
 				27FE2C871B484749A895E58B /* libRNCamera.a in Frameworks */,
-				301B1DE4EFB04C87B78E29A7 /* libRNCAsyncStorage.a in Frameworks */,
+				F3DF16E5F885476483CB1E3A /* libRNCAsyncStorage.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -817,7 +817,7 @@
 				056E82EE147F45DD8672AABC /* RNSVG.xcodeproj */,
 				9F7628AF8E074CE488A2E4E6 /* RNSecureRandom.xcodeproj */,
 				2C8ABAEEB724429DAA20EAD8 /* RNCamera.xcodeproj */,
-				AB99EE8097DE429A8238BD59 /* RNCAsyncStorage.xcodeproj */,
+				600E58CD608D4DB6BD7CF108 /* RNCAsyncStorage.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";

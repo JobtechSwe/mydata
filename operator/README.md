@@ -4,6 +4,7 @@ Backend for managing consents and data flow
 ## Configuration
 Create a file named `.env` in the project directory, example for a developers machine:
 ```
+HOST=http://localhost:3000
 # development, test or production
 NODE_ENV=development
 # optional, defaults to 3000

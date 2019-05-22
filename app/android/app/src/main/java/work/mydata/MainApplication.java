@@ -31,8 +31,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
-        new RNSecureRandomPackage(),
         new AsyncStoragePackage(),
+        new RNSecureRandomPackage(),
         new SvgPackage(),
         new RNDeviceInfo(),
         new RNGestureHandlerPackage(),

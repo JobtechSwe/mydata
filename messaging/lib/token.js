@@ -5,8 +5,8 @@ async function verifyToken ({ decode, verify, importKey }, token) {
   if (typeof decode !== 'function' || typeof decode !== 'function' || typeof importKey !== 'function') {
     throw new Error('First argument must be a JWT library')
   }
-  const { header, payload, signature } = decode(token, { complete: true })
-  const { type } = payload
+  const { header, claimsSet, signature } = decode(token, { complete: true })
+  const { type } = claimsSet
   if (!type) {
     throw new Error('Type missing')
   }
@@ -25,7 +25,7 @@ async function verifyToken ({ decode, verify, importKey }, token) {
     throw new Error('Unknown type')
   }
   await schemas.JOSE_HEADER.validate(header)
-  await schemas[type].validate(payload)
+  await schemas[type].validate(claimsSet)
 
   let key
   if (isDeviceIssued) {

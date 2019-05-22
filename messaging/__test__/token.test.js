@@ -15,7 +15,7 @@ const defaultOptions = {
   algorithm: 'RS256',
   expiresIn: '1 hour',
   issuer: 'https://mycv.work',
-  audience: 'mydata://auth'
+  audience: 'mydata://account'
 }
 
 async function signed (payload, key, options = {}) {
@@ -39,6 +39,7 @@ describe('token', () => {
       payload = {
         type: 'AUTHENTICATION_REQUEST',
         sid: 'f0b5bef5-c137-4211-adaf-a0d6a37be8b1',
+        eventsURI: 'https://mycv.work/api/events'
       }
     })
     it('fails if incorrect format', async () => {
@@ -95,12 +96,13 @@ describe('token', () => {
           jwk: key.toJWK(false)
         })
         expect(result.payload).toEqual({
-          aud: 'mydata://auth',
+          aud: 'mydata://account',
           exp: expect.any(Number),
           iat: expect.any(Number),
           iss: 'https://mycv.work',
           sid: 'f0b5bef5-c137-4211-adaf-a0d6a37be8b1',
-          type: 'AUTHENTICATION_REQUEST'
+          type: 'AUTHENTICATION_REQUEST',
+          eventsURI: 'https://mycv.work/api/events'
         })
       })
     })

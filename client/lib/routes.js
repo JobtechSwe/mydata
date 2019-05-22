@@ -1,12 +1,8 @@
 const createError = require('http-errors')
 const { Router, json } = require('express')
-const { event } = require('./schemas')
-const { JWT, JWK } = require('@panva/jose')
-const { token } = require('@mydata/messaging')
+const { verify } = require('./jwt')
 const { registrationHandler } = require('./registration')
 const bodyParser = require('body-parser')
-
-const verify = token({ ...JWT, importKey: JWK.importKey }).verify
 
 const keyListHandler = ({ keyProvider }) => async (req, res, next) => {
   const keys = await keyProvider.jwksKeyList()

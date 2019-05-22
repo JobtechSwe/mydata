@@ -6,8 +6,12 @@ jest.mock('../lib/adapters/postgres', () => ({ query: jest.fn() }))
 
 describe('accounts', () => {
   describe('#registerAccount', () => {
-    let header, payload
+    let header, payload, res
     beforeEach(async () => {
+      res = {
+        sendStatus: jest.fn()
+      }
+
       const jwk = await JWK.generate('RSA', 1024, {
         kid: 'mydata://account/jwks/account_key',
         use: 'sig'
@@ -25,10 +29,15 @@ describe('accounts', () => {
       }
     })
     it('calls postgres with correct parameters', async () => {
-      await registerAccount({ header, payload })
+      await registerAccount({ header, payload }, res)
       expect(query).toHaveBeenCalledWith(expect.any(String), [
         payload.iss, JSON.stringify(header.jwk), 'dropbox', Buffer.from('foobar')
       ])
+    })
+
+    it('responds with 201', async () => {
+      await registerAccount({ header, payload }, res)
+      expect(res.sendStatus).toHaveBeenCalledWith(201)
     })
   })
 })
