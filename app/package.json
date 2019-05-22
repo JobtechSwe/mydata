@@ -47,8 +47,9 @@
     "react-native-svg-icon": "^0.8.1",
     "react-native-svg-uri": "^1.2.3",
     "react-navigation": "3.9.2",
-    "simple-pem2jwk": "^0.2.2",
-    "styled-components": "^4.2.0"
+    "simple-pem2jwk": "^0.2.4",
+    "styled-components": "^4.2.0",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
@@ -89,7 +90,6 @@
     "react-native-svg-transformer": "^0.12.1",
     "react-native-testing-library": "^1.5.0",
     "react-test-renderer": "^16.7.0",
-    "uuid": "^3.3.2",
     "webpack": "^4.29.5",
     "webpack-cli": "^3.2.3"
   },

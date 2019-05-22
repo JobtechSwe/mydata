@@ -20,7 +20,7 @@ const JOSE_HEADER = Joi.object({
   alg: Joi.string().valid(algs).required(),
   kid: Joi.string().uri(),
   jwk: JWK
-})
+}).required()
 
 const JWE_RECIPIENT = Joi.object({
   encrypted_key: Joi.string().required(),
@@ -64,14 +64,14 @@ const AUTHENTICATION_REQUEST = Joi.object({
   ...JWT_DEFAULTS,
   type: 'AUTHENTICATION_REQUEST',
   sid: Joi.string().required()
-})
+}).required()
 
 // device -> service
 const CONNECTION_INIT = Joi.object({
   ...JWT_DEFAULTS,
   type: 'CONNECTION_INIT',
   sid: Joi.string().required()
-})
+}).required()
 
 const LAWFUL_BASIS = Joi.string().valid('CONSENT')
 
@@ -99,7 +99,7 @@ const PERMISSION_REQUEST = Joi.object({
   })).min(1).required(),
   sub: Joi.string().uuid(),
   sid: Joi.string().uuid({ version: 'uuidv4' }).required()
-})
+}).required()
 
 // service -> device
 const CONNECTION_REQUEST = Joi.object({
@@ -110,7 +110,7 @@ const CONNECTION_REQUEST = Joi.object({
     key: JWK
   })).min(1).optional(),
   sid: Joi.string().uuid({ version: 'uuidv4' }).required()
-})
+}).required()
 
 // device -> operator
 const CONTENT_REQUEST = Joi.object({
@@ -119,7 +119,7 @@ const CONTENT_REQUEST = Joi.object({
   contentPaths: Joi.array()
     .items(Joi.object({ ...CONTENT_PATH }))
     .min(1).required()
-})
+}).required()
 
 // operator -> device
 const CONTENT = Joi.object({
@@ -129,7 +129,7 @@ const CONTENT = Joi.object({
     ...CONTENT_PATH,
     data: JWE
   }))
-})
+}).required()
 
 // device -> (operator) -> service
 const CONNECTION = Joi.object({
@@ -142,7 +142,7 @@ const CONNECTION = Joi.object({
     kid: Joi.string().uri(),
     keys: Joi.array().items(JWK)
   })).min(1).optional()
-})
+}).required()
 
 // device -> operator
 const CONNECTION_APPROVAL = Joi.object({
@@ -153,42 +153,42 @@ const CONNECTION_APPROVAL = Joi.object({
     data: JWE
   })),
   payload: Joi.string().required()
-})
+}).required()
 
 // operator -> service
 const CONNECTION_EVENT = Joi.object({
   ...JWT_DEFAULTS,
   type: 'CONNECTION_EVENT',
   payload: Joi.string().required()
-})
+}).required()
 
 // device -> (operator) -> service
 const LOGIN = Joi.object({
   ...JWT_DEFAULTS,
   type: 'LOGIN',
   sid: Joi.string().required()
-})
+}).required()
 
 // device -> operator
 const LOGIN_APPROVAL = Joi.object({
   ...JWT_DEFAULTS,
   type: 'LOGIN_APPROVAL',
   payload: Joi.string().required()
-})
+}).required()
 
 // operator -> service
 const LOGIN_EVENT = Joi.object({
   ...JWT_DEFAULTS,
   type: 'LOGIN_EVENT',
   payload: Joi.string().required()
-})
+}).required()
 
 // operator -> service
 const ACCESS_TOKEN = Joi.object({
   ...JWT_DEFAULTS,
   type: 'ACCESS_TOKEN',
   sub: Joi.string().uuid({ version: 'uuidv4' }).required()
-})
+}).required()
 
 // service -> operator
 const DATA_READ = Joi.object({
@@ -196,7 +196,7 @@ const DATA_READ = Joi.object({
   type: 'DATA_READ',
   sub: Joi.string().uuid({ version: 'uuidv4' }).required(),
   path: Joi.string().required()
-})
+}).required()
 
 // service -> operator
 const DATA_WRITE = Joi.object({
@@ -205,7 +205,7 @@ const DATA_WRITE = Joi.object({
   sub: Joi.string().uuid({ version: 'uuidv4' }).required(),
   path: Joi.string().required(),
   data: JWE.required()
-})
+}).required()
 
 const deviceSchemas = [ACCOUNT_REGISTRATION, CONNECTION_INIT, CONNECTION, LOGIN]
 

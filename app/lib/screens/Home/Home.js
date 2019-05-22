@@ -4,6 +4,7 @@ import { H1 } from '../../components/typography/Typography'
 import { Wrap, ScrollViewWrap } from '../../components/View/Wrapper'
 import ConsentList from '../../components/ConsentList/ConsentList'
 import { getAll } from '../../services/consents'
+import { getAccount } from '../../services/account'
 
 const HomeScreen = ({ navigation }) => {
   const [consents, setConsents] = useState([])
@@ -13,10 +14,11 @@ const HomeScreen = ({ navigation }) => {
     navigate('QR-kod', { myDataUrl: event.url })
   }
 
-  const updateConsents = () => getAll().then(setConsents)
+  // const updateConsents = () => getAll().then(setConsents)
 
   useEffect(() => {
     Linking.addEventListener('url', handleOpenURL)
+    getAccount().then(console.log)
     // TODO: Uncomment =)
     // const subscription = navigation.addListener('willFocus', updateConsents)
     // updateConsents()

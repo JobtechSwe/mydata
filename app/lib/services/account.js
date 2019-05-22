@@ -3,6 +3,8 @@ import Config from 'react-native-config'
 import { sign } from './crypto'
 import { Base64 } from 'js-base64'
 import AsyncStorage from '@react-native-community/async-storage'
+import { createAccountToken } from './jwt'
+import { v4 } from 'uuid'
 
 async function pluckAndSign(account) {
   const data = pluck(account)
@@ -28,18 +30,14 @@ function pluck(account) {
 }
 
 export async function register(account) {
-  const url = `${Config.OPERATOR_URL}/accounts`
-  const payload = await pluckAndSign(account)
   try {
-    const {
-      data: {
-        data: { id },
-      },
-    } = await axios.post(url, payload)
+    // TODO: Use thumbprint of JWK as account id
+    const id = v4()
+    const jwt = await createAccountToken({ ...account, id })
+    await axios.post(Config.OPERATOR_URL, jwt, { headers: { 'content-type': 'application/jwt' } })
     return id
   } catch (error) {
-    console.error('POST', url, payload, error.message)
-    throw error
+    console.error('could not post account to operator', error)
   }
 }
 
