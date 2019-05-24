@@ -1,11 +1,11 @@
 import axios from 'axios'
 import Config from 'react-native-config'
-import { sign } from './crypto'
+import { sign } from './jwt'
 import { Base64 } from 'js-base64'
 import AsyncStorage from '@react-native-community/async-storage'
-import { createAccountToken } from './jwt'
 import { v4 } from 'uuid'
 
+// TODO: Remove this
 async function pluckAndSign(account) {
   const data = pluck(account)
   const signature = await sign(data, 'account_key', account.keys.privateKey)
@@ -16,6 +16,7 @@ async function pluckAndSign(account) {
   }
 }
 
+// TODO: Remove this
 function pluck(account) {
   const data = {
     firstName: account.firstName,
@@ -27,6 +28,21 @@ function pluck(account) {
     },
   }
   return data
+}
+
+export const createAccountToken = async (account) => {
+  return sign(
+    {
+      type: 'ACCOUNT_REGISTRATION',
+      aud: Config.OPERATOR_URL,
+      iss: `mydata://account/${account.id}`,
+      pds: account.pds,
+    },
+    account.keys.privateKey,
+    {
+      jwk: account.keys.publicKey,
+    }
+  )
 }
 
 export async function register(account) {
@@ -41,6 +57,7 @@ export async function register(account) {
   }
 }
 
+// TODO: This is not up-to-date
 export async function update(account) {
   const url = `${Config.OPERATOR_URL}/accounts/${account.id}`
   let payload

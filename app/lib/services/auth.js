@@ -1,17 +1,7 @@
-import { verify, sign } from './jwt'
-import { getConnections } from './storage'
+import { sign } from './jwt'
 import { getAccount } from './account'
+import { getConnections } from './storage'
 import axios from 'axios'
-
-export const verifyAndParseAuthRequest = async jwt => {
-  const { payload } = await verify(jwt)
-  return payload
-}
-
-export const hasConnection = async authReq => {
-  const connections = await getConnections()
-  return connections.includes(authReq.iss)
-}
 
 const nowSeconds = () => Math.round(Date.now() / 1000)
 
@@ -29,6 +19,12 @@ const createConnectionInit = async ({ aud, iss, sid }) => {
   }, keys.privateKey, { jwk: keys.publicKey, alg: 'RS256' })
 
   return jwt
+}
+
+export const authenticationRequestHandler = async ({ payload, header }) => {
+  const existingConnections = await getConnections()
+  const hasConnection = existingConnections.includes(payload.iss)
+  return { payload, header, hasConnection }
 }
 
 export const initRegistration = async authRequest => {

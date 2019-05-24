@@ -22,11 +22,15 @@ describe('Authentication', () => {
 
   it('Client provides a proper auth url', async () => {
     const { url } = await client.initializeAuthentication()
-    console.log(url)
     expect(url).toEqual(expect.stringContaining('mydata://account'))
   })
 
-  it.skip('Phone does CONNECTION_INIT', async () => {
+  it('Phone handles scanned code and does CONNECTION_INIT if no existing connection', async () => {
+    client.events.emit = jest.fn()
     const { url } = await client.initializeAuthentication()
+    await phone.handleCode({ code: url })
+
+    // Do not throw
+    expect(true).toBe(true)
   })
 })

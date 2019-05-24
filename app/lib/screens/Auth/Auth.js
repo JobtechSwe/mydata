@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Scan, Register, Login } from '../../components/Auth'
-import { verifyAndParseAuthRequest, hasConnection } from '../../services/auth'
+import { handle } from '../../services/index'
 
 const AuthScreen = ({ props }) => {
   const [state, setState] = useState({
@@ -8,11 +8,11 @@ const AuthScreen = ({ props }) => {
     authenticationRequest: undefined,
   })
 
-  const onScan = async (jwt) => {
+  const onScan = async token => {
     try {
-      const authenticationRequest = await verifyAndParseAuthRequest(jwt)
-      const view = await hasConnection(authenticationRequest) ? 'login' : 'register'
-      setState({ view, authenticationRequest })
+      const { payload, header, hasConnection } = await handle(token)
+      const view = hasConnection ? 'login' : 'register'
+      setState({ view, authenticationRequest: payload })
     }
     catch (error) {
       console.error('foo', error)

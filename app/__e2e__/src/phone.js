@@ -1,8 +1,10 @@
+import * as jwt from '../../lib/services/jwt'
+import * as auth from '../../lib/services/auth'
+import { parse } from '../../lib/utils/code'
 import * as account from '../../lib/services/account'
 import * as storage from '../../lib/services/storage'
 import * as crypto from '../../lib/services/crypto'
 import * as consents from '../../lib/services/consents'
-// import * as qrcode from '../../lib/utils/qrcode'
 import Config from 'react-native-config'
 
 export async function createAccount ({ firstName, lastName }) {
@@ -21,6 +23,16 @@ export async function createAccount ({ firstName, lastName }) {
 
 export async function clearAccount () {
   return storage.storeAccount()
+}
+
+export const handleCode = async ({ code }) => {
+  const token = parse(code)
+  const { payload, header, hasConnection } = await jwt.handle(token)
+  if (hasConnection) {
+    // TODO: LOGIN
+  } else {
+    auth.initRegistration(payload)
+  }
 }
 
 // export const getConsentRequest = (url) => {

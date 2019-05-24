@@ -30,7 +30,7 @@ module.exports = client => {
     if (!handlers[req.payload.type]) {
       throw Error(`Missing handler for ${req.payload.type}`)
     }
-    client.events.emit(req.payload.type, req.paylod)
+    client.events.emit(req.payload.type, req.payload)
     handlers[req.payload.type](req, res)
   })
 
