@@ -1,6 +1,6 @@
 const { Router, json } = require('express')
 const jwt = require('./jwt')
-const { registrationHandler } = require('./registration')
+const { connectionInitHandler } = require('./connection')
 const bodyParser = require('body-parser')
 const { middleware: { signed } } = require('@mydata/messaging')
 
@@ -15,7 +15,7 @@ const keyHandler = ({ keyProvider }) => async (req, res, next) => {
 }
 
 const handlers = {
-  CONNECTION_INIT: registrationHandler
+  CONNECTION_INIT: connectionInitHandler
 }
 
 module.exports = client => {

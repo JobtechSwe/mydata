@@ -8,7 +8,7 @@ const { EventEmitter } = require('events')
 const { configSchema } = require('./schemas')
 const { v4 } = require('uuid')
 const { createAuthenticationRequest, createAuthenticationUrl } = require('./auth')
-const { createServiceRegistration } = require('./jwt')
+const { createServiceRegistration } = require('./serviceRegistration')
 
 const defaults = {
   jwksPath: '/jwks',

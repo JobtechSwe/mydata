@@ -1,4 +1,4 @@
-import * as jwt from '../../lib/services/jwt'
+import { handle } from '../../lib/services/index'
 import * as auth from '../../lib/services/auth'
 import { parse } from '../../lib/utils/code'
 import * as account from '../../lib/services/account'
@@ -27,25 +27,13 @@ export async function clearAccount () {
 
 export const handleCode = async ({ code }) => {
   const token = parse(code)
-  const { payload, header, hasConnection } = await jwt.handle(token)
+  const { payload, header, hasConnection } = await handle(token)
   if (hasConnection) {
     // TODO: LOGIN
   } else {
     auth.initRegistration(payload)
   }
 }
-
-// export const getConsentRequest = (url) => {
-//   const { type, code } = qrcode.parse(url)
-//   if (type !== 'register') {
-//     throw new Error('Not a register code')
-//   }
-//   return consents.get(code)
-// }
-
-// export const approveConsentRequest = consents.approve
-
-// export const getAndApproveConsentRequest = (url) => getConsentRequest(url).then(approveConsentRequest)
 
 export const getAllConsents = consents.getAll
 
