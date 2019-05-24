@@ -2,7 +2,7 @@ const express = require('express')
 const { createClient } = require('./helpers/index')
 const { clearOperatorDb } = require('./helpers/operatorPostgres')
 
-describe('Connect', () => {
+describe('Service', () => {
   let server, client
 
   beforeEach(done => {

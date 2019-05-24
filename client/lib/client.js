@@ -13,7 +13,7 @@ const { createServiceRegistration } = require('./jwt')
 const defaults = {
   jwksPath: '/jwks',
   eventsPath: '/events',
-  alg: 'RSA-SHA256'
+  alg: 'RS256'
 }
 
 class Client {

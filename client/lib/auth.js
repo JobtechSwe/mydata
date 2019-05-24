@@ -7,7 +7,7 @@ const createAuthenticationRequest = async (client, id) => {
     sid: id,
     aud: 'mydata://account',
     iss: client.config.clientId,
-    eventsURI: client.config.jwksUrl
+    eventsURI: client.config.eventsUrl
   }
 
   const kid = `${client.config.jwksUrl}/client_key`

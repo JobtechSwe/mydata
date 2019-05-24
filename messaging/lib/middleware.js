@@ -1,7 +1,6 @@
 const createError = require('http-errors')
-const { verify } = require('../services/jwt')
 
-function signed () {
+function signed ({ verify }) {
   return async function (req, _res, next) {
     try {
       let token
@@ -30,4 +29,6 @@ function signed () {
   }
 }
 
-module.exports = signed
+module.exports = {
+  signed
+}

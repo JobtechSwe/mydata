@@ -1,10 +1,7 @@
 const axios = require('axios')
 const schemas = require('./schemas')
 
-async function verifyToken ({ decode, verify, importKey }, token) {
-  if (typeof decode !== 'function' || typeof decode !== 'function' || typeof importKey !== 'function') {
-    throw new Error('First argument must be a JWT library')
-  }
+async function verifyToken ({ decode, verify }, token) {
   const { header, claimsSet, signature } = decode(token, { complete: true })
   const { type } = claimsSet
   if (!type) {
@@ -29,25 +26,26 @@ async function verifyToken ({ decode, verify, importKey }, token) {
 
   let key
   if (isDeviceIssued) {
-    key = importKey(header.jwk)
+    key = header.jwk
   } else {
     try {
       const { data } = await axios.get(kid)
-      key = importKey(data)
+      key = data
     } catch (error) {
-      throw new Error(`No key found for kid: ${kid}`, error)
+      console.error('error', error)
+      throw new Error(`No key found for kid: ${kid}`)
     }
   }
   if (!key) {
     throw Error('No signing key')
   }
-  const result = verify(token, key, { complete: true })
+  const payload = await verify(token, key)
   return {
     header: {
-      ...result.header,
-      jwk: key.toJWK(false)
+      ...header,
+      jwk: header.jwk || key
     },
-    payload: result.payload
+    payload
   }
 }
 
@@ -74,7 +72,13 @@ async function createToken ({ sign, decode }, data, key, header = {}) {
   return token
 }
 
-module.exports = ({ sign, decode, verify, importKey }) => ({
-  verify: (token) => verifyToken({ decode, verify, importKey }, token),
-  sign: (payload, key, header) => createToken({ sign, decode }, payload, key, header)
-})
+module.exports = ({ sign, decode, verify }) => {
+  if (typeof decode !== 'function' || typeof verify !== 'function' || typeof sign !== 'function') {
+    throw new Error('First argument must be a JWT library which provides functions decode, verify and sign')
+  }
+
+  return {
+    verify: (token) => verifyToken({ decode, verify }, token),
+    sign: (payload, key, header) => createToken({ sign, decode }, payload, key, header)
+  }
+}

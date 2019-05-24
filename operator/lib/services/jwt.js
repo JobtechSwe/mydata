@@ -2,13 +2,12 @@ const { JWT, JWK } = require('@panva/jose')
 const { token } = require('@mydata/messaging')
 const { keys, host } = require('./config')
 const { sign, verify } = token({
-  sign: (data, key, header) => JWT.sign(data, key, { header }),
+  sign: (payload, key, header) => JWT.sign(payload, key, { header }),
   decode: (tok, opts) => {
     const { payload, header, signature } = JWT.decode(tok, opts)
     return { claimsSet: payload, header, signature }
   },
-  verify: JWT.verify,
-  importKey: JWK.importKey
+  verify: (tok, jwk) => JWT.verify(tok, JWK.importKey(jwk))
 })
 
 async function loginEventToken (audience, payload) {

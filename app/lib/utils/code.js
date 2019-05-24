@@ -1,22 +1,13 @@
-import { Base64 } from 'js-base64'
-
 const authenticationUrlRegex = /^mydata:\/\/account\/(.*)$/
 
 export const parse = (url) => {
   try {
     const [, code] = url.match(authenticationUrlRegex)
 
-    if (code) {
-      try {
-        const jwt = Base64.decode(decodeURIComponent(code))
-        return jwt
-      } catch (error) {
-        console.error('could not parse jwt from url')
-        throw new Error(error)
-      }
-    } else {
+    if (!code) {
       throw new Error('Unidentified code')
     }
+    return code
   } catch (error) {
     console.error('could not match url!', error)
   }

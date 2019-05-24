@@ -1,5 +1,6 @@
 const { Router } = require('express')
-const signed = require('../middleware/signed')
+const { middleware: { signed } } = require('@mydata/messaging')
+const jwt = require('../services/jwt')
 const health = require('./health')
 const messages = require('../messages')
 
@@ -14,7 +15,7 @@ router.get('/', (req, res, next) => {
 router.use('/health', health)
 
 /* communication */
-router.use('/api', signed(), async (req, res, next) => {
+router.use('/api', signed(jwt), async (req, res, next) => {
   try {
     await messages.handle(req, res)
   } catch (error) {

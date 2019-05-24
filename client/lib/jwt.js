@@ -7,8 +7,7 @@ const { sign, verify } = token({
     const { payload, header, signature } = JWT.decode(tok, opts)
     return { claimsSet: payload, header, signature }
   },
-  verify: JWT.verify,
-  importKey: JWK.importKey
+  verify: (tok, jwk) => JWT.verify(tok, JWK.importKey(jwk))
 })
 
 const createServiceRegistration = async (client) => {
