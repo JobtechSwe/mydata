@@ -1,0 +1,21 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: TEST
+  name: natreg-test
+spec:
+  host: natreg-test.dev.services.jtech.se
+  port:
+    targetPort: http
+  to:
+    kind: Service
+    name: natreg-test
+    weight: 100
+  wildcardPolicy: None
+  tls:
+    valueFrom:
+      secretKeyRef:
+        key: jtech.se.crt
+        name: tls
+    termination: edge

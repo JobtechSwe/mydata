@@ -59,19 +59,3 @@ If you want to run the app on an actual phone it will of course not use your com
 
 **Before pushing/PR:**
 Do `npm test` (this will lint, run unit tests and run e2e/integration tests)
-
-## Deploy (test)
-Do the following to deploy operator to test environment
-
-First:
-```
-git checkout master
-git pull
-git fetch --tags
-```
-
-Then:
-
-```
-npm run version:<pathch|minor|major>
-```

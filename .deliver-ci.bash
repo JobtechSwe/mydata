@@ -7,24 +7,20 @@ DOCKERFILE=""
 if [ ! -z "$3" ]; then
   DOCKERFILE="-f $3"
 fi
+CACHE_DIR="$HOME/.cache/docker/${IMAGE/\//_}"
 
-docker load -i "~/.cache/docker/$IMAGE-latest.tar" || true
+docker load -i "$CACHE_DIR/latest.tar" || true
 docker pull $IMAGE
 
 docker build -t $IMAGE --cache-from $IMAGE $CONTEXT $DOCKERFILE && \
 docker push $IMAGE
 
-if [ $? != 0 ]; then
-  EXIT_CODE=$?
-  echo "Docker build or push failed!"
+EXIT_CODE=$?
+if [ $EXIT_CODE != 0 ]; then
+  echo >&2 "Docker build or push failed!"
   exit $EXIT_CODE
 fi
 
-echo "Redeploying..."
-
-oc rollout latest cv-ci -n mydata
-oc rollout latest operator-ci -n mydata
-
-echo "Cache $IMAGE:latest"
-mkdir -p "~/.cache/docker/jobtechswe"
-docker save $IMAGE:latest -o "~/.cache/docker/$IMAGE-latest.tar"
+echo "Save cache $CACHE_DIR/latest.tar"
+mkdir -p "$CACHE_DIR"
+docker save $IMAGE:latest -o "$CACHE_DIR/latest.tar"
