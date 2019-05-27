@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Scan, Register, Login } from '../../components/Auth'
 import { handle } from '../../services/index'
 
-const AuthScreen = ({ props }) => {
+const AuthScreen = (props) => {
   const [state, setState] = useState({
     view: (props && props.view) || 'scan',
     authenticationRequest: undefined,

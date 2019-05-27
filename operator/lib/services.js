@@ -1,5 +1,6 @@
 const { query, multiple, transaction } = require('./adapters/postgres')
-const jwt = require('./services/jwt')
+const { verify } = require('./services/jwt')
+const { createConnectionEvent } = require('./services/tokens')
 const {
   accountKeyInsert,
   checkConnection,
@@ -13,7 +14,7 @@ const headers = {
   'Content-Type': 'application/jwt'
 }
 
-async function registerService ({ header, payload }, res) {
+async function registerService({ header, payload }, res) {
   const params = {
     serviceId: payload.iss,
     serviceKey: JSON.stringify(header.jwk),
@@ -28,7 +29,7 @@ async function registerService ({ header, payload }, res) {
   res.sendStatus(200)
 }
 
-async function accountLogin ({ header, payload, token }) {
+async function loginResponse({ header, payload, token }) {
   const { jwk: { kid } } = header
   const { aud: [, aud] } = payload
   const params = {
@@ -51,45 +52,47 @@ async function accountLogin ({ header, payload, token }) {
   return axios.post(url, loginEventToken, { headers })
 }
 
-async function accountConnect ({ header, payload, token }) {
-  const { jwk: { kid } } = header
-  const { aud: [, aud], sub } = payload
+async function connectionResponse ({ header, payload }, res, next) {
+  try {
+    const { iss } = payload
+    const { payload: { aud, sub } } = await verify(payload.payload)
 
-  const [resAccount, resService, resConnection] = await multiple(checkConnection({
-    accountId: kid,
-    serviceId: aud
-  }))
+    const [resAccount, resService, resConnection] = await multiple(checkConnection({
+      accountId: iss,
+      serviceId: aud
+    }))
 
-  if (!resAccount.rows.length) {
-    throw new Error('No such account')
+    if (!resAccount.rows.length) {
+      throw new Error('No such account')
+    }
+    if (!resService.rows.length) {
+      throw new Error('No such service')
+    }
+    if (resConnection.rows.length) {
+      throw new Error('Connection already exists')
+    }
+    const connectionEventToken = await createConnectionEvent(aud, payload.payload)
+    const url = resService.rows[0].events_uri
+
+    axios.post(url, connectionEventToken, { headers })
+
+    // Add connection to db
+    const connectionSql = connectionInsert({
+      connectionId: sub,
+      accountId: iss,
+      serviceId: aud
+    })
+    await query(...connectionSql)
+
+    res.sendStatus(201)
+  } catch (error) {
+    next(error)
   }
-  if (!resService.rows.length) {
-    throw new Error('No such service')
-  }
-  if (resConnection.rows.length) {
-    throw new Error('Connection already exists')
-  }
-  const connectionEventToken = await jwt.connectionEventToken(aud, token)
-  const url = resService.rows[0].events_uri
-
-  const response = axios.post(url, connectionEventToken, { headers })
-
-  // Add connection to db
-  const connection = connectionInsert({
-    connectionId: sub,
-    accountId: kid,
-    serviceId: aud
-  })
-
-  const local = permissions(payload, payload.permissions.local || {}, payload.aud[1])
-  await transaction([connection].concat(local))
-  return response
 }
 
 function permissions (payload, block, domain) {
   return Object.entries(block)
     .reduce((statements, [area, permissions]) => {
-
       // Add account key to db
       const params = {
         accountKeyId: '',
@@ -125,6 +128,6 @@ function permissions (payload, block, domain) {
 
 module.exports = {
   registerService,
-  accountConnect,
-  accountLogin
+  connectionResponse,
+  loginResponse
 }
