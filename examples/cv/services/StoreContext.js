@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useReducer } from 'react'
 import * as storage from './storage'
-import { read, write } from './data'
+import { write } from './data'
 
 const StoreContext = createContext({})
 
