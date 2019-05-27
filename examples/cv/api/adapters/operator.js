@@ -1,4 +1,4 @@
-const { create } = require('@mydata/client')
+const { create } = require('@egendata/client')
 const keyValueStore = require('../services/keyValueStore')
 const config = {
   displayName: 'My CV',
