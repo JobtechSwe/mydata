@@ -1,5 +1,5 @@
 const { JWT, JWK } = require('@panva/jose')
-const { token } = require('@mydata/messaging')
+const { token } = require('@egendata/messaging')
 const { keys, host } = require('./config')
 const { sign, verify } = token({
   sign: (payload, key, header) => JWT.sign(payload, key, { header }),

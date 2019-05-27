@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/JobtechSwe/mydata#readme",
   "dependencies": {
-    "@mydata/messaging": "file:../messaging",
+    "@egendata/messaging": "0.1.0",
     "@panva/jose": "1.0.2",
     "axios": "0.18.0",
     "body-parser": "^1.19.0",

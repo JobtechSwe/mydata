@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const { middleware: { signed } } = require('@mydata/messaging')
+const { middleware: { signed } } = require('@egendata/messaging')
 const jwt = require('../services/jwt')
 const { keys: { publicKey } } = require('../services/config')
 const health = require('./health')
