@@ -1,4 +1,4 @@
-import { token } from '@mydata/messaging'
+import { token } from '@egendata/messaging'
 import * as jwt from 'jwt-lite'
 
 export const { sign, verify } = token({

@@ -3,7 +3,7 @@ import { getAccount } from '../account'
 import { verify, decode } from 'jwt-lite'
 import axios from 'axios'
 
-// const foo = require('@mydata/messaging')
+// const foo = require('@egendata/messaging')
 jest.mock('../account', () => ({
   getAccount: jest.fn(),
 }))
