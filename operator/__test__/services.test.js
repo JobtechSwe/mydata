@@ -191,9 +191,7 @@ describe('services', () => {
           readKey: ''
         })
       expect(sqlStatements.permissionInsert)
-        .toHaveBeenCalledWith({
-          
-        })
+        .toHaveBeenCalledWith({})
       expect(transaction).toHaveBeenCalledWith([
         expect.any(Array), // Connection
         [expect.stringMatching(/INSERT INTO permissions/), [

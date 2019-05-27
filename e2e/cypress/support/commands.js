@@ -56,14 +56,6 @@ Cypress.Commands.add('clearAccount', (args) => {
   return callMethod('clearAccount', args)
 })
 
-Cypress.Commands.add('getConsentRequest', (args) => {
-  return callMethod('getConsentRequest', args)
-})
-
-Cypress.Commands.add('approveConsentRequest', (args) => {
-  return callMethod('approveConsentRequest', args)
-})
-
-Cypress.Commands.add('getAndApproveConsentRequest', (args) => {
-  return callMethod('getAndApproveConsentRequest', args)
+Cypress.Commands.add('handleCode', (args) => {
+  return callMethod('handleCode', args)
 })

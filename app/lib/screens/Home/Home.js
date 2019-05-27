@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react'
 import { Linking } from 'react-native'
 import { H1 } from '../../components/typography/Typography'

@@ -1,4 +1,5 @@
-const { query, multiple, transaction } = require('./adapters/postgres')
+/* eslint-disable */
+const { query, multiple } = require('./adapters/postgres')
 const { verify } = require('./services/jwt')
 const { createConnectionEvent } = require('./services/tokens')
 const {
@@ -14,7 +15,7 @@ const headers = {
   'Content-Type': 'application/jwt'
 }
 
-async function registerService({ header, payload }, res) {
+async function registerService ({ header, payload }, res) {
   const params = {
     serviceId: payload.iss,
     serviceKey: JSON.stringify(header.jwk),
@@ -29,7 +30,7 @@ async function registerService({ header, payload }, res) {
   res.sendStatus(200)
 }
 
-async function loginResponse({ header, payload, token }) {
+async function loginResponse ({ header, payload, token }) {
   const { jwk: { kid } } = header
   const { aud: [, aud] } = payload
   const params = {
