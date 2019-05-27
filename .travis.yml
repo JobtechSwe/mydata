@@ -27,8 +27,8 @@ jobs:
     - docker load -i ~/.cache/docker/node.tar || true
     - docker load -i ~/.cache/docker/redis.tar || true
     - docker load -i ~/.cache/docker/postgres.tar || true
-    - npm install file:client --prefix examples/cv
-    - npm install file:client --prefix examples/national-registration
+    # - npm install file:client --prefix examples/cv
+    # - npm install file:client --prefix examples/national-registration
     - npm run install
     script:
     - npm run lint
