@@ -10,6 +10,7 @@ const host = process.env.DOCKER ? ipHelper.getDockerInterfaceAddress() : 'localh
 const createClient = port => create({
   displayName: 'The name of your service',
   description: 'A nice description of your fantastic service',
+  iconURI: `http://${host}:${port}/icon.png`,
   clientId: `http://${host}:${port}`,
   operator: process.env.OPERATOR_URL,
   clientKeys: {

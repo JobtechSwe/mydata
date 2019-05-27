@@ -1,4 +1,4 @@
-const { token } = require('@mydata/messaging')
+const { token } = require('@egendata/messaging')
 const { JWT, JWK } = require('@panva/jose')
 
 const { sign, verify } = token({

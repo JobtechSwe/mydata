@@ -2,7 +2,7 @@ const { Router, json } = require('express')
 const jwt = require('./jwt')
 const { connectionInitHandler, connectionEventHandler } = require('./connection')
 const bodyParser = require('body-parser')
-const { middleware: { signed } } = require('@mydata/messaging')
+const { middleware: { signed } } = require('@egendata/messaging')
 
 const keyListHandler = ({ keyProvider }) => async (req, res, next) => {
   const keys = await keyProvider.jwksKeyList()
