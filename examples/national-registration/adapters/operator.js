@@ -1,4 +1,4 @@
-const { create, utils } = require('@mydata/client')
+const { create, utils } = require('@egendata/client')
 
 const client = create({
   displayName: 'National registration',
