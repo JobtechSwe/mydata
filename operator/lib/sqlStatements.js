@@ -7,7 +7,7 @@ function connectionInsert ({ connectionId, accountId, serviceId }) {
     `INSERT INTO connections(
       connection_id, account_id, service_id
     ) VALUES(
-      $1, $2, $3, $4
+      $1, $2, $3
     )`,
     [connectionId, accountId, serviceId]
   ]

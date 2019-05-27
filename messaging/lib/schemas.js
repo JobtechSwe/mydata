@@ -211,7 +211,7 @@ const DATA_WRITE = Joi.object({
   data: JWE.required()
 }).required()
 
-const deviceSchemas = [ACCOUNT_REGISTRATION, CONNECTION_INIT, CONNECTION, LOGIN]
+const deviceSchemas = [ACCOUNT_REGISTRATION, CONNECTION_INIT, CONNECTION, CONNECTION_RESPONSE, LOGIN, LOGIN_RESPONSE]
 
 module.exports = {
   algs,

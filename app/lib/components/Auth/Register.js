@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { H1, Paragraph } from '../typography/Typography'
+import { PrimaryButton, SecondaryButton } from '../elements/Button/Button'
 import { Wrap } from '../View/Wrapper'
-import { initRegistration } from '../../services/auth'
+import { initRegistration, approveConnection } from '../../services/auth'
 
-const Register = ({ authenticationRequest }) => {
+const Register = ({ authenticationRequest, onApprove }) => {
   const [connectionRequest, setConnectionRequest] = useState({})
   useEffect(() => {
     initRegistration(authenticationRequest)
@@ -14,12 +15,23 @@ const Register = ({ authenticationRequest }) => {
       })
   }, [])
 
+  const onApproveConnection = async () => {
+    await approveConnection(connectionRequest)
+    onApprove()
+  }
+
+  const onDenyConnection = () => {
+    // TODO: Implement
+  }
+
   return (
     <Wrap>
       <H1>MyData</H1>
       <Paragraph align="center">
         Do you want to connect to {connectionRequest.displayName}?
       </Paragraph>
+      <PrimaryButton onPress={onApproveConnection}>Yes!</PrimaryButton>
+      <SecondaryButton onPress={onDenyConnection}>No!</SecondaryButton>
     </Wrap>
   )
 }

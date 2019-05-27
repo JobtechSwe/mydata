@@ -1,4 +1,4 @@
-const { sign } = require('./jwt')
+const { sign, verify } = require('./jwt')
 const pem2jwk = require('pem-jwk').pem2jwk
 
 const createConnectionRequest = (client, { iss, sid }) => {
@@ -30,8 +30,18 @@ const connectionInitHandler = client => async ({ payload }, res) => {
   res.end()
 }
 
+const connectionEventHandler = client => async ({ payload }, res) => {
+  const { payload: { sub, sid } } = await verify(payload.payload)
+
+  const AUTHENTICATION_ID_PREFIX = 'authentication|>'
+  client.keyValueStore.save(`${AUTHENTICATION_ID_PREFIX}${sid}`, sub)
+
+  res.sendStatus(200)
+}
+
 module.exports = {
   connectionInitHandler,
+  connectionEventHandler,
   createConnectionRequest
 }
 
