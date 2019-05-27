@@ -63,12 +63,12 @@ describe('schemas', () => {
       await expect(schemas.CONNECTION.validate(connection))
         .resolves.not.toThrow()
     })
-    describe('CONNECTION_APPROVAL', () => {
+    describe('CONNECTION_RESPONSE', () => {
       it('validates a correct payload', async () => {
         const payload = {
           ...jwtDefaults,
           aud: 'https://smoothoperator',
-          type: 'CONNECTION_APPROVAL',
+          type: 'CONNECTION_RESPONSE',
           content: [
             {
               domain: 'https://mycv.work',
@@ -101,7 +101,7 @@ describe('schemas', () => {
           ],
           payload: 'asadasdas'
         }
-        await expect(schemas.CONNECTION_APPROVAL.validate(payload))
+        await expect(schemas.CONNECTION_RESPONSE.validate(payload))
           .resolves.not.toThrow()
       })
     })

@@ -149,9 +149,9 @@ const CONNECTION = Joi.object({
 }).required()
 
 // device -> operator
-const CONNECTION_APPROVAL = Joi.object({
+const CONNECTION_RESPONSE = Joi.object({
   ...JWT_DEFAULTS,
-  type: 'CONNECTION_APPROVAL',
+  type: 'CONNECTION_RESPONSE',
   content: Joi.array().items(Joi.object({
     ...CONTENT_PATH,
     data: JWE
@@ -174,9 +174,9 @@ const LOGIN = Joi.object({
 }).required()
 
 // device -> operator
-const LOGIN_APPROVAL = Joi.object({
+const LOGIN_RESPONSE = Joi.object({
   ...JWT_DEFAULTS,
-  type: 'LOGIN_APPROVAL',
+  type: 'LOGIN_RESPONSE',
   payload: Joi.string().required()
 }).required()
 
@@ -223,12 +223,12 @@ module.exports = {
   CONNECTION_INIT,
   CONNECTION_REQUEST,
   CONNECTION,
-  CONNECTION_APPROVAL,
+  CONNECTION_RESPONSE,
   CONNECTION_EVENT,
   CONTENT_REQUEST,
   CONTENT,
   LOGIN,
-  LOGIN_APPROVAL,
+  LOGIN_RESPONSE,
   LOGIN_EVENT,
   PERMISSION_REQUEST,
   ACCESS_TOKEN,
