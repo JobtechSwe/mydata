@@ -6,7 +6,7 @@
     "lint": "eslint '**/*.js'"
   },
   "dependencies": {
-    "@egendata/client": "0.1.0",
+    "@egendata/client": "0.1.1",
     "cookie-parser": "^1.4.4",
     "dotenv": "^7.0.0",
     "elastic-apm-node": "^2.9.0",
