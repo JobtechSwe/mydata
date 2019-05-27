@@ -49,7 +49,7 @@ describe('Auth flow for example/cv', () => {
         return cy.handleCode({ code: url })
       })
 
-    // TODO: Fix this test, reimplement when data reading works
+    // TODO: Reimplement when data read works or something...
     // cy
     //   .url()
     //   .should('include', '/profile')
