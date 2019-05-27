@@ -1,5 +1,5 @@
 {
-  "name": "@mydata/client",
+  "name": "@egendata/client",
   "version": "0.25.2",
   "description": "Client for MyData Operator",
   "main": "lib/index.js",
@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/JobtechSwe/mydata/client#readme",
   "dependencies": {
-    "@mydata/messaging": "file:../messaging",
+    "@egendata/messaging": "0.1.0",
     "@panva/jose": "^1.0.1",
     "axios": "^0.18.0",
     "body-parser": "^1.19.0",
