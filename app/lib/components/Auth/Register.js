@@ -1,15 +1,14 @@
-import React, { useEffect } from 'react'
-import { H1 } from '../typography/Typography'
-import { PrimaryButton } from '../elements/Button/Button'
-import { Input } from '../elements/Input/Input'
+import React, { useEffect, useState } from 'react'
+import { H1, Paragraph } from '../typography/Typography'
 import { Wrap } from '../View/Wrapper'
 import { initRegistration } from '../../services/auth'
 
 const Register = ({ authenticationRequest }) => {
+  const [connectionRequest, setConnectionRequest] = useState({})
   useEffect(() => {
     initRegistration(authenticationRequest)
-      .then(res => {
-        console.log('begin polling')
+      .then(payload => {
+        setConnectionRequest(payload)
       }).catch(err => {
         console.error(err)
       })
@@ -18,6 +17,9 @@ const Register = ({ authenticationRequest }) => {
   return (
     <Wrap>
       <H1>MyData</H1>
+      <Paragraph align="center">
+        Do you want to connect to {connectionRequest.displayName}?
+      </Paragraph>
     </Wrap>
   )
 }
