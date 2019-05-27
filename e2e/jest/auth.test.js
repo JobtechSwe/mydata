@@ -3,11 +3,11 @@ const { createClientWithServer } = require('./helpers/index')
 const { clearOperatorDb } = require('./helpers/operatorPostgres')
 
 describe('Authentication', () => {
-  let account, client
+  let client
 
   beforeAll(async () => {
     jest.useFakeTimers()
-    account = await phone.createAccount({ firstName: 'Foo', lastName: 'Barsson' })
+    await phone.createAccount({ firstName: 'Foo', lastName: 'Barsson' })
 
     // Get client going
     client = await createClientWithServer()
