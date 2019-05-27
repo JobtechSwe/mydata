@@ -2,7 +2,7 @@ const dataService = require('../../lib/services/data')
 const pg = require('../../__mocks__/pg')
 const dfs = require('../../__mocks__/dropbox-fs')()
 
-describe('services/data', () => {
+describe.skip('services/data', () => {
   let apiKey, consentId
   beforeEach(() => {
     apiKey = 'my key'

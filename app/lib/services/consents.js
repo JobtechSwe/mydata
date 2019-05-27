@@ -2,7 +2,7 @@ import Config from 'react-native-config'
 import axios from 'axios'
 import { getKey } from './jwks'
 import { sign, verify } from './crypto'
-import { getAccount } from './storage'
+import { getAccount } from './account'
 import { Base64 } from 'js-base64'
 
 export async function get(consentRequestId) {

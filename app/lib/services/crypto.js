@@ -1,10 +1,11 @@
 import { RSA } from 'react-native-rsa-native'
+import pem2jwk from 'simple-pem2jwk'
 
 export async function generateKeys (modulusLength = 2048) {
   const keyPair = await RSA.generateKeys(modulusLength)
   return {
-    publicKey: keyPair.public,
-    privateKey: keyPair.private,
+    publicKey: pem2jwk(keyPair.public, { use: 'sig' }),
+    privateKey: pem2jwk(keyPair.private),
   }
 }
 

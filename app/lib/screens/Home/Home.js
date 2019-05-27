@@ -1,9 +1,11 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react'
 import { Linking } from 'react-native'
 import { H1 } from '../../components/typography/Typography'
 import { Wrap, ScrollViewWrap } from '../../components/View/Wrapper'
 import ConsentList from '../../components/ConsentList/ConsentList'
 import { getAll } from '../../services/consents'
+import { getAccount } from '../../services/account'
 
 const HomeScreen = ({ navigation }) => {
   const [consents, setConsents] = useState([])
@@ -13,16 +15,18 @@ const HomeScreen = ({ navigation }) => {
     navigate('QR-kod', { myDataUrl: event.url })
   }
 
-  const updateConsents = () => getAll().then(setConsents)
+  // const updateConsents = () => getAll().then(setConsents)
 
   useEffect(() => {
     Linking.addEventListener('url', handleOpenURL)
-    const subscription = navigation.addListener('willFocus', updateConsents)
-    updateConsents()
+    getAccount().then(console.log)
+    // TODO: Uncomment =)
+    // const subscription = navigation.addListener('willFocus', updateConsents)
+    // updateConsents()
 
     return () => {
       Linking.removeEventListener('url', handleOpenURL)
-      subscription.remove()
+      // subscription.remove()
     }
   }, [])
 

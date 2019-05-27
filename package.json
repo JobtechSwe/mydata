@@ -5,7 +5,7 @@
     "audit": "lerna exec --parallel -- npm audit",
     "audit:fix": "lerna exec --parallel -- npm audit fix",
     "clean": "lerna clean",
-    "install": "lerna exec --scope @mydata/client -- npm ci && lerna exec --ignore @mydata/client --parallel -- npm ci",
+    "install": "lerna exec --parallel -- npm i",
     "lint": "lerna exec --parallel -- npm run lint",
     "start": "docker-compose -f docker-compose.dev.yml down && docker-compose down && docker-compose up -d && docker-compose -f docker-compose.dev.yml up -d",
     "test": "npm run lint && npm run test:unit && npm run test:e2e",
@@ -17,7 +17,7 @@
     "version:major": "lerna version major"
   },
   "devDependencies": {
-    "lerna": "^3.13.2",
+    "lerna": "^3.14.1",
     "plist": "git+https://github.com/mishoo/node-plist.git"
   },
   "repository": {
@@ -36,5 +36,8 @@
     "url": "https://github.com/JobtechSwe/mydata/issues"
   },
   "homepage": "https://github.com/JobtechSwe/mydata#readme",
-  "version": "0.25.1"
+  "version": "0.25.1",
+  "dependencies": {
+    "pem-jwk": "^2.0.0"
+  }
 }

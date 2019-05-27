@@ -2,8 +2,12 @@ const createMemoryStore = () => {
   const store = new Map()
   return {
     save: async (key, value, ttl) => {
-      // TODO: Respect ttl
-      return store.set(key, value)
+      store.set(key, value)
+
+      if (ttl) {
+        const ttlMilliseconds = ttl * 1000
+        setTimeout(() => store.delete(key), ttlMilliseconds)
+      }
     },
     load: async (key) => {
       return store.get(key)

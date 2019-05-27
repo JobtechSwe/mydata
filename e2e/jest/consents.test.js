@@ -4,7 +4,7 @@ const phone = require('./helpers/phone')
 const { decode } = require('jsonwebtoken')
 const { clearOperatorDb } = require('./helpers/operatorPostgres')
 
-describe('Client', () => {
+describe.skip('Client', () => {
   let client
 
   beforeAll(async () => {
@@ -51,7 +51,7 @@ describe('Client', () => {
   })
 })
 
-describe('Phone', () => {
+describe.skip('Phone', () => {
   let clients
 
   beforeAll(async () => {

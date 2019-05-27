@@ -152,13 +152,14 @@ android {
 
 dependencies {
     implementation project(':@react-native-community_async-storage')
+    implementation project(':react-native-camera')
+    implementation project(':react-native-securerandom')
+    implementation project(':react-native-securerandom')
     compile project(':react-native-svg')
     compile project(':react-native-device-info')
     compile project(':react-native-gesture-handler')
-    compile project(':react-native-camera')
     compile project(':react-native-rsa-native')
     compile project(':react-native-config')
-    compile project(':react-native-push-notification')
     compile ("com.android.support:support-v4:28.0.0")
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"

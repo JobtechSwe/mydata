@@ -31,12 +31,12 @@ describe('adapters/postgres', () => {
     it('closes the connection after result', async () => {
       pg.client.query.mockResolvedValue({ metaData: [], rows: [] })
       await postgres.query('SQL', [1])
-      expect(pg.client.end).toBeCalledTimes(1)
+      expect(pg.client.end).toHaveBeenCalledTimes(1)
     })
     it('closes the connection after error', async () => {
       pg.client.query.mockRejectedValue(new Error('some error'))
       await postgres.query('SQL', [1]).catch(() => {})
-      expect(pg.client.end).toBeCalledTimes(1)
+      expect(pg.client.end).toHaveBeenCalledTimes(1)
     })
   })
   describe('#transaction', () => {

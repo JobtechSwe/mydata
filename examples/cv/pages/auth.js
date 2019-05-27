@@ -13,7 +13,7 @@ export default () => {
 
   const poll = id => setInterval(async () => {
     try {
-      const { data } = await axios.get(`/api/consentrequest/${id}`)
+      const { data } = await axios.get(`/api/auth/${id}`)
       clearInterval(pollId)
       storage.setAccessToken(data.accessToken)
       dispatch({ type: 'SET_TOKEN', payload: data.accessToken })
@@ -31,7 +31,7 @@ export default () => {
         pollId = poll(data.id)
       })
       .catch(err => {
-        console.error(err)
+        console.error('error when initializing authentication', err)
       })
   }, [])
 
@@ -48,7 +48,7 @@ export default () => {
       width="100vw"
     >
       {data && <Box textAlign="center">
-        <Typography variant="h6">Enter the code for this consent request:</Typography>
+        <Typography variant="h6">Scan this QR code to continue</Typography>
         <Box><QRCode
           size={256}
           value={data.url}

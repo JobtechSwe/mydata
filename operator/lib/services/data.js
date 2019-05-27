@@ -1,4 +1,5 @@
-const { list } = require('./consents')
+// const { list } = require('./consents')
+const list = {}
 const pds = require('../adapters/pds')
 const merge = require('merge')
 

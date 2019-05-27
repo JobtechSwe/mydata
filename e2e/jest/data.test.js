@@ -2,7 +2,7 @@ const phone = require('./helpers/phone')
 const { createClientWithServer } = require('./helpers/index')
 const { clearOperatorDb } = require('./helpers/operatorPostgres')
 
-describe('Data', () => {
+describe.skip('Data', () => {
   let client
 
   beforeEach(async () => {

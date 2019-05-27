@@ -32,6 +32,20 @@ async function query (sql, params = []) {
   }
 }
 
+async function multiple (queries) {
+  const conn = await connect()
+  try {
+    const results = []
+    for (const args of queries) {
+      let result = await conn.query(...args)
+      results.push(result)
+    }
+    return results
+  } finally {
+    await conn.end()
+  }
+}
+
 async function transaction (queries) {
   const conn = await connect()
   try {
@@ -51,4 +65,4 @@ async function transaction (queries) {
   }
 }
 
-module.exports = { query, transaction }
+module.exports = { query, multiple, transaction }

@@ -1,6 +1,8 @@
-const createError = require('http-errors')
 const { Router, json } = require('express')
-const { event } = require('./schemas')
+const jwt = require('./jwt')
+const { connectionInitHandler, connectionEventHandler } = require('./connection')
+const bodyParser = require('body-parser')
+const { middleware: { signed } } = require('@egendata/messaging')
 
 const keyListHandler = ({ keyProvider }) => async (req, res, next) => {
   const keys = await keyProvider.jwksKeyList()
@@ -12,28 +14,26 @@ const keyHandler = ({ keyProvider }) => async (req, res, next) => {
   res.send(key)
 }
 
-const eventsHandler = client => async ({ body }, res, next) => {
-  try {
-    await event(body.type).validate(body)
-    client.events.emit(body.type, body.payload)
-    res.sendStatus(200)
-  } catch (error) {
-    if (error.name === 'ValidationError') {
-      next(createError(400, error))
-    } else {
-      next(error)
-    }
-  }
+const handlers = {
+  CONNECTION_INIT: connectionInitHandler,
+  CONNECTION_EVENT: connectionEventHandler
 }
 
 module.exports = client => {
   const router = new Router()
 
   router.use(json())
+  router.use(bodyParser.text({ type: 'application/jwt' }))
 
   router.get(client.config.jwksPath, keyListHandler(client))
   router.get(`${client.config.jwksPath}/:kid`, keyHandler(client))
-  router.post(client.config.eventsPath, eventsHandler(client))
+  router.post(client.config.eventsPath, signed(jwt), (req, res, next) => {
+    if (!handlers[req.payload.type]) {
+      throw Error(`Missing handler for ${req.payload.type}`)
+    }
+    client.events.emit(req.payload.type, req.payload)
+    handlers[req.payload.type](client)(req, res)
+  })
 
   return router
 }

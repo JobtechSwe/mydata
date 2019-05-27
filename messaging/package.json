@@ -1,0 +1,53 @@
+{
+  "name": "@egendata/messaging",
+  "version": "0.1.0",
+  "description": "Internal messaging protocol for MyData client, operator and app",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watchAll",
+    "testAndLint": "npm test && npm run lint",
+    "patch-release": "npm run testAndLint && npm version patch && npm publish --access public && git push origin master --follow-tags",
+    "minor-release": "npm run testAndLint && npm version minor && npm publish --access public && git push origin master --follow-tags",
+    "major-release": "npm run testAndLint && npm version major && npm publish --access public && git push origin master --follow-tags",
+    "lint": "eslint '**/*.js'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JobtechSwe/mydata.git"
+  },
+  "contributors": [
+    "Adam Näslund <adam.naslund@iteam.se>",
+    "Einar Persson <einar.persson@iteam.se>",
+    "Johan Öbrink <johan.obrink@iteam.se>",
+    "Alexander Czigler <alexander@iteam.se>"
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/JobtechSwe/mydata/issues"
+  },
+  "homepage": "https://github.com/JobtechSwe/mydata/messaging#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "http-errors": "^1.7.2",
+    "joi-browser": "^13.4.0",
+    "js-base64": "^2.5.1"
+  },
+  "devDependencies": {
+    "@panva/jose": "^1.0.1",
+    "@types/axios": "^0.14.0",
+    "eslint": "^5.12.1",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jest": "^22.2.1",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "jest": "^23.6.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "automock": false,
+    "clearMocks": true
+  }
+}

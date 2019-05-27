@@ -3,6 +3,7 @@ const { decryptDocumentKey } = require('./crypto')
 const { promisify } = require('util')
 const { serialize } = require('jwks-provider')
 const Joi = require('joi')
+const { JWK } = require('@panva/jose')
 
 const KEY_PREFIX = 'key|>'
 const ACCESS_KEY_IDS_PREFIX = 'accessKeyIds|>'
@@ -52,7 +53,7 @@ const jsonToBase64 = (obj) => Buffer.from(JSON.stringify(obj), 'utf8').toString(
 const base64ToJson = (str) => JSON.parse(Buffer.from(str, 'base64').toString('utf8'))
 
 class KeyProvider {
-  constructor ({ clientKeys, keyValueStore, keyOptions, jwksUrl }) {
+  constructor ({ clientKeys, keyValueStore, keyOptions, jwksUrl, alg }) {
     this.jwksUrl = jwksUrl
     this.clientKeys = {
       use: 'sig',
@@ -62,6 +63,7 @@ class KeyProvider {
     }
     this.options = Object.assign({}, defaults, keyOptions)
     this.keyValueStore = keyValueStore
+    this.alg = alg
   }
   async load (key) {
     const value = await this.keyValueStore.load(key)
@@ -154,10 +156,14 @@ class KeyProvider {
   async jwksKeyList () {
     return serialize([this.clientKeys])
   }
-  async jwksKey (kid) {
-    const key = await this.getKey(kid)
 
-    return key ? serialize([key]).keys[0] : null
+  async jwksKey (kid) {
+    if (kid === 'client_key') {
+      return JWK.importKey(this.clientKeys.publicKey, { kid: `${this.jwksUrl}/client_key`, alg: this.alg })
+    } else {
+      const key = await this.getKey(kid)
+      return key ? serialize([key]).keys[0] : null
+    }
   }
 }
 

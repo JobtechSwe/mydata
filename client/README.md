@@ -4,12 +4,12 @@ Client library for mydata operator
 
 ## Install
 
-`npm install @mydata/client`
+`npm install @egendata/client`
 
 ## Create client
 
 ```javascript
-const { create } = require('@mydata/client')
+const { create } = require('@egendata/client')
 
 const config = {
   displayName: 'The name of your service',
