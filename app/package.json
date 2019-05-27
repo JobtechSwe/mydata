@@ -22,7 +22,7 @@
   ],
   "license": "Apache-2.0",
   "dependencies": {
-    "@mydata/messaging": "file:mydata-messaging-0.1.0.tgz",
+    "@egendata/messaging": "0.1.0",
     "@react-native-community/async-storage": "1.4.0",
     "@types/js-base64": "^2.3.1",
     "axios": "^0.18.0",
