@@ -32,7 +32,7 @@ jobs:
     - npm run install
     script:
     - npm run lint
-    - npm run test:e2e
+    # - npm run test:e2e
     after_script:
     - docker save node -o ~/.cache/docker/node.tar
     - docker save redis -o ~/.cache/docker/redis.tar
