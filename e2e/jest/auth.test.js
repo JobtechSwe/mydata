@@ -25,12 +25,11 @@ describe('Authentication', () => {
     expect(url).toEqual(expect.stringContaining('mydata://account'))
   })
 
-  it('Phone handles scanned code and does CONNECTION_INIT if no existing connection', async () => {
-    client.events.emit = jest.fn()
+  it('Auth flow for new connection', async () => {
+    // Auth url -> phone
     const { url } = await client.initializeAuthentication()
     await phone.handleCode({ code: url })
 
-    // Do not throw
     expect(true).toBe(true)
   })
 })

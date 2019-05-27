@@ -71,6 +71,7 @@ const configSchema = Joi.object({
   clientId: Joi.string().uri({ allowRelative: false }).required(),
   displayName: Joi.string().required(),
   description: Joi.string().required().min(10),
+  iconURI: Joi.string().uri().optional(),
   eventsPath: Joi.string().uri({ relativeOnly: true }).optional(),
   jwksPath: Joi.string().uri({ relativeOnly: true }).optional(),
   operator: Joi.string().uri().required(),

@@ -54,7 +54,7 @@ describe('client', () => {
       })
       expect(client.config.jwksPath).toEqual('/jwks')
       expect(client.config.eventsPath).toEqual('/events')
-      expect(client.config.alg).toEqual('RSA-SHA256')
+      expect(client.config.alg).toEqual('RS256')
     })
     it('throws if clientId is missing', () => {
       config.clientId = undefined

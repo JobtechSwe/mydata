@@ -1,4 +1,4 @@
-import { sign } from './jwt'
+import { sign, verify } from './jwt'
 import { getAccount } from './account'
 import { getConnections } from './storage'
 import axios from 'axios'
@@ -30,7 +30,9 @@ export const authenticationRequestHandler = async ({ payload, header }) => {
 export const initRegistration = async authRequest => {
   const registrationInit = await createConnectionInit(authRequest)
   try {
-    await axios.post(authRequest.eventsURI, registrationInit, { headers: { 'content-type': 'application/jwt' } })
+    const { data } = await axios.post(authRequest.eventsURI, registrationInit, { headers: { 'content-type': 'application/jwt' } })
+    const { payload } = await verify(data)
+    return payload
   } catch (error) {
     console.error(error)
     throw Error('CONNECTION_INIT failed')

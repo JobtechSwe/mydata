@@ -27,7 +27,7 @@ export async function clearAccount () {
 
 export const handleCode = async ({ code }) => {
   const token = parse(code)
-  const { payload, header, hasConnection } = await handle(token)
+  const { payload, hasConnection } = await handle(token)
   if (hasConnection) {
     // TODO: LOGIN
   } else {

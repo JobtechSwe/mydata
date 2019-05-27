@@ -40,6 +40,7 @@
     "jwks-provider": "^0.1.0",
     "jws": "^3.2.2",
     "moment": "^2.24.0",
+    "pem-jwk": "^2.0.0",
     "ramda": "^0.26.1"
   },
   "devDependencies": {

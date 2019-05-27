@@ -10,7 +10,7 @@ const AuthScreen = ({ props }) => {
 
   const onScan = async token => {
     try {
-      const { payload, header, hasConnection } = await handle(token)
+      const { payload, hasConnection } = await handle(token)
       const view = hasConnection ? 'login' : 'register'
       setState({ view, authenticationRequest: payload })
     }
