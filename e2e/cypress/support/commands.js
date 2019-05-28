@@ -60,6 +60,10 @@ Cypress.Commands.add('clearStorage', (args) => {
   return callMethod('clearStorage', args)
 })
 
+Cypress.Commands.add('getConnections', (args) => {
+  return callMethod('getConnections', args)
+})
+
 Cypress.Commands.add('connectOrLogin', (args) => {
   return callMethod('connectOrLogin', args)
 })

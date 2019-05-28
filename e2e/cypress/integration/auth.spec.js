@@ -30,7 +30,7 @@ describe('Auth flow for example/cv', () => {
     cy.visit('/')
   })
 
-  it('New connection: Profile page is loaded when connection is approved', () => {
+  it('Auth flow for new connection', () => {
     cy
       .createAccount({ firstName: 'Johan', lastName: 'Öbrink' })
 
@@ -49,9 +49,11 @@ describe('Auth flow for example/cv', () => {
         return cy.connectOrLogin({ code: url })
       })
 
-    // TODO: Reimplement when data read works or something...
-    // cy
-    //   .url()
-    //   .should('include', '/profile')
+    cy
+      .getConnections()
+      .then(res => {
+        expect(res[0].serviceId).to.match(/^http/)
+        expect(res[0].connectionId).to.be.a('string')
+      })
   })
 })
