@@ -19,7 +19,7 @@ jest.mock('../jwks', () => ({
 Config.OPERATOR_URL = 'https://smoothoperator.work'
 jest.useFakeTimers()
 
-describe('consentService', () => {
+describe.skip('consentService', () => {
   let account, consentRequest, keyPair
   beforeAll(async () => {
     keyPair = await generateKeys(1024)

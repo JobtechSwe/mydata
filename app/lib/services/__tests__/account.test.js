@@ -3,6 +3,7 @@ import axios from 'axios'
 import { RSA } from 'react-native-rsa-native'
 import Config from 'react-native-config'
 import AsyncStorage from '@react-native-community/async-storage'
+import pem2jwk from 'simple-pem2jwk'
 
 Config.OPERATOR_URL = 'aTotallyLegitOperatorUrl'
 
@@ -19,8 +20,8 @@ describe('account', () => {
         access_token: 'abc',
       },
       keys: {
-        publicKey: keys.public,
-        privateKey: keys.private,
+        publicKey: pem2jwk(keys.public, { use: 'sig' }),
+        privateKey: pem2jwk(keys.private),
       },
     }
   })
@@ -42,52 +43,10 @@ describe('account', () => {
     })
   })
 
-  describe('#update', () => {
-    beforeEach(() => {
-      axios.put.mockResolvedValue({})
-    })
-    it('calls axios.put', async () => {
-      await accountService.update(account)
-
-      expect(axios.put).toHaveBeenCalled()
-    })
-  })
-
   describe('#save', () => {
     beforeEach(() => {
       axios.post.mockResolvedValue({ data: { data: { id: 'abc123' } } })
       axios.put.mockResolvedValue({})
-    })
-    describe('existing user', () => {
-      it('calls axios.put to correct url and with parts of account as payload', async () => {
-        await accountService.save(account)
-
-        const expected = {
-          data: {
-            firstName: account.firstName,
-            lastName: account.lastName,
-            accountKey: Buffer.from(account.keys.publicKey).toString('base64'),
-            pds: {
-              provider: 'dropbox',
-              access_token: account.pds.access_token,
-            },
-          },
-          signature: {
-            alg: 'RSA-SHA512',
-            kid: 'account_key',
-            data: expect.any(String),
-          },
-        }
-        expect(axios.put).toHaveBeenCalledWith(
-          'aTotallyLegitOperatorUrl/accounts/abc123',
-          expected
-        )
-      })
-      it('returns account', async () => {
-        const result = await accountService.save(account)
-
-        expect(result).toEqual(account)
-      })
     })
     describe('new user', () => {
       beforeEach(() => {
