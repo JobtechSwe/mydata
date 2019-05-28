@@ -17,9 +17,8 @@ module.exports = {
   createAccount: call('createAccount'),
   clearAccount: call('clearAccount'),
   setConfig: call('setConfig'),
-  // getConsentRequest: call('getConsentRequest'),
-  // approveConsentRequest: call('approveConsentRequest'),
-  // getAndApproveConsentRequest: call('getAndApproveConsentRequest'),
-  // getAllConsents: call('getAllConsents'),
-  handleCode: call('handleCode')
+  connectOrLogin: call('connectOrLogin'),
+  getConnections: call('getConnections'),
+  approveConnection: call('approveConnection'),
+  clearStorage: call('clearStorage')
 }

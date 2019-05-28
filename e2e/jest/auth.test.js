@@ -1,12 +1,14 @@
 const phone = require('./helpers/phone')
 const { createClientWithServer } = require('./helpers/index')
 const { clearOperatorDb } = require('./helpers/operatorPostgres')
+const { v4Regexp } = require('./helpers/regexp')
 
 describe('Authentication', () => {
   let client
 
   beforeAll(async () => {
     jest.useFakeTimers()
+    await phone.clearStorage()
     await phone.createAccount({ firstName: 'Foo', lastName: 'Barsson' })
 
     // Get client going
@@ -15,7 +17,7 @@ describe('Authentication', () => {
   })
 
   afterAll(async (done) => {
-    await phone.clearAccount()
+    await phone.clearStorage()
     await clearOperatorDb()
     client.server.close(done)
   })
@@ -26,10 +28,24 @@ describe('Authentication', () => {
   })
 
   it('Auth flow for new connection', async () => {
-    // Auth url -> phone
-    const { url } = await client.initializeAuthentication()
-    await phone.handleCode({ code: url })
+    // Initial state, expect no connections
+    const connectionsBefore = await phone.getConnections()
+    expect(connectionsBefore).toEqual([])
 
-    expect(true).toBe(true)
+    // Auth url -> phone -> service
+    const { url } = await client.initializeAuthentication()
+
+    // User presses yes
+    await phone.connectOrLogin({ code: url })
+    const connectionsAfter = await phone.getConnections()
+
+    // After state, expect one new connection
+    expect(connectionsAfter.length).toBe(1)
+    expect(connectionsAfter[0].connectionId).toMatch(v4Regexp)
+    expect(connectionsAfter[0].serviceId).toContain('http://')
+  })
+
+  it.skip('Auth flow for existing connection (login)', async () => {
+
   })
 })

@@ -1,6 +1,5 @@
 import { sign } from './jwt'
 import { getAccount } from './account'
-import { v4 } from 'uuid'
 import Config from 'react-native-config'
 
 const nowSeconds = () => Math.round(Date.now() / 1000)
@@ -34,10 +33,9 @@ export const createConnectionInit = async ({ aud, iss, sid }) => {
   }, keys.privateKey, { jwk: keys.publicKey, alg: 'RS256' })
 }
 
-export const createConnection = async ({ iss, sid }) => {
+export const createConnection = async ({ iss, sid }, connectionId) => {
   const { keys } = await getAccount()
 
-  const connectionId = v4()
   return sign({
     type: 'CONNECTION',
     aud: iss,

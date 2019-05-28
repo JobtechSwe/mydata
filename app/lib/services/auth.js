@@ -1,8 +1,9 @@
 import { verify } from './jwt'
-import { getConnections } from './storage'
+import { getConnections, storeConnection } from './storage'
 import Config from 'react-native-config'
 import axios from 'axios'
 import { createConnectionInit, createConnection, createConnectionResponse } from './tokens'
+import { v4 } from 'uuid'
 
 export const authenticationRequestHandler = async ({ payload, header }) => {
   const existingConnections = await getConnections()
@@ -22,10 +23,16 @@ export const initRegistration = async authRequest => {
   }
 }
 
-export const approveConnection = async ({ sid, iss }) => {
-  const connection = await createConnection({ sid, iss })
+export const approveConnection = async (connectionRequest) => {
+  const connectionId = v4()
+  const connection = await createConnection(connectionRequest, connectionId)
   const connectionResponse = await createConnectionResponse(connection)
 
   await axios.post(Config.OPERATOR_URL, connectionResponse,
     { headers: { 'content-type': 'application/jwt' } })
+
+  await storeConnection({
+    serviceId: connectionRequest.iss,
+    connectionId,
+  })
 }

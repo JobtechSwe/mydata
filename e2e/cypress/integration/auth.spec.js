@@ -2,7 +2,7 @@ const v4Regexp = /[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-
 
 describe('Auth flow for example/cv', () => {
   beforeEach(() => {
-    cy.clearAccount()
+    cy.clearStorage()
 
     cy.window().then(win => {
       win.sessionStorage.clear()
@@ -46,7 +46,7 @@ describe('Auth flow for example/cv', () => {
       .get('#qrcode')
       .then(res => {
         const url = res[0].getAttribute('data-consent-request-url')
-        return cy.handleCode({ code: url })
+        return cy.connectOrLogin({ code: url })
       })
 
     // TODO: Reimplement when data read works or something...

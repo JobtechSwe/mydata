@@ -56,6 +56,10 @@ Cypress.Commands.add('clearAccount', (args) => {
   return callMethod('clearAccount', args)
 })
 
-Cypress.Commands.add('handleCode', (args) => {
-  return callMethod('handleCode', args)
+Cypress.Commands.add('clearStorage', (args) => {
+  return callMethod('clearStorage', args)
+})
+
+Cypress.Commands.add('connectOrLogin', (args) => {
+  return callMethod('connectOrLogin', args)
 })

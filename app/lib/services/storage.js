@@ -9,7 +9,7 @@ export const getConnections = async () => {
   return connections || []
 }
 
-export const storeConnection = async (connection) => {
+export const storeConnection = async ({ serviceId, connectionId }) => {
   const existingConnections = await getConnections()
-  return AsyncStorage.setItem('connections', [ ...existingConnections, connection ])
+  return AsyncStorage.setItem('connections', [ ...existingConnections, { serviceId, connectionId } ])
 }

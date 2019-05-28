@@ -6,6 +6,7 @@ import * as storage from '../../lib/services/storage'
 import * as crypto from '../../lib/services/crypto'
 import * as consents from '../../lib/services/consents'
 import Config from 'react-native-config'
+import AsyncStorage from '@react-native-community/async-storage'
 
 export async function createAccount ({ firstName, lastName }) {
   const keys = await crypto.generateKeys()
@@ -25,13 +26,18 @@ export async function clearAccount () {
   return storage.storeAccount()
 }
 
-export const handleCode = async ({ code }) => {
+export const clearStorage = async () => {
+  return AsyncStorage.clear()
+}
+
+export const connectOrLogin = async ({ code }) => {
   const token = parse(code)
   const { payload, hasConnection } = await handle(token)
   if (hasConnection) {
     // TODO: LOGIN
   } else {
-    auth.initRegistration(payload)
+    const connectionRequest = await auth.initRegistration(payload)
+    await approveConnection(connectionRequest)
   }
 }
 
@@ -51,3 +57,7 @@ export async function clearConfig () {
 export async function getConfig () {
   return Config
 }
+
+export const getConnections = storage.getConnections
+
+export const approveConnection = auth.approveConnection
