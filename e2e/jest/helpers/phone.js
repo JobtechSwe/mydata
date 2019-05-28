@@ -20,5 +20,6 @@ module.exports = {
   setConfig: call('setConfig'),
   getConnections: call('getConnections'),
   handleAuthCode: call('handleAuthCode'),
-  approveConnection: call('approveConnection')
+  approveConnection: call('approveConnection'),
+  approveLogin: call('approveLogin')
 }

@@ -2,21 +2,17 @@ import { verify } from './jwt'
 import { getConnections, storeConnection } from './storage'
 import Config from 'react-native-config'
 import axios from 'axios'
-import { createConnectionInit, createConnection, createConnectionResponse } from './tokens'
+import { createConnectionInit, createConnection, createConnectionResponse, createLogin, createLoginResponse } from './tokens'
 import { v4 } from 'uuid'
 
 export const authenticationRequestHandler = async ({ payload }) => {
-  const existingConnections = await getConnections()
-  const hasConnection = existingConnections.includes(payload.iss)
-
-  if (hasConnection) {
-    // Create LOGIN
-    console.log('existingConnections', existingConnections)
-    throw Error('LOGIN NOT IMPLEMENTED')
+  const allConnections = await getConnections()
+  const existingConnection = allConnections.find(x => x.serviceId === payload.iss)
+  if (existingConnection) {
+    return { existingConnection, sessionId: payload.sid }
   } else {
-    //  Init Registration and return CONNECTION_REQUEST
     const connectionRequest = await initConnection(payload)
-    return { connectionRequest }
+    return { connectionRequest, sessionId: payload.sid }
   }
 }
 
@@ -44,4 +40,16 @@ export const approveConnection = async (connectionRequest) => {
     serviceId: connectionRequest.iss,
     connectionId,
   })
+}
+
+export const approveLogin = async ({ connection, sessionId }) => {
+  try {
+    const login = await createLogin(connection, sessionId)
+    const loginResponse = await createLoginResponse(login)
+    await axios.post(Config.OPERATOR_URL, loginResponse,
+      { headers: { 'content-type': 'application/jwt' } })
+  } catch (error) {
+    console.log('error', error)
+    throw Error('Could not approve Login')
+  }
 }

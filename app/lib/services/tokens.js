@@ -55,3 +55,27 @@ export const createConnectionResponse = async (payload) => {
     payload,
   }, keys.privateKey, { jwk: keys.publicKey, alg: 'RS256' })
 }
+
+export const createLogin = async ({ serviceId, connectionId }, sessionId) => {
+  if (!sessionId) {
+    throw Error('SessionId is missing')
+  }
+  const { keys } = await getAccount()
+  return sign({
+    type: 'LOGIN',
+    aud: serviceId,
+    sid: sessionId,
+    sub: connectionId,
+    iss: 'mydata://account',
+  }, keys.privateKey, { jwk: keys.publicKey, alg: 'RS256' })
+}
+
+export const createLoginResponse = async (loginPayload) => {
+  const { keys, id } = await getAccount()
+  return sign({
+    type: 'LOGIN_RESPONSE',
+    payload: loginPayload,
+    iss: `mydata://account/${id}`,
+    aud: Config.OPERATOR_URL,
+  }, keys.privateKey, { jwk: keys.publicKey, alg: 'RS256' })
+}

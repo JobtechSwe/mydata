@@ -37,6 +37,8 @@ export const handleAuthCode = async ({ code }) => {
 
 export const approveConnection = auth.approveConnection
 
+export const approveLogin = auth.approveLogin
+
 export const getAllConsents = consents.getAll
 
 export async function setConfig (config) {

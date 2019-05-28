@@ -44,16 +44,3 @@ module.exports = {
   connectionEventHandler,
   createConnectionRequest
 }
-
-// const CONNECTION_REQUEST = Joi.object({
-//   ...JWT_DEFAULTS,
-//   type: 'CONNECTION_REQUEST',
-//   permissions: Joi.array().items(Joi.object({
-//     ...PERMISSION,
-//     key: JWK
-//   })).min(1).optional(),
-//   sid: Joi.string().uuid({ version: 'uuidv4' }).required(),
-//   displayName: Joi.string().required(),
-//   description: Joi.string().required(),
-//   iconURI: Joi.string().required()
-// }).required()

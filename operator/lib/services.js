@@ -1,7 +1,7 @@
 /* eslint-disable */
 const { query, multiple } = require('./adapters/postgres')
 const { verify } = require('./services/jwt')
-const { createConnectionEvent } = require('./services/tokens')
+const { createConnectionEvent, createLoginEvent } = require('./services/tokens')
 const {
   accountKeyInsert,
   checkConnection,
@@ -10,10 +10,6 @@ const {
   serviceInsert
 } = require('./sqlStatements')
 const axios = require('axios')
-
-const headers = {
-  'Content-Type': 'application/jwt'
-}
 
 async function registerService ({ header, payload }, res) {
   const params = {
@@ -30,14 +26,14 @@ async function registerService ({ header, payload }, res) {
   res.sendStatus(200)
 }
 
-async function loginResponse ({ header, payload, token }) {
-  const { jwk: { kid } } = header
-  const { aud: [, aud] } = payload
-  const params = {
-    accountId: kid,
+async function loginResponse ({ header, payload }, res, next) {
+  const { iss } = payload
+  const { payload: { aud, sub } } = await verify(payload.payload)
+
+  const [resAccount, resService, resConnection] = await multiple(checkConnection({
+    accountId: iss,
     serviceId: aud
-  }
-  const [resAccount, resService, resConnection] = await multiple(checkConnection(params))
+  }))
 
   if (!resAccount.rows.length) {
     throw new Error('No such account')
@@ -48,9 +44,11 @@ async function loginResponse ({ header, payload, token }) {
   if (!resConnection.rows.length) {
     throw new Error('No connection exists')
   }
-  const loginEventToken = await jwt.loginEventToken(aud, token)
+  const loginEventToken = await createLoginEvent(payload.payload, aud)
   const url = resService.rows[0].events_uri
-  return axios.post(url, loginEventToken, { headers })
+  await axios.post(url, loginEventToken, { headers: { 'content-type': 'application/jwt' } })
+
+  res.sendStatus(200)
 }
 
 async function connectionResponse ({ header, payload }, res, next) {
@@ -75,7 +73,7 @@ async function connectionResponse ({ header, payload }, res, next) {
     const connectionEventToken = await createConnectionEvent(aud, payload.payload)
     const url = resService.rows[0].events_uri
 
-    axios.post(url, connectionEventToken, { headers })
+    await axios.post(url, connectionEventToken, { headers: { 'content-type': 'application/jwt' } })
 
     // Add connection to db
     const connectionSql = connectionInsert({
