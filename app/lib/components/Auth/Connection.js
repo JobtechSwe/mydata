@@ -1,19 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { H1, Paragraph } from '../typography/Typography'
 import { PrimaryButton, SecondaryButton } from '../elements/Button/Button'
 import { Wrap } from '../View/Wrapper'
-import { initRegistration, approveConnection } from '../../services/auth'
+import { approveConnection } from '../../services/auth'
 
-const Register = ({ authenticationRequest, onApprove }) => {
-  const [connectionRequest, setConnectionRequest] = useState({})
-  useEffect(() => {
-    initRegistration(authenticationRequest)
-      .then(payload => {
-        setConnectionRequest(payload)
-      }).catch(err => {
-        console.error(err)
-      })
-  }, [])
+const Connection = ({ connectionRequest, onApprove }) => {
 
   const onApproveConnection = async () => {
     await approveConnection(connectionRequest)
@@ -36,7 +27,7 @@ const Register = ({ authenticationRequest, onApprove }) => {
   )
 }
 
-export default Register
+export default Connection
 
 // export default class RegisterScreen extends React.Component {
 //   state = {

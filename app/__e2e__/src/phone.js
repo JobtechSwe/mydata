@@ -30,16 +30,12 @@ export const clearStorage = async () => {
   return AsyncStorage.clear()
 }
 
-export const connectOrLogin = async ({ code }) => {
+export const handleAuthCode = async ({ code }) => {
   const token = parse(code)
-  const { payload, hasConnection } = await handle(token)
-  if (hasConnection) {
-    // TODO: LOGIN
-  } else {
-    const connectionRequest = await auth.initRegistration(payload)
-    await approveConnection(connectionRequest)
-  }
+  return handle(token)
 }
+
+export const approveConnection = auth.approveConnection
 
 export const getAllConsents = consents.getAll
 
@@ -59,5 +55,3 @@ export async function getConfig () {
 }
 
 export const getConnections = storage.getConnections
-
-export const approveConnection = auth.approveConnection

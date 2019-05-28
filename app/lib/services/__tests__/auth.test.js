@@ -1,4 +1,4 @@
-import { initRegistration } from '../auth'
+import { initConnection } from '../auth'
 import { getAccount } from '../account'
 import axios from 'axios'
 import { RSA } from 'react-native-rsa-native'
@@ -34,7 +34,7 @@ describe('auth', () => {
     getAccount.mockResolvedValue(account)
   })
 
-  describe('#initRegistration', () => {
+  describe('#initConnection', () => {
     it('posts to correct url with correct content type', async () => {
       const authRequest = {
         aud: 'mydata://account',
@@ -47,7 +47,7 @@ describe('auth', () => {
         type: 'AUTHENTICATION_REQUEST',
       }
 
-      await initRegistration(authRequest)
+      await initConnection(authRequest)
 
       expect(axios.post).toHaveBeenCalledWith('http://localhost:4000/events', 'this-is-a-jwt', { headers: { 'content-type': 'application/jwt' } })
     })

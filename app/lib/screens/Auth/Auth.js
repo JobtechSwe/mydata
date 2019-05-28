@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Scan, Register, Login } from '../../components/Auth'
+import { Scan, Connection, Login } from '../../components/Auth'
 import { handle } from '../../services/index'
 
 const AuthScreen = (props) => {
@@ -10,9 +10,9 @@ const AuthScreen = (props) => {
 
   const onScan = async token => {
     try {
-      const { payload, hasConnection } = await handle(token)
-      const view = hasConnection ? 'login' : 'register'
-      setState({ view, authenticationRequest: payload })
+      const { connectionRequest } = await handle(token)
+      const view = connectionRequest ? 'connection' : 'login'
+      setState({ view, connectionRequest })
     }
     catch (error) {
       console.error('foo', error)
@@ -42,10 +42,10 @@ const AuthScreen = (props) => {
           onError={onError}
         />
       )
-    case 'register':
+    case 'connection':
       return (
-        <Register
-          authenticationRequest={state.authenticationRequest}
+        <Connection
+          connectionRequest={state.connectionRequest}
           onApprove={onApprove}
           onCancel={onCancel}
         />

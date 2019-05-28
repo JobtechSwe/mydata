@@ -32,11 +32,14 @@ describe('Authentication', () => {
     const connectionsBefore = await phone.getConnections()
     expect(connectionsBefore).toEqual([])
 
-    // Auth url -> phone -> service
+    // Auth url flowes from service -> phone -> service -> phone
     const { url } = await client.initializeAuthentication()
+    const { connectionRequest } = await phone.handleAuthCode({ code: url })
 
-    // User presses yes
-    await phone.connectOrLogin({ code: url })
+    // Approve it!
+    await phone.approveConnection(connectionRequest)
+
+    // Get connections again
     const connectionsAfter = await phone.getConnections()
 
     // After state, expect one new connection

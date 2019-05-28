@@ -16,9 +16,9 @@ const call = method =>
 module.exports = {
   createAccount: call('createAccount'),
   clearAccount: call('clearAccount'),
+  clearStorage: call('clearStorage'),
   setConfig: call('setConfig'),
-  connectOrLogin: call('connectOrLogin'),
   getConnections: call('getConnections'),
-  approveConnection: call('approveConnection'),
-  clearStorage: call('clearStorage')
+  handleAuthCode: call('handleAuthCode'),
+  approveConnection: call('approveConnection')
 }

@@ -64,6 +64,10 @@ Cypress.Commands.add('getConnections', (args) => {
   return callMethod('getConnections', args)
 })
 
-Cypress.Commands.add('connectOrLogin', (args) => {
-  return callMethod('connectOrLogin', args)
+Cypress.Commands.add('handleAuthCode', (args) => {
+  return callMethod('handleAuthCode', args)
+})
+
+Cypress.Commands.add('approveConnection', (args) => {
+  return callMethod('approveConnection', args)
 })

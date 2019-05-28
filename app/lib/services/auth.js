@@ -5,13 +5,22 @@ import axios from 'axios'
 import { createConnectionInit, createConnection, createConnectionResponse } from './tokens'
 import { v4 } from 'uuid'
 
-export const authenticationRequestHandler = async ({ payload, header }) => {
+export const authenticationRequestHandler = async ({ payload }) => {
   const existingConnections = await getConnections()
   const hasConnection = existingConnections.includes(payload.iss)
-  return { payload, header, hasConnection }
+
+  if (hasConnection) {
+    // Create LOGIN
+    console.log('existingConnections', existingConnections)
+    throw Error('LOGIN NOT IMPLEMENTED')
+  } else {
+    //  Init Registration and return CONNECTION_REQUEST
+    const connectionRequest = await initConnection(payload)
+    return { connectionRequest }
+  }
 }
 
-export const initRegistration = async authRequest => {
+export const initConnection = async authRequest => {
   const registrationInit = await createConnectionInit(authRequest)
   try {
     const { data } = await axios.post(authRequest.eventsURI, registrationInit, { headers: { 'content-type': 'application/jwt' } })
