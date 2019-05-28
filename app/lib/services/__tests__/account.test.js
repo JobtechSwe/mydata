@@ -1,29 +1,15 @@
 import * as accountService from '../account'
 import axios from 'axios'
-import { RSA } from 'react-native-rsa-native'
 import Config from 'react-native-config'
 import AsyncStorage from '@react-native-community/async-storage'
-import pem2jwk from 'simple-pem2jwk'
+import { generateTestAccount } from './_helpers'
 
 Config.OPERATOR_URL = 'aTotallyLegitOperatorUrl'
 
 describe('account', () => {
   let account
   beforeEach(async () => {
-    const keys = await RSA.generateKeys(1024)
-    account = {
-      id: 'abc123',
-      firstName: 'Foo',
-      lastName: 'Bar',
-      pds: {
-        provider: 'dropbox',
-        access_token: 'abc',
-      },
-      keys: {
-        publicKey: pem2jwk(keys.public, { use: 'sig' }),
-        privateKey: pem2jwk(keys.private),
-      },
-    }
+    account = await generateTestAccount()
   })
 
   describe('#register', () => {

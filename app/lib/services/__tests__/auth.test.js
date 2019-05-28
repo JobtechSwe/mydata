@@ -1,8 +1,7 @@
 import { initConnection } from '../auth'
 import { getAccount } from '../account'
 import axios from 'axios'
-import { RSA } from 'react-native-rsa-native'
-import pem2jwk from 'simple-pem2jwk'
+import { generateTestAccount } from './_helpers'
 
 jest.mock('../account', () => ({
   getAccount: jest.fn(),
@@ -22,14 +21,7 @@ describe('auth', () => {
   let account
 
   beforeAll(async () => {
-    const keys = await RSA.generateKeys(1024)
-    account = {
-      id: 'foo',
-      keys: {
-        privateKey: pem2jwk(keys.private),
-        publicKey: pem2jwk(keys.public, { use: 'sig' }),
-      },
-    }
+    account = generateTestAccount()
 
     getAccount.mockResolvedValue(account)
   })
