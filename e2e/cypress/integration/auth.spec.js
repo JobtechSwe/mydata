@@ -47,7 +47,7 @@ describe('Auth flow for example/cv', () => {
       .then(res => {
         const url = res[0].getAttribute('data-consent-request-url')
         return cy.handleAuthCode({ code: url })
-          .then(({ connectionRequest }) => cy.approveConnection(connectionRequest))
+          .then(({ connectionRequest, sessionId }) => cy.approveConnection({ connectionRequest, sessionId }))
       })
 
     cy

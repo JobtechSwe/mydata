@@ -44,7 +44,10 @@ function Login(props) {
 
   const approve = async () => {
     updateState({ ...currentState, view: 'approving' })
-    approveLogin(props.existingConnection, props.sessionId)
+    approveLogin({
+      connection: props.existingConnection,
+      sessionId: props.sessionId,
+    })
     props.onApprove()
   }
 

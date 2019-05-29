@@ -1,9 +1,9 @@
 const axios = require('axios')
-const baseUrl = 'http://localhost:1337'
+const appServerUrl = process.env.APP_SERVER_URL || 'http://localhost:1337'
 
 const call = method =>
   args => axios
-    .post(`${baseUrl}/${method}`, { args })
+    .post(`${appServerUrl}/${method}`, { args })
     .then(res => res.data)
     .catch(err => {
       console.error('Phone server responded with error:')

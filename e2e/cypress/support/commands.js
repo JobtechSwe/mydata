@@ -24,10 +24,12 @@
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
+const appServerUrl = Cypress.env('APP_SERVER_URL') || 'http://localhost:1337'
+
 function callMethod (method, args) {
   return cy
     .request({
-      url: `http://localhost:1337/${method}`,
+      url: `${appServerUrl}/${method}`,
       method: 'POST',
       body: {
         args
