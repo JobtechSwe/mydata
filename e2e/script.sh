@@ -88,6 +88,7 @@ npm --prefix ../operator start &
 OPERATOR_PID=$!
 
 # Start app server
+npm --prefix ../app run e2e:build
 PORT=1338 \
 OPERATOR_URL=http://localhost:3001/api \
 npm --prefix ../app run e2e:start &
