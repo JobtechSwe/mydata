@@ -14,11 +14,11 @@ if (!process.env.OPERATOR_URL) {
 const app = express()
 app.use(json())
 app.post('/:method', async ({ body = {}, params: { method } }, res, next) => {
-  if (body.args) {
-    console.info(`CALL: ${method} with args`, body.args)
-  } else {
-    console.info(`CALL: ${method}`)
-  }
+  // if (body.args) {
+  //   console.info(`CALL: ${method} with args`, body.args)
+  // } else {
+  //   console.info(`CALL: ${method}`)
+  // }
 
   try {
     const result = await phone[method](body.args)
@@ -30,7 +30,7 @@ app.post('/:method', async ({ body = {}, params: { method } }, res, next) => {
 
 app.use((error, req, res, _) => {
   const { status, message, stack } = error
-  console.error(error)
+  console.error(`${status}: ${message}`)
   res.status(status || 500).send({ message, stack })
 })
 

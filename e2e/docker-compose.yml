@@ -4,6 +4,8 @@ services:
     image: redis:4.0-alpine
     environment:
       - REDIS_PASSWORD=fubar
+    ports:
+      - 6381:6379
     command: sh -c 'redis-server --requirepass $${REDIS_PASSWORD}'
 
   operator-postgres:
@@ -22,80 +24,10 @@ services:
       timeout: 5s
       retries: 5
 
-  operator:
-    image: node:12-alpine
-    user: ${DC_U}:${DC_G}
-    volumes:
-      - ./../operator:/app
-      - ./../messaging:/messaging
-    ports:
-      - 3001:3000
-    environment:
-      - PGHOST=operator-postgres
-      - PGPORT=5432
-      - REDIS=redis://:fubar@operator-redis:6379/
-      - DATABASE_URL=postgres://postgresuser:postgrespassword@operator-postgres:5432/mydata
-      - NODE_ENV=development
-      - APM_SERVER=
-    depends_on:
-     - operator-postgres
-     - operator-redis
-    working_dir: /app
-    command: sh -c 'node wait-for-postgres && npm run migrate up && npm run start:watch'
-
   cv-redis:
     image: redis:4.0-alpine
     environment:
       - REDIS_PASSWORD=fubar
+    ports:
+      - 6382:6379
     command: sh -c 'redis-server --requirepass $${REDIS_PASSWORD}'
-
-  cv:
-    image: node:12-alpine
-    user: ${DC_U}:${DC_G}
-    volumes:
-      - ./../:/app
-    ports:
-      - 4001:4000
-    environment:
-      - REDIS=redis://:fubar@cv-redis:6379/
-      - NODE_ENV=development
-      - CLIENT_ID=http://cv:4000
-      - OPERATOR_URL=http://operator:3000
-      - "PUBLIC_KEY=-----BEGIN RSA PUBLIC KEY-----\nMIGJAoGBAMinl3TDhzy/hZr+2ZrUMwveG+1eawsHqxUXOsdqARKfsBHTRYFPr+GW\nff9iNezU5yBBORtc/jVnPwto/lBhn2+jLCtcPuK5od8AEeiWGJbfL2np8P0/qg0O\n80qhLrMU47uuoEdTe9mbnB8A+N4OrC2WhPBj3zd9yAp1zLNPOk6NAgMBAAE=\n-----END RSA PUBLIC KEY-----\n"
-      - "PRIVATE_KEY=-----BEGIN RSA PRIVATE KEY-----\nMIICXgIBAAKBgQDIp5d0w4c8v4Wa/tma1DML3hvtXmsLB6sVFzrHagESn7AR00WB\nT6/hln3/YjXs1OcgQTkbXP41Zz8LaP5QYZ9voywrXD7iuaHfABHolhiW3y9p6fD9\nP6oNDvNKoS6zFOO7rqBHU3vZm5wfAPjeDqwtloTwY983fcgKdcyzTzpOjQIDAQAB\nAoGBALGfGYV1KJvv9jdUbhCO03kn7pTbReqHqTyMSa4I+lYgId5FpXtorQsHCxYt\nPAsgFFELK6A7W5SuhrJ1CNri8Bxzh/7gYyj7njBTsjNfuoiK3cIkZBoTvY9K/OB+\nzinNKibWf3SZv9l1qFkaJvaC/+R5DMLb9RXUiWJbhOHqTThJAkEA5i5IOpmUmDl1\nHkYaf1cHbmCdnuQHI1YTlANAk/QsAdzfExK6tsTgIqSq5qd+Q38xtZJQrTvTT6p7\nJX+WQflunwJBAN8pdOrdr1tr1o8m958uLs33zjLk75ScnL+tqlCFEtZTVZWIXScB\n9YVZff5yYONfkuDK0kw631UMSxSA14vL71MCQQCbb+WWrN+LbEGKkAyUsVBzWQsX\noSSw2A+ghBG318tf9qctWhh8E7bHris6VyEMs3f+BTA1y5CG27kNOXteUfJBAkEA\n2QQDwvLaONlhycxnOdE7iujVCQFBSxASDwTff3Ypn2ti6wu1Kt3o2UjyEaNBPVwQ\nBbK3V5JY5OgTi1jQRA6KKQJAQiTQR1sA2xiUhYwF6K4hnojGW1Ew0ZBLND+APkej\nufcVAF5yh+ACYQPUMrgNwgcHFshCEJ9cpePZMotVy7zSFQ==\n-----END RSA PRIVATE KEY-----\n"
-      - APM_SERVER=
-    working_dir: /app/examples/cv
-    depends_on:
-     - operator-postgres
-     - operator-redis
-    command: sh -c 'npm start'
-
-  national-registration:
-    image: node:12-alpine
-    user: ${DC_U}:${DC_G}
-    volumes:
-      - ./../examples/national-registration:/app
-    ports:
-      - 5001:5000
-    environment:
-      - NODE_ENV=development
-      - PORT=5000
-      - CLIENT_ID=http://national-registration:5000
-      - OPERATOR_URL=http://operator:3000
-      - APM_SERVER=
-      - "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv/MgNZvi0YRhA0FePG6t\ne32qMz37tD1t6mKeVolt6OZt6pblbCIfIW7J99jyKy3Zk2aZF/Eerr86qjKFwGro\nAmGT4VN7bEtHOFnpj4jFf3wvo7weyRHBIh9rc5LJtZ8k1MWYGDqxT/H835ZhxMrI\niUHPVLB6JKhEBk1h8gHSJdH574T8ZNc4jrMgapOgCJqzP7OSpOEus3nRfv9vKMD8\nRGESJukNwj0Vxf4FlkuqPGhsp6ImRPKnvdCPnfInx2IEcgS3UU7sV6B7k14lzepl\n313KzFpbrS1qXbuEhwLsvIthNKqA5C/YOpiJz7NlC+sOQw8QxMLfTq9WmSuQ4HKn\n6QIDAQAB\n-----END PUBLIC KEY-----\n"
-      - "PRIVATE_KEY=-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC/8yA1m+LRhGED\nQV48bq17faozPfu0PW3qYp5WiW3o5m3qluVsIh8hbsn32PIrLdmTZpkX8R6uvzqq\nMoXAaugCYZPhU3tsS0c4WemPiMV/fC+jvB7JEcEiH2tzksm1nyTUxZgYOrFP8fzf\nlmHEysiJQc9UsHokqEQGTWHyAdIl0fnvhPxk1ziOsyBqk6AImrM/s5Kk4S6zedF+\n/28owPxEYRIm6Q3CPRXF/gWWS6o8aGynoiZE8qe90I+d8ifHYgRyBLdRTuxXoHuT\nXiXN6mXfXcrMWlutLWpdu4SHAuy8i2E0qoDkL9g6mInPs2UL6w5DDxDEwt9Or1aZ\nK5DgcqfpAgMBAAECggEBAKmQdvWknbwEO0cK6dps0yfyHPZjXQUd9wlE0ScVBFjn\nplXDsyvRALsiCZy+sz9do4TI75js0fQAziwnsWwHhKkF1gMJIlDKN0Iae27mncE+\nzT7RIkjxPDGOm/dexn2A9qJXY0KUJqq+1GoXiIq1sG1AC41+0IetdVoz5cBJx4DL\n8n8RuRHdayMGYovhidxZIzNsD4ClBTHIpXg04PKgzd6zGfD3rqPrmPauPcoqWPKB\nzFL2LdFvN2t60Zw94AnfXN7khTxd2c1017B2aFr0HGog8kn+sWPqc/45Uc7sBusz\nZWCgQR5VTZ48mfaNDMky0pG2DBjQTXNp+fsRXU+HJZkCgYEA7Ph+WWXQfOPNWgCh\nSLmC3G9ct0CQLJ/FTYyWD2wwC85tPQCNjeCuphUX8OkYmpq3jlXkmc0d6VqMBDDE\nex8THpfJ1w7SIN5EVHE4REF6Kvjq3auv3LXj1KWvkCEOV03knyLIbY8T1xoKhkyK\nx+uFKE0CQaAbtqDTgqd5m74v4EsCgYEAz10eAFN7YLChY2OkA1sSbcGnMITHjyzp\nGEU/3XqsKHzz0ikMLoLx5eU0Rm4AXSAnOHyfHSmRcGIAhcVION4Lo0sUM6S8mgpi\nwQtSY1VbgxBqVAwHeRdNcO0Knn9z4Z/iFpbnT+jXpHbi7jYkjrOIgUFH9P2Y4ki9\n50EWn9ByABsCgYEAs6jmajLF8Znoe78UiIWVUDjiC1FYvWxYcyYOMx0sBBd6PJCp\nwZJB90rwvsaKz9RTLAe07GJVtjDfDOJIZKw3m68q6PCkoSTCm17HcQBPdjsIHg3n\npCcG15bSVyyoqco1de0yFdYvDZsBtbZcVZwbdWWFO2n++ORP17PPgCOeOqcCgYAC\neJyb6mLFAzXZJl3VAGfW0QD6DgsGxMU+WczqCcU1ck/BiGWxxDO3xqR51mPAuFpf\nTPTkdxNZoIFbFr/GlbbTylhCSUtKFqeYn1brAiBmDnMF72LDaaitmNWQj/pEjRA3\nrrKw/BhdyGDp79E9thwBVlLSM5d30uAYemkXnHdPUwKBgQC1qURMS8K6tZdpxOcP\nn3SXm+kzQ6l8uTzUCa7OtokwzteG0wgbq211eUwHz/w5ZWm5WELEN/pYoIbiIQ0Y\nCmx4cdQdj30a+bIj3gKb9ZNxZobY5Fwu/YlsntG47kJLzIVBe/Pb+OQnE93ayD1c\nDNGvM0BRQBe5Q4QKhecExBAIGw==\n-----END PRIVATE KEY-----\n"
-
-  app:
-    image: node:12-alpine
-    user: ${DC_U}:${DC_G}
-    volumes:
-      - ./../app:/app
-    working_dir: /app
-    ports:
-      - 1338:1337
-    depends_on:
-      - operator
-    environment:
-      - OPERATOR_URL=http://operator:3000/api
-    command: npm run e2e:server
