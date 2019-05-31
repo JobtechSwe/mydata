@@ -49,7 +49,7 @@ export const approveLogin = async ({ connection, sessionId }) => {
     await axios.post(Config.OPERATOR_URL, loginResponse,
       { headers: { 'content-type': 'application/jwt' } })
   } catch (error) {
-    console.log('error', error)
+    console.error('error', error)
     throw Error('Could not approve Login')
   }
 }
