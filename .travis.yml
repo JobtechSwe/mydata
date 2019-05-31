@@ -23,6 +23,7 @@ jobs:
     - chmod +x docker-compose
     - sudo mv docker-compose /usr/local/bin
     - if ! [ -x "$(command -v lerna)" ]; then npm install -g lerna; fi
+    - apt-get install libgconf-2-4
     install:
     - docker load -i ~/.cache/docker/node.tar || true
     - docker load -i ~/.cache/docker/redis.tar || true

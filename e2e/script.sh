@@ -1,12 +1,13 @@
 #!/bin/sh
 echo '**** Running script for e2e & integration tests ****'
-export DC_U=`id -u`
-export DC_G=`id -g`
+export DC_U=$(id -u)
+export DC_G=$(id -g)
 
 cleanup() {
   echo "Killing processes $APP_SERVER_PID, $CV_PID and $OPERATOR_PID"
   kill "$APP_SERVER_PID" "$CV_PID" "$OPERATOR_PID"
 
+  sleep 2
   docker-compose down
   echo 'Docker containers are down'
   exit 0
@@ -83,7 +84,7 @@ HOST=http://localhost:3001 \
 PORT=3001 \
 REDIS=redis://:fubar@localhost:6381/ \
 NODE_ENV=development \
-APM_SERVER= \
+APM_SERVER='' \
 npm --prefix ../operator start &
 OPERATOR_PID=$!
 
@@ -91,6 +92,7 @@ OPERATOR_PID=$!
 npm --prefix ../app run e2e:build
 PORT=1338 \
 OPERATOR_URL=http://localhost:3001/api \
+NODE_ENV=development \
 npm --prefix ../app run e2e:start &
 APP_SERVER_PID=$!
 
@@ -99,7 +101,7 @@ REDIS=redis://:fubar@localhost:6382/ \
 CLIENT_ID=http://localhost:4001 \
 PORT=4001 \
 OPERATOR_URL=http://localhost:3001 \
-APM_SERVER= \
+APM_SERVER='' \
 npm --prefix ../examples/cv start &
 CV_PID=$!
 
@@ -111,9 +113,13 @@ waitfor http://localhost:4001/health
 # Run cypress e2e tests for /examples
 echo 'Running cypress e2e tests for /examples'
 CYPRESS_baseUrl=http://localhost:4001 CYPRESS_APP_SERVER_URL=http://localhost:1338 npm run cypress
+EXIT_CODE=$?
 
 # Run jest integration tests
 echo 'Running jest integration tests'
 OPERATOR_PGPORT=5435 OPERATOR_URL=http://localhost:3001 APP_SERVER_URL=http://localhost:1338 npm run jest
+if [ $EXIT_CODE = 0 ]; then
+  EXIT_CODE=$?
+fi
 
 cleanup
