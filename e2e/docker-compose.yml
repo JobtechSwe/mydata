@@ -27,6 +27,7 @@ services:
     user: ${DC_U}:${DC_G}
     volumes:
       - ./../operator:/app
+      - ./../messaging:/messaging
     ports:
       - 3001:3000
     environment:
@@ -92,7 +93,7 @@ services:
       - ./../app:/app
     working_dir: /app
     ports:
-      - 1337:1337
+      - 1338:1337
     depends_on:
       - operator
     environment:

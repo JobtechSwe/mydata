@@ -2,7 +2,7 @@ import ConsentModal from './ConsentModal'
 import ConsentRequest from './ConsentRequest'
 import Scan from './Scan'
 import ScanQRCode from './ScanQRCode'
-import Register from './Register'
+import Connection from './Connection'
 import Login from './Login'
 
 export {
@@ -10,6 +10,6 @@ export {
   ConsentRequest,
   Scan,
   ScanQRCode,
-  Register,
+  Connection,
   Login,
 }

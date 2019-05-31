@@ -1,35 +1,22 @@
-import { sign, verify } from './jwt'
-import { getAccount } from './account'
-import { getConnections } from './storage'
+import { verify } from './jwt'
+import { getConnections, storeConnection } from './storage'
 import Config from 'react-native-config'
 import axios from 'axios'
+import { createConnectionInit, createConnection, createConnectionResponse, createLogin, createLoginResponse } from './tokens'
 import { v4 } from 'uuid'
 
-const nowSeconds = () => Math.round(Date.now() / 1000)
-
-const createConnectionInit = async ({ aud, iss, sid }) => {
-  const { keys } = await getAccount()
-
-  const now = nowSeconds()
-  const jwt = await sign({
-    type: 'CONNECTION_INIT',
-    aud: iss,
-    iss: aud,
-    sid,
-    iat: now,
-    exp: now + 60,
-  }, keys.privateKey, { jwk: keys.publicKey, alg: 'RS256' })
-
-  return jwt
+export const authenticationRequestHandler = async ({ payload }) => {
+  const allConnections = await getConnections()
+  const existingConnection = allConnections.find(x => x.serviceId === payload.iss)
+  if (existingConnection) {
+    return { existingConnection, sessionId: payload.sid }
+  } else {
+    const connectionRequest = await initConnection(payload)
+    return { connectionRequest, sessionId: payload.sid }
+  }
 }
 
-export const authenticationRequestHandler = async ({ payload, header }) => {
-  const existingConnections = await getConnections()
-  const hasConnection = existingConnections.includes(payload.iss)
-  return { payload, header, hasConnection }
-}
-
-export const initRegistration = async authRequest => {
+export const initConnection = async authRequest => {
   const registrationInit = await createConnectionInit(authRequest)
   try {
     const { data } = await axios.post(authRequest.eventsURI, registrationInit, { headers: { 'content-type': 'application/jwt' } })
@@ -41,34 +28,28 @@ export const initRegistration = async authRequest => {
   }
 }
 
-export const approveConnection = async ({ sid, iss }) => {
-  const { keys, id } = await getAccount()
-
-  // ...
+export const approveConnection = async (connectionRequest) => {
   const connectionId = v4()
-  const connection = await sign({
-    type: 'CONNECTION',
-    aud: iss,
-    iss: 'mydata://account',
-    sub: connectionId,
-    sid,
-  }, keys.privateKey,
-    {
-      jwk: keys.publicKey,
-      alg: 'RS256',
-    })
-
-  const connectionResponse = await sign({
-    type: 'CONNECTION_RESPONSE',
-    aud: Config.OPERATOR_URL,
-    iss: `mydata://account/${id}`,
-    payload: connection,
-  }, keys.privateKey,
-    {
-      jwk: keys.publicKey,
-      alg: 'RS256',
-    })
+  const connection = await createConnection(connectionRequest, connectionId)
+  const connectionResponse = await createConnectionResponse(connection)
 
   await axios.post(Config.OPERATOR_URL, connectionResponse,
     { headers: { 'content-type': 'application/jwt' } })
+
+  await storeConnection({
+    serviceId: connectionRequest.iss,
+    connectionId,
+  })
+}
+
+export const approveLogin = async ({ connection, sessionId }) => {
+  try {
+    const login = await createLogin(connection, sessionId)
+    const loginResponse = await createLoginResponse(login)
+    await axios.post(Config.OPERATOR_URL, loginResponse,
+      { headers: { 'content-type': 'application/jwt' } })
+  } catch (error) {
+    console.error('error', error)
+    throw Error('Could not approve Login')
+  }
 }

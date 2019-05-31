@@ -3,8 +3,11 @@ const { v4Regexp } = require('./helpers/regexp')
 const { clearOperatorDb } = require('./helpers/operatorPostgres')
 
 describe('Account', () => {
+  beforeAll(async () => {
+    await phone.clearStorage()
+  })
   afterAll(async () => {
-    await phone.clearAccount()
+    await phone.clearStorage()
     await clearOperatorDb()
   })
 

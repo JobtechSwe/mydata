@@ -1,18 +1,17 @@
 import React, { useState } from 'react'
-import { Scan, Register, Login } from '../../components/Auth'
+import { Scan, Connection, Login } from '../../components/Auth'
 import { handle } from '../../services/index'
 
 const AuthScreen = (props) => {
   const [state, setState] = useState({
     view: (props && props.view) || 'scan',
-    authenticationRequest: undefined,
   })
 
   const onScan = async token => {
     try {
-      const { payload, hasConnection } = await handle(token)
-      const view = hasConnection ? 'login' : 'register'
-      setState({ view, authenticationRequest: payload })
+      const { connectionRequest, existingConnection, sessionId } = await handle(token)
+      const view = existingConnection ? 'login' : 'connection'
+      setState({ view, connectionRequest, existingConnection, sessionId })
     }
     catch (error) {
       console.error('foo', error)
@@ -36,16 +35,17 @@ const AuthScreen = (props) => {
     case 'login':
       return (
         <Login
-          code={state.code}
+          existingConnection={state.existingConnection}
+          sessionId={state.sessionId}
           onApprove={onApprove}
           onCancel={onCancel}
           onError={onError}
         />
       )
-    case 'register':
+    case 'connection':
       return (
-        <Register
-          authenticationRequest={state.authenticationRequest}
+        <Connection
+          connectionRequest={state.connectionRequest}
           onApprove={onApprove}
           onCancel={onCancel}
         />

@@ -1,21 +1,13 @@
 const { Router } = require('express')
-const { generateScope } = require('./../services/scope')
 const { getPerson } = require('./../services/person')
 const QRCode = require('qrcode')
-
-const unixNow = () => Math.floor(new Date() / 1000)
 
 module.exports = client => {
   const router = Router()
 
   router.get('/', async (req, res, next) => {
     if (!req.cookies.consentRequest) {
-      const consentRequest = {
-        scope: generateScope(client.config.clientId),
-        expiry: unixNow() + 24 * 3600
-      }
-
-      const { id, url } = await client.consents.request(consentRequest)
+      const { id, url } = await client.initializeAuthentication()
       const qr = await QRCode.toString(url, { type: 'svg' })
       return res.json({
         id,

@@ -1,13 +1,11 @@
 import * as storage from '../storage'
 import AsyncStorage from '@react-native-community/async-storage'
+import { generateTestAccount } from './_helpers'
 
 describe('storage', () => {
   let account
-  beforeEach(() => {
-    account = {
-      firstName: 'Foo',
-      lastName: 'Bar',
-    }
+  beforeEach(async () => {
+    account = await generateTestAccount()
   })
 
   describe('#storeAccountId', () => {

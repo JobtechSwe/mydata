@@ -4,12 +4,11 @@ export async function storeAccount (account) {
   await AsyncStorage.setItem('account', account ? JSON.stringify(account) : '')
 }
 
-export const getConnections = async () => {
-  const connections = await AsyncStorage.getItem('connections')
-  return connections || []
-}
+export const getConnections = () => AsyncStorage
+    .getItem('connections')
+    .then(res => res ? JSON.parse(res) : [])
 
-export const storeConnection = async (connection) => {
+export const storeConnection = async ({ serviceId, connectionId }) => {
   const existingConnections = await getConnections()
-  return AsyncStorage.setItem('connections', [ ...existingConnections, connection ])
+  return AsyncStorage.setItem('connections', JSON.stringify([ ...existingConnections, { serviceId, connectionId } ]))
 }

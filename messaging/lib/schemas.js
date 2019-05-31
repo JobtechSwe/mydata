@@ -170,7 +170,8 @@ const CONNECTION_EVENT = Joi.object({
 const LOGIN = Joi.object({
   ...JWT_DEFAULTS,
   type: 'LOGIN',
-  sid: Joi.string().required()
+  sid: Joi.string().required(),
+  sub: Joi.string().uuid({ version: 'uuidv4' }).required()
 }).required()
 
 // device -> operator

@@ -2,7 +2,7 @@ const v4Regexp = /[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-
 
 describe('Auth flow for example/cv', () => {
   beforeEach(() => {
-    cy.clearAccount()
+    cy.clearStorage()
 
     cy.window().then(win => {
       win.sessionStorage.clear()
@@ -30,7 +30,7 @@ describe('Auth flow for example/cv', () => {
     cy.visit('/')
   })
 
-  it('New connection: Profile page is loaded when connection is approved', () => {
+  it('Auth flow for new connection', () => {
     cy
       .createAccount({ firstName: 'Johan', lastName: 'Öbrink' })
 
@@ -46,12 +46,15 @@ describe('Auth flow for example/cv', () => {
       .get('#qrcode')
       .then(res => {
         const url = res[0].getAttribute('data-consent-request-url')
-        return cy.handleCode({ code: url })
+        return cy.handleAuthCode({ code: url })
+          .then(({ connectionRequest, sessionId }) => cy.approveConnection({ connectionRequest, sessionId }))
       })
 
-    // TODO: Reimplement when data read works or something...
-    // cy
-    //   .url()
-    //   .should('include', '/profile')
+    cy
+      .getConnections()
+      .then(res => {
+        expect(res[0].serviceId).to.match(/^http/)
+        expect(res[0].connectionId).to.be.a('string')
+      })
   })
 })

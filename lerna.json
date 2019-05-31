@@ -9,7 +9,8 @@
     "client",
     "e2e",
     "examples/*",
-    "operator"
+    "operator",
+    "messaging"
   ],
   "version": "independent",
   "ignoreChanges": [

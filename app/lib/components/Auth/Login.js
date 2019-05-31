@@ -1,5 +1,4 @@
-/* eslint-disable */
-import React from 'react'
+import React, { useState } from 'react'
 import { View } from 'react-native'
 import Modal from 'react-native-modal'
 import { Wrap, ScrollViewWrap } from '../View/Wrapper'
@@ -10,7 +9,8 @@ import {
   DenyConsentButton,
   ConsentButtonWrap,
 } from '../elements/Button/ConsentButton'
-import { Spinner } from '../elements/Spinner/Spinner'
+
+import { approveLogin } from '../../services/auth'
 
 const StyledModal = styled(Modal)`
   margin: 0;
@@ -36,33 +36,18 @@ const ScopeItemWrapper = styled(View)`
   margin-bottom: 24px;
 `
 
-function LoginRequest(props) {
-  const [currentState, updateState] = React.useState({
-    view: 'loading',
-    consent: undefined,
-    request: undefined,
-    modalVisible: false,
+function Login(props) {
+  const [currentState, updateState] = useState({
+    view: 'question',
+    modalVisible: true,
   })
-
-  const login = async () => {
-    try {
-      // const { consent, request } = await loginService.get(props.code)
-      updateState({ consent, request, view: 'approve', modalVisible: true })
-    } catch (error) {
-      updateState({ view: 'error', error })
-    }
-  }
-
-  React.useEffect(() => {
-    login()
-  }, [])
 
   const approve = async () => {
     updateState({ ...currentState, view: 'approving' })
-    // await loginService.approve({
-    //   ...currentState.request,
-    //   ...currentState.consent,
-    // })
+    approveLogin({
+      connection: props.existingConnection,
+      sessionId: props.sessionId,
+    })
     props.onApprove()
   }
 
@@ -71,18 +56,12 @@ function LoginRequest(props) {
   }
 
   const reject = () => {
-    updateState({ ...currentState, view: 'loading' })
+    updateState({ ...currentState, view: 'question' })
     props.onCancel()
   }
 
   switch (currentState.view) {
-    case 'loading':
-      return (
-        <Wrap>
-          <Spinner />
-        </Wrap>
-      )
-    case 'approve':
+    case 'question':
       return (
         <Wrap>
           <StyledModal
@@ -106,7 +85,7 @@ function LoginRequest(props) {
               >
                 <ScopeItemWrapper style={{ marginBottom: 24 }}>
                   <H3>Vill du logga in på:</H3>
-                  <Paragraph small>{currentState.request.clientId}</Paragraph>
+                  <Paragraph small>{props.existingConnection.serviceId}</Paragraph>
                 </ScopeItemWrapper>
               </ScrollViewWrap>
               <ConsentButtonWrap
@@ -160,4 +139,4 @@ function LoginRequest(props) {
   }
 }
 
-export default LoginRequest
+export default Login

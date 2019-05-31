@@ -7,6 +7,7 @@ import { PrimaryButton } from '../../components/elements/Button/Button'
 import { Wrap, ScrollViewWrap } from '../../components/View/Wrapper'
 import { storeAccount } from '../../services/storage'
 import { getAccount } from '../../services/account'
+import AsyncStorage from '@react-native-community/async-storage'
 
 function Settings({ navigation }) {
   const [account, setAccount] = React.useState()
@@ -22,6 +23,7 @@ function Settings({ navigation }) {
 
   const doClearAccount = async () => {
     await storeAccount()
+    AsyncStorage.removeItem('connections')
     setAccount(undefined)
     const { navigate } = navigation
     navigate('AuthLoading')
