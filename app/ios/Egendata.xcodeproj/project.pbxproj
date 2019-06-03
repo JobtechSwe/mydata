@@ -1701,7 +1701,7 @@
 				CODE_SIGN_ENTITLEMENTS = Egendata/Egendata.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 24;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = BSE2J6442R;
 				HEADER_SEARCH_PATHS = (
@@ -1724,7 +1724,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = work.mydata.ConsentApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.egendata.ios;
 				PRODUCT_NAME = Egendata;
 				PROVISIONING_PROFILE_SPECIFIER = "Egendata iOS";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1738,7 +1738,7 @@
 				CODE_SIGN_ENTITLEMENTS = Egendata/Egendata.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 24;
 				DEVELOPMENT_TEAM = BSE2J6442R;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1760,9 +1760,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = work.mydata.ConsentApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.egendata.ios;
 				PRODUCT_NAME = Egendata;
-				PROVISIONING_PROFILE_SPECIFIER = "Egendata iOS Distribution";
+				PROVISIONING_PROFILE_SPECIFIER = "Egendata iOS Distribution Profile";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
