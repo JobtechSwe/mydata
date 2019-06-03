@@ -81,23 +81,23 @@ const CONTENT_PATH = {
   area: Joi.string().required()
 }
 
-const PERMISSION = {
+const PERMISSION = Joi.object({
   ...CONTENT_PATH,
   id: Joi.string().uuid().required(),
   type: Joi.string().valid('READ', 'WRITE').required(),
   purpose: Joi.string(),
   description: Joi.string(),
-  lawfulBasis: LAWFUL_BASIS
-}
+  lawfulBasis: LAWFUL_BASIS,
+  jwk: JWK
+})
 
 // service -> operator
 const PERMISSION_REQUEST = Joi.object({
   ...JWT_DEFAULTS,
   type: 'PERMISSION_REQUEST',
-  permissions: Joi.array().items(Joi.object({
-    ...PERMISSION,
-    key: JWK
-  })).min(1).required(),
+  permissions: Joi.array().items(
+    PERMISSION
+  ).min(1).required(),
   sub: Joi.string().uuid(),
   sid: Joi.string().uuid({ version: 'uuidv4' }).required()
 }).required()
@@ -106,10 +106,9 @@ const PERMISSION_REQUEST = Joi.object({
 const CONNECTION_REQUEST = Joi.object({
   ...JWT_DEFAULTS,
   type: 'CONNECTION_REQUEST',
-  permissions: Joi.array().items(Joi.object({
-    ...PERMISSION,
-    key: JWK
-  })).min(1).optional(),
+  permissions: Joi.array().items(
+    PERMISSION
+  ).min(1).optional(),
   sid: Joi.string().uuid({ version: 'uuidv4' }).required(),
   displayName: Joi.string().required(),
   description: Joi.string().required(),
@@ -141,11 +140,9 @@ const CONNECTION = Joi.object({
   type: 'CONNECTION',
   sid: Joi.string().required(),
   sub: Joi.string().uuid({ version: 'uuidv4' }).required(),
-  permissions: Joi.array().items(Joi.object({
-    ...PERMISSION,
-    kid: Joi.string().uri(),
-    keys: Joi.array().items(JWK)
-  })).min(1).optional()
+  permissions: Joi.array().items(
+    PERMISSION
+  ).min(1).optional()
 }).required()
 
 // device -> operator
