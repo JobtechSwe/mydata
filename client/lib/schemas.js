@@ -21,9 +21,9 @@ const configSchema = Joi.object({
   }).required(),
   keyValueStore: keyValueStore.required(),
   keyOptions: Joi.object().optional(), // TODO: Describe key options
-  defaultPermissions: Joi.array().items(Joi.object({
-    ...PERMISSION
-  })).min(1).optional()
+  defaultPermissions: Joi.array().items(
+    PERMISSION
+  ).min(1).optional()
 })
 
 module.exports = {
