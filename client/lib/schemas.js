@@ -1,5 +1,5 @@
 const Joi = require('joi')
-const { schemas: { PERMISSION, JWK } } = require('@egendata/messaging')
+const { schemas: { PERMISSION } } = require('@egendata/messaging')
 
 const keyValueStore = Joi.object({
   load: Joi.func().required(),
