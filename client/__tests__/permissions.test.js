@@ -1,5 +1,6 @@
 const { JWK } = require('@panva/jose')
 const permissionsInit = require('../lib/permissions')
+const { schemas } = require('@egendata/messaging')
 
 describe('permissions', () => {
   let clientId, keyProvider, permissions, key
@@ -18,6 +19,14 @@ describe('permissions', () => {
     permissions = permissionsInit(client)
   })
   describe('#fromConfig', () => {
+    it('creates permissions that are consistent with the schema', async () => {
+      const configPermissions = [
+        { area: 'education', types: ['WRITE'], description: 'stuff' }
+      ]
+      const result = await permissions.fromConfig(configPermissions)
+
+      await Promise.all(result.map(x => schemas.PERMISSION.validate(x)))
+    })
     it('adds own domain, CONSENT and an id', async () => {
       const configPermissions = [
         { area: 'education', types: ['WRITE'], description: 'stuff' }
@@ -31,7 +40,7 @@ describe('permissions', () => {
           area: 'education',
           type: 'WRITE',
           description: 'stuff',
-          legalBasis: 'CONSENT'
+          lawfulBasis: 'CONSENT'
         }
       ])
     })
@@ -48,7 +57,7 @@ describe('permissions', () => {
           area: 'education',
           type: 'READ',
           purpose: 'stuff',
-          legalBasis: 'CONSENT',
+          lawfulBasis: 'CONSENT',
           jwk: key.toJWK()
         }
       ])
@@ -71,7 +80,7 @@ describe('permissions', () => {
           area: 'education',
           type: 'READ',
           purpose: 'stuff',
-          legalBasis: 'CONSENT',
+          lawfulBasis: 'CONSENT',
           jwk: key.toJWK()
         },
         {
@@ -80,7 +89,7 @@ describe('permissions', () => {
           area: 'education',
           type: 'WRITE',
           description: 'stuff',
-          legalBasis: 'CONSENT'
+          lawfulBasis: 'CONSENT'
         }
       ])
     })

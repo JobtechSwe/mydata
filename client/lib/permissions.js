@@ -7,7 +7,7 @@ const fromConfig = (clientId, keyProvider) => async (configPermissions) => {
         const permission = {
           id: v4(),
           domain: cp.domain || clientId,
-          legalBasis: cp.legalBasis || 'CONSENT',
+          lawfulBasis: cp.lawfulBasis || 'CONSENT',
           area: cp.area,
           type
         }

@@ -21,8 +21,14 @@ const configSchema = Joi.object({
   }).required(),
   keyValueStore: keyValueStore.required(),
   keyOptions: Joi.object().optional(), // TODO: Describe key options
-  defaultPermissions: Joi.array().items(
-    PERMISSION
+  defaultPermissions: Joi.array().items(Joi.object({
+    area: Joi.string().required(),
+    types: Joi.array().items(
+      Joi.string().valid('READ', 'WRITE').required()
+    ).required(),
+    purpose: Joi.string().optional(),
+    description: Joi.string().optional()
+  })
   ).min(1).optional()
 })
 
