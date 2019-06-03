@@ -85,8 +85,16 @@ const PERMISSION = Joi.object({
   ...CONTENT_PATH,
   id: Joi.string().uuid().required(),
   type: Joi.string().valid('READ', 'WRITE').required(),
-  purpose: Joi.string(),
-  description: Joi.string(),
+  purpose: Joi.alternatives()
+    .when('type', { is: 'READ',
+      then: Joi.string().required(),
+      otherwise: Joi.forbidden() }
+    ),
+  description: Joi.alternatives()
+    .when('type', { is: 'WRITE',
+      then: Joi.string().required(),
+      otherwise: Joi.forbidden() }
+    ),
   lawfulBasis: LAWFUL_BASIS,
   jwk: JWK
 })
