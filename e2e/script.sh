@@ -79,31 +79,39 @@ C8QryBR3Wo6wHAXgIQBnvKTHBXIBCboDc0s1y9U/wXwcIVBp/sJJ
 -----END RSA PRIVATE KEY-----"
 
 # Start operator
+cd ../operator || exit 2
 PGPORT=5435 \
 HOST=http://localhost:3001 \
 PORT=3001 \
 REDIS=redis://:fubar@localhost:6381/ \
 NODE_ENV=development \
 APM_SERVER='' \
-npm --prefix ../operator start &
+node ../operator/lib/server.js &
 OPERATOR_PID=$!
+cd ../e2e || exit 2
+
+# Build app server
+npm --prefix ../app run e2e:build
 
 # Start app server
-npm --prefix ../app run e2e:build
+cd ../app || exit 2
 PORT=1338 \
 OPERATOR_URL=http://localhost:3001/api \
 NODE_ENV=development \
-npm --prefix ../app run e2e:start &
+node __e2e__/dist/index.js &
 APP_SERVER_PID=$!
+cd ../e2e || exit 2
 
 # Start CV
+cd ../examples/cv || exit 2
 REDIS=redis://:fubar@localhost:6382/ \
 CLIENT_ID=http://localhost:4001 \
 PORT=4001 \
 OPERATOR_URL=http://localhost:3001 \
 APM_SERVER='' \
-npm --prefix ../examples/cv start &
+node server.js &
 CV_PID=$!
+cd ../../e2e || exit 2
 
 # Wait for operator, app-server and CV
 waitfor http://localhost:3001/health
