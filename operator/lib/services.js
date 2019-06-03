@@ -1,4 +1,5 @@
 /* eslint-disable */
+const createError = require('http-errors')
 const { query, multiple } = require('./adapters/postgres')
 const { verify } = require('./services/jwt')
 const { createConnectionEvent, createLoginEvent } = require('./services/tokens')
@@ -54,18 +55,28 @@ async function loginResponse ({ header, payload }, res, next) {
 async function connectionResponse ({ header, payload }, res, next) {
   try {
     const { iss } = payload
-    const { payload: { aud, sub } } = await verify(payload.payload)
+    let verified
+    try {
+      verified = await verify(payload.payload)
+    } catch (error) {
+      throw Error('Could not verify CONNECTION_RESPONSE payload')
+    }
+
+    const { payload: { aud, sub } } = verified
 
     const [resAccount, resService, resConnection] = await multiple(checkConnection({
       accountId: iss,
       serviceId: aud
-    }))
+    })).catch(err => {
+      console.error('Could not check connection', err)
+      throw err
+    })
 
     if (!resAccount.rows.length) {
-      throw new Error('No such account')
+      throw new Error(`No such account ${iss}`)
     }
     if (!resService.rows.length) {
-      throw new Error('No such service')
+      throw new Error(`No such service ${aud}`)
     }
     if (resConnection.rows.length) {
       throw new Error('Connection already exists')
@@ -73,7 +84,12 @@ async function connectionResponse ({ header, payload }, res, next) {
     const connectionEventToken = await createConnectionEvent(aud, payload.payload)
     const url = resService.rows[0].events_uri
 
-    await axios.post(url, connectionEventToken, { headers: { 'content-type': 'application/jwt' } })
+    try {
+      await axios.post(url, connectionEventToken, { headers: { 'content-type': 'application/jwt' } })
+    } catch (error) {
+      console.error((`Could not send token to ${url}`))
+      throw Error(`Could not send token to ${url}`)
+    }
 
     // Add connection to db
     const connectionSql = connectionInsert({
@@ -82,9 +98,9 @@ async function connectionResponse ({ header, payload }, res, next) {
       serviceId: aud
     })
     await query(...connectionSql)
-
     res.sendStatus(201)
   } catch (error) {
+    console.error('Could not handle connectionResponse', error)
     next(error)
   }
 }

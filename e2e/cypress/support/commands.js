@@ -73,3 +73,7 @@ Cypress.Commands.add('handleAuthCode', (args) => {
 Cypress.Commands.add('approveConnection', (args) => {
   return callMethod('approveConnection', args)
 })
+
+Cypress.Commands.add('approveLogin', (args) => {
+  return callMethod('approveLogin', args)
+})

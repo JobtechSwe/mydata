@@ -6,7 +6,7 @@
   "scripts": {
     "cypress": "cypress run",
     "cypress:open": "cypress open",
-    "jest:docker": "DOCKER=true OPERATOR_PGPORT=5435 jest --runInBand --verbose",
+    "jest": "jest --runInBand --verbose",
     "jest:local": "OPERATOR_URL=http://localhost:3000 OPERATOR_PGPORT=5432 jest --runInBand --verbose",
     "lint": "eslint '**/*.js'"
   },
