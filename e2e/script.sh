@@ -7,7 +7,7 @@ cleanup() {
   echo "Killing processes $APP_SERVER_PID, $CV_PID and $OPERATOR_PID"
   kill "$APP_SERVER_PID" "$CV_PID" "$OPERATOR_PID"
 
-  sleep 2
+  sleep 5
   docker-compose down
   echo 'Docker containers are down'
   exit 0
