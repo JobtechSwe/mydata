@@ -1,42 +1,46 @@
-const { JWK } = require('@panva/jose')
-const permissionsInit = require('../lib/permissions')
+const { createPermissions } = require('../lib/permissions')
+const { createMemoryStore } = require('../lib/memoryStore')
+const { generateKeyPair } = require('./_helpers')
 const { schemas } = require('@egendata/messaging')
 
 describe('permissions', () => {
-  let clientId, keyProvider, permissions, key
-  beforeEach(() => {
-    clientId = 'https://mycv.work'
-    key = JWK.generateSync('RSA', 1024, { use: 'enc' })
-    keyProvider = {
-      createEncryptionKey: jest.fn()
-        .mockName('keyProvider.createEncryptionKey')
-        .mockResolvedValue(key.toJWK(false))
-    }
-    const client = {
-      clientId,
-      keyProvider
-    }
-    permissions = permissionsInit(client)
-  })
-  describe('#fromConfig', () => {
-    it('creates permissions that are consistent with the schema', async () => {
-      const configPermissions = [
+  let config, keyProvider
+  beforeAll(async () => {
+    const clientKeys = await generateKeyPair()
+    config = {
+      displayName: 'CV app',
+      description: 'A CV app with a description which is longer than 10 chars',
+      iconURI: 'http://localhost:4000/ico.png',
+      clientId: 'http://localhost:4000',
+      operator: 'https://smoothoperator.work',
+      jwksPath: '/jwks',
+      eventsPath: '/events',
+      clientKeys: clientKeys,
+      keyValueStore: createMemoryStore(),
+      keyOptions: { modulusLength: 1024 },
+      defaultPermissions: [
         { area: 'education', types: ['WRITE'], description: 'stuff' }
       ]
-      const result = await permissions.fromConfig(configPermissions)
+    }
+  })
+  describe('#createPermissions', () => {
+    it('creates permissions that are consistent with the schema', async () => {
+      keyProvider = { createEncryptionKey: jest.fn() }
+
+      const result = await createPermissions(config, keyProvider)
 
       await Promise.all(result.map(x => schemas.PERMISSION.validate(x)))
     })
+
     it('adds own domain, CONSENT and an id', async () => {
-      const configPermissions = [
-        { area: 'education', types: ['WRITE'], description: 'stuff' }
-      ]
-      const result = await permissions.fromConfig(configPermissions)
+      keyProvider = { createEncryptionKey: jest.fn() }
+
+      const result = await createPermissions(config, keyProvider)
 
       expect(result).toEqual([
         {
           id: expect.any(String),
-          domain: clientId,
+          domain: config.clientId,
           area: 'education',
           type: 'WRITE',
           description: 'stuff',
@@ -44,25 +48,41 @@ describe('permissions', () => {
         }
       ])
     })
+
     it('creates an encryption key for READ', async () => {
-      const configPermissions = [
-        { area: 'education', types: ['READ'], purpose: 'stuff' }
-      ]
-      const result = await permissions.fromConfig(configPermissions)
+      const jwk = { kid: 'foo', kty: 'RSA', use: 'enc', e: 'AQAB', n: 'a-large-number' }
+      keyProvider = {
+        generateTempKey: jest.fn().mockResolvedValue(jwk)
+      }
+
+      const configWithReadPermissions = {
+        ...config,
+        defaultPermissions: [ { area: 'education', types: ['READ'], purpose: 'stuff' } ]
+      }
+
+      const result = await createPermissions(configWithReadPermissions, keyProvider)
+
+      await Promise.all(result.map(x => schemas.PERMISSION.validate(x)))
 
       expect(result).toEqual([
         {
           id: expect.any(String),
-          domain: clientId,
+          domain: config.clientId,
           area: 'education',
           type: 'READ',
           purpose: 'stuff',
           lawfulBasis: 'CONSENT',
-          jwk: key.toJWK()
+          jwk
         }
       ])
     })
     it('turns each type into a row', async () => {
+      const jwk = { kid: 'foo', kty: 'RSA', use: 'enc', e: 'AQAB', n: 'a-large-number' }
+
+      keyProvider = {
+        generateTempKey: jest.fn().mockResolvedValue(jwk)
+      }
+
       const configPermissions = [
         {
           area: 'education',
@@ -71,21 +91,23 @@ describe('permissions', () => {
           description: 'stuff'
         }
       ]
-      const result = await permissions.fromConfig(configPermissions)
+      const result = await createPermissions({ ...config, defaultPermissions: configPermissions }, keyProvider)
+
+      await Promise.all(result.map(x => schemas.PERMISSION.validate(x)))
 
       expect(result).toEqual([
         {
           id: expect.any(String),
-          domain: clientId,
+          domain: config.clientId,
           area: 'education',
           type: 'READ',
           purpose: 'stuff',
           lawfulBasis: 'CONSENT',
-          jwk: key.toJWK()
+          jwk
         },
         {
           id: expect.any(String),
-          domain: clientId,
+          domain: config.clientId,
           area: 'education',
           type: 'WRITE',
           description: 'stuff',

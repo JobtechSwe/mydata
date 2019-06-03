@@ -1,12 +1,12 @@
 const { v4 } = require('uuid')
 
-const fromConfig = (clientId, keyProvider) => async (configPermissions) => {
-  return configPermissions
+const createPermissions = async (config, keyProvider) => {
+  return config.defaultPermissions
     .reduce(async (permissions, cp) => {
       for (let type of cp.types) {
         const permission = {
           id: v4(),
-          domain: cp.domain || clientId,
+          domain: cp.domain || config.clientId,
           lawfulBasis: cp.lawfulBasis || 'CONSENT',
           area: cp.area,
           type
@@ -14,7 +14,7 @@ const fromConfig = (clientId, keyProvider) => async (configPermissions) => {
         switch (type) {
           case 'READ':
             permission.purpose = cp.purpose
-            permission.jwk = await keyProvider.createEncryptionKey()
+            permission.jwk = await keyProvider.generateTempKey()
             break
           case 'WRITE':
             permission.description = cp.description
@@ -29,6 +29,6 @@ const fromConfig = (clientId, keyProvider) => async (configPermissions) => {
     }, [])
 }
 
-module.exports = ({ clientId, keyProvider }) => ({
-  fromConfig: fromConfig(clientId, keyProvider)
-})
+module.exports = {
+  createPermissions
+}

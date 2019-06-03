@@ -1,6 +1,4 @@
-const { generateKeyPair, createHash } = require('crypto')
-const { decryptDocumentKey } = require('./crypto')
-const { promisify } = require('util')
+const { decryptDocumentKey, generateJwkPair } = require('./crypto')
 const { serialize } = require('jwks-provider')
 const Joi = require('joi')
 const { JWK } = require('@panva/jose')
@@ -11,14 +9,7 @@ const DOCUMENT_KEYS_PREFIX = 'documentKeys|>'
 const CONSENT_KEY_ID_PREFIX = 'consentKeyId|>'
 
 const defaults = {
-  modulusLength: 2048,
-  publicKeyEncoding: { type: 'pkcs1', format: 'pem' },
-  privateKeyEncoding: { type: 'pkcs1', format: 'pem' },
   tempKeyExpiry: 10 * 60 * 1000
-}
-
-function generateKid (jwksUrl, use, publicKey) {
-  return `${jwksUrl}/${use}_${createHash('SHA256').update(publicKey).digest('hex')}`
 }
 
 async function isUrl (kid) {
@@ -28,24 +19,6 @@ async function isUrl (kid) {
     return true
   } catch (_) {
     return false
-  }
-}
-
-async function generateKeyPairObject (jwksUrl, { kid, use }, { modulusLength, publicKeyEncoding, privateKeyEncoding }) {
-  const { publicKey, privateKey } = await promisify(generateKeyPair)('rsa', {
-    modulusLength,
-    publicKeyEncoding,
-    privateKeyEncoding
-  })
-  kid = kid || generateKid(jwksUrl, use, publicKey)
-  if (!await isUrl(kid)) {
-    kid = `${jwksUrl}/${kid}`
-  }
-  return {
-    publicKey,
-    privateKey,
-    use,
-    kid
   }
 }
 
@@ -81,13 +54,13 @@ class KeyProvider {
     }
     return this.load(`${KEY_PREFIX}${kid}`)
   }
-  async generateKey ({ use, kid }) {
-    const key = await generateKeyPairObject(this.jwksUrl, { use, kid }, this.options)
+  async generateKey ({ use }) {
+    const key = await generateJwkPair(this.jwksUrl, { use })
     await this.save(`${KEY_PREFIX}${key.kid}`, key)
     return key
   }
-  async generateTempKey ({ use, kid }) {
-    const key = await generateKeyPairObject(this.jwksUrl, { use, kid }, this.options)
+  async generateTempKey ({ use }) {
+    const key = await generateJwkPair(this.jwksUrl, { use })
     await this.save(`${KEY_PREFIX}${key.kid}`, key, this.options.tempKeyExpiry)
     return key
   }

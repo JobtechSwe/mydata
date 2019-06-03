@@ -1,10 +1,9 @@
 const Joi = require('joi')
-const { schemas: { PERMISSION } } = require('@egendata/messaging')
 
 const keyValueStore = Joi.object({
-  load: Joi.func().required(),
-  save: Joi.func().required(),
-  remove: Joi.func().required()
+  load: Joi.func().arity(1).required(),
+  save: Joi.func().arity(3).required(),
+  remove: Joi.func().arity(1).required()
 }).unknown(true)
 
 const configSchema = Joi.object({

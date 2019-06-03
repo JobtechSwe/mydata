@@ -1,10 +1,28 @@
 const crypto = require('../lib/crypto')
 const { generateKeyPair } = require('./_helpers')
+const { schemas } = require('@egendata/messaging')
 
 describe('crypto', () => {
   let keys = []
   beforeAll(async () => {
     keys.push(await generateKeyPair())
+  })
+  describe('#generateJwkPair', () => {
+    it('generates valid public key', async () => {
+      const jwksUrl = 'http://localhost:4000/jwks'
+      const keys = await crypto.generateJwkPair(jwksUrl, { kid: 'foo', use: 'enc' })
+
+      await schemas.JWK.validate(keys.publicKey)
+    })
+    it('generates valid private key', async () => {
+      const jwksUrl = 'http://localhost:4000/jwks'
+      const keys = await crypto.generateJwkPair(jwksUrl, { kid: 'foo', use: 'enc' })
+      await schemas.JWK_PRIVATE.validate(keys.privateKey)
+    })
+
+    it('throws if use is missing', async () => {
+      return expect(crypto.generateJwkPair('http://localhost:4000/jwks', { kid: 'foo' })).rejects.toThrow(Error)
+    })
   })
   describe('#generateDocumentKey', () => {
     it('returns a 32 byte (256 bit) key', async () => {

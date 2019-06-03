@@ -3,9 +3,13 @@ const {
   createDecipheriv,
   publicEncrypt,
   privateDecrypt,
-  randomBytes
+  randomBytes,
+  generateKeyPair,
+  createHash
 } = require('crypto')
 const { promisify } = require('util')
+const pem2jwk = require('pem-jwk').pem2jwk
+const Joi = require('joi')
 
 async function generateDocumentKey (encoding) {
   const key = await promisify(randomBytes)(32)
@@ -44,7 +48,26 @@ function decryptDocument (aesKey, data) {
   return JSON.parse(dataString)
 }
 
+async function generateJwkPair (jwksUrl, { use }, modulusLength = 2048) {
+  if (!(use === 'enc' || use === 'sig')) {
+    throw Error(`"use" has to be "enc" or "sig"`)
+  }
+  const { publicKey, privateKey } = await promisify(generateKeyPair)('rsa', {
+    modulusLength,
+    publicKeyEncoding: { type: 'pkcs1', format: 'pem' },
+    privateKeyEncoding: { type: 'pkcs1', format: 'pem' }
+  })
+
+  const kid = `${jwksUrl}/${use}_${createHash('SHA256').update(publicKey).digest('hex')}`
+
+  return {
+    publicKey: pem2jwk(publicKey, { use, kid }),
+    privateKey: pem2jwk(privateKey, { use, kid })
+  }
+}
+
 module.exports = {
+  generateJwkPair,
   generateDocumentKey,
   encryptDocumentKey,
   decryptDocumentKey,

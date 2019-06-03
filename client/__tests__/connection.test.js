@@ -39,5 +39,30 @@ describe('auth', () => {
       const result = JWT.decode(connReq)
       expect(result).not.toBe(null)
     })
+
+    it('Adds permissions if default permissions are configured', async () => {
+      const clientWithDefaultPermissions = createClient({
+        ...config,
+        defaultPermissions: [
+          { area: 'education', types: ['READ'], purpose: 'stuff' },
+          { area: 'experience', types: ['WRITE'], description: 'Because i wanna' }
+        ]
+      })
+
+      const connInit = {
+        type: 'CONNECTION_INIT',
+        aud: 'http://localhost:51545',
+        iss: 'mydata://account',
+        sid: 'd1f99125-4537-40f1-b15c-fd5e0f067c61',
+        iat: 1558945645,
+        exp: 1558949245
+      }
+
+      const connReq = await createConnectionRequest(clientWithDefaultPermissions, connInit)
+
+      const result = JWT.decode(connReq)
+
+      expect(result.permissons).toEqual(expect.any(Array))
+    })
   })
 })

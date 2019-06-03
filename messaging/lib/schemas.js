@@ -16,6 +16,20 @@ const JWK = Joi.object({
   n: Joi.string().required()
 })
 
+const JWK_PRIVATE = Joi.object({
+  kid: Joi.string().required(),
+  kty: Joi.string().valid('RSA').required(),
+  use: Joi.string().valid(['sig', 'enc']).required(),
+  e: Joi.string().valid('AQAB').required(),
+  n: Joi.string().required(),
+  d: Joi.string().required(),
+  p: Joi.string().required(),
+  dp: Joi.string().required(),
+  q: Joi.string().required(),
+  dq: Joi.string().required(),
+  qi: Joi.string().required()
+})
+
 const JOSE_HEADER = Joi.object({
   alg: Joi.string().valid(algs).required(),
   kid: Joi.string().uri(),
@@ -236,6 +250,7 @@ module.exports = {
   DATA_WRITE,
   JOSE_HEADER,
   JWK,
+  JWK_PRIVATE,
   LOGIN,
   LOGIN_EVENT,
   LOGIN_RESPONSE,

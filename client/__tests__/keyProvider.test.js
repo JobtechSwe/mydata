@@ -1,6 +1,7 @@
 const { generateKeyPair } = require('./_helpers')
 const crypto = require('../lib/crypto')
 const KeyProvider = require('../lib/keyProvider')
+const { schemas } = require('@egendata/messaging')
 
 const jsonToBase64 = (obj) => Buffer.from(JSON.stringify(obj), 'utf8').toString('base64')
 const base64ToJson = (str) => JSON.parse(Buffer.from(str, 'base64').toString('utf8'))
@@ -45,17 +46,15 @@ describe('KeyProvider', () => {
     it('saves generated keys', async () => {
       await keyProvider.generateKey({ use: 'enc' })
 
-      expect(keyValueStore.save)
-        .toHaveBeenCalledWith(expect.any(String), expect.any(String), undefined)
+      expect(keyValueStore.save).toHaveBeenCalled()
 
       const [kid, b64] = keyValueStore.save.mock.calls[0]
       expect(kid).toEqual(expect.stringMatching(new RegExp(`^key|>${jwksUrl}/enc_`)))
-      expect(base64ToJson(b64)).toEqual({
-        publicKey: expect.any(String),
-        privateKey: expect.any(String),
-        use: 'enc',
-        kid: expect.stringMatching(new RegExp(`^${jwksUrl}/enc_`))
-      })
+
+      const savedKey = base64ToJson(b64)
+
+      await schemas.JWK_PRIVATE.validate(savedKey.privateKey)
+      await schemas.JWK.validate(savedKey.publicKey)
     })
     it('returns the generated keys', async () => {
       const result = await keyProvider.generateKey({ use: 'enc' })
@@ -80,19 +79,40 @@ describe('KeyProvider', () => {
     })
   })
   describe('#generateTempKey', () => {
+    it('resolves to a valid jwk', async () => {
+      const key = await keyProvider.generateTempKey({ use: 'enc' })
+      await schemas.JWK.validate(key)
+    })
+
     it('saves generated keys', async () => {
       await keyProvider.generateTempKey({ use: 'enc' })
 
       expect(keyValueStore.save)
-        .toHaveBeenCalledWith(expect.any(String), expect.any(String), 100)
+        .toHaveBeenCalled()
 
-      const [kid, b64, ttl] = keyValueStore.save.mock.calls[0]
+      const [kid, value, ttl] = keyValueStore.save.mock.calls[0]
       expect(kid).toEqual(expect.stringMatching(new RegExp(`key|>^${jwksUrl}/enc_`)))
-      expect(base64ToJson(b64)).toEqual({
-        publicKey: expect.any(String),
-        privateKey: expect.any(String),
-        use: 'enc',
-        kid: expect.stringMatching(new RegExp(`^${jwksUrl}/enc_`))
+      expect(base64ToJson(value)).toEqual({
+        privateKey: {
+          d: expect.any(String),
+          dp: expect.any(String),
+          dq: expect.any(String),
+          e: 'AQAB',
+          kty: 'RSA',
+          n: expect.any(String),
+          p: expect.any(String),
+          q: expect.any(String),
+          qi: expect.any(String),
+          use: 'enc',
+          kid: expect.stringMatching(new RegExp(`^${jwksUrl}/enc_`))
+        },
+        publicKey: {
+          e: 'AQAB',
+          n: expect.any(String),
+          kid: expect.stringMatching(new RegExp(`^${jwksUrl}/enc_`)),
+          kty: 'RSA',
+          use: 'enc'
+        }
       })
       expect(ttl).toEqual(100)
     })

@@ -1,9 +1,12 @@
 const { sign, verify } = require('./jwt')
 const pem2jwk = require('pem-jwk').pem2jwk
+const { createPermissions } = require('./permissions')
 
 const createConnectionRequest = (client, { iss, sid }) => {
   const key = pem2jwk(client.config.clientKeys.privateKey)
   key.kid = `${client.config.jwksUrl}/client_key`
+
+  // TODO: Create permissions if configured and append to connection request
 
   return sign(
     {
