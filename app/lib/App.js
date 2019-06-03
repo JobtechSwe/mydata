@@ -36,6 +36,7 @@ const AppStack = createBottomTabNavigator(
           inactiveTintColor: myDataTheme.colors.lightGrey,
           activeTintColor: myDataTheme.colors.lightGrey,
         },
+        tabBarVisible: false,
       }),
     },
     Konto: { screen: Settings },

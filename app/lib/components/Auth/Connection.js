@@ -5,7 +5,6 @@ import { Wrap } from '../View/Wrapper'
 import { approveConnection } from '../../services/auth'
 
 const Connection = ({ connectionRequest, onApprove }) => {
-
   const onApproveConnection = async () => {
     await approveConnection(connectionRequest)
     onApprove()
@@ -17,7 +16,7 @@ const Connection = ({ connectionRequest, onApprove }) => {
 
   return (
     <Wrap>
-      <H1>MyData</H1>
+      <H1>Egendata</H1>
       <Paragraph align="center">
         Do you want to connect to {connectionRequest.displayName}?
       </Paragraph>
@@ -46,7 +45,7 @@ export default Connection
 //   render() {
 //     return (
 //       <>
-//         <H1>MyData</H1>
+//         <H1>Egendata</H1>
 //         <Input
 //           name="firstName"
 //           onChangeText={firstName => this.setState({ firstName })}
