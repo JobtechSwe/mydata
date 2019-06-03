@@ -9,52 +9,91 @@ describe('Auth flow for example/cv', () => {
     })
   })
   it('Loads auth page and displays authentication code', () => {
-    cy
-      .visit('/')
+    cy.visit('/')
 
-    cy
-      .get('button')
+    cy.get('button')
       .contains('Login')
       .click()
 
-    cy
-      .url()
+    cy.url()
       .should('include', '/auth')
 
-    cy
-      .get('#qrcode')
+    cy.get('#qrcode')
       .should(res => {
         expect(res[0].getAttribute('data-consent-request-id')).to.match(v4Regexp)
       })
-
-    cy.visit('/')
   })
 
   it('Auth flow for new connection', () => {
-    cy
-      .createAccount({ firstName: 'Johan', lastName: 'Öbrink' })
+    cy.createAccount({ firstName: 'Johan', lastName: 'Öbrink' })
 
-    cy
-      .visit('/')
+    cy.visit('/')
 
-    cy
-      .get('button')
+    cy.get('button')
       .contains('Login')
       .click()
 
-    cy
-      .get('#qrcode')
+    cy.get('#qrcode')
       .then(res => {
         const url = res[0].getAttribute('data-consent-request-url')
         return cy.handleAuthCode({ code: url })
-          .then(({ connectionRequest, sessionId }) => cy.approveConnection({ connectionRequest, sessionId }))
+          .then(({ connectionRequest }) => cy.approveConnection(connectionRequest))
       })
 
-    cy
-      .getConnections()
+    cy.getConnections()
       .then(res => {
         expect(res[0].serviceId).to.match(/^http/)
         expect(res[0].connectionId).to.be.a('string')
       })
+
+    cy.url()
+      .should('include', '/profile')
+  })
+
+  it('Auth flow for existing connection', () => {
+    cy.createAccount({ firstName: 'Foo', lastName: 'Barsson' })
+
+    cy.visit('/')
+
+    cy.get('button')
+      .contains('Login')
+      .click()
+
+    cy.get('#qrcode')
+      .then(res => {
+        const url = res[0].getAttribute('data-consent-request-url')
+        return cy.handleAuthCode({ code: url })
+          .then(({ connectionRequest }) => cy.approveConnection(connectionRequest))
+      })
+
+    cy.getConnections()
+      .then(res => {
+        expect(res[0].serviceId).to.match(/^http/)
+        expect(res[0].connectionId).to.be.a('string')
+      })
+
+    cy.url()
+      .should('include', '/profile')
+
+    cy.window().then(win => {
+      win.sessionStorage.clear()
+    })
+
+    // Now, try to login again
+    cy.visit('/')
+
+    cy.get('button')
+      .contains('Login')
+      .click()
+
+    cy.get('#qrcode')
+      .then(res => {
+        const url = res[0].getAttribute('data-consent-request-url')
+        return cy.handleAuthCode({ code: url })
+          .then(({ existingConnection, sessionId }) => cy.approveLogin({ connection: existingConnection, sessionId }))
+      })
+
+    cy.url()
+      .should('include', '/profile')
   })
 })
