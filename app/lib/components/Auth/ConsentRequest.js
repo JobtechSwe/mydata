@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Wrap } from '../View/Wrapper'
+import { Wrap } from '../view/Wrapper'
 import { Spinner } from '../elements/Spinner/Spinner'
 import * as consentsService from '../../services/consents'
 import { Paragraph } from '../typography/Typography'

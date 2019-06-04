@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { View } from 'react-native'
 import Modal from 'react-native-modal'
-import { Wrap, ScrollViewWrap } from '../View/Wrapper'
+import { Wrap, ScrollViewWrap } from '../view/Wrapper'
 import styled, { theme } from '../../theme'
 import { H3, Paragraph, Separator } from '../typography/Typography'
 import {
@@ -85,7 +85,9 @@ function Login(props) {
               >
                 <ScopeItemWrapper style={{ marginBottom: 24 }}>
                   <H3>Vill du logga in på:</H3>
-                  <Paragraph small>{props.existingConnection.serviceId}</Paragraph>
+                  <Paragraph small>
+                    {props.existingConnection.serviceId}
+                  </Paragraph>
                 </ScopeItemWrapper>
               </ScrollViewWrap>
               <ConsentButtonWrap
