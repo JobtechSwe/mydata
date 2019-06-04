@@ -78,7 +78,8 @@ brew cask install fastlane
 3. Certificates
 
 - Add a file name "Appfile" within `ios/fastlane`. For contents, see LastPass.
-- Download and open the matching certificates and provisioning-profiles from the [Apple Developer Potal](developer.apple.com)
+- Download and open the matching certificates and provisioning-profiles from the [Apple Developer Potal](developer.apple.com). For `Signing (Debug)` use "Egendata iOS", for  `Signing (Release)` use "Egendata iOS Distribution Profile".
+
 
 4. Release
 

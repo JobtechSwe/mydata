@@ -5,13 +5,14 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
 		00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302C01ABCB91800DB3ED1 /* libRCTImage.a */; };
 		00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
 		00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
-		00E356F31AD99517003FC87E /* MyDataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* MyDataTests.m */; };
+		00E356F31AD99517003FC87E /* EgendataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* EgendataTests.m */; };
 		0633A51E2FE44789A812051C /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C4A876FD404D4F86B70915 /* libReactNativeConfig.a */; };
 		11D1A2F320CAFA9E000508D9 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
@@ -24,6 +25,7 @@
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		2372616A72DF4471A6EAFBFB /* libRNSVG-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 074675879B66426C8778F536 /* libRNSVG-tvOS.a */; };
+		27FE2C871B484749A895E58B /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 400627A6CA914C05990B6A25 /* libRNCamera.a */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -35,12 +37,13 @@
 		2D02E4C71E0B4AEC006451C7 /* libRCTText-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3E941DF850E9000B6D8A /* libRCTText-tvOS.a */; };
 		2D02E4C81E0B4AEC006451C7 /* libRCTWebSocket-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3E991DF850E9000B6D8A /* libRCTWebSocket-tvOS.a */; };
 		2D16E6881FA4F8E400B85C8A /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6891FA4F8E400B85C8A /* libReact.a */; };
-		2DCD954D1E0B4F2C00145EB5 /* MyDataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* MyDataTests.m */; };
+		2DCD954D1E0B4F2C00145EB5 /* EgendataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* EgendataTests.m */; };
 		2DF0FFEE2056DD460020B375 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
 		33D1031480CF429C988CB7B6 /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C43E0678FBB4C98B6D63A32 /* libRNSVG.a */; };
 		4172B70FD0A64786AD35AEDA /* libRNRSA.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F7025A5EB072483592A671F3 /* libRNRSA.a */; };
 		51251476216B50F0000436B6 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5125145A216B50BB000436B6 /* libRCTPushNotification.a */; };
 		5172C0E9224A32D30021B3B3 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5172C0AC224A32D20021B3B3 /* JavaScriptCore.framework */; };
+		70785A9F82DF4387B1B1C904 /* libRNCAsyncStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 044BCDC5FF954508840821DC /* libRNCAsyncStorage.a */; };
 		7966F21BD6EB41628CBE286D /* Karla-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 266B2EA229474AD3B8281DA6 /* Karla-Regular.ttf */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		A5D67ACD9B5449B184331A42 /* libRNSecureRandom.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BD89C2D1172A4B058CED4A0D /* libRNSecureRandom.a */; };
@@ -52,8 +55,6 @@
 		EC8F162AE7D543A4AA1DFF3B /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 008B7F98B8CE49419652F17B /* libReactNativePermissions.a */; };
 		F53C80FFA9AD499EAE72493F /* Karla-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FC4E0E85E9744228B090976D /* Karla-Bold.ttf */; };
 		F63650BBD1B64EDD8AF14A4D /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 264109B70D7C48B294BBF532 /* Rubik-Medium.ttf */; };
-		27FE2C871B484749A895E58B /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 400627A6CA914C05990B6A25 /* libRNCamera.a */; };
-		F3DF16E5F885476483CB1E3A /* libRNCAsyncStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B72F8FFA6EF7476BBE46D97B /* libRNCAsyncStorage.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,7 +98,7 @@
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
-			remoteInfo = MyData;
+			remoteInfo = Egendata;
 		};
 		139105C01AF99BAD00B5F7CC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -132,7 +133,7 @@
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
-			remoteInfo = "MyData-tvOS";
+			remoteInfo = "Egendata-tvOS";
 		};
 		2D16E6711FA4F8DC00B85C8A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -421,9 +422,16 @@
 			remoteGlobalIDString = 94DDAC5C1F3D024300EED511;
 			remoteInfo = "RNSVG-tvOS";
 		};
-		D7DF225C226609A40028A838 /* PBXContainerItemProxy */ = {
+		D7D5DA2C22A51403005BD8BF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 8CF06832801A4469A23DB8D5 /* RNCAsyncStorage.xcodeproj */;
+			containerPortal = 2C8ABAEEB724429DAA20EAD8 /* RNCamera.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4107012F1ACB723B00C6AA39;
+			remoteInfo = RNCamera;
+		};
+		D7D5DA9322A5144C005BD8BF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EBB69C7AE4474F1FBBC975E5 /* RNCAsyncStorage.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNCAsyncStorage;
@@ -438,29 +446,32 @@
 		00C302BB1ABCB91800DB3ED1 /* RCTImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImage.xcodeproj; path = "../node_modules/react-native/Libraries/Image/RCTImage.xcodeproj"; sourceTree = "<group>"; };
 		00C302D31ABCB9D200DB3ED1 /* RCTNetwork.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTNetwork.xcodeproj; path = "../node_modules/react-native/Libraries/Network/RCTNetwork.xcodeproj"; sourceTree = "<group>"; };
 		00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTVibration.xcodeproj; path = "../node_modules/react-native/Libraries/Vibration/RCTVibration.xcodeproj"; sourceTree = "<group>"; };
-		00E356EE1AD99517003FC87E /* MyDataTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyDataTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		00E356EE1AD99517003FC87E /* EgendataTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EgendataTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* MyDataTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyDataTests.m; sourceTree = "<group>"; };
+		00E356F21AD99517003FC87E /* EgendataTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EgendataTests.m; sourceTree = "<group>"; };
 		03A1285B15E0402E983737BC /* Rubik-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Regular.ttf"; path = "../assets/fonts/Rubik-Regular.ttf"; sourceTree = "<group>"; };
+		044BCDC5FF954508840821DC /* libRNCAsyncStorage.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCAsyncStorage.a; sourceTree = "<group>"; };
 		056E82EE147F45DD8672AABC /* RNSVG.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNSVG.xcodeproj; path = "../node_modules/react-native-svg/ios/RNSVG.xcodeproj"; sourceTree = "<group>"; };
 		074675879B66426C8778F536 /* libRNSVG-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNSVG-tvOS.a"; sourceTree = "<group>"; };
 		0E34F6DB5E3D465EB492CB59 /* RNRSA.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNRSA.xcodeproj; path = "../node_modules/react-native-rsa-native/ios/RNRSA.xcodeproj"; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* MyData.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyData.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = MyData/AppDelegate.h; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = MyData/AppDelegate.m; sourceTree = "<group>"; };
+		13B07F961A680F5B00A75B9A /* Egendata.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Egendata.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Egendata/AppDelegate.h; sourceTree = "<group>"; };
+		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Egendata/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = MyData/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = MyData/Info.plist; sourceTree = "<group>"; };
-		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = MyData/main.m; sourceTree = "<group>"; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Egendata/Images.xcassets; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Egendata/Info.plist; sourceTree = "<group>"; };
+		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Egendata/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		1C43E0678FBB4C98B6D63A32 /* libRNSVG.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSVG.a; sourceTree = "<group>"; };
 		264109B70D7C48B294BBF532 /* Rubik-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Medium.ttf"; path = "../assets/fonts/Rubik-Medium.ttf"; sourceTree = "<group>"; };
 		266B2EA229474AD3B8281DA6 /* Karla-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Karla-Regular.ttf"; path = "../assets/fonts/Karla-Regular.ttf"; sourceTree = "<group>"; };
-		2D02E47B1E0B4A5D006451C7 /* MyData-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MyData-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2D02E4901E0B4A5D006451C7 /* MyData-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "MyData-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C8ABAEEB724429DAA20EAD8 /* RNCamera.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RNCamera.xcodeproj"; sourceTree = "<group>"; };
+		2D02E47B1E0B4A5D006451C7 /* Egendata-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Egendata-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D02E4901E0B4A5D006451C7 /* Egendata-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Egendata-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		400627A6CA914C05990B6A25 /* libRNCamera.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCamera.a; sourceTree = "<group>"; };
 		44C4A876FD404D4F86B70915 /* libReactNativeConfig.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativeConfig.a; sourceTree = "<group>"; };
 		4E6F3F66DD574CC0966BECDE /* libRNGestureHandler.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNGestureHandler.a; sourceTree = "<group>"; };
 		51251448216B50BB000436B6 /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
@@ -474,20 +485,17 @@
 		AED279217C004B988AE973FC /* RNGestureHandler.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNGestureHandler.xcodeproj; path = "../node_modules/react-native-gesture-handler/ios/RNGestureHandler.xcodeproj"; sourceTree = "<group>"; };
 		B56FB8E06494463AB572F859 /* ReactNativePermissions.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativePermissions.xcodeproj; path = "../node_modules/react-native-permissions/ios/ReactNativePermissions.xcodeproj"; sourceTree = "<group>"; };
 		BD89C2D1172A4B058CED4A0D /* libRNSecureRandom.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSecureRandom.a; sourceTree = "<group>"; };
-		D73B9BA02237F08B00E8B39D /* MyData.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = MyData.entitlements; path = MyData/MyData.entitlements; sourceTree = "<group>"; };
+		D73B9BA02237F08B00E8B39D /* Egendata.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Egendata.entitlements; path = Egendata/Egendata.entitlements; sourceTree = "<group>"; };
 		D75ECDDC22411EB700576A42 /* fa-brands-400.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "fa-brands-400.ttf"; path = "../assets/fonts/fa-brands-400.ttf"; sourceTree = "<group>"; };
 		D75ECDDD22411EB700576A42 /* fa-solid-900.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "fa-solid-900.ttf"; path = "../assets/fonts/fa-solid-900.ttf"; sourceTree = "<group>"; };
 		D75ECDDE22411EB700576A42 /* fa-regular-400.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "fa-regular-400.ttf"; path = "../assets/fonts/fa-regular-400.ttf"; sourceTree = "<group>"; };
 		D75ECE312241227500576A42 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = fonts; path = ../assets/fonts; sourceTree = "<group>"; };
+		EBB69C7AE4474F1FBBC975E5 /* RNCAsyncStorage.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNCAsyncStorage.xcodeproj; path = "../node_modules/@react-native-community/async-storage/ios/RNCAsyncStorage.xcodeproj"; sourceTree = "<group>"; };
 		ECE9A602540342BDB8789B4D /* ReactNativeConfig.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeConfig.xcodeproj; path = "../node_modules/react-native-config/ios/ReactNativeConfig.xcodeproj"; sourceTree = "<group>"; };
 		F7025A5EB072483592A671F3 /* libRNRSA.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNRSA.a; sourceTree = "<group>"; };
 		F92AC7AC0A52405AA564616C /* libRNDeviceInfo-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNDeviceInfo-tvOS.a"; sourceTree = "<group>"; };
 		FACCBCC911BD4F90B1EED06B /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/ios/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		FC4E0E85E9744228B090976D /* Karla-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Karla-Bold.ttf"; path = "../assets/fonts/Karla-Bold.ttf"; sourceTree = "<group>"; };
-		2C8ABAEEB724429DAA20EAD8 /* RNCamera.xcodeproj */ = {isa = PBXFileReference; name = "RNCamera.xcodeproj"; path = "../node_modules/react-native-camera/ios/RNCamera.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		400627A6CA914C05990B6A25 /* libRNCamera.a */ = {isa = PBXFileReference; name = "libRNCamera.a"; path = "libRNCamera.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
-		600E58CD608D4DB6BD7CF108 /* RNCAsyncStorage.xcodeproj */ = {isa = PBXFileReference; name = "RNCAsyncStorage.xcodeproj"; path = "../node_modules/@react-native-community/async-storage/ios/RNCAsyncStorage.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		B72F8FFA6EF7476BBE46D97B /* libRNCAsyncStorage.a */ = {isa = PBXFileReference; name = "libRNCAsyncStorage.a"; path = "libRNCAsyncStorage.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -525,7 +533,7 @@
 				33D1031480CF429C988CB7B6 /* libRNSVG.a in Frameworks */,
 				A5D67ACD9B5449B184331A42 /* libRNSecureRandom.a in Frameworks */,
 				27FE2C871B484749A895E58B /* libRNCamera.a in Frameworks */,
-				F3DF16E5F885476483CB1E3A /* libRNCAsyncStorage.a in Frameworks */,
+				70785A9F82DF4387B1B1C904 /* libRNCAsyncStorage.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -599,13 +607,13 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		00E356EF1AD99517003FC87E /* MyDataTests */ = {
+		00E356EF1AD99517003FC87E /* EgendataTests */ = {
 			isa = PBXGroup;
 			children = (
-				00E356F21AD99517003FC87E /* MyDataTests.m */,
+				00E356F21AD99517003FC87E /* EgendataTests.m */,
 				00E356F01AD99517003FC87E /* Supporting Files */,
 			);
-			path = MyDataTests;
+			path = EgendataTests;
 			sourceTree = "<group>";
 		};
 		00E356F01AD99517003FC87E /* Supporting Files */ = {
@@ -636,10 +644,10 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		13B07FAE1A68108700A75B9A /* MyData */ = {
+		13B07FAE1A68108700A75B9A /* Egendata */ = {
 			isa = PBXGroup;
 			children = (
-				D73B9BA02237F08B00E8B39D /* MyData.entitlements */,
+				D73B9BA02237F08B00E8B39D /* Egendata.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -648,7 +656,7 @@
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
-			name = MyData;
+			name = Egendata;
 			sourceTree = "<group>";
 		};
 		146834001AC3E56700842450 /* Products */ = {
@@ -691,14 +699,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		510B76D32289597A00FC607A /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				510B76D72289597A00FC607A /* libRNCAsyncStorage.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		51251449216B50BB000436B6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -723,9 +723,9 @@
 				F92AC7AC0A52405AA564616C /* libRNDeviceInfo-tvOS.a */,
 				1C43E0678FBB4C98B6D63A32 /* libRNSVG.a */,
 				074675879B66426C8778F536 /* libRNSVG-tvOS.a */,
-				17F8D169D4504379A87A849F /* libRNCamera.a */,
 				BD89C2D1172A4B058CED4A0D /* libRNSecureRandom.a */,
-				C9B67643F4D5448E886604F5 /* libRNCAsyncStorage.a */,
+				400627A6CA914C05990B6A25 /* libRNCamera.a */,
+				044BCDC5FF954508840821DC /* libRNCAsyncStorage.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -817,7 +817,7 @@
 				056E82EE147F45DD8672AABC /* RNSVG.xcodeproj */,
 				9F7628AF8E074CE488A2E4E6 /* RNSecureRandom.xcodeproj */,
 				2C8ABAEEB724429DAA20EAD8 /* RNCamera.xcodeproj */,
-				600E58CD608D4DB6BD7CF108 /* RNCAsyncStorage.xcodeproj */,
+				EBB69C7AE4474F1FBBC975E5 /* RNCAsyncStorage.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -834,9 +834,9 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				13B07FAE1A68108700A75B9A /* MyData */,
+				13B07FAE1A68108700A75B9A /* Egendata */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
-				00E356EF1AD99517003FC87E /* MyDataTests */,
+				00E356EF1AD99517003FC87E /* EgendataTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				6D7F23A99B404644BD90732E /* Resources */,
@@ -850,10 +850,10 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* MyData.app */,
-				00E356EE1AD99517003FC87E /* MyDataTests.xctest */,
-				2D02E47B1E0B4A5D006451C7 /* MyData-tvOS.app */,
-				2D02E4901E0B4A5D006451C7 /* MyData-tvOSTests.xctest */,
+				13B07F961A680F5B00A75B9A /* Egendata.app */,
+				00E356EE1AD99517003FC87E /* EgendataTests.xctest */,
+				2D02E47B1E0B4A5D006451C7 /* Egendata-tvOS.app */,
+				2D02E4901E0B4A5D006451C7 /* Egendata-tvOSTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -885,10 +885,18 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		D7DF2259226609A40028A838 /* Products */ = {
+		D7D5DA2722A51403005BD8BF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D7DF225D226609A40028A838 /* libRNCAsyncStorage.a */,
+				D7D5DA2D22A51403005BD8BF /* libRNCamera.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D7D5DA9022A5144B005BD8BF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D7D5DA9422A5144C005BD8BF /* libRNCAsyncStorage.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -896,9 +904,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		00E356ED1AD99517003FC87E /* MyDataTests */ = {
+		00E356ED1AD99517003FC87E /* EgendataTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "MyDataTests" */;
+			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "EgendataTests" */;
 			buildPhases = (
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
@@ -909,14 +917,14 @@
 			dependencies = (
 				00E356F51AD99517003FC87E /* PBXTargetDependency */,
 			);
-			name = MyDataTests;
-			productName = MyDataTests;
-			productReference = 00E356EE1AD99517003FC87E /* MyDataTests.xctest */;
+			name = EgendataTests;
+			productName = EgendataTests;
+			productReference = 00E356EE1AD99517003FC87E /* EgendataTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		13B07F861A680F5B00A75B9A /* MyData */ = {
+		13B07F861A680F5B00A75B9A /* Egendata */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "MyData" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Egendata" */;
 			buildPhases = (
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
@@ -927,14 +935,14 @@
 			);
 			dependencies = (
 			);
-			name = MyData;
+			name = Egendata;
 			productName = "Hello World";
-			productReference = 13B07F961A680F5B00A75B9A /* MyData.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* Egendata.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2D02E47A1E0B4A5D006451C7 /* MyData-tvOS */ = {
+		2D02E47A1E0B4A5D006451C7 /* Egendata-tvOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "MyData-tvOS" */;
+			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "Egendata-tvOS" */;
 			buildPhases = (
 				2D02E4771E0B4A5D006451C7 /* Sources */,
 				2D02E4781E0B4A5D006451C7 /* Frameworks */,
@@ -945,14 +953,14 @@
 			);
 			dependencies = (
 			);
-			name = "MyData-tvOS";
-			productName = "MyData-tvOS";
-			productReference = 2D02E47B1E0B4A5D006451C7 /* MyData-tvOS.app */;
+			name = "Egendata-tvOS";
+			productName = "Egendata-tvOS";
+			productReference = 2D02E47B1E0B4A5D006451C7 /* Egendata-tvOS.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2D02E48F1E0B4A5D006451C7 /* MyData-tvOSTests */ = {
+		2D02E48F1E0B4A5D006451C7 /* Egendata-tvOSTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "MyData-tvOSTests" */;
+			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "Egendata-tvOSTests" */;
 			buildPhases = (
 				2D02E48C1E0B4A5D006451C7 /* Sources */,
 				2D02E48D1E0B4A5D006451C7 /* Frameworks */,
@@ -963,9 +971,9 @@
 			dependencies = (
 				2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */,
 			);
-			name = "MyData-tvOSTests";
-			productName = "MyData-tvOSTests";
-			productReference = 2D02E4901E0B4A5D006451C7 /* MyData-tvOSTests.xctest */;
+			name = "Egendata-tvOSTests";
+			productName = "Egendata-tvOSTests";
+			productReference = 2D02E4901E0B4A5D006451C7 /* Egendata-tvOSTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -1002,7 +1010,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "MyData" */;
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "Egendata" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -1076,8 +1084,12 @@
 					ProjectRef = B56FB8E06494463AB572F859 /* ReactNativePermissions.xcodeproj */;
 				},
 				{
-					ProductGroup = D7DF2259226609A40028A838 /* Products */;
-					ProjectRef = 8CF06832801A4469A23DB8D5 /* RNCAsyncStorage.xcodeproj */;
+					ProductGroup = D7D5DA2722A51403005BD8BF /* Products */;
+					ProjectRef = 2C8ABAEEB724429DAA20EAD8 /* RNCamera.xcodeproj */;
+				},
+				{
+					ProductGroup = D7D5DA9022A5144B005BD8BF /* Products */;
+					ProjectRef = EBB69C7AE4474F1FBBC975E5 /* RNCAsyncStorage.xcodeproj */;
 				},
 				{
 					ProductGroup = 517D6DF222313B8600B4E056 /* Products */;
@@ -1102,10 +1114,10 @@
 			);
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* MyData */,
-				00E356ED1AD99517003FC87E /* MyDataTests */,
-				2D02E47A1E0B4A5D006451C7 /* MyData-tvOS */,
-				2D02E48F1E0B4A5D006451C7 /* MyData-tvOSTests */,
+				13B07F861A680F5B00A75B9A /* Egendata */,
+				00E356ED1AD99517003FC87E /* EgendataTests */,
+				2D02E47A1E0B4A5D006451C7 /* Egendata-tvOS */,
+				2D02E48F1E0B4A5D006451C7 /* Egendata-tvOSTests */,
 			);
 		};
 /* End PBXProject section */
@@ -1461,6 +1473,20 @@
 			remoteRef = D75ECD392241115000576A42 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		D7D5DA2D22A51403005BD8BF /* libRNCamera.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNCamera.a;
+			remoteRef = D7D5DA2C22A51403005BD8BF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D7D5DA9422A5144C005BD8BF /* libRNCAsyncStorage.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNCAsyncStorage.a;
+			remoteRef = D7D5DA9322A5144C005BD8BF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -1537,7 +1563,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00E356F31AD99517003FC87E /* MyDataTests.m in Sources */,
+				00E356F31AD99517003FC87E /* EgendataTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1563,7 +1589,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2DCD954D1E0B4F2C00145EB5 /* MyDataTests.m in Sources */,
+				2DCD954D1E0B4F2C00145EB5 /* EgendataTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1572,12 +1598,12 @@
 /* Begin PBXTargetDependency section */
 		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* MyData */;
+			target = 13B07F861A680F5B00A75B9A /* Egendata */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
 		2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 2D02E47A1E0B4A5D006451C7 /* MyData-tvOS */;
+			target = 2D02E47A1E0B4A5D006451C7 /* Egendata-tvOS */;
 			targetProxy = 2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1589,7 +1615,7 @@
 				13B07FB21A68108700A75B9A /* Base */,
 			);
 			name = LaunchScreen.xib;
-			path = MyData;
+			path = Egendata;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1616,7 +1642,7 @@
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 				);
-				INFOPLIST_FILE = MyDataTests/Info.plist;
+				INFOPLIST_FILE = EgendataTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -1629,7 +1655,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MyData.app/MyData";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Egendata.app/Egendata";
 			};
 			name = Debug;
 		};
@@ -1651,7 +1677,7 @@
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 				);
-				INFOPLIST_FILE = MyDataTests/Info.plist;
+				INFOPLIST_FILE = EgendataTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -1664,7 +1690,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MyData.app/MyData";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Egendata.app/Egendata";
 			};
 			name = Release;
 		};
@@ -1672,10 +1698,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = MyData/MyData.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Egendata/Egendata.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 24;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = BSE2J6442R;
 				HEADER_SEARCH_PATHS = (
@@ -1691,16 +1717,16 @@
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 				);
-				INFOPLIST_FILE = MyData/Info.plist;
+				INFOPLIST_FILE = Egendata/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = work.mydata.ConsentApp;
-				PRODUCT_NAME = MyData;
-				PROVISIONING_PROFILE_SPECIFIER = "MyData iOS";
+				PRODUCT_BUNDLE_IDENTIFIER = com.egendata.ios;
+				PRODUCT_NAME = Egendata;
+				PROVISIONING_PROFILE_SPECIFIER = "Egendata iOS";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1709,10 +1735,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = MyData/MyData.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Egendata/Egendata.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 24;
 				DEVELOPMENT_TEAM = BSE2J6442R;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1727,16 +1753,16 @@
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 				);
-				INFOPLIST_FILE = MyData/Info.plist;
+				INFOPLIST_FILE = Egendata/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = work.mydata.ConsentApp;
-				PRODUCT_NAME = MyData;
-				PROVISIONING_PROFILE_SPECIFIER = "MyData iOS Distribution";
+				PRODUCT_BUNDLE_IDENTIFIER = com.egendata.ios;
+				PRODUCT_NAME = Egendata;
+				PROVISIONING_PROFILE_SPECIFIER = "Egendata iOS Distribution Profile";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -1765,7 +1791,7 @@
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 				);
-				INFOPLIST_FILE = "MyData-tvOS/Info.plist";
+				INFOPLIST_FILE = "Egendata-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1775,7 +1801,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.MyData-tvOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.Egendata-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -1807,7 +1833,7 @@
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 				);
-				INFOPLIST_FILE = "MyData-tvOS/Info.plist";
+				INFOPLIST_FILE = "Egendata-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1817,7 +1843,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.MyData-tvOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.Egendata-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -1848,7 +1874,7 @@
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 				);
-				INFOPLIST_FILE = "MyData-tvOSTests/Info.plist";
+				INFOPLIST_FILE = "Egendata-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1858,10 +1884,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.MyData-tvOSTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.Egendata-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MyData-tvOS.app/MyData-tvOS";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Egendata-tvOS.app/Egendata-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
 			name = Debug;
@@ -1889,7 +1915,7 @@
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 				);
-				INFOPLIST_FILE = "MyData-tvOSTests/Info.plist";
+				INFOPLIST_FILE = "Egendata-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1899,10 +1925,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.MyData-tvOSTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.Egendata-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MyData-tvOS.app/MyData-tvOS";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Egendata-tvOS.app/Egendata-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
 			name = Release;
@@ -2010,7 +2036,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "MyDataTests" */ = {
+		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "EgendataTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				00E356F61AD99517003FC87E /* Debug */,
@@ -2019,7 +2045,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "MyData" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Egendata" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
@@ -2028,7 +2054,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "MyData-tvOS" */ = {
+		2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "Egendata-tvOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2D02E4971E0B4A5E006451C7 /* Debug */,
@@ -2037,7 +2063,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "MyData-tvOSTests" */ = {
+		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "Egendata-tvOSTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2D02E4991E0B4A5E006451C7 /* Debug */,
@@ -2046,7 +2072,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "MyData" */ = {
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "Egendata" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
