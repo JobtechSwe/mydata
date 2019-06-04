@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>MyData</string>
+	<string>Egendata</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -34,7 +34,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>19</string>
+	<string>24</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -58,9 +58,9 @@
 	<string>We need this in order to detect what abilities your device supports.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>We need the camera to scan QR codes</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We need this in order to detect what abilities your device supports.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
+	<string>We need this in order to detect what abilities your device supports.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We need this in order to detect what abilities your device supports.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We need this in order to detect what abilities your device supports.</string>

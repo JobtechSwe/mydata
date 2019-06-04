@@ -4,8 +4,8 @@ import { PrimaryButton } from '../elements/Button/Button'
 import { Input } from '../elements/Input/Input'
 
 const Register = ({ onSubmit }) => {
-  const [ firstName, setFirstName ] = useState('')
-  const [ lastName, setLastName ] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
 
   const handleSubmit = () => {
     if (firstName !== '' && lastName !== '') {
@@ -15,22 +15,23 @@ const Register = ({ onSubmit }) => {
 
   return (
     <>
-    <H1>MyData</H1>
-    <Input
-      name="firstName"
-      onChangeText={firstName => setFirstName(firstName)}
-      placeholder="Förnamn"
-      style={{ marginTop: 64 }}
-      value={firstName}
-    />
-    <Input
-      name="lastName"
-      onChangeText={lastName => setLastName(lastName)}
-      placeholder="Efternamn"
-      value={lastName}
-    />
-    <PrimaryButton onPress={handleSubmit}>Registrera</PrimaryButton>
-  </>)
+      <H1>Egendata</H1>
+      <Input
+        name="firstName"
+        onChangeText={firstName => setFirstName(firstName)}
+        placeholder="Förnamn"
+        style={{ marginTop: 64 }}
+        value={firstName}
+      />
+      <Input
+        name="lastName"
+        onChangeText={lastName => setLastName(lastName)}
+        placeholder="Efternamn"
+        value={lastName}
+      />
+      <PrimaryButton onPress={handleSubmit}>Registrera</PrimaryButton>
+    </>
+  )
 }
 
 export default Register

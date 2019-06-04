@@ -16,7 +16,7 @@ const Connection = ({ connectionRequest, onApprove }) => {
 
   return (
     <Wrap>
-      <H1>MyData</H1>
+      <H1>Egendata</H1>
       <Paragraph align="center">
         Do you want to connect to {connectionRequest.displayName}?
       </Paragraph>
