@@ -40,12 +40,12 @@ describe('auth', () => {
       expect(result).not.toBe(null)
     })
 
-    it.only('Adds permissions if default permissions are configured', async () => {
+    it('Adds permissions if default permissions are configured', async () => {
       const clientWithDefaultPermissions = createClient({
         ...config,
         defaultPermissions: [
-          { area: 'education', types: ['READ'], purpose: 'stuff' },
-          { area: 'experience', types: ['WRITE'], description: 'Because i wanna' }
+          { area: 'education', types: ['READ'], purpose: 'Because i wanna' },
+          { area: 'experience', types: ['WRITE'], description: 'Many things about stuff' }
         ]
       })
 
@@ -60,9 +60,9 @@ describe('auth', () => {
 
       const connReq = await createConnectionRequest(clientWithDefaultPermissions, connInit)
 
-      // const result = JWT.decode(connReq)
+      const result = JWT.decode(connReq)
 
-      // expect(result.permissons).toEqual(expect.any(Array))
+      expect(result.permissions).toEqual(expect.any(Array))
     })
   })
 })
