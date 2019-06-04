@@ -8,20 +8,30 @@ describe('crypto', () => {
     keys.push(await generateKeyPair())
   })
   describe('#generateJwkPair', () => {
+    const jwksUrl = 'http://localhost:4000/jwks'
+
     it('generates valid public key', async () => {
-      const jwksUrl = 'http://localhost:4000/jwks'
-      const keys = await crypto.generateJwkPair(jwksUrl, { kid: 'foo', use: 'enc' })
+      const keys = await crypto.generateJwkPair(jwksUrl, { kid: 'foo', use: 'enc' }, 1024)
 
       await schemas.JWK.validate(keys.publicKey)
     })
     it('generates valid private key', async () => {
-      const jwksUrl = 'http://localhost:4000/jwks'
-      const keys = await crypto.generateJwkPair(jwksUrl, { kid: 'foo', use: 'enc' })
+      const keys = await crypto.generateJwkPair(jwksUrl, { kid: 'foo', use: 'enc' }, 1024)
       await schemas.JWK_PRIVATE.validate(keys.privateKey)
     })
 
     it('throws if use is missing', async () => {
-      return expect(crypto.generateJwkPair('http://localhost:4000/jwks', { kid: 'foo' })).rejects.toThrow(Error)
+      return expect(crypto.generateJwkPair('http://localhost:4000/jwks', { kid: 'foo' }, 1024)).rejects.toThrow(Error)
+    })
+
+    it('throws if modulusLength is missing', async () => {
+      return expect(crypto.generateJwkPair('http://localhost:4000/jwks', { kid: 'foo', use: 'enc' })).rejects.toThrow(Error)
+    })
+
+    it('correctly names enc key as absolute url', async () => {
+      const { privateKey, publicKey } = await crypto.generateJwkPair(jwksUrl, { use: 'enc' }, 1024)
+      expect(privateKey.kid).toEqual(expect.stringMatching(new RegExp(`^${jwksUrl}/enc_`)))
+      expect(publicKey.kid).toEqual(expect.stringMatching(new RegExp(`^${jwksUrl}/enc_`)))
     })
   })
   describe('#generateDocumentKey', () => {

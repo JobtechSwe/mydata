@@ -9,7 +9,8 @@ const DOCUMENT_KEYS_PREFIX = 'documentKeys|>'
 const CONSENT_KEY_ID_PREFIX = 'consentKeyId|>'
 
 const defaults = {
-  tempKeyExpiry: 10 * 60 * 1000
+  tempKeyExpiry: 10 * 60 * 1000,
+  modulusLength: 2048
 }
 
 async function isUrl (kid) {
@@ -54,15 +55,15 @@ class KeyProvider {
     }
     return this.load(`${KEY_PREFIX}${kid}`)
   }
-  async generateKey ({ use }) {
-    const key = await generateJwkPair(this.jwksUrl, { use })
-    await this.save(`${KEY_PREFIX}${key.kid}`, key)
-    return key
+  async generatePersistentKey ({ use }) {
+    const keyPair = await generateJwkPair(this.jwksUrl, { use }, this.options.modulusLength)
+    await this.save(`${KEY_PREFIX}${keyPair.publicKey.kid}`, keyPair)
+    return keyPair
   }
-  async generateTempKey ({ use }) {
-    const key = await generateJwkPair(this.jwksUrl, { use })
-    await this.save(`${KEY_PREFIX}${key.kid}`, key, this.options.tempKeyExpiry)
-    return key
+  async generateTemporaryKey ({ use }) {
+    const keyPair = await generateJwkPair(this.jwksUrl, { use }, this.options.modulusLength)
+    await this.save(`${KEY_PREFIX}${keyPair.publicKey.kid}`, keyPair, this.options.tempKeyExpiry)
+    return keyPair
   }
   async saveKey (key) {
     return this.save(`${KEY_PREFIX}${key.kid}`, key)
@@ -135,7 +136,7 @@ class KeyProvider {
       return JWK.importKey(this.clientKeys.publicKey, { kid: `${this.jwksUrl}/client_key`, alg: this.alg })
     } else {
       const key = await this.getKey(kid)
-      return key ? serialize([key]).keys[0] : null
+      return key && key.publicKey
     }
   }
 }

@@ -2,11 +2,14 @@ const { sign, verify } = require('./jwt')
 const pem2jwk = require('pem-jwk').pem2jwk
 const { createPermissions } = require('./permissions')
 
-const createConnectionRequest = (client, { iss, sid }) => {
+const createConnectionRequest = async (client, { iss, sid }) => {
   const key = pem2jwk(client.config.clientKeys.privateKey)
   key.kid = `${client.config.jwksUrl}/client_key`
 
-  // TODO: Create permissions if configured and append to connection request
+  let permissions
+  if (client.config.defaultPermissions) {
+    permissions = await createPermissions(client.config, client.keyProvider)
+  }
 
   return sign(
     {
@@ -16,7 +19,8 @@ const createConnectionRequest = (client, { iss, sid }) => {
       sid,
       displayName: client.config.displayName,
       description: client.config.description,
-      iconURI: client.config.iconURI
+      iconURI: client.config.iconURI,
+      permissions
     },
     key,
     {
@@ -25,12 +29,16 @@ const createConnectionRequest = (client, { iss, sid }) => {
   )
 }
 
-const connectionInitHandler = client => async ({ payload }, res) => {
-  const connectionRequest = await createConnectionRequest(client, payload)
+const connectionInitHandler = client => async ({ payload }, res, next) => {
+  try {
+    const connectionRequest = await createConnectionRequest(client, payload)
 
-  res.setHeader('content-type', 'application/jwt')
-  res.write(connectionRequest)
-  res.end()
+    res.setHeader('content-type', 'application/jwt')
+    res.write(connectionRequest)
+    res.end()
+  } catch (error) {
+    next(error)
+  }
 }
 
 const connectionEventHandler = client => async ({ payload }, res) => {

@@ -52,7 +52,7 @@ describe('permissions', () => {
     it('creates an encryption key for READ', async () => {
       const jwk = { kid: 'foo', kty: 'RSA', use: 'enc', e: 'AQAB', n: 'a-large-number' }
       keyProvider = {
-        generateTempKey: jest.fn().mockResolvedValue(jwk)
+        generateTemporaryKey: jest.fn().mockResolvedValue({ publicKey: jwk })
       }
 
       const configWithReadPermissions = {
@@ -80,7 +80,7 @@ describe('permissions', () => {
       const jwk = { kid: 'foo', kty: 'RSA', use: 'enc', e: 'AQAB', n: 'a-large-number' }
 
       keyProvider = {
-        generateTempKey: jest.fn().mockResolvedValue(jwk)
+        generateTemporaryKey: jest.fn().mockResolvedValue({ publicKey: jwk })
       }
 
       const configPermissions = [

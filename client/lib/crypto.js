@@ -48,9 +48,12 @@ function decryptDocument (aesKey, data) {
   return JSON.parse(dataString)
 }
 
-async function generateJwkPair (jwksUrl, { use }, modulusLength = 2048) {
+async function generateJwkPair (jwksUrl, { use }, modulusLength) {
   if (!(use === 'enc' || use === 'sig')) {
-    throw Error(`"use" has to be "enc" or "sig"`)
+    throw Error('"use" has to be "enc" or "sig"')
+  }
+  if (!modulusLength) {
+    throw Error('modulusLength has to be provided')
   }
   const { publicKey, privateKey } = await promisify(generateKeyPair)('rsa', {
     modulusLength,
