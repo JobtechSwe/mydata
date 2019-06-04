@@ -25,18 +25,9 @@ const configSchema = Joi.object({
     types: Joi.array().items(
       Joi.string().valid('READ', 'WRITE').required()
     ).required(),
-    purpose: Joi.alternatives()
-      .when('types', {
-        is: Joi.array().has('READ'),
-        then: Joi.string().required(),
-        otherwise: Joi.forbidden()
-      }),
-    description: Joi.alternatives()
-      .when('types', {
-        is: Joi.array().has('WRITE'),
-        then: Joi.string().required(),
-        otherwise: Joi.forbidden()
-      })
+    // todo: make this require purpose for read and description for write
+    purpose: Joi.string(),
+    description: Joi.string()
   })
   ).min(1).optional()
 })
