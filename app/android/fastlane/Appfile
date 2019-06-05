@@ -1,0 +1,2 @@
+json_key_file("/Users/ter/dev/egendata_google_play.json")
+package_name("com.egendata")

@@ -55,25 +55,28 @@ If the app doesn't open automatically go into apps and find MyData
 
 React debug menu available on ios with ⌘d and on android with ⌘m / ctrl+m
 
-## Release Beta - iOS
+## Releasing Betas
 
-1. Install the latest Xcode command line tools:
-
-`xcode-select --install`
-
-2. Install fastlane
+*Install fastlane*
 
 ```
 # Using RubyGems
 sudo gem install fastlane -NV
 ```
-
 or
 
 ```
 # Alternatively using Homebrew
 brew cask install fastlane
 ```
+
+### iOS (Testflight)
+
+*Prerequisites:*
+
+1. Install the latest Xcode command line tools:
+
+`xcode-select --install`
 
 3. Certificates
 
@@ -84,28 +87,25 @@ brew cask install fastlane
 4. Release
 
 *NOTE: Remember to change `.env`-file (correct OPERATOR_URL etc.) before doing the steps below*
+
 ```
 cd ios
 fastlane beta
 ```
 
-## Release Android (Google Play)
+### Android (Google Play)
 
 *NOTE: Remember to change `.env`-file (correct OPERATOR_URL etc.) before doing the steps below*
 
 1. Download the Google Play JSON-file (it's in LastPass)
+  - Place the `.json`-file somewhere, you'll need to point to it from `android/fastlane/Appfile`
+    `json_key_file("/path/to/egendata_google_play.json")` 
   - Place the `release.keystore` in `android/app`
   - Place `gradle.properties` in `android`
-2. Open Android Studio
-  - Select "Build Variant" "release" for "app" under "Build Variants" (a tab on the left-most window, toward the lower left corner)
-  - Increment versionCode in android/app/build.gradle
-  - Under "Build" press "Generate Signed Bundle / APK" then "Android App Bundle"
-  - Point to the "Key store path"
-  - Use the passwords from the previously downloaded gradle.properties file, and "upload" for key alias
-  - You can select both "debug" and "release" for build-variants here.
-3. Log in to Google Play-console and select the "MyData"-app
-  - Under Release management -> App releases
-  - Select an appropriate release-type and upload the exported .apk-file from the previous step.
-
   
+2. 
+```
+cd android
+fastlane beta
+```
 

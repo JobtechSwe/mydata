@@ -4,7 +4,7 @@ import { Alert, View } from 'react-native'
 import { Spinner } from '../../components/elements/Spinner/Spinner'
 import { H2, H3, Paragraph } from '../../components/typography/Typography'
 import { PrimaryButton } from '../../components/elements/Button/Button'
-import { Wrap, ScrollViewWrap } from '../../components/View/Wrapper'
+import { Wrap, ScrollViewWrap } from '../../components/view/Wrapper'
 import { storeAccount } from '../../services/storage'
 import { getAccount } from '../../services/account'
 import AsyncStorage from '@react-native-community/async-storage'
@@ -17,6 +17,7 @@ function Settings({ navigation }) {
 
     setAccount(account)
   }
+
   React.useEffect(() => {
     getAccountFromStorage()
   }, [])
