@@ -16,7 +16,7 @@ export const authenticationRequestHandler = async ({ payload }) => {
   }
 }
 
-export const initConnection = async authRequest => {
+export const initConnection = async (authRequest) => {
   const registrationInit = await createConnectionInit(authRequest)
   try {
     const { data } = await axios.post(authRequest.eventsURI, registrationInit, { headers: { 'content-type': 'application/jwt' } })
