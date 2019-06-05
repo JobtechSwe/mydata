@@ -1,4 +1,4 @@
-# mydata-app
+# egendata-app
 
 An example app for managing consents and viewing data
 
@@ -51,7 +51,7 @@ react-native run-ios
 react-native run-android
 ```
 
-If the app doesn't open automatically go into apps and find MyData
+If the app doesn't open automatically go into apps and find Egendata
 
 React debug menu available on ios with ⌘d and on android with ⌘m / ctrl+m
 
@@ -103,7 +103,7 @@ fastlane beta
   - Point to the "Key store path"
   - Use the passwords from the previously downloaded gradle.properties file, and "upload" for key alias
   - You can select both "debug" and "release" for build-variants here.
-3. Log in to Google Play-console and select the "MyData"-app
+3. Log in to Google Play-console and select the "Egendata"-app
   - Under Release management -> App releases
   - Select an appropriate release-type and upload the exported .apk-file from the previous step.
 
