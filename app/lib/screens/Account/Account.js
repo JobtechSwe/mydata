@@ -1,10 +1,10 @@
-import Finished from '../../components/Finished/Finished'
+import Finished from '../../components/wizard/Finished'
 import KeyPair from '../../components/KeyPair'
-import PDS from '../../components/PDS/PDS'
+import PDS from '../../components/wizard/PDS'
 import React from 'react'
 import Register from '../../components/Account/Register'
 import { Alert } from 'react-native'
-import { Wrap, ScrollViewWrap } from '../../components/View/Wrapper'
+import { Wrap, ScrollViewWrap } from '../../components/view/Wrapper'
 import { save } from '../../services/account'
 import { storeAccount } from '../../services/storage'
 

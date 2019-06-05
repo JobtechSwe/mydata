@@ -2,18 +2,19 @@ import React, { useState } from 'react'
 import { Scan, Connection, Login } from '../../components/Auth'
 import { handle } from '../../services/index'
 
-const AuthScreen = (props) => {
+const AuthScreen = props => {
   const [state, setState] = useState({
     view: (props && props.view) || 'scan',
   })
 
   const onScan = async token => {
     try {
-      const { connectionRequest, existingConnection, sessionId } = await handle(token)
+      const { connectionRequest, existingConnection, sessionId } = await handle(
+        token
+      )
       const view = existingConnection ? 'login' : 'connection'
       setState({ view, connectionRequest, existingConnection, sessionId })
-    }
-    catch (error) {
+    } catch (error) {
       console.error('foo', error)
     }
   }
@@ -25,6 +26,9 @@ const AuthScreen = (props) => {
 
   const onApprove = () => {
     setState({ view: 'enter' })
+    /* TODO: Add me
+     * Linking.openURL(redirectUrl)
+     */
     props.navigation.navigate('Hem')
   }
   const onError = () => {
@@ -52,12 +56,7 @@ const AuthScreen = (props) => {
       )
     case 'scan':
     default:
-      return (
-        <Scan
-          onCancel={onCancel}
-          onScan={onScan}
-        />
-      )
+      return <Scan onCancel={onCancel} onScan={onScan} />
   }
 }
 

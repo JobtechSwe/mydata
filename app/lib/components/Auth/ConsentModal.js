@@ -3,7 +3,7 @@ import { View, TouchableOpacity } from 'react-native'
 import Collapsible from 'react-native-collapsible'
 import SvgUri from 'react-native-svg-uri'
 import Modal from 'react-native-modal'
-import { Wrap, ScrollViewWrap } from '../View/Wrapper'
+import { Wrap, ScrollViewWrap } from '../view/Wrapper'
 import styled, { theme } from '../../theme'
 import { H3, H4, Paragraph, Separator } from '../typography/Typography'
 import {
