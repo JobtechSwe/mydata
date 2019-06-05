@@ -1,9 +1,9 @@
 import React from 'react'
-import { View, TouchableOpacity } from 'react-native'
+import { Image, View, TouchableOpacity } from 'react-native'
 import Collapsible from 'react-native-collapsible'
 import SvgUri from 'react-native-svg-uri'
 import Modal from 'react-native-modal'
-import { Wrap, ScrollViewWrap } from '../View/Wrapper'
+import { Wrap, ScrollViewWrap } from '../view/Wrapper'
 import styled, { theme } from '../../theme'
 import { H3, H4, Paragraph, Separator } from '../typography/Typography'
 import {
@@ -26,7 +26,12 @@ const ModalWrapper = styled(View)`
 const ConsentHeader = styled(View)`
   background-color: ${({ theme }) => theme.colors.white};
   padding: 24px 36px;
+  flex-direction: row;
   align-self: stretch;
+`
+
+const ClientDescription = styled(View)`
+  padding: 4px 0;
 `
 
 const ConsentHeaderExternal = styled(ConsentHeader)`
@@ -98,6 +103,8 @@ const ConsentModal = ({
   onApprove,
   onReject,
 }) => {
+  console.log('Client', client)
+
   return (
     <Wrap>
       <StyledModal
@@ -108,8 +115,14 @@ const ConsentModal = ({
         <ModalWrapper>
           <Separator style={{ marginBottom: 0, marginTop: 0 }} />
           <ConsentHeader>
-            <H3>{client.displayName}</H3>
-            <Paragraph align="left">{client.description}</Paragraph>
+            <Image
+              source={{ uri: client.iconURI }}
+              style={{ width: 64, height: 64, marginRight: 12 }}
+            />
+            <ClientDescription>
+              <H3 style={{ marginBottom: 8 }}>{client.displayName}</H3>
+              <Paragraph align="left">{client.description}</Paragraph>
+            </ClientDescription>
           </ConsentHeader>
           <Separator style={{ marginBottom: 0, marginTop: 0 }} />
           <ScrollViewWrap
@@ -122,7 +135,11 @@ const ConsentModal = ({
               alignItems: 'stretch',
             }}
           >
-            {client.areas.map((scope, i) => (
+            <Paragraph style={{ paddingHorizontal: 32 }}>
+              Vill upprätta en relation med dig
+            </Paragraph>
+
+            {/*client.areas.map((scope, i) => (
               <ScopeItem
                 key={scope.area}
                 lastItem={i === client.areas.length - 1}
@@ -147,7 +164,7 @@ const ConsentModal = ({
                   />
                 ))}
               </View>
-            ))}
+            ))*/}
           </ScrollViewWrap>
           <ConsentButtonWrap>
             <AcceptConsentButton onPress={onApprove}>
