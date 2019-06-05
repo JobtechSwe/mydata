@@ -95,6 +95,35 @@ const CONTENT_PATH = {
   area: Joi.string().required()
 }
 
+const PERMISSION_BASE = {
+  ...CONTENT_PATH,
+  id: Joi.string().uuid().required(),
+  type: Joi.string().valid('READ', 'WRITE').required(),
+  lawfulBasis: LAWFUL_BASIS
+}
+
+const READ_PERMISSION_REQUEST = {
+  ...PERMISSION_BASE
+}
+const WRITE_PERMISSION_REQUEST = {
+  ...PERMISSION_BASE
+}
+const MISC_PERMISSION_REQUEST = {
+  ...PERMISSION_BASE
+}
+const READ_PERMISSION = {
+  ...PERMISSION_BASE
+}
+const WRITE_PERMISSION = {
+  ...PERMISSION_BASE
+}
+const MISC_PERMISSION = {
+  ...PERMISSION_BASE
+}
+const PERMISSION_DENIED = {
+  ...PERMISSION_BASE
+}
+
 const PERMISSION = Joi.object({
   ...CONTENT_PATH,
   id: Joi.string().uuid().required(),
@@ -109,8 +138,7 @@ const PERMISSION = Joi.object({
       then: Joi.string().required(),
       otherwise: Joi.forbidden() }
     ),
-  lawfulBasis: LAWFUL_BASIS,
-  jwk: JWK
+  lawfulBasis: LAWFUL_BASIS
 })
 
 // service -> operator
@@ -118,7 +146,9 @@ const PERMISSION_REQUEST = Joi.object({
   ...JWT_DEFAULTS,
   type: 'PERMISSION_REQUEST',
   permissions: Joi.array().items(
-    PERMISSION
+    READ_PERMISSION_REQUEST,
+    WRITE_PERMISSION_REQUEST,
+    MISC_PERMISSION_REQUEST
   ).min(1).required(),
   sub: Joi.string().uuid(),
   sid: Joi.string().uuid({ version: 'uuidv4' }).required()
@@ -129,7 +159,9 @@ const CONNECTION_REQUEST = Joi.object({
   ...JWT_DEFAULTS,
   type: 'CONNECTION_REQUEST',
   permissions: Joi.array().items(
-    PERMISSION
+    READ_PERMISSION_REQUEST,
+    WRITE_PERMISSION_REQUEST,
+    MISC_PERMISSION_REQUEST
   ).min(1).optional(),
   sid: Joi.string().uuid({ version: 'uuidv4' }).required(),
   displayName: Joi.string().required(),
@@ -162,9 +194,13 @@ const CONNECTION = Joi.object({
   type: 'CONNECTION',
   sid: Joi.string().required(),
   sub: Joi.string().uuid({ version: 'uuidv4' }).required(),
-  permissions: Joi.array().items(
-    PERMISSION
-  ).min(1).optional()
+  permissions: Joi.object({
+    approved: Joi.array().items(
+      READ_PERMISSION, WRITE_PERMISSION, MISC_PERMISSION
+    ).min(1).optional(),
+    denied: Joi.array().items(PERMISSION_DENIED)
+      .min(1).optional()
+  }).optional()
 }).required()
 
 // device -> operator
@@ -174,7 +210,11 @@ const CONNECTION_RESPONSE = Joi.object({
   content: Joi.array().items(Joi.object({
     ...CONTENT_PATH,
     data: JWE
-  })),
+  })).min(1).optional(),
+  accountKeys: Joi.array().items(Joi.object({
+    ...CONTENT_PATH,
+    jwk: JWK
+  })).min(1).required(),
   payload: Joi.string().required()
 }).required()
 
