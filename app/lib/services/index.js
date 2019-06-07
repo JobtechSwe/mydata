@@ -14,15 +14,16 @@ export { dropbox }
 export { rsaUtils }
 export { storage }
 
-
 const handlers = {
   AUTHENTICATION_REQUEST: auth.authenticationRequestHandler,
 }
 
 export const handle = async jwt => {
   const { payload, header } = await verify(jwt)
+
   if (!handlers[payload.type]) {
     throw Error(`Missing handler for ${payload.type}`)
   }
+
   return handlers[payload.type]({ payload, header })
 }

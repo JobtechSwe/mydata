@@ -42,16 +42,12 @@ const ScopeItemWrapper = styled(View)`
   margin-bottom: 0px;
 `
 
-const readAndWriteHelper = permissions => {
-  if (permissions.includes('READ') && permissions.includes('WRITE')) {
-    return 'Läsa och skriva'
-  }
-
-  if (permissions.includes('READ')) {
+const readAndWriteHelper = type => {
+  if (type === 'READ') {
     return 'Läsa'
   }
 
-  if (permissions.includes('WRITE')) {
+  if (type === 'WRITE') {
     return 'Skriva'
   } else {
     return 'Inga rättigheter'
@@ -86,7 +82,7 @@ const ScopeItem = ({ scope, lastItem }) => {
         <H4 style={{ fontSize: 12, marginTop: 8 }}>Syfte</H4>
         <Paragraph small>{scope.purpose}</Paragraph>
         <H4 style={{ fontSize: 12, marginTop: 8 }}>Rättigheter</H4>
-        <Paragraph small>{readAndWriteHelper(scope.permissions)}</Paragraph>
+        <Paragraph small>{readAndWriteHelper(scope.type)}</Paragraph>
       </Collapsible>
       {lastItem ? (
         <View style={{ marginTop: 12, marginBottom: 16 }} />
@@ -97,14 +93,8 @@ const ScopeItem = ({ scope, lastItem }) => {
   )
 }
 
-const ConsentModal = ({
-  data: { client, externals },
-  visible,
-  onApprove,
-  onReject,
-}) => {
-  console.log('Client', client)
-
+const ConsentModal = ({ data, visible, onApprove, onReject }) => {
+  console.log('Data', data)
   return (
     <Wrap>
       <StyledModal
@@ -116,12 +106,12 @@ const ConsentModal = ({
           <Separator style={{ marginBottom: 0, marginTop: 0 }} />
           <ConsentHeader>
             <Image
-              source={{ uri: client.iconURI }}
+              source={{ uri: data.iconURI }}
               style={{ width: 64, height: 64, marginRight: 12 }}
             />
             <ClientDescription>
-              <H3 style={{ marginBottom: 8 }}>{client.displayName}</H3>
-              <Paragraph align="left">{client.description}</Paragraph>
+              <H3 style={{ marginBottom: 8 }}>{data.displayName}</H3>
+              <Paragraph align="left">{data.description}</Paragraph>
             </ClientDescription>
           </ConsentHeader>
           <Separator style={{ marginBottom: 0, marginTop: 0 }} />
@@ -139,32 +129,29 @@ const ConsentModal = ({
               Vill upprätta en relation med dig
             </Paragraph>
 
-            {/*client.areas.map((scope, i) => (
+            {data.local.map((scope, i) => (
               <ScopeItem
                 key={scope.area}
-                lastItem={i === client.areas.length - 1}
+                // lastItem={i === data.areas.length - 1}
                 scope={scope}
               />
             ))}
-            {externals.map(({ client }) => (
-              <View key={client.displayName}>
+
+            {data.external.map(({ data }) => (
+              <View key={data.displayName}>
                 <Separator style={{ marginBottom: 0, marginTop: 0 }} />
                 <ConsentHeaderExternal>
-                  <H4>{client.displayName}</H4>
+                  <H4>{data.displayName}</H4>
                   <Paragraph align="left" small>
-                    {client.description}
+                    {data.description}
                   </Paragraph>
                 </ConsentHeaderExternal>
                 <Separator style={{ marginBottom: 24, marginTop: 0 }} />
-                {client.areas.map((scope, i) => (
-                  <ScopeItem
-                    key={scope.area}
-                    lastItem={i === client.areas.length - 1}
-                    scope={scope}
-                  />
+                {data.areas.map((scope, i) => (
+                  <ScopeItem key={scope.area} scope={scope} />
                 ))}
               </View>
-            ))*/}
+            ))}
           </ScrollViewWrap>
           <ConsentButtonWrap>
             <AcceptConsentButton onPress={onApprove}>

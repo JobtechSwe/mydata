@@ -4,9 +4,9 @@ import { Spinner } from '../elements/Spinner/Spinner'
 import { Paragraph } from '../typography/Typography'
 import ConsentModal from './ConsentModal'
 import { approveConnection } from '../../services/auth'
-// import { toViewModel } from './parseData'
+import { toViewModel } from './parseData'
 
-const Connection = ({ connectionRequest, onApprove }) => {
+const Connection = ({ connectionRequest, onApprove, onCancel }) => {
   const [modalVisible, setModalVisible] = React.useState(true)
   const [approving, setApproving] = React.useState(false)
 
@@ -21,6 +21,7 @@ const Connection = ({ connectionRequest, onApprove }) => {
   const onDenyConnection = () => {
     // TODO: Implement
     setModalVisible(false)
+    onCancel()
   }
 
   if (approving) {
@@ -39,7 +40,7 @@ const Connection = ({ connectionRequest, onApprove }) => {
       onApprove={onApproveConnection}
       onReject={onDenyConnection}
       visible={modalVisible}
-      data={{ client: connectionRequest }}
+      data={toViewModel(connectionRequest)}
     />
   )
 }

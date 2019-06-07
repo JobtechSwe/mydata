@@ -15,7 +15,7 @@ const AuthScreen = props => {
       const view = existingConnection ? 'login' : 'connection'
       setState({ view, connectionRequest, existingConnection, sessionId })
     } catch (error) {
-      console.error('foo', error)
+      console.error('Error while initialiasing connectionRequest', error)
     }
   }
 
@@ -28,6 +28,7 @@ const AuthScreen = props => {
     setState({ view: 'enter' })
     props.navigation.navigate('Hem')
   }
+
   const onError = () => {
     props.navigation.goBack()
   }

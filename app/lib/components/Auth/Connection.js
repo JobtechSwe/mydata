@@ -14,8 +14,6 @@ const Connection = ({ connectionRequest, onApprove }) => {
     // TODO: Implement
   }
 
-  console.log('ConnectionRequest', connectionRequest)
-
   return (
     <Wrap>
       <H1>MyData</H1>

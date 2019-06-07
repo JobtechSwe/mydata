@@ -7,7 +7,7 @@ import ConsentList from '../../components/ConsentList/ConsentList'
 import { getAccount } from '../../services/account'
 
 const HomeScreen = ({ navigation }) => {
-  const [consents, setConsents] = useState([])
+  const [consents, _setConsents] = useState([])
 
   const handleOpenURL = event => {
     const { navigate } = navigation
