@@ -22,7 +22,6 @@ describe('auth', () => {
     }
     client = createClient(config)
   })
-
   describe('#createAuthenticationRequest', () => {
     it('creates a valid jwt', async () => {
       const id = 'some_id'
@@ -31,7 +30,6 @@ describe('auth', () => {
       const payload = JWT.decode(authReq)
       expect(payload).not.toBe(null)
     })
-
     it('creates header with correct kid', async () => {
       const id = 'some_id'
       const authReq = await createAuthenticationRequest(client, id)
@@ -40,7 +38,6 @@ describe('auth', () => {
 
       expect(header.kid).toEqual('http://localhost:4000/jwks/client_key')
     })
-
     it('creates the correct jwt claimsSet', async () => {
       const id = v4()
       const authReq = await createAuthenticationRequest(client, id)
