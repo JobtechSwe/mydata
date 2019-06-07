@@ -30,6 +30,10 @@ const JWK_PRIVATE = Joi.object({
   qi: Joi.string().required()
 })
 
+const JWKS = Joi.object({
+  keys: Joi.array().valid(JWK).min(1).required()
+})
+
 const JOSE_HEADER = Joi.object({
   alg: Joi.string().valid(algs).required(),
   kid: Joi.string().uri(),
@@ -102,47 +106,41 @@ const PERMISSION_BASE = {
   lawfulBasis: LAWFUL_BASIS
 }
 
-const READ_PERMISSION_REQUEST = {
+const READ_PERMISSION_REQUEST = Joi.object({
   ...PERMISSION_BASE,
+  type: Joi.string().valid('READ').required(),
   purpose: Joi.string().required(),
-  jwk: JWK
-}
-const WRITE_PERMISSION_REQUEST = {
+  jwk: JWK.required()
+})
+const WRITE_PERMISSION_REQUEST = Joi.object({
   ...PERMISSION_BASE,
+  type: Joi.string().valid('WRITE').required(),
   description: Joi.string().required()
-}
-const MISC_PERMISSION_REQUEST = {
-  ...PERMISSION_BASE
-}
-const READ_PERMISSION = {
+})
+const MISC_PERMISSION_REQUEST = Joi.object({
   ...PERMISSION_BASE,
-  jwk: JWK
-}
+  type: Joi.string().invalid('READ', 'WRITE').required(),
+  purpose: Joi.string().required()
+})
+const READ_PERMISSION = Joi.object({
+  ...PERMISSION_BASE,
+  type: Joi.string().valid('READ').required(),
+  purpose: Joi.string().required(),
+  kid: Joi.string().uri().required()
+})
 const WRITE_PERMISSION = {
-  ...PERMISSION_BASE
+  ...PERMISSION_BASE,
+  type: Joi.string().valid('WRITE').required(),
+  description: Joi.string().required(),
+  jwks: JWKS.required()
 }
 const MISC_PERMISSION = {
-  ...PERMISSION_BASE
+  ...PERMISSION_BASE,
+  type: Joi.string().invalid('READ', 'WRITE').required(),
+  purpose: Joi.string().required()
 }
-const PERMISSION_DENIED = {
+const PERMISSION_DENIED = Joi.object({
   ...PERMISSION_BASE
-}
-
-const PERMISSION = Joi.object({
-  ...CONTENT_PATH,
-  id: Joi.string().uuid().required(),
-  type: Joi.string().valid('READ', 'WRITE').required(),
-  purpose: Joi.alternatives()
-    .when('type', { is: 'READ',
-      then: Joi.string().required(),
-      otherwise: Joi.forbidden() }
-    ),
-  description: Joi.alternatives()
-    .when('type', { is: 'WRITE',
-      then: Joi.string().required(),
-      otherwise: Joi.forbidden() }
-    ),
-  lawfulBasis: LAWFUL_BASIS
 })
 
 // service -> operator
@@ -290,7 +288,6 @@ module.exports = {
   LOGIN,
   LOGIN_EVENT,
   LOGIN_RESPONSE,
-  PERMISSION,
   PERMISSION_REQUEST,
   SERVICE_REGISTRATION
 }
