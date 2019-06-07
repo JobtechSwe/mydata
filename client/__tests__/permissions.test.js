@@ -29,7 +29,8 @@ describe('permissions', () => {
 
       const result = await createPermissions(config, keyProvider)
 
-      await Promise.all(result.map(x => schemas.PERMISSION.validate(x)))
+      await expect(schemas.PERMISSION_REQUESTS.validate(result))
+        .resolves.not.toThrow()
     })
 
     it('adds own domain, CONSENT and an id', async () => {
@@ -62,8 +63,6 @@ describe('permissions', () => {
 
       const result = await createPermissions(configWithReadPermissions, keyProvider)
 
-      await Promise.all(result.map(x => schemas.PERMISSION.validate(x)))
-
       expect(result).toEqual([
         {
           id: expect.any(String),
@@ -92,8 +91,6 @@ describe('permissions', () => {
         }
       ]
       const result = await createPermissions({ ...config, defaultPermissions: configPermissions }, keyProvider)
-
-      await Promise.all(result.map(x => schemas.PERMISSION.validate(x)))
 
       expect(result).toEqual([
         {
