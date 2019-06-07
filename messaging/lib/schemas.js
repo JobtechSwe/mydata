@@ -11,7 +11,7 @@ const JWT_DEFAULTS = {
 const JWK = Joi.object({
   kid: Joi.string(),
   kty: Joi.string().valid('RSA').required(),
-  use: Joi.string().valid(['sig', 'enc']).required(),
+  use: Joi.string().valid('sig', 'enc').required(),
   e: Joi.string().valid('AQAB').required(),
   n: Joi.string().required()
 })
@@ -29,6 +29,13 @@ const JWK_PRIVATE = Joi.object({
   dq: Joi.string().required(),
   qi: Joi.string().required()
 })
+
+const JWKS = Joi.object({
+  keys: Joi.array().items(JWK).min(1).required()
+})
+
+const JWS = Joi.string()
+  .regex(/^[a-zA-Z0-9\-_]+?\.[a-zA-Z0-9\-_]+?\.([a-zA-Z0-9\-_]+)?$/)
 
 const JOSE_HEADER = Joi.object({
   alg: Joi.string().valid(algs).required(),
@@ -99,50 +106,54 @@ const PERMISSION_BASE = {
   ...CONTENT_PATH,
   id: Joi.string().uuid().required(),
   type: Joi.string().valid('READ', 'WRITE').required(),
-  lawfulBasis: LAWFUL_BASIS
+  lawfulBasis: LAWFUL_BASIS.required()
 }
 
-const READ_PERMISSION_REQUEST = {
+const READ_PERMISSION_REQUEST = Joi.object({
   ...PERMISSION_BASE,
+  type: Joi.string().valid('READ').required(),
   purpose: Joi.string().required(),
-  jwk: JWK
-}
-const WRITE_PERMISSION_REQUEST = {
+  jwk: JWK.required()
+})
+const WRITE_PERMISSION_REQUEST = Joi.object({
   ...PERMISSION_BASE,
+  type: Joi.string().valid('WRITE').required(),
   description: Joi.string().required()
-}
-const MISC_PERMISSION_REQUEST = {
-  ...PERMISSION_BASE
-}
-const READ_PERMISSION = {
+})
+const MISC_PERMISSION_REQUEST = Joi.object({
   ...PERMISSION_BASE,
-  jwk: JWK
-}
+  type: Joi.string().invalid('READ', 'WRITE').required(),
+  purpose: Joi.string().required()
+})
+const PERMISSION_REQUESTS = Joi.array().items(
+  READ_PERMISSION_REQUEST,
+  WRITE_PERMISSION_REQUEST,
+  MISC_PERMISSION_REQUEST
+)
+const READ_PERMISSION = Joi.object({
+  ...PERMISSION_BASE,
+  type: Joi.string().valid('READ').required(),
+  purpose: Joi.string().required(),
+  kid: Joi.string().uri().required()
+})
 const WRITE_PERMISSION = {
-  ...PERMISSION_BASE
+  ...PERMISSION_BASE,
+  type: Joi.string().valid('WRITE').required(),
+  description: Joi.string().required(),
+  jwks: JWKS.required()
 }
 const MISC_PERMISSION = {
-  ...PERMISSION_BASE
+  ...PERMISSION_BASE,
+  type: Joi.string().invalid('READ', 'WRITE').required(),
+  purpose: Joi.string().required()
 }
-const PERMISSION_DENIED = {
+const PERMISSIONS = Joi.array().items(
+  READ_PERMISSION,
+  WRITE_PERMISSION,
+  MISC_PERMISSION
+)
+const PERMISSION_DENIED = Joi.object({
   ...PERMISSION_BASE
-}
-
-const PERMISSION = Joi.object({
-  ...CONTENT_PATH,
-  id: Joi.string().uuid().required(),
-  type: Joi.string().valid('READ', 'WRITE').required(),
-  purpose: Joi.alternatives()
-    .when('type', { is: 'READ',
-      then: Joi.string().required(),
-      otherwise: Joi.forbidden() }
-    ),
-  description: Joi.alternatives()
-    .when('type', { is: 'WRITE',
-      then: Joi.string().required(),
-      otherwise: Joi.forbidden() }
-    ),
-  lawfulBasis: LAWFUL_BASIS
 })
 
 // service -> operator
@@ -162,11 +173,7 @@ const PERMISSION_REQUEST = Joi.object({
 const CONNECTION_REQUEST = Joi.object({
   ...JWT_DEFAULTS,
   type: 'CONNECTION_REQUEST',
-  permissions: Joi.array().items(
-    READ_PERMISSION_REQUEST,
-    WRITE_PERMISSION_REQUEST,
-    MISC_PERMISSION_REQUEST
-  ).min(1).optional(),
+  permissions: PERMISSION_REQUESTS.min(1).optional(),
   sid: Joi.string().uuid({ version: 'uuidv4' }).required(),
   displayName: Joi.string().required(),
   description: Joi.string().required(),
@@ -199,9 +206,7 @@ const CONNECTION = Joi.object({
   sid: Joi.string().required(),
   sub: Joi.string().uuid({ version: 'uuidv4' }).required(),
   permissions: Joi.object({
-    approved: Joi.array().items(
-      READ_PERMISSION, WRITE_PERMISSION, MISC_PERMISSION
-    ).min(1).optional(),
+    approved: PERMISSIONS.min(1).optional(),
     denied: Joi.array().items(PERMISSION_DENIED)
       .min(1).optional()
   }).optional()
@@ -211,14 +216,14 @@ const CONNECTION = Joi.object({
 const CONNECTION_RESPONSE = Joi.object({
   ...JWT_DEFAULTS,
   type: 'CONNECTION_RESPONSE',
-  payload: CONNECTION
+  payload: JWS.required()
 }).required()
 
 // operator -> service
 const CONNECTION_EVENT = Joi.object({
   ...JWT_DEFAULTS,
   type: 'CONNECTION_EVENT',
-  payload: Joi.string().required()
+  payload: JWS.required()
 }).required()
 
 // device -> (operator) -> service
@@ -233,14 +238,14 @@ const LOGIN = Joi.object({
 const LOGIN_RESPONSE = Joi.object({
   ...JWT_DEFAULTS,
   type: 'LOGIN_RESPONSE',
-  payload: Joi.string().required()
+  payload: JWS.required()
 }).required()
 
 // operator -> service
 const LOGIN_EVENT = Joi.object({
   ...JWT_DEFAULTS,
   type: 'LOGIN_EVENT',
-  payload: Joi.string().required()
+  payload: JWS.required()
 }).required()
 
 // operator -> service
@@ -286,11 +291,13 @@ module.exports = {
   DATA_WRITE,
   JOSE_HEADER,
   JWK,
+  JWKS,
   JWK_PRIVATE,
   LOGIN,
   LOGIN_EVENT,
   LOGIN_RESPONSE,
-  PERMISSION,
+  PERMISSIONS,
+  PERMISSION_REQUESTS,
   PERMISSION_REQUEST,
   SERVICE_REGISTRATION
 }

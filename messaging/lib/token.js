@@ -32,7 +32,6 @@ async function verifyToken ({ decode, verify }, token) {
       const { data } = await axios.get(kid)
       key = data
     } catch (error) {
-      console.error('error', error)
       throw new Error(`No key found for kid: ${kid}`)
     }
   }
