@@ -4,7 +4,6 @@ import { parse } from '../../lib/utils/code'
 import * as account from '../../lib/services/account'
 import * as storage from '../../lib/services/storage'
 import * as crypto from '../../lib/services/crypto'
-import * as consents from '../../lib/services/consents'
 import Config from 'react-native-config'
 import AsyncStorage from '@react-native-community/async-storage'
 
@@ -39,7 +38,6 @@ export const approveConnection = auth.approveConnection
 
 export const approveLogin = auth.approveLogin
 
-export const getAllConsents = consents.getAll
 
 export async function setConfig (config) {
   Object.entries(config).forEach(([key, val]) =>

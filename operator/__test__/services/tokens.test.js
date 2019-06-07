@@ -4,13 +4,13 @@ const { sign } = require('../../lib/services/jwt')
 
 describe('tokens', () => {
   it('CONNECTION_EVENT', async () => {
-    const token = await tokens.createConnectionEvent('http://mycv.work', 'drftyguhjklnbiasdhoiasdhasoidasdsa')
+    const token = await tokens.createConnectionEvent('http://mycv.work', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c')
     expect(token).toEqual(expect.any(String))
   })
 
   describe('#createLoginEvent', () => {
     it('Happy path', async () => {
-      const payload = 'fghuijohjiosadasdsad'
+      const payload = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
       const serviceId = 'http://mycv.work'
       const token = await tokens.createLoginEvent(payload, serviceId)
       expect(token).toEqual(expect.any(String))

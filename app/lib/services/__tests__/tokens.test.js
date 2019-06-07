@@ -83,7 +83,7 @@ describe('tokens', () => {
   })
 
   it('LOGIN_RESPONSE', async () => {
-    const token = await tokens.createLoginResponse('this-is-a-jwt-payload')
+    const token = await tokens.createLoginResponse('this-is.a-jwt.payload')
     expect(token).toEqual(expect.any(String))
   })
 })
