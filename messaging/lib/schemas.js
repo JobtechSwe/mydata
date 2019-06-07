@@ -103,16 +103,20 @@ const PERMISSION_BASE = {
 }
 
 const READ_PERMISSION_REQUEST = {
-  ...PERMISSION_BASE
+  ...PERMISSION_BASE,
+  purpose: Joi.string().required(),
+  jwk: JWK
 }
 const WRITE_PERMISSION_REQUEST = {
-  ...PERMISSION_BASE
+  ...PERMISSION_BASE,
+  description: Joi.string().required()
 }
 const MISC_PERMISSION_REQUEST = {
   ...PERMISSION_BASE
 }
 const READ_PERMISSION = {
-  ...PERMISSION_BASE
+  ...PERMISSION_BASE,
+  jwk: JWK
 }
 const WRITE_PERMISSION = {
   ...PERMISSION_BASE
@@ -207,15 +211,7 @@ const CONNECTION = Joi.object({
 const CONNECTION_RESPONSE = Joi.object({
   ...JWT_DEFAULTS,
   type: 'CONNECTION_RESPONSE',
-  content: Joi.array().items(Joi.object({
-    ...CONTENT_PATH,
-    data: JWE
-  })).min(1).optional(),
-  accountKeys: Joi.array().items(Joi.object({
-    ...CONTENT_PATH,
-    jwk: JWK
-  })).min(1).required(),
-  payload: Joi.string().required()
+  payload: CONNECTION
 }).required()
 
 // operator -> service
