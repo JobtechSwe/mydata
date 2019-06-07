@@ -4,7 +4,6 @@ import { Linking } from 'react-native'
 import { H1 } from '../../components/typography/Typography'
 import { Wrap, ScrollViewWrap } from '../../components/View/Wrapper'
 import ConsentList from '../../components/ConsentList/ConsentList'
-import { getAll } from '../../services/consents'
 import { getAccount } from '../../services/account'
 
 const HomeScreen = ({ navigation }) => {

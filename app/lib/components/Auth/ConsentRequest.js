@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Wrap } from '../View/Wrapper'
 import { Spinner } from '../elements/Spinner/Spinner'
-import * as consentsService from '../../services/consents'
 import { Paragraph } from '../typography/Typography'
 import ConsentModal from './ConsentModal'
 import { toViewModel } from './parseData'
@@ -14,16 +13,16 @@ class ConsentRequest extends Component {
   }
 
   async componentDidMount() {
-    const consentRequest = await consentsService.get(
+    /*const consentRequest = await consentsService.get(
       this.props.consentRequestId
     )
-    this.setState({ consentRequest, view: 'approve' })
+    this.setState({ consentRequest, view: 'approve' })*/
   }
 
   approve = async () => {
-    this.setState({ view: 'approving' })
+    /*this.setState({ view: 'approving' })
     await consentsService.approve(this.state.consentRequest)
-    this.props.onApprove()
+    this.props.onApprove()*/
   }
 
   reject = () => {
