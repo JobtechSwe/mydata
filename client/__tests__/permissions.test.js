@@ -32,7 +32,6 @@ describe('permissions', () => {
       await expect(schemas.PERMISSION_REQUESTS.validate(result))
         .resolves.not.toThrow()
     })
-
     it('adds own domain, CONSENT and an id', async () => {
       keyProvider = { createEncryptionKey: jest.fn() }
 
@@ -49,7 +48,6 @@ describe('permissions', () => {
         }
       ])
     })
-
     it('creates an encryption key for READ', async () => {
       const jwk = { kid: 'foo', kty: 'RSA', use: 'enc', e: 'AQAB', n: 'a-large-number' }
       keyProvider = {
