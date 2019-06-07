@@ -1,8 +1,10 @@
 const schemas = require('../lib/schemas')
 const { JWK } = require('@panva/jose')
 
-function jwk () {
-  return JWK.generateSync('RSA', 1024, { use: 'enc' }).toJWK(false)
+function jwk (domain) {
+  const key = JWK.generateSync('RSA', 1024, { use: 'enc' }).toJWK(false)
+  key.kid = `${domain}/jwks/${key.kid}`
+  return key
 }
 
 describe('schemas', () => {
@@ -24,7 +26,8 @@ describe('schemas', () => {
         displayName: 'My CV',
         description: 'This is a good CV site',
         iconURI: 'https://cv.work/icon.png',
-        permissionRequests: [
+        permissions: [
+          // Read permission request
           {
             id: '91910133-4024-4641-a7c7-91fb6e11588e',
             domain: 'http://cv.work',
@@ -32,7 +35,25 @@ describe('schemas', () => {
             type: 'READ',
             purpose: 'Stuff',
             lawfulBasis: 'CONSENT',
-            key: jwk()
+            jwk: jwk('http://cv.work')
+          },
+          // Write permission request
+          {
+            id: '392c6472-40e4-4e2b-92e2-77a46c1900b8',
+            domain: 'http://cv.work',
+            area: 'education',
+            type: 'WRITE',
+            description: 'Stuff',
+            lawfulBasis: 'CONSENT'
+          },
+          // Misc permission request
+          {
+            id: '2276b993-5e9c-4a60-b4da-e136d5998a32',
+            domain: 'http://cv.work',
+            area: 'education',
+            type: 'PUBLISH',
+            purpose: 'Stuff',
+            lawfulBasis: 'CONSENT'
           }
         ]
       }
@@ -49,14 +70,41 @@ describe('schemas', () => {
         aud: 'https://mycv.work',
         sid: 'sdkfhdkskdfd',
         sub: 'baa949aa-fbb5-4aad-8351-d6ef219dd07b',
-        permissions: [
-          {
-            id: 'd8f53525-18a8-4819-a7af-847ed456420f',
-            domain: 'https://mycv.work',
-            area: 'edumacation',
-            type: 'READ'
-          }
-        ]
+        permissions: {
+          approved: [
+            {
+              id: '91910133-4024-4641-a7c7-91fb6e11588e',
+              domain: 'https://mycv.work',
+              area: 'edumacation',
+              type: 'READ',
+              purpose: 'Stuff',
+              lawfulBasis: 'CONSENT',
+              kid: jwk('http://cv.work').kid
+            },
+            {
+              id: '392c6472-40e4-4e2b-92e2-77a46c1900b8',
+              domain: 'https://mycv.work',
+              area: 'edumacation',
+              type: 'WRITE',
+              description: 'Stuff',
+              lawfulBasis: 'CONSENT',
+              jwks: {
+                keys: [
+                  jwk('mydata://account/baa949aa-fbb5-4aad-8351-d6ef219dd07b'),
+                  jwk('http://cv.work')
+                ]
+              }
+            },
+            {
+              id: '2276b993-5e9c-4a60-b4da-e136d5998a32',
+              domain: 'https://mycv.work',
+              area: 'edumacation',
+              type: 'PUBLISH',
+              purpose: 'Stuff',
+              lawfulBasis: 'CONSENT'
+            }
+          ]
+        }
       }
     })
     it('validates a correct payload', async () => {
@@ -69,31 +117,7 @@ describe('schemas', () => {
           ...jwtDefaults,
           aud: 'https://smoothoperator',
           type: 'CONNECTION_RESPONSE',
-          payload: {
-            ...jwtDefaults,
-            type: 'CONNECTION',
-            aud: 'https://mycv.work',
-            sid: 'sdkfhdkskdfd',
-            sub: 'baa949aa-fbb5-4aad-8351-d6ef219dd07b',
-            permissions: {
-              approved: [
-                {
-                  id: 'd8f53525-18a8-4819-a7af-847ed456420f',
-                  domain: 'https://mycv.work',
-                  area: 'edumacation',
-                  type: 'READ'
-                }
-              ],
-              denied: [
-                {
-                  id: '647d1fc5-2a5b-405f-bbd9-1b84d58ce5dc',
-                  domain: 'https://mycv.work',
-                  area: 'diary',
-                  type: 'READ'
-                }
-              ]
-            }
-          }
+          payload: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dnZWRJbkFzIjoiYWRtaW4iLCJpYXQiOjE0MjI3Nzk2Mzh9.gzSraSYS8EXBxLN_oWnFSRgCzcmJmMjLiuyu5CSpyHI'
         }
         await expect(schemas.CONNECTION_RESPONSE.validate(payload))
           .resolves.not.toThrow()
