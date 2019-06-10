@@ -62,7 +62,7 @@ async function connectionResponse ({ header, payload }, res, next) {
       throw Error('Could not verify CONNECTION_RESPONSE payload')
     }
 
-    const { payload: { aud, sub } } = verified
+    const { payload: { aud, sub, permissions } } = verified
 
     const [resAccount, resService, resConnection] = await multiple(checkConnection({
       accountId: iss,
@@ -97,6 +97,7 @@ async function connectionResponse ({ header, payload }, res, next) {
       accountId: iss,
       serviceId: aud
     })
+    const permissionsSql = approved(permissions)
     await query(...connectionSql)
     res.sendStatus(201)
   } catch (error) {
@@ -105,40 +106,8 @@ async function connectionResponse ({ header, payload }, res, next) {
   }
 }
 
-function permissions (payload, block, domain) {
-  return Object.entries(block)
-    .reduce((statements, [area, permissions]) => {
-      // Add account key to db
-      const params = {
-        accountKeyId: '',
-        accountId: '',
-        domain,
-        area,
-        readKey: ''
-      }
-      statements.push(accountKeyInsert(params))
-
-      Object.entries(permissions)
-        .forEach(([type, permission]) => {
-          const params = {
-            permissionId: permission.id,
-            connectionId: payload.sub,
-            domain,
-            area,
-            type,
-            purpose: permission.purpose,
-            legalBasis: permission.legalBasis,
-            readKey: null
-          }
-
-          if (type.toUpperCase() === 'READ') {
-            const key = permission.jwks.find(jwk => jwk.kid.match(new RegExp(`^${domain}`)))
-            params.readKey = key
-          }
-          statements.push(permissionInsert(params))
-        })
-      return statements
-    }, [])
+function approved ({ approved } = {}) {
+  return []
 }
 
 module.exports = {
