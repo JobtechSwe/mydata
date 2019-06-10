@@ -53,7 +53,7 @@ spec:
               secretKeyRef:
                 name: apm
                 key: token
-          image: jobtechswe/mydata-operator:latest
+          image: jobtechswe/mydata-operator:latest-tag
           imagePullPolicy: Always
           name: operator-test
           terminationMessagePath: /dev/termination-log
