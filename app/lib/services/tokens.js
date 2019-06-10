@@ -37,7 +37,11 @@ export const createConnectionInit = async ({ aud, iss, sid }) => {
   )
 }
 
-export const createConnection = async ({ iss, sid }, connectionId) => {
+export const createConnection = async (
+  { iss, sid },
+  permissions,
+  connectionId
+) => {
   const { keys } = await getAccount()
 
   return sign(
@@ -47,6 +51,7 @@ export const createConnection = async ({ iss, sid }, connectionId) => {
       iss: 'mydata://account',
       sid,
       sub: connectionId,
+      permissions,
     },
     keys.privateKey,
     { jwk: keys.publicKey, alg: 'RS256' }
@@ -99,4 +104,3 @@ export const createLoginResponse = async loginPayload => {
     { jwk: keys.publicKey, alg: 'RS256' }
   )
 }
-

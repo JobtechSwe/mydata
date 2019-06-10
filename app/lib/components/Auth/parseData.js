@@ -17,9 +17,21 @@ export function toViewModel(data) {
       current.description = item.description
     }
 
-    group[item.area] = {
-      ...current,
-      [item.type.toLowerCase()]: item,
+    if (item.type === 'READ') {
+      const { jwk, ...details } = item
+
+      group[item.area] = {
+        ...current,
+        [item.type.toLowerCase()]: {
+          ...details,
+          kid: jwk.kid,
+        },
+      }
+    } else if (item.type === 'WRITE') {
+      group[item.area] = {
+        ...current,
+        [item.type.toLowerCase()]: item,
+      }
     }
 
     return group
@@ -45,8 +57,10 @@ export function toConnectionRequest({ local = [], external = [] }) {
 
   const notUndefined = value => value !== undefined
 
-  return [
-    ...local.reduce(extractPermissions, []).filter(notUndefined),
-    ...external.reduce(extractPermissions, []).filter(notUndefined),
-  ]
+  return {
+    approved: [
+      ...local.reduce(extractPermissions, []).filter(notUndefined),
+      ...external.reduce(extractPermissions, []).filter(notUndefined),
+    ],
+  }
 }

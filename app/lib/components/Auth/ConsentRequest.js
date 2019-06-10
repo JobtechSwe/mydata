@@ -12,7 +12,7 @@ const Connection = ({ connectionRequest, onApprove, onCancel }) => {
 
   const onApproveConnection = async permissions => {
     setApproving(true)
-    await approveConnection({ ...connectionRequest, permissions })
+    await approveConnection(connectionRequest, permissions)
     onApprove()
   }
 

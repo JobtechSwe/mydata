@@ -115,6 +115,8 @@ const ConsentModal = ({ data, visible, onApprove, onReject }) => {
       toConnectionRequest({ local: data.local, external: data.external })
     )
 
+  const { local = [], external = [] } = data
+
   return (
     <Wrap>
       <StyledModal
@@ -149,25 +151,25 @@ const ConsentModal = ({ data, visible, onApprove, onReject }) => {
             {/*   Vill upprätta en relation med dig */}
             {/* </Paragraph> */}
 
-            {data.local.map((permission, i) => (
+            {local.map((permission, i) => (
               <ScopeItem
                 key={permission.area}
-                lastItem={i === data.local.length - 1}
+                lastItem={i === local.length - 1}
                 scope={permission}
               />
             ))}
 
-            {/*data.external.map(({ scope }) => (
-              <View key={data.displayName}>
+            {/*external.map(({ scope }) => (
+              <View key={scope.displayName}>
                 <Separator style={{ marginBottom: 0, marginTop: 0 }} />
                 <ConsentHeaderExternal>
-                  <H4>{data.displayName}</H4>
+                  <H4>{scope.displayName}</H4>
                   <Paragraph align="left" small>
-                    {data.description}
+                    {scope.description}
                   </Paragraph>
                 </ConsentHeaderExternal>
                 <Separator style={{ marginBottom: 24, marginTop: 0 }} />
-                {data.areas.map((scope, i) => (
+                {scope.areas.map((scope, i) => (
                   <ScopeItem key={scope.area} scope={scope} />
                 ))}
               </View>

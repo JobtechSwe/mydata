@@ -39,9 +39,17 @@ export const initConnection = async authRequest => {
   }
 }
 
-export const approveConnection = async connectionRequest => {
+export const approveConnection = async (
+  connectionRequest,
+  permissionsResult
+) => {
   const connectionId = v4()
-  const connection = await createConnection(connectionRequest, connectionId)
+  const connection = await createConnection(
+    connectionRequest,
+    permissionsResult,
+    connectionId
+  )
+
   const connectionResponse = await createConnectionResponse(connection)
 
   await axios.post(Config.OPERATOR_URL, connectionResponse, {
