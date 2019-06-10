@@ -45,15 +45,6 @@ describe('schemas', () => {
             type: 'WRITE',
             description: 'Stuff',
             lawfulBasis: 'CONSENT'
-          },
-          // Misc permission request
-          {
-            id: '2276b993-5e9c-4a60-b4da-e136d5998a32',
-            domain: 'http://cv.work',
-            area: 'education',
-            type: 'PUBLISH',
-            purpose: 'Stuff',
-            lawfulBasis: 'CONSENT'
           }
         ]
       }
@@ -94,14 +85,6 @@ describe('schemas', () => {
                   jwk('http://cv.work')
                 ]
               }
-            },
-            {
-              id: '2276b993-5e9c-4a60-b4da-e136d5998a32',
-              domain: 'https://mycv.work',
-              area: 'edumacation',
-              type: 'PUBLISH',
-              purpose: 'Stuff',
-              lawfulBasis: 'CONSENT'
             }
           ]
         }
