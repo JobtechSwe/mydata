@@ -120,16 +120,11 @@ const WRITE_PERMISSION_REQUEST = Joi.object({
   type: Joi.string().valid('WRITE').required(),
   description: Joi.string().required()
 })
-const MISC_PERMISSION_REQUEST = Joi.object({
-  ...PERMISSION_BASE,
-  type: Joi.string().invalid('READ', 'WRITE').required(),
-  purpose: Joi.string().required()
-})
 const PERMISSION_REQUEST_ARRAY = Joi.array().items(
   READ_PERMISSION_REQUEST,
-  WRITE_PERMISSION_REQUEST,
-  MISC_PERMISSION_REQUEST
+  WRITE_PERMISSION_REQUEST
 )
+
 const READ_PERMISSION = Joi.object({
   ...PERMISSION_BASE,
   type: Joi.string().valid('READ').required(),
@@ -142,16 +137,11 @@ const WRITE_PERMISSION = {
   description: Joi.string().required(),
   jwks: JWKS.required()
 }
-const MISC_PERMISSION = {
-  ...PERMISSION_BASE,
-  type: Joi.string().invalid('READ', 'WRITE').required(),
-  purpose: Joi.string().required()
-}
 const PERMISSION_ARRAY = Joi.array().items(
   READ_PERMISSION,
-  WRITE_PERMISSION,
-  MISC_PERMISSION
+  WRITE_PERMISSION
 )
+
 const PERMISSION_DENIED = Joi.object({
   ...PERMISSION_BASE
 })
