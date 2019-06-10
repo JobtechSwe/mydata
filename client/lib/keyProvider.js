@@ -2,7 +2,7 @@ const { generateKeyPair, createHash } = require('crypto')
 const { decryptDocumentKey } = require('./crypto')
 const { promisify } = require('util')
 const { serialize } = require('jwks-provider')
-const Joi = require('joi')
+const Joi = require('@hapi/joi')
 const { JWK } = require('@panva/jose')
 
 const KEY_PREFIX = 'key|>'
