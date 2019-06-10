@@ -1,6 +1,6 @@
-# egendata-client
+# Egendata-client
 
-Client library for egendata operator
+Client library for Egendata operator
 
 ## Install
 

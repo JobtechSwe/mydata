@@ -1,7 +1,7 @@
 {
   "name": "egendata-e2e",
   "version": "0.26.0",
-  "description": "End-to-end testing for egendata",
+  "description": "End-to-end testing for Egendata",
   "main": "index.js",
   "scripts": {
     "cypress": "cypress run",

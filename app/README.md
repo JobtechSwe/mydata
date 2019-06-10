@@ -1,4 +1,4 @@
-# egendata-app
+# Egendata-app
 
 An example app for managing consents and viewing data
 

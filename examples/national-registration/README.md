@@ -1,6 +1,6 @@
-# egendata-national-registration
+# Egendata-national-registration
 
-Example of how a national registry could participate in the egendata ecosystem as a Data Source
+Example of how a national registry could participate in the Egendata ecosystem as a Data Source
 
 ## Configuration
 
