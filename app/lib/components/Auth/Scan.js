@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Wrap } from '../View/Wrapper'
+import { Wrap } from '../view/Wrapper'
 import { Paragraph } from '../typography/Typography'
 import { PrimaryButton } from '../elements/Button/Button'
 import { parse } from '../../utils/code'

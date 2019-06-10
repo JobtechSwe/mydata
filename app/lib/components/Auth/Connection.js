@@ -1,11 +1,10 @@
 import React from 'react'
 import { H1, Paragraph } from '../typography/Typography'
 import { PrimaryButton, SecondaryButton } from '../elements/Button/Button'
-import { Wrap } from '../View/Wrapper'
+import { Wrap } from '../view/Wrapper'
 import { approveConnection } from '../../services/auth'
 
 const Connection = ({ connectionRequest, onApprove }) => {
-
   const onApproveConnection = async () => {
     await approveConnection(connectionRequest)
     onApprove()
@@ -21,8 +20,8 @@ const Connection = ({ connectionRequest, onApprove }) => {
       <Paragraph align="center">
         Do you want to connect to {connectionRequest.displayName}?
       </Paragraph>
-      <PrimaryButton onPress={onApproveConnection}>Yes!</PrimaryButton>
-      <SecondaryButton onPress={onDenyConnection}>No!</SecondaryButton>
+      <PrimaryButton onPress={onApproveConnection}>Some(Yes!)</PrimaryButton>
+      <SecondaryButton onPress={onDenyConnection}>None(No!)</SecondaryButton>
     </Wrap>
   )
 }

@@ -2,12 +2,12 @@
 import React, { useState, useEffect } from 'react'
 import { Linking } from 'react-native'
 import { H1 } from '../../components/typography/Typography'
-import { Wrap, ScrollViewWrap } from '../../components/View/Wrapper'
+import { Wrap, ScrollViewWrap } from '../../components/view/Wrapper'
 import ConsentList from '../../components/ConsentList/ConsentList'
 import { getAccount } from '../../services/account'
 
 const HomeScreen = ({ navigation }) => {
-  const [consents, setConsents] = useState([])
+  const [consents, _setConsents] = useState([])
 
   const handleOpenURL = event => {
     const { navigate } = navigation

@@ -1,9 +1,9 @@
 import React from 'react'
-import { View, TouchableOpacity } from 'react-native'
+import { Image, View, TouchableOpacity } from 'react-native'
 import Collapsible from 'react-native-collapsible'
 import SvgUri from 'react-native-svg-uri'
 import Modal from 'react-native-modal'
-import { Wrap, ScrollViewWrap } from '../View/Wrapper'
+import { Wrap, ScrollViewWrap } from '../view/Wrapper'
 import styled, { theme } from '../../theme'
 import { H3, H4, Paragraph, Separator } from '../typography/Typography'
 import {
@@ -11,6 +11,7 @@ import {
   DenyConsentButton,
   ConsentButtonWrap,
 } from '../elements/Button/ConsentButton'
+import { toConnectionRequest } from './parseData'
 
 const StyledModal = styled(Modal)`
   margin: 0;
@@ -26,7 +27,12 @@ const ModalWrapper = styled(View)`
 const ConsentHeader = styled(View)`
   background-color: ${({ theme }) => theme.colors.white};
   padding: 24px 36px;
+  flex-direction: row;
   align-self: stretch;
+`
+
+const ClientDescription = styled(View)`
+  padding: 4px 0;
 `
 
 const ConsentHeaderExternal = styled(ConsentHeader)`
@@ -37,28 +43,26 @@ const ScopeItemWrapper = styled(View)`
   margin-bottom: 0px;
 `
 
-const readAndWriteHelper = permissions => {
-  if (permissions.includes('READ') && permissions.includes('WRITE')) {
-    return 'Läsa och skriva'
-  }
-
-  if (permissions.includes('READ')) {
-    return 'Läsa'
-  }
-
-  if (permissions.includes('WRITE')) {
-    return 'Skriva'
-  } else {
-    return 'Inga rättigheter'
+const readAndWriteHelper = type => {
+  switch (type) {
+    case 'READ':
+      return 'Läsa'
+    case 'WRITE':
+      return 'Skriva'
+    default:
+      return 'Inga rättigheter'
   }
 }
+
 const ScopeItem = ({ scope, lastItem }) => {
   const [collapsed, setCollapsed] = React.useState(true)
+  const { read, write } = scope
+
   return (
     <ScopeItemWrapper key={scope.area} style={{ paddingHorizontal: 36 }}>
       <TouchableOpacity
         activeOpactiy={1}
-        onPress={_ => setCollapsed(!collapsed)}
+        onPress={_ => setCollapsed(wasCollapsed => !wasCollapsed)}
       >
         <View
           style={{
@@ -78,10 +82,23 @@ const ScopeItem = ({ scope, lastItem }) => {
         </View>
       </TouchableOpacity>
       <Collapsible collapsed={collapsed}>
-        <H4 style={{ fontSize: 12, marginTop: 8 }}>Syfte</H4>
-        <Paragraph small>{scope.purpose}</Paragraph>
-        <H4 style={{ fontSize: 12, marginTop: 8 }}>Rättigheter</H4>
-        <Paragraph small>{readAndWriteHelper(scope.permissions)}</Paragraph>
+        {read && (
+          <>
+            <H4 style={{ fontSize: 12, marginTop: 8 }}>
+              {readAndWriteHelper(read.type)}
+            </H4>
+            <Paragraph small>{read.purpose}</Paragraph>
+          </>
+        )}
+
+        {write && (
+          <>
+            <H4 style={{ fontSize: 12, marginTop: 8 }}>
+              {readAndWriteHelper(write.type)}
+            </H4>
+            <Paragraph small>{write.description}</Paragraph>
+          </>
+        )}
       </Collapsible>
       {lastItem ? (
         <View style={{ marginTop: 12, marginBottom: 16 }} />
@@ -92,12 +109,12 @@ const ScopeItem = ({ scope, lastItem }) => {
   )
 }
 
-const ConsentModal = ({
-  data: { client, externals },
-  visible,
-  onApprove,
-  onReject,
-}) => {
+const ConsentModal = ({ data, visible, onApprove, onReject }) => {
+  const handleApprovePermissions = () =>
+    onApprove(
+      toConnectionRequest({ local: data.local, external: data.external })
+    )
+
   return (
     <Wrap>
       <StyledModal
@@ -108,8 +125,14 @@ const ConsentModal = ({
         <ModalWrapper>
           <Separator style={{ marginBottom: 0, marginTop: 0 }} />
           <ConsentHeader>
-            <H3>{client.displayName}</H3>
-            <Paragraph align="left">{client.description}</Paragraph>
+            <Image
+              source={{ uri: data.iconURI }}
+              style={{ width: 64, height: 64, marginRight: 12 }}
+            />
+            <ClientDescription>
+              <H3 style={{ marginBottom: 8 }}>{data.displayName}</H3>
+              <Paragraph align="left">{data.description}</Paragraph>
+            </ClientDescription>
           </ConsentHeader>
           <Separator style={{ marginBottom: 0, marginTop: 0 }} />
           <ScrollViewWrap
@@ -122,35 +145,36 @@ const ConsentModal = ({
               alignItems: 'stretch',
             }}
           >
-            {client.areas.map((scope, i) => (
+            {/* <Paragraph style={{ paddingHorizontal: 32 }}> */}
+            {/*   Vill upprätta en relation med dig */}
+            {/* </Paragraph> */}
+
+            {data.local.map((permission, i) => (
               <ScopeItem
-                key={scope.area}
-                lastItem={i === client.areas.length - 1}
-                scope={scope}
+                key={permission.area}
+                lastItem={i === data.local.length - 1}
+                scope={permission}
               />
             ))}
-            {externals.map(({ client }) => (
-              <View key={client.displayName}>
+
+            {/*data.external.map(({ scope }) => (
+              <View key={data.displayName}>
                 <Separator style={{ marginBottom: 0, marginTop: 0 }} />
                 <ConsentHeaderExternal>
-                  <H4>{client.displayName}</H4>
+                  <H4>{data.displayName}</H4>
                   <Paragraph align="left" small>
-                    {client.description}
+                    {data.description}
                   </Paragraph>
                 </ConsentHeaderExternal>
                 <Separator style={{ marginBottom: 24, marginTop: 0 }} />
-                {client.areas.map((scope, i) => (
-                  <ScopeItem
-                    key={scope.area}
-                    lastItem={i === client.areas.length - 1}
-                    scope={scope}
-                  />
+                {data.areas.map((scope, i) => (
+                  <ScopeItem key={scope.area} scope={scope} />
                 ))}
               </View>
-            ))}
+            ))*/}
           </ScrollViewWrap>
           <ConsentButtonWrap>
-            <AcceptConsentButton onPress={onApprove}>
+            <AcceptConsentButton onPress={handleApprovePermissions}>
               Tillåt
             </AcceptConsentButton>
             <Separator

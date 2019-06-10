@@ -1,20 +1,21 @@
 import React, { useState } from 'react'
-import { Scan, Connection, Login } from '../../components/Auth'
+import { Scan, ConsentRequest, Login } from '../../components/Auth'
 import { handle } from '../../services/index'
 
-const AuthScreen = (props) => {
+const AuthScreen = props => {
   const [state, setState] = useState({
     view: (props && props.view) || 'scan',
   })
 
   const onScan = async token => {
     try {
-      const { connectionRequest, existingConnection, sessionId } = await handle(token)
+      const { connectionRequest, existingConnection, sessionId } = await handle(
+        token
+      )
       const view = existingConnection ? 'login' : 'connection'
       setState({ view, connectionRequest, existingConnection, sessionId })
-    }
-    catch (error) {
-      console.error('foo', error)
+    } catch (error) {
+      console.error('Error while initialiasing connectionRequest', error)
     }
   }
 
@@ -27,6 +28,7 @@ const AuthScreen = (props) => {
     setState({ view: 'enter' })
     props.navigation.navigate('Hem')
   }
+
   const onError = () => {
     props.navigation.goBack()
   }
@@ -44,7 +46,7 @@ const AuthScreen = (props) => {
       )
     case 'connection':
       return (
-        <Connection
+        <ConsentRequest
           connectionRequest={state.connectionRequest}
           onApprove={onApprove}
           onCancel={onCancel}
@@ -52,12 +54,7 @@ const AuthScreen = (props) => {
       )
     case 'scan':
     default:
-      return (
-        <Scan
-          onCancel={onCancel}
-          onScan={onScan}
-        />
-      )
+      return <Scan onCancel={onCancel} onScan={onScan} />
   }
 }
 
