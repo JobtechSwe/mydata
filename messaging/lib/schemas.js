@@ -120,16 +120,11 @@ const WRITE_PERMISSION_REQUEST = Joi.object({
   type: Joi.string().valid('WRITE').required(),
   description: Joi.string().required()
 })
-const MISC_PERMISSION_REQUEST = Joi.object({
-  ...PERMISSION_BASE,
-  type: Joi.string().invalid('READ', 'WRITE').required(),
-  purpose: Joi.string().required()
-})
-const PERMISSION_REQUESTS = Joi.array().items(
+const PERMISSION_REQUEST_ARRAY = Joi.array().items(
   READ_PERMISSION_REQUEST,
-  WRITE_PERMISSION_REQUEST,
-  MISC_PERMISSION_REQUEST
+  WRITE_PERMISSION_REQUEST
 )
+
 const READ_PERMISSION = Joi.object({
   ...PERMISSION_BASE,
   type: Joi.string().valid('READ').required(),
@@ -142,16 +137,11 @@ const WRITE_PERMISSION = {
   description: Joi.string().required(),
   jwks: JWKS.required()
 }
-const MISC_PERMISSION = {
-  ...PERMISSION_BASE,
-  type: Joi.string().invalid('READ', 'WRITE').required(),
-  purpose: Joi.string().required()
-}
-const PERMISSIONS = Joi.array().items(
+const PERMISSION_ARRAY = Joi.array().items(
   READ_PERMISSION,
-  WRITE_PERMISSION,
-  MISC_PERMISSION
+  WRITE_PERMISSION
 )
+
 const PERMISSION_DENIED = Joi.object({
   ...PERMISSION_BASE
 })
@@ -160,11 +150,7 @@ const PERMISSION_DENIED = Joi.object({
 const PERMISSION_REQUEST = Joi.object({
   ...JWT_DEFAULTS,
   type: 'PERMISSION_REQUEST',
-  permissions: Joi.array().items(
-    READ_PERMISSION_REQUEST,
-    WRITE_PERMISSION_REQUEST,
-    MISC_PERMISSION_REQUEST
-  ).min(1).required(),
+  permissions: PERMISSION_ARRAY.min(1).required(),
   sub: Joi.string().uuid(),
   sid: Joi.string().uuid({ version: 'uuidv4' }).required()
 }).required()
@@ -173,7 +159,7 @@ const PERMISSION_REQUEST = Joi.object({
 const CONNECTION_REQUEST = Joi.object({
   ...JWT_DEFAULTS,
   type: 'CONNECTION_REQUEST',
-  permissions: PERMISSION_REQUESTS.min(1).optional(),
+  permissions: PERMISSION_REQUEST_ARRAY.min(1).optional(),
   sid: Joi.string().uuid({ version: 'uuidv4' }).required(),
   displayName: Joi.string().required(),
   description: Joi.string().required(),
@@ -206,7 +192,7 @@ const CONNECTION = Joi.object({
   sid: Joi.string().required(),
   sub: Joi.string().uuid({ version: 'uuidv4' }).required(),
   permissions: Joi.object({
-    approved: PERMISSIONS.min(1).optional(),
+    approved: PERMISSION_ARRAY.min(1).optional(),
     denied: Joi.array().items(PERMISSION_DENIED)
       .min(1).optional()
   }).optional()
@@ -296,7 +282,6 @@ module.exports = {
   LOGIN,
   LOGIN_EVENT,
   LOGIN_RESPONSE,
-  PERMISSIONS,
   PERMISSION_REQUEST,
   SERVICE_REGISTRATION
 }
