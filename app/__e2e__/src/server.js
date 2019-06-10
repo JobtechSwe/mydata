@@ -15,9 +15,10 @@ const app = express()
 app.use(json())
 app.post('/:method', async ({ body = {}, params: { method } }, res, next) => {
   try {
-    const result = await phone[method](body.args)
+    const result = await phone[method](...body.args)
     res.send(result)
   } catch (err) {
+    console.error(err)
     next(err)
   }
 })

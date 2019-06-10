@@ -2,7 +2,7 @@ const axios = require('axios')
 const appServerUrl = process.env.APP_SERVER_URL || 'http://localhost:1337'
 
 const call = method =>
-  args => axios
+  (...args) => axios
     .post(`${appServerUrl}/${method}`, { args })
     .then(res => res.data)
     .catch(err => {

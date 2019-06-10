@@ -26,7 +26,7 @@
 
 const appServerUrl = Cypress.env('APP_SERVER_URL') || 'http://localhost:1337'
 
-function callMethod (method, args) {
+function callMethod (method, ...args) {
   return cy
     .request({
       url: `${appServerUrl}/${method}`,
