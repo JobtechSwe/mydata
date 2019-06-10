@@ -1,5 +1,5 @@
 {
-  "name": "mydata-cv",
+  "name": "egendata-cv",
   "version": "0.26.0",
   "description": "A Data Source/Data Sink offering a searchable CV",
   "main": "server.js",

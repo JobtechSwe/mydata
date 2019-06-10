@@ -1,6 +1,6 @@
-# mydata-client
+# Egendata-client
 
-Client library for mydata operator
+Client library for Egendata operator
 
 ## Install
 
@@ -45,7 +45,7 @@ await client.connect()
 ```
 
 ## Create login URL
-To enable users (who already have approved consents) to log in present this as a QR code so they can scan it with the MyData-app on their phone.
+To enable users (who already have approved consents) to log in present this as a QR code so they can scan it with the Egendata-app on their phone.
 ```
 const loginUrl = client.login.getUrl(sessionId)
 ```

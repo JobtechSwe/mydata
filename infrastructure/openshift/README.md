@@ -44,7 +44,7 @@ oc create secret docker-registry dockerhub --docker-server=docker.io --docker-us
 
 ### Shared resources
 
-MyData uses __PostgreSQL__ and __Redis__. Inside the `./shared` folder you will find the yaml files that describes how to deploy these.
+Egendata uses __PostgreSQL__ and __Redis__. Inside the `./shared` folder you will find the yaml files that describes how to deploy these.
 
 ```bash
 # Deploy everything specified inside ./shared (ImageStreams + ephemeral databases)

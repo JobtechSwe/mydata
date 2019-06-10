@@ -1,4 +1,4 @@
-# E2E / System wide integration tests for MyData
+# E2E / System wide integration tests for Egendata
 
 ## All
 Run `script.sh`

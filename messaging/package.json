@@ -1,7 +1,7 @@
 {
   "name": "@egendata/messaging",
   "version": "0.2.0",
-  "description": "Internal messaging protocol for MyData client, operator and app",
+  "description": "Internal messaging protocol for Egendata client, operator and app",
   "main": "lib/index.js",
   "scripts": {
     "test": "jest",
