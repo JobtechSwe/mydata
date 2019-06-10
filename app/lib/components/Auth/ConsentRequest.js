@@ -10,9 +10,9 @@ const Connection = ({ connectionRequest, onApprove, onCancel }) => {
   const [modalVisible, setModalVisible] = React.useState(true)
   const [approving, setApproving] = React.useState(false)
 
-  const onApproveConnection = async () => {
+  const onApproveConnection = async permissions => {
     setApproving(true)
-    await approveConnection(connectionRequest)
+    await approveConnection({ ...connectionRequest, permissions })
     onApprove()
   }
 

@@ -1,4 +1,4 @@
-import { toViewModel } from '../parseData'
+import { toViewModel, toConnectionRequest } from '../parseData'
 
 describe('components/Consent/parseData', () => {
   describe('#toViewModel', () => {
@@ -9,7 +9,7 @@ describe('components/Consent/parseData', () => {
           {
             area: 'baseData',
             domain: 'https://mycv.work',
-            id: 'f7f8b408-088d-47fe-b2d9-050582101fd2',
+            id: '18710e28-7d6c-49cf-941e-0f954bb179ae',
             lawfulBasis: 'CONSENT',
             purpose: 'In order to create a CV using our website.',
             type: 'READ',
@@ -18,7 +18,7 @@ describe('components/Consent/parseData', () => {
             area: 'baseData',
             description: 'Personal information.',
             domain: 'https://mycv.work',
-            id: '3e2ad237-8a03-41c0-aa52-7700abc22896',
+            id: '1712ec0c-9ae6-472f-9e14-46088e51f505',
             lawfulBasis: 'CONSENT',
             type: 'WRITE',
           },
@@ -26,7 +26,7 @@ describe('components/Consent/parseData', () => {
             area: 'experience',
             description: 'A list of your work experiences.',
             domain: 'https://mycv.work',
-            id: '3e2ad237-8a03-41c0-aa52-7700abc22896',
+            id: 'd5dab30d-b0ac-43e3-9ac8-cff8b39ca560',
             lawfulBasis: 'CONSENT',
             type: 'WRITE',
           },
@@ -34,7 +34,7 @@ describe('components/Consent/parseData', () => {
             area: 'experience',
             purpose: 'In order to create a CV using our website.',
             domain: 'https://mycv.work',
-            id: '3e2ad237-8a03-41c0-aa52-7700abc22896',
+            id: '55c24372-6956-4891-b5ff-a6cf69fb5c8b',
             lawfulBasis: 'CONSENT',
             type: 'READ',
           },
@@ -42,7 +42,7 @@ describe('components/Consent/parseData', () => {
             area: 'experience',
             purpose: 'In order to create a CV using our website.',
             domain: 'https://national.gov',
-            id: '3e2ad237-8a03-41c0-aa52-7700abc22896',
+            id: 'fc284cf5-b1af-4fac-b793-7d1adf8a9c60',
             lawfulBasis: 'CONSENT',
             type: 'READ',
           },
@@ -59,10 +59,6 @@ describe('components/Consent/parseData', () => {
       }
     })
 
-    Object.values({
-      baseData: {},
-    })
-
     it('works', () => {
       const expected = {
         displayName: 'My CV',
@@ -75,7 +71,7 @@ describe('components/Consent/parseData', () => {
             read: {
               area: 'baseData',
               domain: 'https://mycv.work',
-              id: 'f7f8b408-088d-47fe-b2d9-050582101fd2',
+              id: '18710e28-7d6c-49cf-941e-0f954bb179ae',
               lawfulBasis: 'CONSENT',
               purpose: 'In order to create a CV using our website.',
               type: 'READ',
@@ -84,7 +80,7 @@ describe('components/Consent/parseData', () => {
               area: 'baseData',
               description: 'Personal information.',
               domain: 'https://mycv.work',
-              id: '3e2ad237-8a03-41c0-aa52-7700abc22896',
+              id: '1712ec0c-9ae6-472f-9e14-46088e51f505',
               lawfulBasis: 'CONSENT',
               type: 'WRITE',
             },
@@ -96,7 +92,7 @@ describe('components/Consent/parseData', () => {
               area: 'experience',
               purpose: 'In order to create a CV using our website.',
               domain: 'https://mycv.work',
-              id: '3e2ad237-8a03-41c0-aa52-7700abc22896',
+              id: '55c24372-6956-4891-b5ff-a6cf69fb5c8b',
               lawfulBasis: 'CONSENT',
               type: 'READ',
             },
@@ -104,7 +100,7 @@ describe('components/Consent/parseData', () => {
               area: 'experience',
               description: 'A list of your work experiences.',
               domain: 'https://mycv.work',
-              id: '3e2ad237-8a03-41c0-aa52-7700abc22896',
+              id: 'd5dab30d-b0ac-43e3-9ac8-cff8b39ca560',
               lawfulBasis: 'CONSENT',
               type: 'WRITE',
             },
@@ -117,7 +113,7 @@ describe('components/Consent/parseData', () => {
               area: 'experience',
               purpose: 'In order to create a CV using our website.',
               domain: 'https://national.gov',
-              id: '3e2ad237-8a03-41c0-aa52-7700abc22896',
+              id: 'fc284cf5-b1af-4fac-b793-7d1adf8a9c60',
               lawfulBasis: 'CONSENT',
               type: 'READ',
             },
@@ -125,6 +121,116 @@ describe('components/Consent/parseData', () => {
         ],
       }
       expect(toViewModel(consentRequest)).toEqual(expected)
+    })
+  })
+
+  describe('#toConnectionRequest', () => {
+    let local
+    let external
+    beforeEach(() => {
+      local = [
+        {
+          area: 'baseData',
+          description: 'Personal information.',
+          read: {
+            area: 'baseData',
+            domain: 'https://mycv.work',
+            id: '18710e28-7d6c-49cf-941e-0f954bb179ae',
+            lawfulBasis: 'CONSENT',
+            purpose: 'In order to create a CV using our website.',
+            type: 'READ',
+          },
+          write: {
+            area: 'baseData',
+            description: 'Personal information.',
+            domain: 'https://mycv.work',
+            id: '1712ec0c-9ae6-472f-9e14-46088e51f505',
+            lawfulBasis: 'CONSENT',
+            type: 'WRITE',
+          },
+        },
+        {
+          area: 'experience',
+          description: 'A list of your work experiences.',
+          read: {
+            area: 'experience',
+            purpose: 'In order to create a CV using our website.',
+            domain: 'https://mycv.work',
+            id: '55c24372-6956-4891-b5ff-a6cf69fb5c8b',
+            lawfulBasis: 'CONSENT',
+            type: 'READ',
+          },
+          write: {
+            area: 'experience',
+            description: 'A list of your work experiences.',
+            domain: 'https://mycv.work',
+            id: 'd5dab30d-b0ac-43e3-9ac8-cff8b39ca560',
+            lawfulBasis: 'CONSENT',
+            type: 'WRITE',
+          },
+        },
+      ]
+
+      external = [
+        {
+          area: 'experience',
+          read: {
+            area: 'experience',
+            purpose: 'In order to create a CV using our website.',
+            domain: 'https://national.gov',
+            id: 'fc284cf5-b1af-4fac-b793-7d1adf8a9c60',
+            lawfulBasis: 'CONSENT',
+            type: 'READ',
+          },
+        },
+      ]
+    })
+
+    it('works', () => {
+      const expected = [
+        {
+          area: 'baseData',
+          domain: 'https://mycv.work',
+          id: '18710e28-7d6c-49cf-941e-0f954bb179ae',
+          lawfulBasis: 'CONSENT',
+          purpose: 'In order to create a CV using our website.',
+          type: 'READ',
+        },
+        {
+          area: 'baseData',
+          description: 'Personal information.',
+          domain: 'https://mycv.work',
+          id: '1712ec0c-9ae6-472f-9e14-46088e51f505',
+          lawfulBasis: 'CONSENT',
+          type: 'WRITE',
+        },
+        {
+          area: 'experience',
+          purpose: 'In order to create a CV using our website.',
+          domain: 'https://mycv.work',
+          id: '55c24372-6956-4891-b5ff-a6cf69fb5c8b',
+          lawfulBasis: 'CONSENT',
+          type: 'READ',
+        },
+        {
+          area: 'experience',
+          description: 'A list of your work experiences.',
+          domain: 'https://mycv.work',
+          id: 'd5dab30d-b0ac-43e3-9ac8-cff8b39ca560',
+          lawfulBasis: 'CONSENT',
+          type: 'WRITE',
+        },
+        {
+          area: 'experience',
+          purpose: 'In order to create a CV using our website.',
+          domain: 'https://national.gov',
+          id: 'fc284cf5-b1af-4fac-b793-7d1adf8a9c60',
+          lawfulBasis: 'CONSENT',
+          type: 'READ',
+        },
+      ]
+
+      expect(toConnectionRequest({ local, external })).toEqual(expected)
     })
   })
 })

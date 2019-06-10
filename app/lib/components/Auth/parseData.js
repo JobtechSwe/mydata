@@ -35,3 +35,18 @@ export function toViewModel(data) {
 
   return normalisedData
 }
+
+export function toConnectionRequest({ local = [], external = [] }) {
+  const extractPermissions = (permissions, { read, write }) => [
+    ...permissions,
+    read,
+    write,
+  ]
+
+  const notUndefined = value => value !== undefined
+
+  return [
+    ...local.reduce(extractPermissions, []).filter(notUndefined),
+    ...external.reduce(extractPermissions, []).filter(notUndefined),
+  ]
+}

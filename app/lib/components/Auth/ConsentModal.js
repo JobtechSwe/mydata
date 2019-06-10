@@ -11,6 +11,7 @@ import {
   DenyConsentButton,
   ConsentButtonWrap,
 } from '../elements/Button/ConsentButton'
+import { toConnectionRequest } from './parseData'
 
 const StyledModal = styled(Modal)`
   margin: 0;
@@ -43,23 +44,25 @@ const ScopeItemWrapper = styled(View)`
 `
 
 const readAndWriteHelper = type => {
-  if (type === 'READ') {
-    return 'Läsa'
-  }
-
-  if (type === 'WRITE') {
-    return 'Skriva'
-  } else {
-    return 'Inga rättigheter'
+  switch (type) {
+    case 'READ':
+      return 'Läsa'
+    case 'WRITE':
+      return 'Skriva'
+    default:
+      return 'Inga rättigheter'
   }
 }
+
 const ScopeItem = ({ scope, lastItem }) => {
   const [collapsed, setCollapsed] = React.useState(true)
+  const { read, write } = scope
+
   return (
     <ScopeItemWrapper key={scope.area} style={{ paddingHorizontal: 36 }}>
       <TouchableOpacity
         activeOpactiy={1}
-        onPress={_ => setCollapsed(!collapsed)}
+        onPress={_ => setCollapsed(wasCollapsed => !wasCollapsed)}
       >
         <View
           style={{
@@ -79,10 +82,23 @@ const ScopeItem = ({ scope, lastItem }) => {
         </View>
       </TouchableOpacity>
       <Collapsible collapsed={collapsed}>
-        <H4 style={{ fontSize: 12, marginTop: 8 }}>Syfte</H4>
-        <Paragraph small>{scope.purpose}</Paragraph>
-        <H4 style={{ fontSize: 12, marginTop: 8 }}>Rättigheter</H4>
-        <Paragraph small>{readAndWriteHelper(scope.type)}</Paragraph>
+        {read && (
+          <>
+            <H4 style={{ fontSize: 12, marginTop: 8 }}>
+              {readAndWriteHelper(read.type)}
+            </H4>
+            <Paragraph small>{read.purpose}</Paragraph>
+          </>
+        )}
+
+        {write && (
+          <>
+            <H4 style={{ fontSize: 12, marginTop: 8 }}>
+              {readAndWriteHelper(write.type)}
+            </H4>
+            <Paragraph small>{write.description}</Paragraph>
+          </>
+        )}
       </Collapsible>
       {lastItem ? (
         <View style={{ marginTop: 12, marginBottom: 16 }} />
@@ -94,7 +110,11 @@ const ScopeItem = ({ scope, lastItem }) => {
 }
 
 const ConsentModal = ({ data, visible, onApprove, onReject }) => {
-  console.log('Data', data)
+  const handleApprovePermissions = () =>
+    onApprove(
+      toConnectionRequest({ local: data.local, external: data.external })
+    )
+
   return (
     <Wrap>
       <StyledModal
@@ -125,19 +145,19 @@ const ConsentModal = ({ data, visible, onApprove, onReject }) => {
               alignItems: 'stretch',
             }}
           >
-            <Paragraph style={{ paddingHorizontal: 32 }}>
-              Vill upprätta en relation med dig
-            </Paragraph>
+            {/* <Paragraph style={{ paddingHorizontal: 32 }}> */}
+            {/*   Vill upprätta en relation med dig */}
+            {/* </Paragraph> */}
 
-            {data.local.map((scope, i) => (
+            {data.local.map((permission, i) => (
               <ScopeItem
-                key={scope.area}
-                // lastItem={i === data.areas.length - 1}
-                scope={scope}
+                key={permission.area}
+                lastItem={i === data.local.length - 1}
+                scope={permission}
               />
             ))}
 
-            {data.external.map(({ data }) => (
+            {/*data.external.map(({ scope }) => (
               <View key={data.displayName}>
                 <Separator style={{ marginBottom: 0, marginTop: 0 }} />
                 <ConsentHeaderExternal>
@@ -151,10 +171,10 @@ const ConsentModal = ({ data, visible, onApprove, onReject }) => {
                   <ScopeItem key={scope.area} scope={scope} />
                 ))}
               </View>
-            ))}
+            ))*/}
           </ScrollViewWrap>
           <ConsentButtonWrap>
-            <AcceptConsentButton onPress={onApprove}>
+            <AcceptConsentButton onPress={handleApprovePermissions}>
               Tillåt
             </AcceptConsentButton>
             <Separator
