@@ -1,6 +1,6 @@
 const phone = require('./helpers/phone')
 const { createClientWithServer } = require('./helpers/index')
-const { clearOperatorDb } = require('./helpers/operatorPostgres')
+const operatorPostgres = require('./helpers/operatorPostgres')
 const { JWK, JWK_PRIVATE } = require('../../messaging/lib/schemas')
 
 jest.useFakeTimers()
@@ -16,7 +16,7 @@ describe('Permissions', () => {
   })
 
   afterAll(async () => {
-    await clearOperatorDb()
+    await operatorPostgres.clearOperatorDb()
   })
 
   it('correctly stores default READ permissions', async (done) => {
@@ -47,10 +47,11 @@ describe('Permissions', () => {
     client.server.close(done)
   })
 
-  it.skip('correctly sends CONNECTION_REPONSE with default READ permissions', async (done) => {
+  it.only('correctly sends CONNECTION_REPONSE with default READ permissions', async (done) => {
+    const permissionArea = 'favorite_cats'
     const serviceConfig = {
       defaultPermissions: [{
-        area: 'favorite_cats',
+        area: permissionArea,
         types: ['READ'],
         purpose: 'To recommend you cats that you\'ll like'
       }]
@@ -71,16 +72,24 @@ describe('Permissions', () => {
     await JWK_PRIVATE.validate(permissionKey.privateKey)
      */
 
-    const userPermissionResult = {
-      approved: connectionRequest.permission
-    }
+    // Change from READ_PERMISSION_REQUEST to READ_PERMISSION
+    const approved = connectionRequest.permissions
+    approved[0].kid = approved[0].jwk.kid
+    delete approved[0].jwk
     // Approve it!
-    await phone.approveConnection(connectionRequest, 42)
+    await phone.approveConnection(connectionRequest, { approved })
 
     // After state, expect connection in client for the session id
     const connectionEntryInClient = await client.keyValueStore.load(`authentication|>${id}`)
     expect(connectionEntryInClient).toEqual(expect.any(String))
 
+    // These permissions should now be in the Operator DB
+    const dbResult = await operatorPostgres.queryOperatorDb('SELECT * FROM permissions WHERE area=$1', [permissionArea])
+    expect(dbResult.rowCount).toEqual(1)
+    // expect(dbResult.rows).toEqual({})
+
     client.server.close(done)
   })
+
+  // todo: also test WRITE persmissionjisjisj
 })
