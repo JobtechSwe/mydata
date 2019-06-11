@@ -22,35 +22,38 @@ function checkConnection ({ accountId, serviceId }) {
 }
 
 function permissionInsert ({
-  permissionId,
+  id,
   connectionId,
   domain,
   area,
   type,
   purpose,
-  legalBasis,
+  description,
+  lawfulBasis,
   readKey
 }) {
   return [
     `INSERT INTO permissions(
-                  permission_id,
+                  id,
                   connection_id,
                   domain,
                   area,
                   type,
                   purpose,
-                  legal_basis,
+                  description,
+                  lawful_basis,
                   read_key,
-                  accepted
+                  approvedAt
                 ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
     [
-      permissionId,
+      id,
       connectionId,
       domain,
       area,
       type.toUpperCase(),
       purpose,
-      legalBasis,
+      description,
+      lawfulBasis,
       readKey ? JSON.stringify(readKey) : null,
       'now()'
     ]
