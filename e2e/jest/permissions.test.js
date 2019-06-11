@@ -47,7 +47,7 @@ describe('Permissions', () => {
     client.server.close(done)
   })
 
-  it.only('correctly sends CONNECTION_REPONSE with default READ permissions', async (done) => {
+  it('correctly sends CONNECTION_REPONSE with default READ permissions', async (done) => {
     const permissionArea = 'favorite_cats'
     const serviceConfig = {
       defaultPermissions: [{
@@ -86,7 +86,7 @@ describe('Permissions', () => {
     // These permissions should now be in the Operator DB
     const dbResult = await operatorPostgres.queryOperatorDb('SELECT * FROM permissions WHERE area=$1', [permissionArea])
     expect(dbResult.rowCount).toEqual(1)
-    // expect(dbResult.rows).toEqual({})
+    expect(dbResult.rows).toEqual({})
 
     client.server.close(done)
   })
