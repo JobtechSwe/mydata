@@ -12,7 +12,7 @@ const {
 } = require('./sqlStatements')
 const axios = require('axios')
 
-async function registerService ({ header, payload }, res) {
+async function registerService({ header, payload }, res) {
   const params = {
     serviceId: payload.iss,
     serviceKey: JSON.stringify(header.jwk),
@@ -27,7 +27,7 @@ async function registerService ({ header, payload }, res) {
   res.sendStatus(200)
 }
 
-async function loginResponse ({ header, payload }, res, next) {
+async function loginResponse({ header, payload }, res, next) {
   const { iss } = payload
   const { payload: { aud, sub } } = await verify(payload.payload)
 
@@ -52,7 +52,7 @@ async function loginResponse ({ header, payload }, res, next) {
   res.sendStatus(200)
 }
 
-async function connectionResponse ({ header, payload }, res, next) {
+async function connectionResponse({ header, payload }, res, next) {
   try {
     const { iss } = payload
     let verified
@@ -97,17 +97,21 @@ async function connectionResponse ({ header, payload }, res, next) {
       accountId: iss,
       serviceId: aud
     })
-    const permissionsSql = approved(permissions)
     await query(...connectionSql)
+
+    if (permissions && permissions.approved) {
+      await Promise.all(permissions.approved
+        .map(permission => ({ ...permission, connectionId: sub }))
+        .map(permissionInsert)
+        .map(sql => query(...sql))
+      )
+    }
+
     res.sendStatus(201)
   } catch (error) {
     console.error('Could not handle connectionResponse', error)
     next(error)
   }
-}
-
-function approved ({ approved } = {}) {
-  return []
 }
 
 module.exports = {

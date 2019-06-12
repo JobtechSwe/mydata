@@ -202,14 +202,14 @@ const CONNECTION = Joi.object({
 const CONNECTION_RESPONSE = Joi.object({
   ...JWT_DEFAULTS,
   type: 'CONNECTION_RESPONSE',
-  payload: JWS.required()
+  payload: JWS.required() // A serialised CONNECTION
 }).required()
 
 // operator -> service
 const CONNECTION_EVENT = Joi.object({
   ...JWT_DEFAULTS,
   type: 'CONNECTION_EVENT',
-  payload: JWS.required()
+  payload: JWS.required() // A serialised CONNECTION
 }).required()
 
 // device -> (operator) -> service
@@ -224,14 +224,14 @@ const LOGIN = Joi.object({
 const LOGIN_RESPONSE = Joi.object({
   ...JWT_DEFAULTS,
   type: 'LOGIN_RESPONSE',
-  payload: JWS.required()
+  payload: JWS.required() // A serialised LOGIN
 }).required()
 
 // operator -> service
 const LOGIN_EVENT = Joi.object({
   ...JWT_DEFAULTS,
   type: 'LOGIN_EVENT',
-  payload: JWS.required()
+  payload: JWS.required() // A serialised LOGIN
 }).required()
 
 // operator -> service
