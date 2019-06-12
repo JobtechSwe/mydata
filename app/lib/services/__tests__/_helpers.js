@@ -1,14 +1,14 @@
-import { RSA } from 'react-native-rsa-native'
-import pem2jwk from 'simple-pem2jwk'
+import { generateKey } from '../crypto'
 
-export const generateTestAccount = async () => {
-  const keys = await RSA.generateKeys(1024)
+export const generateTestAccount = async (kid) => {
   return {
-      id: 'foo',
-      keys: {
-        privateKey: pem2jwk(keys.private),
-        publicKey: pem2jwk(keys.public, { use: 'sig' }),
-      },
-      pds: { provider: 'memory' },
-    }
+    id: 'foo',
+    pds: { provider: 'memory' },
+    kid,
+  }
+}
+
+export const generateTestKey = async (options) => {
+  const key = await generateKey(options, 1024)
+  return key
 }

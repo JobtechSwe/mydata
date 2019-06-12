@@ -1,27 +1,35 @@
-import { getAccount } from '../account'
+import { getAccount, getAccountKeys } from '../storage'
 import * as tokens from '../tokens'
+import { toPublicKey } from '../crypto'
 import Config from 'react-native-config'
-import { generateTestAccount } from './_helpers'
+import { generateTestAccount, generateTestKey } from './_helpers'
 import { v4 } from 'uuid'
 
-jest.mock('../account', () => ({
+jest.mock('../storage', () => ({
   getAccount: jest.fn(),
+  getAccountKeys: jest.fn(),
 }))
 
 jest.useFakeTimers()
 
 describe('tokens', () => {
-  let account
+  let account, privateKey, publicKey
 
   beforeAll(async () => {
     Config.OPERATOR_URL = 'https://smoothoperator.work'
 
-    account = await generateTestAccount()
+    privateKey = await generateTestKey({ use: 'sig' })
+    publicKey = toPublicKey(privateKey)
+    account = await generateTestAccount(privateKey.kid)
     getAccount.mockResolvedValue(account)
+    getAccountKeys.mockResolvedValue({
+      privateKey,
+      publicKey,
+    })
   })
 
   it('ACCOUNT_REGISTRATION', async () => {
-    const token = await tokens.createAccountRegistration(account)
+    const token = await tokens.createAccountRegistration(account, { publicKey, privateKey })
     expect(token).toEqual(expect.any(String))
   })
 

@@ -3,6 +3,7 @@ package work.mydata;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.trackforce.crypto.RCTAesPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import org.reactnative.camera.RNCameraPackage;
 import net.rhogan.rnsecurerandom.RNSecureRandomPackage;
@@ -31,6 +32,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+            new RCTAesPackage(),
         new AsyncStoragePackage(),
         new RNSecureRandomPackage(),
         new SvgPackage(),

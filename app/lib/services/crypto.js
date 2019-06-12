@@ -1,28 +1,31 @@
-import { RSA } from 'react-native-rsa-native'
+import { Rsa, Sha } from '@trackforce/react-native-crypto'
 import pem2jwk from 'simple-pem2jwk'
 
-export async function generateKeys (modulusLength = 2048) {
-  const keyPair = await RSA.generateKeys(modulusLength)
+export function toBase64Url(base64) {
+  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '')
+}
+
+export async function generateKeys(modulusLength = 2048) {
+  const keyPair = await Rsa.generateKeys(modulusLength)
   return {
     publicKey: pem2jwk(keyPair.public, { use: 'sig' }),
     privateKey: pem2jwk(keyPair.private),
   }
 }
 
-export async function sign (data, kid, privateKey) {
-  return {
-    kid,
-    alg: 'RSA-SHA512',
-    data: await RSA.sign(JSON.stringify(data), privateKey),
-  }
+export async function thumbprint({ e, kty, n }) {
+  const hash = await Sha.sha256(JSON.stringify({ e, kty, n }))
+  return toBase64Url(hash)
 }
 
-export async function verify (data, signature, publicKey) {
-  if (!signature.alg) {
-    throw new Error('Signature algorithm must be specified. Only [RSA-SHA512] is supported.')
-  }
-  if (signature.alg.toLowerCase() !== 'rsa-sha512') {
-    throw new Error(`Unsupported algorithm [${signature.alg}]. Only [RSA-SHA512] is supported.`)
-  }
-  return RSA.verify(signature.data, JSON.stringify(data), publicKey)
+export async function generateKey(options = {}, modulusLength = 2048) {
+  const keyPair = await Rsa.generateKeys(modulusLength)
+  const key = pem2jwk(keyPair.private, options)
+  key.kid = `egendata://jwks/${await thumbprint(key)}`
+
+  return key
+}
+
+export function toPublicKey ({ e, kid, kty, n, use }) {
+  return { e, kid, kty, n, use }
 }
