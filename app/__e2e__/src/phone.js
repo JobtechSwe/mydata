@@ -21,6 +21,10 @@ export async function createAccount ({ firstName, lastName }) {
   return accountWithId
 }
 
+export async function getAccount () {
+  return account.getAccount()
+}
+
 export async function clearAccount () {
   return storage.storeAccount()
 }
