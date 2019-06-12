@@ -21,8 +21,7 @@ const clearOperatorDb = async () => {
       migrationsTable: 'pgmigrations',
       log: () => undefined
     })
-  }
-  catch (e) {
+  } catch (e) {
     console.error('Error clearing OperatorDb! \nMake sure to close any other open connections to it.', e)
   }
 }
