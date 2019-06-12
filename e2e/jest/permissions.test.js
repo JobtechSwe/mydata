@@ -102,12 +102,12 @@ describe('Permissions', () => {
     const { connectionRequest } = await phone.handleAuthCode({ code: url })
 
     // Get user key to put in WRITE_PERMISSION
-    const phoneAccount = await phone.getAccount()
+    const { publicKey } = await phone.getAccountKeys()
 
     // Change from WRITE_PERMISSION_REQUEST to WRITE_PERMISSION
     const approved = connectionRequest.permissions
     approved[0].jwks = {
-      keys: [ phoneAccount.keys.publicKey ]
+      keys: [ publicKey ]
     }
 
     // Approve it!

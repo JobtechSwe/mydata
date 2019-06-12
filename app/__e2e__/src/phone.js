@@ -1,32 +1,32 @@
 import { handle } from '../../lib/services/index'
 import * as auth from '../../lib/services/auth'
 import { parse } from '../../lib/utils/code'
-import * as account from '../../lib/services/account'
-import * as storage from '../../lib/services/storage'
-import * as crypto from '../../lib/services/crypto'
+import * as accountService from '../../lib/services/account'
+import * as storageService from '../../lib/services/storage'
 import Config from 'react-native-config'
 import AsyncStorage from '@react-native-community/async-storage'
 
 export async function createAccount ({ firstName, lastName }) {
-  const keys = await crypto.generateKeys()
   const pds = { provider: 'memory', access_token: 'nope' }
   const acc = {
     firstName,
     lastName,
-    keys,
     pds,
   }
-  const accountWithId = await account.save(acc)
-  await storage.storeAccount(accountWithId)
-  return accountWithId
+  const account = await accountService.save(acc)
+  return account
 }
 
 export async function getAccount () {
-  return account.getAccount()
+  return storageService.getAccount()
+}
+
+export async function getAccountKeys() {
+  return storageService.getAccountKeys()
 }
 
 export async function clearAccount () {
-  return storage.storeAccount()
+  return storageService.storeAccount()
 }
 
 export const clearStorage = async () => {
@@ -58,4 +58,4 @@ export async function getConfig () {
   return Config
 }
 
-export const getConnections = storage.getConnections
+export const getConnections = storageService.getConnections

@@ -1,5 +1,6 @@
 import express, { json } from 'express'
 import * as phone from './phone'
+import { inspect } from 'util'
 
 if (!process.env.OPERATOR_URL) {
   console.warn('OPERATOR_URL not set for app-server. SetConfig has to be used before app-server will be able to reach Operator')
@@ -18,13 +19,13 @@ app.post('/:method', async ({ body = {}, params: { method } }, res, next) => {
     const result = await phone[method](...body.args)
     res.send(result)
   } catch (err) {
+    console.error(inspect(err, false, 3))
     next(err)
   }
 })
 
 app.use((error, req, res, _) => {
   const { status, message, stack } = error
-  console.error(`${status}: ${message}`)
   res.status(status || 500).send({ message, stack })
 })
 
