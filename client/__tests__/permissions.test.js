@@ -1,7 +1,6 @@
 const { createPermissions } = require('../lib/permissions')
 const { createMemoryStore } = require('../lib/memoryStore')
 const { generateKeyPair } = require('./_helpers')
-const { schemas } = require('@egendata/messaging')
 
 describe('permissions', () => {
   let config, keyProvider
@@ -24,14 +23,6 @@ describe('permissions', () => {
     }
   })
   describe('#createPermissions', () => {
-    it('creates permissions that are consistent with the schema', async () => {
-      keyProvider = { createEncryptionKey: jest.fn() }
-
-      const result = await createPermissions(config, keyProvider)
-
-      await expect(schemas.PERMISSION_REQUESTS.validate(result))
-        .resolves.not.toThrow()
-    })
     it('adds own domain, CONSENT and an id', async () => {
       keyProvider = { createEncryptionKey: jest.fn() }
 
