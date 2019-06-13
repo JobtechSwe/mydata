@@ -26,29 +26,33 @@ async function registerService({ header, payload }, res) {
   res.sendStatus(200)
 }
 
-async function loginResponse({ header, payload }, res, next) {
-  const { iss } = payload
-  const { payload: { aud, sub } } = await verify(payload.payload)
+async function loginResponse({ payload }, res, next) {
+  try {
+    const { iss } = payload
+    const { payload: { aud } } = await verify(payload.payload)
 
-  const [resAccount, resService, resConnection] = await multiple(checkConnection({
-    accountId: iss,
-    serviceId: aud
-  }))
+    const [resAccount, resService, resConnection] = await multiple(checkConnection({
+      accountId: iss,
+      serviceId: aud
+    }))
 
-  if (!resAccount.rows.length) {
-    throw new Error('No such account')
-  }
-  if (!resService.rows.length) {
-    throw new Error('No such service')
-  }
-  if (!resConnection.rows.length) {
-    throw new Error('No connection exists')
-  }
-  const loginEventToken = await createLoginEvent(payload.payload, aud)
-  const url = resService.rows[0].events_uri
-  await axios.post(url, loginEventToken, { headers: { 'content-type': 'application/jwt' } })
+    if (!resAccount.rows.length) {
+      throw new Error(`No such account ${iss}`)
+    }
+    if (!resService.rows.length) {
+      throw new Error(`No such service ${aud}`)
+    }
+    if (!resConnection.rows.length) {
+      throw new Error('No connection exists')
+    }
+    const loginEventToken = await createLoginEvent(aud, payload.payload)
+    const url = resService.rows[0].events_uri
+    await axios.post(url, loginEventToken, { headers: { 'content-type': 'application/jwt' } })
 
-  res.sendStatus(200)
+    res.sendStatus(200)
+  } catch (err) {
+    next(err)
+  }
 }
 
 async function connectionResponse({ payload }, res, next) {

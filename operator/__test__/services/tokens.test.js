@@ -12,7 +12,7 @@ describe('tokens', () => {
     it('Happy path', async () => {
       const payload = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
       const serviceId = 'http://mycv.work'
-      const token = await tokens.createLoginEvent(payload, serviceId)
+      const token = await tokens.createLoginEvent(serviceId, payload)
       expect(token).toEqual(expect.any(String))
     })
   })

@@ -12,7 +12,7 @@ async function createConnectionEvent (serviceId, payload) {
   })
 }
 
-const createLoginEvent = async (payload, serviceId) => {
+const createLoginEvent = async (serviceId, payload) => {
   return sign({
     type: 'LOGIN_EVENT',
     aud: serviceId,
