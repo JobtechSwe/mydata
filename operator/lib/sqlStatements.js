@@ -2,7 +2,7 @@ function accountKeyInsert ({ accountKeyId, accountId, domain, area, readKey }) {
 
 }
 
-function connectionInsert ({ connectionId, accountId, serviceId }) {
+function connectionInserts ({ connectionId, accountId, serviceId }) {
   return [
     `INSERT INTO connections(
       connection_id, account_id, service_id
@@ -21,43 +21,82 @@ function checkConnection ({ accountId, serviceId }) {
   ]
 }
 
-function permissionInsert ({
-  id,
-  connectionId,
-  domain,
-  area,
-  type,
-  purpose,
-  description,
-  lawfulBasis,
-  readKey
-}) {
-  return [
-    `INSERT INTO permissions(
-                  id,
-                  connection_id,
-                  domain,
-                  area,
-                  type,
-                  purpose,
-                  description,
-                  lawful_basis,
-                  read_key,
-                  approved_at
-                ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
-    [
-      id,
-      connectionId,
-      domain,
-      area,
-      type.toUpperCase(),
-      purpose,
-      description,
-      lawfulBasis,
-      readKey ? JSON.stringify(readKey) : null,
-      'now()'
-    ]
-  ]
+function permissionsInserts ({
+  iss: accountId
+}, {
+  sub: connectionId,
+  permissions: { approved: permissions }
+}, readKeys) {
+  const rxAccountKey = /^egendata:\/\//
+  const sqlStatements = []
+
+  // account_keys
+  const writePermissions = permissions.filter(p => p.type === 'WRITE')
+  for (let p of writePermissions) {
+    const accountKeys = p.jwks.keys
+      .filter(({ kid }) => rxAccountKey.test(kid))
+
+    for (let accountKey of accountKeys) {
+      sqlStatements.push([
+        `INSERT INTO account_keys(
+          account_key_id,
+          account_id,
+          domain,
+          area,
+          read_key
+        ) VALUES($1, $2, $3, $4, $5)
+        ON CONFLICT ON CONSTRAINT
+          account_keys_account_id_domain_area_unique_index
+        DO NOTHING`,
+        [
+          accountKey.kid,
+          accountId,
+          p.domain,
+          p.area,
+          accountKey
+        ]
+      ])
+    }
+  }
+
+  // permissions
+  for (let p of permissions) {
+    let readKey = null
+    if (p.type === 'READ') {
+      readKey = readKeys[p.kid]
+    }
+    sqlStatements.push([
+      `INSERT INTO permissions(
+        id,
+        connection_id,
+        domain,
+        area,
+        type,
+        description,
+        purpose,
+        lawful_basis,
+        read_key,
+        approved_at
+      ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+      ON CONFLICT ON CONSTRAINT
+        permissions_connection_id_domain_area_type_accepted_rejected_ex
+      DO NOTHING`,
+      [
+        p.id,
+        connectionId,
+        p.domain,
+        p.area,
+        p.type,
+        p.description || null,
+        p.purpose || null,
+        p.lawfulBasis,
+        readKey,
+        'now()'
+      ]
+    ])
+  }
+
+  return sqlStatements
 }
 
 function serviceInsert ({
@@ -102,7 +141,7 @@ function serviceInsert ({
 module.exports = {
   accountKeyInsert,
   checkConnection,
-  connectionInsert,
-  permissionInsert,
+  connectionInserts,
+  permissionsInserts,
   serviceInsert
 }

@@ -1,16 +1,15 @@
 /* eslint-disable */
-const createError = require('http-errors')
-const { query, multiple } = require('./adapters/postgres')
+const { query, multiple, transaction } = require('./adapters/postgres')
 const { verify } = require('./services/jwt')
 const { createConnectionEvent, createLoginEvent } = require('./services/tokens')
 const {
-  accountKeyInsert,
   checkConnection,
-  connectionInsert,
-  permissionInsert,
+  connectionInserts,
+  permissionsInserts,
   serviceInsert
 } = require('./sqlStatements')
 const axios = require('axios')
+const { jwks: { getKeys } } = require('@egendata/messaging')
 
 async function registerService({ header, payload }, res) {
   const params = {
@@ -52,7 +51,7 @@ async function loginResponse({ header, payload }, res, next) {
   res.sendStatus(200)
 }
 
-async function connectionResponse({ header, payload }, res, next) {
+async function connectionResponse({ payload }, res, next) {
   try {
     const { iss } = payload
     let verified
@@ -68,8 +67,7 @@ async function connectionResponse({ header, payload }, res, next) {
       accountId: iss,
       serviceId: aud
     })).catch(err => {
-      console.error('Could not check connection', err)
-      throw err
+      throw new Error('Could not check connection', err)
     })
 
     if (!resAccount.rows.length) {
@@ -81,9 +79,26 @@ async function connectionResponse({ header, payload }, res, next) {
     if (resConnection.rows.length) {
       throw new Error('Connection already exists')
     }
+
+    // Add connection to db
+    const connectionSql = connectionInserts({
+      connectionId: sub,
+      accountId: iss,
+      serviceId: aud
+    })
+    let permissionsSql = []
+    if (permissions && permissions.approved) {
+      const readKeyIds = permissions.approved
+        .filter(p => p.type === 'READ')
+        .map(p => p.kid)
+      const keys = await getKeys(readKeyIds)
+      permissionsSql = permissionsInserts(payload, { sub, permissions }, keys)
+    }
+    await transaction([...connectionSql, ...permissionsSql])
+
+    // Send connection event to service
     const connectionEventToken = await createConnectionEvent(aud, payload.payload)
     const url = resService.rows[0].events_uri
-
     try {
       await axios.post(url, connectionEventToken, { headers: { 'content-type': 'application/jwt' } })
     } catch (error) {
@@ -91,25 +106,8 @@ async function connectionResponse({ header, payload }, res, next) {
       throw Error(`Could not send token to ${url}`)
     }
 
-    // Add connection to db
-    const connectionSql = connectionInsert({
-      connectionId: sub,
-      accountId: iss,
-      serviceId: aud
-    })
-    await query(...connectionSql)
-
-    if (permissions && permissions.approved) {
-      await Promise.all(permissions.approved
-        .map(permission => ({ ...permission, connectionId: sub }))
-        .map(permissionInsert)
-        .map(sql => query(...sql))
-      )
-    }
-
     res.sendStatus(201)
   } catch (error) {
-    console.error('Could not handle connectionResponse', error)
     next(error)
   }
 }
