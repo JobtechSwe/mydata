@@ -5,8 +5,7 @@ import { Spinner } from '../../components/elements/Spinner/Spinner'
 import { H2, H3, Paragraph } from '../../components/typography/Typography'
 import { PrimaryButton } from '../../components/elements/Button/Button'
 import { Wrap, ScrollViewWrap } from '../../components/view/Wrapper'
-import { storeAccount } from '../../services/storage'
-import { getAccount } from '../../services/account'
+import { getAccount, storeAccount } from '../../services/storage'
 import AsyncStorage from '@react-native-community/async-storage'
 
 function Settings({ navigation }) {
@@ -68,9 +67,7 @@ function Settings({ navigation }) {
           <H2 style={{ alignSelf: 'flex-start', marginTop: 64 }}>
             Inställningar
           </H2>
-          <Paragraph align="left">{`${account.firstName} ${
-            account.lastName
-          }`}</Paragraph>
+          <Paragraph align="left">{`${account.firstName} ${account.lastName}`}</Paragraph>
           <H3 style={{ marginTop: 32 }}>PDS</H3>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <SvgUri
