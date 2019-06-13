@@ -29,7 +29,7 @@ const createConnectionRequest = async (client, { iss, sid }) => {
   )
 }
 
-const connectionInitHandler = client => async ({ payload }, res, next) => {
+const connectionInitHandler = (client) => async ({ payload }, res, next) => {
   try {
     const connectionRequest = await createConnectionRequest(client, payload)
 
@@ -41,7 +41,7 @@ const connectionInitHandler = client => async ({ payload }, res, next) => {
   }
 }
 
-const connectionEventHandler = client => async ({ payload }, res) => {
+const connectionEventHandler = (client) => async ({ payload }, res) => {
   const { payload: { sub, sid } } = await verify(payload.payload)
 
   const AUTHENTICATION_ID_PREFIX = 'authentication|>'
@@ -52,6 +52,5 @@ const connectionEventHandler = client => async ({ payload }, res) => {
 
 module.exports = {
   connectionInitHandler,
-  connectionEventHandler,
-  createConnectionRequest
+  connectionEventHandler
 }
