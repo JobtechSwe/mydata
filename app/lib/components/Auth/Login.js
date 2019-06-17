@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { View } from 'react-native'
 import Modal from 'react-native-modal'
-import { Wrap, ScrollViewWrap } from '../view/Wrapper'
+import { Wrap, ScrollViewWrap } from '../View/Wrapper'
 import styled, { theme } from '../../theme'
 import { H3, Paragraph, Separator } from '../typography/Typography'
 import {

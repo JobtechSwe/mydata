@@ -1,7 +1,7 @@
 import React from 'react'
 import { H1, Paragraph } from '../typography/Typography'
 import { PrimaryButton, SecondaryButton } from '../elements/Button/Button'
-import { Wrap } from '../view/Wrapper'
+import { Wrap } from '../View/Wrapper'
 import { approveConnection } from '../../services/auth'
 
 const Connection = ({ connectionRequest, onApprove }) => {
