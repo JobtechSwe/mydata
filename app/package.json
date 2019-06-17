@@ -43,7 +43,6 @@
     "react-native-json-tree": "^1.2.0",
     "react-native-modal": "^9.0.0",
     "react-native-qrcode-scanner": "^1.1.2",
-    "react-native-rsa-native": "^1.0.24",
     "react-native-securerandom": "^0.3.0",
     "react-native-svg": "^9.2.4",
     "react-native-svg-icon": "^0.8.1",
