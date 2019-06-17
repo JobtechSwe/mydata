@@ -9,7 +9,6 @@ const {
 } = require('crypto')
 const { promisify } = require('util')
 const pem2jwk = require('pem-jwk').pem2jwk
-const Joi = require('joi')
 
 async function generateDocumentKey (encoding) {
   const key = await promisify(randomBytes)(32)
@@ -69,11 +68,41 @@ async function generateJwkPair (jwksUrl, { use }, modulusLength) {
   }
 }
 
+function toBase64Url (base64) {
+  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '')
+}
+
+async function thumbprint ({ e, kty, n }) {
+  const hash = await createHash('SHA256')
+    .update(JSON.stringify({ e, kty, n }))
+    .digest('base64')
+  return toBase64Url(hash)
+}
+
+async function generateKey (jwksURI, options = {}, modulusLength = 2048) {
+  const { privateKey } = await promisify(generateKeyPair)('rsa', {
+    modulusLength,
+    publicKeyEncoding: { type: 'pkcs1', format: 'pem' },
+    privateKeyEncoding: { type: 'pkcs1', format: 'pem' }
+  })
+  const key = pem2jwk(privateKey, options)
+  key.kid = `${jwksURI}/${await thumbprint(key)}`
+
+  return key
+}
+
+function toPublicKey ({ e, kid, kty, n, use }) {
+  return { e, kid, kty, n, use }
+}
+
 module.exports = {
   generateJwkPair,
   generateDocumentKey,
   encryptDocumentKey,
   decryptDocumentKey,
   encryptDocument,
-  decryptDocument
+  decryptDocument,
+
+  generateKey,
+  toPublicKey
 }
