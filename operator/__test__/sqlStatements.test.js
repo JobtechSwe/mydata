@@ -63,7 +63,7 @@ describe('sqlStatements', () => {
           connectionResponse.iss,
           'https://mycv.work',
           'education',
-          accountKey
+          JSON.stringify(accountKey)
         ]
       ])
     })
@@ -85,7 +85,7 @@ describe('sqlStatements', () => {
             null, // description
             'stuff', // purpose
             'CONSENT', // lawful basis
-            myCvEducationKey, // read key
+            JSON.stringify(myCvEducationKey), // read key
             'now()' // approved at
           ]
         ], [

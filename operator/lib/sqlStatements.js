@@ -53,7 +53,7 @@ function permissionsInserts ({
           accountId,
           p.domain,
           p.area,
-          accountKey
+          JSON.stringify(accountKey)
         ]
       ])
     }
@@ -90,7 +90,7 @@ function permissionsInserts ({
         p.description || null,
         p.purpose || null,
         p.lawfulBasis,
-        readKey,
+        JSON.stringify(readKey),
         'now()'
       ]
     ])

@@ -90,7 +90,8 @@ async function connectionResponse({ payload }, res, next) {
       accountId: iss,
       serviceId: aud
     })
-    let permissionsSql = []
+
+    let permissionsSql
     if (permissions && permissions.approved) {
       const readKeyIds = permissions.approved
         .filter(p => p.type === 'READ')
@@ -98,7 +99,16 @@ async function connectionResponse({ payload }, res, next) {
       const keys = await getKeys(readKeyIds)
       permissionsSql = permissionsInserts(payload, { sub, permissions }, keys)
     }
-    await transaction([...connectionSql, ...permissionsSql])
+
+    const sql = permissionsSql
+      ? [ connectionSql, ...permissionsSql ]
+      : [ connectionSql ]
+
+    try {
+      await transaction(sql)
+    } catch (error) {
+      console.error('error', error)
+    }
 
     // Send connection event to service
     const connectionEventToken = await createConnectionEvent(aud, payload.payload)
