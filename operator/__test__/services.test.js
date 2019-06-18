@@ -312,10 +312,9 @@ describe('services', () => {
       const readKeys = {
         'https://mycv.work/jwks/abcd': myCvEducationKey
       }
-      const { sub, permissions } = connection
 
       expect(sqlStatements.permissionsInserts).toHaveBeenCalledWith(
-        connectionResponse, { sub, permissions }, readKeys
+        connectionResponse, connection, readKeys
       )
     })
     it('runs inserts as transaction', async () => {

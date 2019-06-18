@@ -55,30 +55,28 @@ async function loginResponse({ payload }, res, next) {
   }
 }
 
-async function connectionResponse({ payload }, res, next) {
+async function connectionResponse({ payload: connection_response }, res, next) {
   try {
-    const { iss } = payload
-    let verified
+    let connection
     try {
-      verified = await verify(payload.payload)
+      const verified = await verify(connection_response.payload)
+      connection = verified.payload
     } catch (error) {
       throw Error('Could not verify CONNECTION_RESPONSE payload')
     }
 
-    const { payload: { aud, sub, permissions } } = verified
-
     const [resAccount, resService, resConnection] = await multiple(checkConnection({
-      accountId: iss,
-      serviceId: aud
+      accountId: connection_response.iss,
+      serviceId: connection.aud
     })).catch(err => {
       throw new Error('Could not check connection', err)
     })
 
     if (!resAccount.rows.length) {
-      throw new Error(`No such account ${iss}`)
+      throw new Error(`No such account ${connection_response.iss}`)
     }
     if (!resService.rows.length) {
-      throw new Error(`No such service ${aud}`)
+      throw new Error(`No such service ${connection.aud}`)
     }
     if (resConnection.rows.length) {
       throw new Error('Connection already exists')
@@ -86,18 +84,18 @@ async function connectionResponse({ payload }, res, next) {
 
     // Add connection to db
     const connectionSql = connectionInserts({
-      connectionId: sub,
-      accountId: iss,
-      serviceId: aud
+      connectionId: connection.sub,
+      accountId: connection_response.iss,
+      serviceId: connection.aud
     })
 
     let permissionsSql
-    if (permissions && permissions.approved) {
-      const readKeyIds = permissions.approved
+    if (connection.permissions && connection.permissions.approved) {
+      const readKeyIds = connection.permissions.approved
         .filter(p => p.type === 'READ')
         .map(p => p.kid)
       const keys = await getKeys(readKeyIds)
-      permissionsSql = permissionsInserts(payload, { sub, permissions }, keys)
+      permissionsSql = permissionsInserts(connection_response, connection, keys)
     }
 
     const sql = permissionsSql
@@ -111,7 +109,7 @@ async function connectionResponse({ payload }, res, next) {
     }
 
     // Send connection event to service
-    const connectionEventToken = await createConnectionEvent(aud, payload.payload)
+    const connectionEventToken = await createConnectionEvent(connection.aud, connection_response.payload)
     const url = resService.rows[0].events_uri
     try {
       await axios.post(url, connectionEventToken, { headers: { 'content-type': 'application/jwt' } })
