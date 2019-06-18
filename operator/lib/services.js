@@ -56,6 +56,7 @@ async function loginResponse({ payload }, res, next) {
 }
 
 async function connectionResponse({ payload: connection_response }, res, next) {
+  // todo: verify that payload is a CONNECTION_RESPONSE
   try {
     let connection
     try {
@@ -98,12 +99,13 @@ async function connectionResponse({ payload: connection_response }, res, next) {
       permissionsSql = permissionsInserts(connection_response, connection, keys)
     }
 
-    const sql = permissionsSql
-      ? [ connectionSql, ...permissionsSql ]
-      : [ connectionSql ]
+    let sqls = [connectionSql]
+    if(permissionsSql) {
+      sqls.push(permissionsSql)
+    }
 
     try {
-      await transaction(sql)
+      await transaction(sqls)
     } catch (error) {
       console.error('error', error)
     }

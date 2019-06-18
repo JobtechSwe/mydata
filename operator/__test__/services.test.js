@@ -318,14 +318,18 @@ describe('services', () => {
       )
     })
     it('runs inserts as transaction', async () => {
-      sqlStatements.connectionInserts.mockReturnValue(['INSERT CONNECTION THING', [ 1, 2, 3 ]])
-      sqlStatements.permissionsInserts.mockReturnValue(['INSERT PERMISSONS THING', [ 4, 5, 6 ]])
+      const connectionInsertSql = 'INSERT INTO connections blah blah'
+      const connectionInsertValues = [1, 2, 3]
+      const permissionsInsertSql = 'INSERT INTO permissions blah blah'
+      const permissionsInsertValues = [4, 5, 6]
+      sqlStatements.connectionInserts.mockReturnValue([connectionInsertSql, connectionInsertValues])
+      sqlStatements.permissionsInserts.mockReturnValue([permissionsInsertSql, permissionsInsertValues])
 
       await services.connectionResponse({ payload: connectionResponse }, res, next)
 
       expect(postgres.transaction).toHaveBeenCalledWith([
-        ['INSERT CONNECTION THING', [ 1, 2, 3 ]],
-        ['INSERT PERMISSONS THING', [ 4, 5, 6 ]]
+        [connectionInsertSql, connectionInsertValues],
+        [permissionsInsertSql, permissionsInsertValues]
       ])
     })
     it('creates a CONNECTION_EVENT', async () => {

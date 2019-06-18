@@ -90,7 +90,7 @@ function permissionsInserts ({
         p.description || null,
         p.purpose || null,
         p.lawfulBasis,
-        JSON.stringify(readKey),
+        readKey ? JSON.stringify(readKey) : null,
         'now()'
       ]
     ])
