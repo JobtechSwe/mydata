@@ -80,8 +80,10 @@
     "eslint-plugin-react": "^7.12.4",
     "eslint-plugin-standard": "^4.0.0",
     "express": "^4.16.4",
+    "husky": "^2.4.1",
     "isomorphic-webcrypto": "^1.6.1",
     "jest": "24.5.0",
+    "lint-staged": "^8.2.1",
     "lolex": "^3.1.0",
     "metro-react-native-babel-preset": "^0.53.1",
     "nodemon": "^1.18.10",
@@ -94,9 +96,24 @@
     "webpack": "^4.29.5",
     "webpack-cli": "^3.2.3"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "rnpm": {
     "assets": [
       "./assets/fonts/"
+    ]
+  },
+  "lint-staged": {
+    "*.{js,css,md}": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.js": [
+      "eslint --fix",
+      "git add"
     ]
   }
 }

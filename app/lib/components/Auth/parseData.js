@@ -1,3 +1,4 @@
+/* View Model */
 export function toViewModel(data) {
   const {
     permissions,
