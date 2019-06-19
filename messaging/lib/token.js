@@ -1,4 +1,3 @@
-const axios = require('axios')
 const { getKey } = require('./jwks')
 const schemas = require('./schemas')
 

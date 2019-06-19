@@ -35,9 +35,11 @@ const ClientDescription = styled(View)`
   padding: 4px 0;
 `
 
+/*
 const ConsentHeaderExternal = styled(ConsentHeader)`
   padding: 12px 36px;
 `
+*/
 
 const ScopeItemWrapper = styled(View)`
   margin-bottom: 0px;
@@ -112,10 +114,12 @@ const ScopeItem = ({ scope, lastItem }) => {
 const ConsentModal = ({ data, visible, onApprove, onReject }) => {
   const handleApprovePermissions = () =>
     onApprove(
-      toPermissionResult({ local: data.local, external: data.external })
+      // toPermissionResult({ local: data.local, external: data.external })
+      toPermissionResult({ local: data.local })
     )
 
-  const { local = [], external = [] } = data
+  // const { local = [], external = [] } = data
+  const { local = [] } = data
 
   return (
     <Wrap>
