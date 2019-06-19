@@ -6,6 +6,10 @@ const { JWK, JWK_PRIVATE } = require('../../messaging/lib/schemas')
 jest.useFakeTimers()
 
 describe('Permissions', () => {
+  beforeAll(async () => {
+    await operatorPostgres.clearOperatorDb()
+  })
+
   beforeEach(async () => {
     await phone.clearStorage()
     await phone.createAccount({ firstName: 'Foo', lastName: 'Barsson' })
@@ -13,10 +17,10 @@ describe('Permissions', () => {
 
   afterEach(async () => {
     await phone.clearStorage()
-    await operatorPostgres.clearOperatorDb()
   })
 
   afterAll(async () => {
+    await operatorPostgres.clearOperatorDb()
   })
 
   it('correctly stores default READ permissions', async (done) => {
@@ -47,7 +51,7 @@ describe('Permissions', () => {
     client.server.close(done)
   })
 
-  it('correctly sends CONNECTION_REPONSE with default READ permissions', async (done) => {
+  it('correctly sends CONNECTION_RESPONSE with default READ permissions', async (done) => {
     const permissionArea = 'favorite_cats'
     const serviceConfig = {
       defaultPermissions: [{
@@ -83,13 +87,13 @@ describe('Permissions', () => {
     client.server.close(done)
   })
 
-  it('correctly sends CONNECTION_REPONSE with default WRITE permissions', async (done) => {
-    const permissionArea = 'favorite_cats'
+  it('correctly sends CONNECTION_RESPONSE with default WRITE permissions', async (done) => {
+    const permissionArea = 'favorite_dogs'
     const serviceConfig = {
       defaultPermissions: [{
         area: permissionArea,
         types: ['WRITE'],
-        description: 'The cats you like the most'
+        description: 'The dogs you like the most'
       }]
     }
     let client = await createClientWithServer(serviceConfig)
