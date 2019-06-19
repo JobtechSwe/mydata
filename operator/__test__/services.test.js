@@ -30,8 +30,8 @@ jest.mock('../lib/services/tokens', () => ({
 jest.mock('../lib/sqlStatements', () => ({
   accountKeyInsert: jest.fn().mockName('sqlStatements.accountKeyInsert').mockReturnValue([]),
   checkConnection: jest.fn().mockName('sqlStatements.checkConnection').mockReturnValue([]),
-  connectionInserts: jest.fn().mockName('sqlStatements.connectionInserts').mockReturnValue([]),
-  permissionsInserts: jest.fn().mockName('permissionsInserts').mockReturnValue([]),
+  connectionInserts: jest.fn().mockName('sqlStatements.connectionInserts').mockReturnValue([[]]),
+  permissionsInserts: jest.fn().mockName('permissionsInserts').mockReturnValue([[]]),
   serviceInsert: jest.fn().mockName('serviceInsert').mockReturnValue([])
 }))
 
@@ -322,8 +322,8 @@ describe('services', () => {
       const connectionInsertValues = [1, 2, 3]
       const permissionsInsertSql = 'INSERT INTO permissions blah blah'
       const permissionsInsertValues = [4, 5, 6]
-      sqlStatements.connectionInserts.mockReturnValue([connectionInsertSql, connectionInsertValues])
-      sqlStatements.permissionsInserts.mockReturnValue([permissionsInsertSql, permissionsInsertValues])
+      sqlStatements.connectionInserts.mockReturnValue([[connectionInsertSql, connectionInsertValues]])
+      sqlStatements.permissionsInserts.mockReturnValue([[permissionsInsertSql, permissionsInsertValues]])
 
       await services.connectionResponse({ payload: connectionResponse }, res, next)
 

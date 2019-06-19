@@ -3,14 +3,15 @@ function accountKeyInsert ({ accountKeyId, accountId, domain, area, readKey }) {
 }
 
 function connectionInserts ({ connectionId, accountId, serviceId }) {
-  return [
+  // returns array in array to be consistent with permissionsInserts
+  return [[
     `INSERT INTO connections(
       connection_id, account_id, service_id
     ) VALUES(
       $1, $2, $3
     )`,
     [connectionId, accountId, serviceId]
-  ]
+  ]]
 }
 
 function checkConnection ({ accountId, serviceId }) {
@@ -45,9 +46,7 @@ function permissionsInserts ({
           area,
           read_key
         ) VALUES($1, $2, $3, $4, $5)
-        ON CONFLICT ON CONSTRAINT
-          account_keys_account_id_domain_area_unique_index
-        DO NOTHING`,
+        ON CONFLICT DO NOTHING`,
         [
           accountKey.kid,
           accountId,
@@ -78,9 +77,7 @@ function permissionsInserts ({
         read_key,
         approved_at
       ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-      ON CONFLICT ON CONSTRAINT
-        permissions_connection_id_domain_area_type_accepted_rejected_ex
-      DO NOTHING`,
+      ON CONFLICT DO NOTHING`,
       [
         p.id,
         connectionId,

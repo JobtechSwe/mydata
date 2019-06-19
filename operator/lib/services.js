@@ -90,7 +90,7 @@ async function connectionResponse({ payload: connection_response }, res, next) {
       serviceId: connection.aud
     })
 
-    let permissionsSql
+    let permissionsSql = []
     if (connection.permissions && connection.permissions.approved) {
       const readKeyIds = connection.permissions.approved
         .filter(p => p.type === 'READ')
@@ -99,13 +99,8 @@ async function connectionResponse({ payload: connection_response }, res, next) {
       permissionsSql = permissionsInserts(connection_response, connection, keys)
     }
 
-    let sqls = [connectionSql]
-    if(permissionsSql) {
-      sqls.push(permissionsSql)
-    }
-
     try {
-      await transaction(sqls)
+      await transaction([...connectionSql, ...permissionsSql])
     } catch (error) {
       console.error('error', error)
     }
