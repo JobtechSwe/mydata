@@ -1,3 +1,4 @@
+/* View Model */
 export function toViewModel(data) {
   const {
     permissions,
@@ -48,6 +49,7 @@ export function toViewModel(data) {
   return normalisedData
 }
 
+/* Connection Request */
 export function toConnectionRequest({ local = [], external = [] }) {
   const extractPermissions = (permissions, { read, write }) => [
     ...permissions,
