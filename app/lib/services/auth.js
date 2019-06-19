@@ -10,6 +10,7 @@ import {
   createLoginResponse,
 } from './tokens'
 import { v4 } from 'uuid'
+import { generateKey, toPublicKey } from './crypto'
 
 export const authenticationRequestHandler = async ({ payload }) => {
   const allConnections = await getConnections()
@@ -43,10 +44,25 @@ export const approveConnection = async (
   connectionRequest,
   permissionsResult
 ) => {
+  const withJwk = async permission => {
+    const key = await generateKey({ use: 'enc' })
+    const publicKey = toPublicKey(key)
+
+    return { ...permission, jwks: { keys: [publicKey] } }
+  }
+
+  const approvedReads = permissionsResult.approved.filter(
+    x => x.type === 'READ'
+  )
+
+  const approvedWrites = await Promise.all(
+    permissionsResult.approved.filter(x => x.type === 'WRITE').map(withJwk)
+  )
+
   const connectionId = v4()
   const connection = await createConnection(
     connectionRequest,
-    permissionsResult,
+    [...approvedReads, ...approvedWrites],
     connectionId
   )
 
