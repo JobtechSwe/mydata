@@ -11,7 +11,7 @@ import {
   DenyConsentButton,
   ConsentButtonWrap,
 } from '../elements/Button/ConsentButton'
-import { toConnectionRequest } from './parseData'
+import { toPermissionResult } from './parseData'
 
 const StyledModal = styled(Modal)`
   margin: 0;
@@ -112,7 +112,7 @@ const ScopeItem = ({ scope, lastItem }) => {
 const ConsentModal = ({ data, visible, onApprove, onReject }) => {
   const handleApprovePermissions = () =>
     onApprove(
-      toConnectionRequest({ local: data.local, external: data.external })
+      toPermissionResult({ local: data.local, external: data.external })
     )
 
   const { local = [], external = [] } = data
