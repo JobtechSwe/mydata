@@ -7,11 +7,16 @@ const { sign } = require('../lib/jwt')
 const { generateKey, toPublicKey } = require('../lib/crypto')
 const { schemas } = require('@egendata/messaging')
 
+jest.useFakeTimers()
+
 describe('connection', () => {
-  let clientKeys, accountKey, config, handle, res, next
+  let clientKeys, accountKey, permissionKey, config, client, handle, res, next
   beforeAll(async () => {
     accountKey = await generateKey('egendata://jwks', { use: 'sig' })
+    permissionKey = await generateKey('http://localhost:4000/jwks', { use: 'enc' })
     clientKeys = await generateKeyPair({ kid: '' })
+  })
+  beforeEach(() => {
     config = {
       displayName: 'CV app',
       description: 'A CV app with a description which is longer than 10 chars',
@@ -24,8 +29,6 @@ describe('connection', () => {
       keyValueStore: createMemoryStore(),
       keyOptions: { modulusLength: 1024 }
     }
-  })
-  beforeEach(() => {
     res = {
       sendStatus: jest.fn().mockName('res.sendStatus'),
       setHeader: jest.fn().mockName('res.setHeader'),
@@ -56,7 +59,7 @@ describe('connection', () => {
     })
     describe('without defaultPermissions', () => {
       beforeEach(() => {
-        const client = createClient(config)
+        client = createClient(config)
         handle = connectionInitHandler(client)
       })
       it('creates a valid jwt', async () => {
@@ -98,7 +101,7 @@ describe('connection', () => {
           { area: 'education', types: ['READ'], purpose: 'Because i wanna' },
           { area: 'experience', types: ['WRITE'], description: 'Many things about stuff' }
         ]
-        const client = createClient({
+        client = createClient({
           ...config,
           defaultPermissions
         })
@@ -147,7 +150,6 @@ describe('connection', () => {
   })
   describe('#connectionEventHandler', () => {
     let payload, connection
-    let res, next
     beforeEach(async () => {
       connection = {
         type: 'CONNECTION',
@@ -171,23 +173,111 @@ describe('connection', () => {
     })
     describe('no permissions', () => {
       beforeEach(() => {
-        const client = createClient(config)
+        client = createClient(config)
         handle = connectionEventHandler(client)
       })
-      it('stores new connection', async () => {
-        console.log(payload)
+      it('saves authentication to db', async () => {
         await handle({ payload }, res, next)
-        const [token] = res.write.mock.calls[0]
-        const result = JWT.decode(token)
 
-        expect(result).not.toBe(null)
+        const sub = await config.keyValueStore.load(`authentication|>${connection.sid}`)
+
+        expect(sub).toEqual(connection.sub)
+      })
+      it('saves connection to db', async () => {
+        await handle({ payload }, res, next)
+
+        const connectionKey = `connection|>${connection.sub}`
+        const conn = JSON.parse(await config.keyValueStore.load(connectionKey))
+
+        expect(conn).toEqual({})
+      })
+      it('sends a 204 (No content) on success', async () => {
+        await handle({ payload }, res, next)
+
+        expect(res.sendStatus).toHaveBeenCalledWith(204)
       })
       it('passes any errors to next middleware', async () => {
-        const error = new Error('b0rk')
-        res.setHeader.mockImplementation(() => { throw error })
+        payload.payload = 'this is not a valid token'
         await handle({ payload }, res, next)
 
-        expect(next).toHaveBeenCalledWith(error)
+        expect(next).toHaveBeenCalledWith(expect.any(Error))
+      })
+    })
+    describe('with approved permissions', () => {
+      beforeEach(async () => {
+        client = createClient(config)
+        handle = connectionEventHandler(client)
+
+        await client.keyProvider.save(`key|>${permissionKey.kid}`, permissionKey, 10)
+
+        connection.permissions = {
+          approved: [
+            {
+              id: '1fc622ab-ebdf-4f8d-a0dd-1afbfb492a5a',
+              domain: 'https://mycv.work',
+              area: 'education',
+              type: 'READ',
+              purpose: 'stuff',
+              lawfulBasis: 'CONSENT',
+              kid: permissionKey.kid
+            },
+            {
+              id: '052bb693-de11-442c-a5b1-3fa9a36bc851',
+              domain: 'https://mycv.work',
+              area: 'education',
+              type: 'WRITE',
+              description: 'some data yo!',
+              lawfulBasis: 'CONSENT',
+              jwks: {
+                keys: [
+                  toPublicKey(accountKey),
+                  toPublicKey(permissionKey)
+                ]
+              }
+            }
+          ]
+        }
+        const connectionToken = await sign(connection, accountKey, { jwk: toPublicKey(accountKey) })
+        payload.payload = connectionToken
+      })
+      afterEach(async () => {
+        await client.keyProvider.removeKey(permissionKey.kid)
+      })
+      it('saves authentication to db', async () => {
+        await handle({ payload }, res, next)
+
+        const sub = await config.keyValueStore.load(`authentication|>${connection.sid}`)
+
+        expect(sub).toEqual(connection.sub)
+      })
+      it('saves connection to db', async () => {
+        await handle({ payload }, res, next)
+
+        const connectionKey = `connection|>${connection.sub}`
+        const conn = JSON.parse(await config.keyValueStore.load(connectionKey))
+
+        expect(conn).toEqual({
+          permissions: connection.permissions
+        })
+      })
+      it('saves approved read-keys permanently', async () => {
+        await handle({ payload }, res, next)
+
+        jest.runAllTimers()
+
+        const key = await client.keyProvider.getKey(permissionKey.kid)
+        expect(key).toEqual(permissionKey)
+      })
+      it('sends a 204 (No content) on success', async () => {
+        await handle({ payload }, res, next)
+
+        expect(res.sendStatus).toHaveBeenCalledWith(204)
+      })
+      it('passes any errors to next middleware', async () => {
+        payload.payload = 'this is not a valid token'
+        await handle({ payload }, res, next)
+
+        expect(next).toHaveBeenCalledWith(expect.any(Error))
       })
     })
   })

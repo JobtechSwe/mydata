@@ -2,6 +2,9 @@ const { sign, verify } = require('./jwt')
 const pem2jwk = require('pem-jwk').pem2jwk
 const { createPermissions } = require('./permissions')
 
+const AUTHENTICATION_PREFIX = 'authentication|>'
+const CONNECTION_PREFIX = 'connection|>'
+
 const createConnectionRequest = async (client, { iss, sid }) => {
   const key = pem2jwk(client.config.clientKeys.privateKey)
   key.kid = `${client.config.jwksUrl}/client_key`
@@ -41,13 +44,25 @@ const connectionInitHandler = (client) => async ({ payload }, res, next) => {
   }
 }
 
-const connectionEventHandler = (client) => async ({ payload }, res) => {
-  const { payload: { sub, sid } } = await verify(payload.payload)
+const connectionEventHandler = (client) => async ({ payload }, res, next) => {
+  try {
+    const { payload: { sub, sid, permissions } } = await verify(payload.payload)
 
-  const AUTHENTICATION_ID_PREFIX = 'authentication|>'
-  client.keyValueStore.save(`${AUTHENTICATION_ID_PREFIX}${sid}`, sub)
+    client.keyValueStore.save(`${AUTHENTICATION_PREFIX}${sid}`, sub)
 
-  res.sendStatus(200)
+    const connection = { permissions }
+    client.keyValueStore.save(`${CONNECTION_PREFIX}${sub}`, JSON.stringify(connection))
+
+    if (permissions && permissions.approved) {
+      for (let permission of permissions.approved.filter(p => p.type === 'READ')) {
+        await client.keyProvider.makeKeyPermanent(permission.kid)
+      }
+    }
+
+    res.sendStatus(204)
+  } catch (err) {
+    next(err)
+  }
 }
 
 module.exports = {

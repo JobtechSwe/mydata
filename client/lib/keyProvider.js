@@ -65,6 +65,13 @@ class KeyProvider {
     await this.save(`${KEY_PREFIX}${keyPair.publicKey.kid}`, keyPair, this.options.tempKeyExpiry)
     return keyPair
   }
+  async makeKeyPermanent (kid) {
+    const key = await this.getKey(kid)
+    if (!key) {
+      throw new Error(`No such key [${kid}]`)
+    }
+    await this.saveKey(key)
+  }
   async saveKey (key) {
     return this.save(`${KEY_PREFIX}${key.kid}`, key)
   }
