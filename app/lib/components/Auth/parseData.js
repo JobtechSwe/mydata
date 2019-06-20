@@ -1,4 +1,5 @@
-/* View Model */
+/* import { generateKey } from '../../services/crypto' */
+
 export function toViewModel(data) {
   const {
     permissions,

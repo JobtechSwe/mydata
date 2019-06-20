@@ -71,7 +71,9 @@ const mock = {
 
 describe('components/Consent/ConsentModal', () => {
   it('should render without errors', () => {
-    const { output } = shallow(<ConsentModal visible={true} data={mock} />)
+    const { output } = shallow(
+      <ConsentModal visible={true} data={{ viewModel: mock }} />
+    )
 
     expect(output).toMatchSnapshot()
   })

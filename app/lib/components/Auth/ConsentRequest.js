@@ -40,7 +40,10 @@ const Connection = ({ connectionRequest, onApprove, onCancel }) => {
       onApprove={onApproveConnection}
       onReject={onDenyConnection}
       visible={modalVisible}
-      data={toViewModel(connectionRequest)}
+      data={{
+        viewModel: toViewModel(connectionRequest),
+        connectionRequest,
+      }}
     />
   )
 }

@@ -106,15 +106,20 @@ const ScopeItem = ({ scope, lastItem }) => {
   )
 }
 
-const ConsentModal = ({ data, visible, onApprove, onReject }) => {
+const ConsentModal = ({
+  data: { viewModel },
+  visible,
+  onApprove,
+  onReject,
+}) => {
   const handleApprovePermissions = () =>
     onApprove(
-      // toPermissionResult({ local: data.local, external: data.external })
-      toPermissionResult({ local: data.local })
+      // toPermissionResult({ local: viewModel.local, external: viewModel.external })
+      toPermissionResult({ local: viewModel.local })
     )
 
   // const { local = [], external = [] } = data
-  const { local = [] } = data
+  const { local = [] } = viewModel
 
   return (
     <Wrap>
@@ -127,12 +132,12 @@ const ConsentModal = ({ data, visible, onApprove, onReject }) => {
           <Separator style={{ marginBottom: 0, marginTop: 0 }} />
           <ConsentHeader>
             <Image
-              source={{ uri: data.iconURI }}
+              source={{ uri: viewModel.iconURI }}
               style={{ width: 64, height: 64, marginRight: 12 }}
             />
             <ClientDescription>
-              <H3 style={{ marginBottom: 8 }}>{data.displayName}</H3>
-              <Paragraph align="left">{data.description}</Paragraph>
+              <H3 style={{ marginBottom: 8 }}>{viewModel.displayName}</H3>
+              <Paragraph align="left">{viewModel.description}</Paragraph>
             </ClientDescription>
           </ConsentHeader>
           <Separator style={{ marginBottom: 0, marginTop: 0 }} />
