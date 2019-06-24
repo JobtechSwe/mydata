@@ -129,13 +129,13 @@ const READ_PERMISSION = Joi.object({
   ...PERMISSION_BASE,
   type: Joi.string().valid('READ').required(),
   purpose: Joi.string().required(),
-  kid: Joi.string().uri().required()
+  kid: Joi.string().uri().required() // the key of the service which is allowed to READ
 })
 const WRITE_PERMISSION = {
   ...PERMISSION_BASE,
   type: Joi.string().valid('WRITE').required(),
   description: Joi.string().required(),
-  jwks: JWKS.required()
+  jwks: JWKS.required() // a 'keychain' with the keys of all approved readers of this data point
 }
 const PERMISSION_ARRAY = Joi.array().items(
   READ_PERMISSION,

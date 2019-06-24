@@ -44,25 +44,10 @@ export const approveConnection = async (
   connectionRequest,
   permissionsResult
 ) => {
-  const withJwk = async permission => {
-    const key = await generateKey({ use: 'enc' })
-    const publicKey = toPublicKey(key)
-
-    return { ...permission, jwks: { keys: [publicKey] } }
-  }
-
-  const approvedReads = permissionsResult.approved.filter(
-    x => x.type === 'READ'
-  )
-
-  const approvedWrites = await Promise.all(
-    permissionsResult.approved.filter(x => x.type === 'WRITE').map(withJwk)
-  )
-
   const connectionId = v4()
   const connection = await createConnection(
     connectionRequest,
-    [...approvedReads, ...approvedWrites],
+    permissionsResult,
     connectionId
   )
 
@@ -88,5 +73,63 @@ export const approveLogin = async ({ connection, sessionId }) => {
   } catch (error) {
     console.error('error', error)
     throw Error('Could not approve Login')
+  }
+}
+
+function mapReadKeys({ permissions }) {
+  return permissions
+    .filter(p => p.type === 'READ')
+    .reduce(
+      (map, { domain, area, jwk }) => map.set(`${domain}|${area}`, jwk),
+      new Map()
+    )
+}
+
+export async function createPermissionResult(
+  { local = [], external = [] },
+  connectionRequest
+) {
+  const extractPermissions = (permissions, { read, write }) => [
+    ...permissions,
+    read,
+    write,
+  ]
+
+  // const withJwk = async permission => {
+  const withJwk = async () => {
+    const key = await generateKey({ use: 'enc' })
+    const publicKey = toPublicKey(key)
+
+    /* TODO(@all): Store these in the app with the key from permission */
+    return publicKey
+  }
+
+  const notUndefined = value => value !== undefined
+
+  const readServiceReadKeysByArea = mapReadKeys(connectionRequest)
+
+  return {
+    approved: await Promise.all(
+      [
+        ...local.reduce(extractPermissions, []).filter(notUndefined),
+        ...external.reduce(extractPermissions, []).filter(notUndefined),
+      ].map(async p => {
+        if (p.type === 'WRITE') {
+          if (!p.jwks) {
+            p.jwks = {
+              keys: [],
+            }
+          }
+          // push service read-keys to jwks-keys
+          p.jwks.keys.push(
+            readServiceReadKeysByArea.get(`${p.domain}|${p.area}`)
+          )
+
+          // push user read-key
+          p.jwks.keys.push(await withJwk(p))
+        }
+        return p
+      })
+    ),
   }
 }
