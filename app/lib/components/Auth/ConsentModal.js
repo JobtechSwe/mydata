@@ -10,7 +10,6 @@ import {
   DenyConsentButton,
   ConsentButtonWrap,
 } from '../elements/Button/ConsentButton'
-import { toPermissionResult } from './parseData'
 import { Info } from '../Icons'
 
 const StyledModal = styled(Modal)`
@@ -112,11 +111,7 @@ const ConsentModal = ({
   onApprove,
   onReject,
 }) => {
-  const handleApprovePermissions = () =>
-    onApprove(
-      // toPermissionResult({ local: viewModel.local, external: viewModel.external })
-      toPermissionResult({ local: viewModel.local })
-    )
+  const handleApprovePermissions = () => onApprove({ local: viewModel.local })
 
   // const { local = [], external = [] } = data
   const { local = [] } = viewModel

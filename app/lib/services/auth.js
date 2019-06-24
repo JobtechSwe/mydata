@@ -40,11 +40,12 @@ export const initConnection = async authRequest => {
   }
 }
 
-export const approveConnection = async (
-  connectionRequest,
-  permissionsResult
-) => {
+export const approveConnection = async (connectionRequest, permissions) => {
   const connectionId = v4()
+  const permissionsResult = await createPermissionResult(
+    permissions,
+    connectionRequest
+  )
   const connection = await createConnection(
     connectionRequest,
     permissionsResult,
