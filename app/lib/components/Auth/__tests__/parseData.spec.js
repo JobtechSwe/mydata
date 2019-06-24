@@ -239,7 +239,9 @@ describe('components/Auth/parseData', () => {
           kid: nationalExperienceKey.kid,
         },
       ]
-      expect(toPermissionResult(viewModelResponse)).toEqual(expected)
+      expect(toPermissionResult(viewModelResponse, connectionRequest)).toEqual(
+        expected
+      )
     })
   })
 })
