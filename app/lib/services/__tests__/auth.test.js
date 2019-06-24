@@ -220,11 +220,9 @@ describe('auth', () => {
         ],
       }
 
-      // console.log(JSON.stringify(await createPermissionResult(viewModelResponse, connectionRequest), null, 2))
       expect(
         await createPermissionResult(viewModelResponse, connectionRequest)
       ).toEqual(expected)
-      // expect(1).toEqual(2)
     })
   })
 })
