@@ -55,26 +55,26 @@ async function loginResponse({ payload }, res, next) {
   }
 }
 
-async function connectionResponse({ payload: connection_response }, res, next) {
+async function connectionResponse({ payload: connection_token }, res, next) {
   // todo: verify that payload is a CONNECTION_RESPONSE
   try {
     let connection
     try {
-      const verified = await verify(connection_response.payload)
+      const verified = await verify(connection_token.payload)
       connection = verified.payload
     } catch (error) {
-      throw Error('Could not verify CONNECTION_RESPONSE payload')
+      throw Error('Could not verify CONNECTION payload')
     }
 
     const [resAccount, resService, resConnection] = await multiple(checkConnection({
-      accountId: connection_response.iss,
+      accountId: connection_token.iss,
       serviceId: connection.aud
     })).catch(err => {
       throw new Error('Could not check connection', err)
     })
 
     if (!resAccount.rows.length) {
-      throw new Error(`No such account ${connection_response.iss}`)
+      throw new Error(`No such account ${connection_token.iss}`)
     }
     if (!resService.rows.length) {
       throw new Error(`No such service ${connection.aud}`)
@@ -86,7 +86,7 @@ async function connectionResponse({ payload: connection_response }, res, next) {
     // Add connection to db
     const connectionSql = connectionInserts({
       connectionId: connection.sub,
-      accountId: connection_response.iss,
+      accountId: connection_token.iss,
       serviceId: connection.aud
     })
 
@@ -96,17 +96,19 @@ async function connectionResponse({ payload: connection_response }, res, next) {
         .filter(p => p.type === 'READ')
         .map(p => p.kid)
       const keys = await getKeys(readKeyIds)
-      permissionsSql = permissionsInserts(connection_response, connection, keys)
+      permissionsSql = permissionsInserts(connection_token, connection, keys)
     }
 
     try {
-      await transaction([...connectionSql, ...permissionsSql])
+      const statements = [...connectionSql, ...permissionsSql]
+      await transaction(statements)
     } catch (error) {
       console.error('error', error)
+      throw error
     }
 
     // Send connection event to service
-    const connectionEventToken = await createConnectionEvent(connection.aud, connection_response.payload)
+    const connectionEventToken = await createConnectionEvent(connection.aud, connection_token.payload)
     const url = resService.rows[0].events_uri
     try {
       await axios.post(url, connectionEventToken, { headers: { 'content-type': 'application/jwt' } })

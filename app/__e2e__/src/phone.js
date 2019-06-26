@@ -38,8 +38,9 @@ export const handleAuthCode = async ({ code }) => {
   return handle(token)
 }
 
-export const approveConnection = async (permissions, approved = {}) => {
-  return auth.approveConnection(permissions, new Map(Object.entries(approved)))
+export const approveConnection = async (permissions, approved = []) => {
+  const approvedMap = new Map(approved)
+  return auth.approveConnection(permissions, approvedMap)
 }
 
 export const approveLogin = auth.approveLogin

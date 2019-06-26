@@ -74,6 +74,7 @@ describe('Permissions', () => {
     connectionRequest.permissions.forEach(p => {
       approvalResponse.set(p.id, true)
     })
+    
     await phone.approveConnection(connectionRequest, approvalResponse)
 
     // After state, expect connection in client for the session id
@@ -105,17 +106,12 @@ describe('Permissions', () => {
     // Scan auth and do ping-pong
     const { connectionRequest } = await phone.handleAuthCode({ code: url })
 
-    // Get user key to put in WRITE_PERMISSION
-    const { publicKey } = await phone.getAccountKeys()
-
-    // Change from WRITE_PERMISSION_REQUEST to WRITE_PERMISSION
-    const approved = connectionRequest.permissions
-    approved[0].jwks = {
-      keys: [ publicKey ]
-    }
-
     // Approve it!
-    await phone.approveConnection(connectionRequest, { approved })
+    let approvalResponse = new Map()
+    connectionRequest.permissions.forEach(p => {
+      approvalResponse.set(p.id, true)
+    })
+    await phone.approveConnection(connectionRequest, approvalResponse)
 
     // After state, expect connection in client for the session id
     const connectionEntryInClient = await client.keyValueStore.load(`authentication|>${id}`)

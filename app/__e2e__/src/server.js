@@ -3,13 +3,13 @@ import * as phone from './phone'
 import { inspect } from 'util'
 
 if (!process.env.OPERATOR_URL) {
-  console.warn('OPERATOR_URL not set for app-server. SetConfig has to be used before app-server will be able to reach Operator')
+  console.warn(
+    'OPERATOR_URL not set for app-server. SetConfig has to be used before app-server will be able to reach Operator'
+  )
 } else {
-  phone
-    .setConfig({ OPERATOR_URL: process.env.OPERATOR_URL })
-    .then(() => {
-      console.info(`OPERATOR_URL set to ${process.env.OPERATOR_URL}`)
-    })
+  phone.setConfig({ OPERATOR_URL: process.env.OPERATOR_URL }).then(() => {
+    console.info(`OPERATOR_URL set to ${process.env.OPERATOR_URL}`)
+  })
 }
 
 const app = express()
@@ -19,7 +19,7 @@ app.post('/:method', async ({ body = {}, params: { method } }, res, next) => {
     const result = await phone[method](...body.args)
     res.send(result)
   } catch (err) {
-    console.error(inspect(err, false, 3))
+    console.error(inspect(err, false, 3, true))
     next(err)
   }
 })
