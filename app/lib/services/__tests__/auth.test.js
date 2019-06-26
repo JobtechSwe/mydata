@@ -3,7 +3,6 @@ import { getAccount } from '../account'
 import axios from 'axios'
 import { generateTestAccount } from './_helpers'
 import { generateKey } from '../crypto'
-import { toViewModel } from '../../components/Auth/parseData'
 
 jest.mock('../account', () => ({
   getAccount: jest.fn(),
@@ -60,7 +59,6 @@ describe('auth', () => {
   })
 
   describe('#createPermissionResult', () => {
-    let viewModelResponse
     const appKeyBaseData = {
       e: 'AQAB',
       kid: 'egendata://jwks/base-data',
@@ -158,14 +156,13 @@ describe('auth', () => {
       ],
     }
     beforeEach(() => {
-      viewModelResponse = toViewModel(connectionRequest)
       generateKey.mockResolvedValueOnce(appKeyBaseData)
       generateKey.mockResolvedValueOnce(appKeyExperience)
     })
     afterEach(() => {
       generateKey.mockReset()
     })
-    it('transforms a view model response into a CONNECTION message', async () => {
+    it('creates a CONNECTION message', async () => {
       const expected = {
         approved: [
           {
@@ -190,15 +187,6 @@ describe('auth', () => {
           },
           {
             area: 'experience',
-            domain: 'https://mycv.work',
-            id: '55c24372-6956-4891-b5ff-a6cf69fb5c8b',
-            lawfulBasis: 'CONSENT',
-            purpose: 'In order to create a CV using our website.',
-            type: 'READ',
-            kid: experienceKey.kid,
-          },
-          {
-            area: 'experience',
             description: 'A list of your work experiences.',
             domain: 'https://mycv.work',
             id: 'd5dab30d-b0ac-43e3-9ac8-cff8b39ca560',
@@ -207,6 +195,15 @@ describe('auth', () => {
             jwks: {
               keys: [experienceKey, appKeyExperience],
             },
+          },
+          {
+            area: 'experience',
+            domain: 'https://mycv.work',
+            id: '55c24372-6956-4891-b5ff-a6cf69fb5c8b',
+            lawfulBasis: 'CONSENT',
+            purpose: 'In order to create a CV using our website.',
+            type: 'READ',
+            kid: experienceKey.kid,
           },
           {
             area: 'experience',
@@ -219,10 +216,17 @@ describe('auth', () => {
           },
         ],
       }
+      const approved = new Map([
+        ['18710e28-7d6c-49cf-941e-0f954bb179ae', true],
+        ['1712ec0c-9ae6-472f-9e14-46088e51f505', true],
+        ['55c24372-6956-4891-b5ff-a6cf69fb5c8b', true],
+        ['d5dab30d-b0ac-43e3-9ac8-cff8b39ca560', true],
+        ['fc284cf5-b1af-4fac-b793-7d1adf8a9c60', true],
+      ])
 
-      expect(
-        await createPermissionResult(viewModelResponse, connectionRequest)
-      ).toEqual(expected)
+      const result = await createPermissionResult(connectionRequest, approved)
+
+      expect(result).toEqual(expected)
     })
   })
 })

@@ -1,5 +1,3 @@
-/* import { generateKey } from '../../services/crypto' */
-
 export function toViewModel(data) {
   const {
     permissions,
@@ -27,12 +25,16 @@ export function toViewModel(data) {
         [item.type.toLowerCase()]: {
           ...details,
           kid: jwk.kid,
+          approved: true,
         },
       }
     } else if (item.type === 'WRITE') {
       group[item.area] = {
         ...current,
-        [item.type.toLowerCase()]: item,
+        [item.type.toLowerCase()]: {
+          ...item,
+          approved: true,
+        },
       }
     }
 
@@ -48,4 +50,16 @@ export function toViewModel(data) {
   }
 
   return normalisedData
+}
+
+export function toResponse({ local, external }) {
+  return local.concat(external).reduce((map, area) => {
+    if (area.read) {
+      map.set(area.read.id, area.read.approved)
+    }
+    if (area.write) {
+      map.set(area.write.id, area.write.approved)
+    }
+    return map
+  }, new Map())
 }

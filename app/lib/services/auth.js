@@ -1,5 +1,5 @@
 import { verify } from './jwt'
-import { getConnections, storeConnection } from './storage'
+import { getConnections, storeConnection, storeKey } from './storage'
 import Config from 'react-native-config'
 import axios from 'axios'
 import {
@@ -86,51 +86,41 @@ function mapReadKeys({ permissions }) {
     )
 }
 
-export async function createPermissionResult(
-  { local = [], external = [] },
-  connectionRequest
-) {
-  const extractPermissions = (permissions, { read, write }) => [
-    ...permissions,
-    read,
-    write,
-  ]
-
-  // const withJwk = async permission => {
+export async function createPermissionResult(connectionRequest, approved) {
   const withJwk = async () => {
     const key = await generateKey({ use: 'enc' })
+    await storeKey(key)
     const publicKey = toPublicKey(key)
 
-    /* TODO(@all): Store these in the app with the key from permission */
     return publicKey
   }
-
-  const notUndefined = value => value !== undefined
 
   const readServiceReadKeysByArea = mapReadKeys(connectionRequest)
 
   return {
     approved: await Promise.all(
-      [
-        ...local.reduce(extractPermissions, []).filter(notUndefined),
-        ...external.reduce(extractPermissions, []).filter(notUndefined),
-      ].map(async p => {
-        if (p.type === 'WRITE') {
-          if (!p.jwks) {
-            p.jwks = {
-              keys: [],
+      connectionRequest.permissions
+        .filter(p => approved.get(p.id))
+        .map(async p => {
+          if (p.type === 'WRITE') {
+            if (!p.jwks) {
+              p.jwks = {
+                keys: [],
+              }
             }
-          }
-          // push service read-keys to jwks-keys
-          p.jwks.keys.push(
-            readServiceReadKeysByArea.get(`${p.domain}|${p.area}`)
-          )
+            // push service read-keys to jwks-keys
+            p.jwks.keys.push(
+              readServiceReadKeysByArea.get(`${p.domain}|${p.area}`)
+            )
 
-          // push user read-key
-          p.jwks.keys.push(await withJwk(p))
-        }
-        return p
-      })
+            // push user read-key
+            p.jwks.keys.push(await withJwk(p))
+          } else if (p.type === 'READ') {
+            p.kid = p.jwk.kid
+            delete p.jwk
+          }
+          return p
+        })
     ),
   }
 }

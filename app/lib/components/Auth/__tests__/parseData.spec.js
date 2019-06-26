@@ -1,4 +1,4 @@
-import { toViewModel } from '../parseData'
+import { toViewModel, toResponse } from '../parseData'
 
 jest.mock('../../../services/crypto', () => ({
   generateKey: jest.fn().mockName('crypto.generateKey'),
@@ -107,6 +107,7 @@ describe('components/Auth/parseData', () => {
               purpose: 'In order to create a CV using our website.',
               type: 'READ',
               kid: 'http://localhost:4000/jwks/base-data',
+              approved: true,
             },
             write: {
               area: 'baseData',
@@ -115,6 +116,7 @@ describe('components/Auth/parseData', () => {
               id: '1712ec0c-9ae6-472f-9e14-46088e51f505',
               lawfulBasis: 'CONSENT',
               type: 'WRITE',
+              approved: true,
             },
           },
           {
@@ -128,6 +130,7 @@ describe('components/Auth/parseData', () => {
               lawfulBasis: 'CONSENT',
               type: 'READ',
               kid: 'http://localhost:4000/jwks/experience',
+              approved: true,
             },
             write: {
               area: 'experience',
@@ -136,6 +139,7 @@ describe('components/Auth/parseData', () => {
               id: 'd5dab30d-b0ac-43e3-9ac8-cff8b39ca560',
               lawfulBasis: 'CONSENT',
               type: 'WRITE',
+              approved: true,
             },
           },
         ],
@@ -150,11 +154,93 @@ describe('components/Auth/parseData', () => {
               lawfulBasis: 'CONSENT',
               type: 'READ',
               kid: 'http://localhost:4000/jwks/national-experience',
+              approved: true,
             },
           },
         ],
       }
       expect(toViewModel(connectionRequest)).toEqual(expected)
+    })
+  })
+  describe('#toResponse', () => {
+    it('moves permissions to approved/denied', () => {
+      const viewmodel = {
+        displayName: 'My CV',
+        description: 'An app for your CV online',
+        iconURI: 'https://mycv.work/android-icon-96x96.png',
+        local: [
+          {
+            area: 'baseData',
+            description: 'Personal information.',
+            read: {
+              area: 'baseData',
+              domain: 'https://mycv.work',
+              id: '18710e28-7d6c-49cf-941e-0f954bb179ae',
+              lawfulBasis: 'CONSENT',
+              purpose: 'In order to create a CV using our website.',
+              type: 'READ',
+              kid: 'http://localhost:4000/jwks/base-data',
+              approved: true,
+            },
+            write: {
+              area: 'baseData',
+              description: 'Personal information.',
+              domain: 'https://mycv.work',
+              id: '1712ec0c-9ae6-472f-9e14-46088e51f505',
+              lawfulBasis: 'CONSENT',
+              type: 'WRITE',
+              approved: true,
+            },
+          },
+          {
+            area: 'experience',
+            description: 'A list of your work experiences.',
+            read: {
+              area: 'experience',
+              purpose: 'In order to create a CV using our website.',
+              domain: 'https://mycv.work',
+              id: '55c24372-6956-4891-b5ff-a6cf69fb5c8b',
+              lawfulBasis: 'CONSENT',
+              type: 'READ',
+              kid: 'http://localhost:4000/jwks/experience',
+              approved: false,
+            },
+            write: {
+              area: 'experience',
+              description: 'A list of your work experiences.',
+              domain: 'https://mycv.work',
+              id: 'd5dab30d-b0ac-43e3-9ac8-cff8b39ca560',
+              lawfulBasis: 'CONSENT',
+              type: 'WRITE',
+              approved: false,
+            },
+          },
+        ],
+        external: [
+          {
+            area: 'experience',
+            read: {
+              area: 'experience',
+              purpose: 'In order to create a CV using our website.',
+              domain: 'https://national.gov',
+              id: 'fc284cf5-b1af-4fac-b793-7d1adf8a9c60',
+              lawfulBasis: 'CONSENT',
+              type: 'READ',
+              kid: 'http://localhost:4000/jwks/national-experience',
+              approved: true,
+            },
+          },
+        ],
+      }
+      const expected = new Map([
+        ['18710e28-7d6c-49cf-941e-0f954bb179ae', true],
+        ['1712ec0c-9ae6-472f-9e14-46088e51f505', true],
+        ['55c24372-6956-4891-b5ff-a6cf69fb5c8b', false],
+        ['d5dab30d-b0ac-43e3-9ac8-cff8b39ca560', false],
+        ['fc284cf5-b1af-4fac-b793-7d1adf8a9c60', true],
+      ])
+
+      expect(toResponse(viewmodel)).toEqual(expected)
     })
   })
 })
