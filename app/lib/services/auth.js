@@ -77,7 +77,7 @@ export const approveLogin = async ({ connection, sessionId }) => {
   }
 }
 
-function mapReadKeys({ permissions }) {
+function mapReadKeys(permissions) {
   return permissions
     .filter(p => p.type === 'READ')
     .reduce(
@@ -86,7 +86,7 @@ function mapReadKeys({ permissions }) {
     )
 }
 
-export async function createPermissionResult(connectionRequest, approved) {
+export async function createPermissionResult({ permissions = [] }, approved) {
   const withJwk = async () => {
     const key = await generateKey({ use: 'enc' })
     await storeKey(key)
@@ -95,11 +95,11 @@ export async function createPermissionResult(connectionRequest, approved) {
     return publicKey
   }
 
-  const readServiceReadKeysByArea = mapReadKeys(connectionRequest)
+  const readServiceReadKeysByArea = mapReadKeys(permissions)
 
   return {
     approved: await Promise.all(
-      connectionRequest.permissions
+      permissions
         .filter(p => approved.get(p.id))
         .map(async p => {
           if (p.type === 'WRITE') {
