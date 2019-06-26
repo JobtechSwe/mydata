@@ -161,6 +161,17 @@ describe('components/Auth/parseData', () => {
       }
       expect(toViewModel(connectionRequest)).toEqual(expected)
     })
+    it('transforms a CONNECTION_REQUEST message without permissions into a view model', () => {
+      connectionRequest.permissions = undefined
+      const expected = {
+        displayName: 'My CV',
+        description: 'An app for your CV online',
+        iconURI: 'https://mycv.work/android-icon-96x96.png',
+        local: [],
+        external: [],
+      }
+      expect(toViewModel(connectionRequest)).toEqual(expected)
+    })
   })
   describe('#toResponse', () => {
     it('moves permissions to approved/denied', () => {

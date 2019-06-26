@@ -1,6 +1,6 @@
 export function toViewModel(data) {
   const {
-    permissions,
+    permissions = [],
     displayName,
     description,
     iconURI,

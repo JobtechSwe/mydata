@@ -114,7 +114,7 @@ export async function createPermissionResult(connectionRequest, approved) {
             )
 
             // push user read-key
-            p.jwks.keys.push(await withJwk(p))
+            p.jwks.keys.push(await withJwk())
           } else if (p.type === 'READ') {
             p.kid = p.jwk.kid
             delete p.jwk
