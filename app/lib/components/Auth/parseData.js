@@ -53,7 +53,7 @@ export function toViewModel(data) {
 }
 
 export function toResponse({ local, external }) {
-  return local.concat(external).reduce((map, area) => {
+  return [...local, ...external].reduce((map, area) => {
     if (area.read) {
       map.set(area.read.id, area.read.approved)
     }
