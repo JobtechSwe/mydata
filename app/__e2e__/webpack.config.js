@@ -7,9 +7,18 @@ module.exports = {
   resolve: {
     alias: {
       'react-native': resolve(__dirname, 'src/native/react-native'),
-      'react-native-config': resolve(__dirname, 'src/native/react-native-config'),
-      '@trackforce/react-native-crypto': resolve(__dirname, 'src/native/react-native-crypto'),
-      '@react-native-community/async-storage': resolve(__dirname, 'src/native/async-storage'),
+      'react-native-config': resolve(
+        __dirname,
+        'src/native/react-native-config'
+      ),
+      '@trackforce/react-native-crypto': resolve(
+        __dirname,
+        'src/native/react-native-crypto'
+      ),
+      '@react-native-community/async-storage': resolve(
+        __dirname,
+        'src/native/async-storage'
+      ),
       'isomorphic-webcrypto': resolve(__dirname, 'src/native/webcrypto.js'),
     },
   },
@@ -18,6 +27,7 @@ module.exports = {
     filename: 'index.js',
     libraryTarget: 'commonjs2',
   },
+  devtool: 'source-map',
   module: {
     rules: [
       {
