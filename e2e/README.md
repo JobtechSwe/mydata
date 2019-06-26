@@ -13,5 +13,4 @@ Setup:
 - In `/` run `docker-compose up -d`
 - In `/operator`run `npm run dev`
 - In `/app` run `OPERATOR_URL=http://localhost:3000/api npm run e2e:watch`
-
-Then: In this folder run `npm run jest:local`
+- In `/e2e` run `npm run jest:local` OR `npm run jest:local:watch`
