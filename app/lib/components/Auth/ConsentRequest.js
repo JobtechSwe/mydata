@@ -4,7 +4,7 @@ import { Spinner } from '../elements/Spinner/Spinner'
 import { Paragraph } from '../typography/Typography'
 import ConsentModal from './ConsentModal'
 import { approveConnection } from '../../services/auth'
-import { toViewModel } from './parseData'
+import { toViewModel, toResponse } from './parseData'
 
 const Connection = ({ connectionRequest, onApprove, onCancel }) => {
   const [modalVisible, setModalVisible] = React.useState(true)
@@ -12,7 +12,7 @@ const Connection = ({ connectionRequest, onApprove, onCancel }) => {
 
   const onApproveConnection = async permissions => {
     setApproving(true)
-    await approveConnection(connectionRequest, permissions)
+    await approveConnection(connectionRequest, toResponse(permissions))
     onApprove()
   }
 

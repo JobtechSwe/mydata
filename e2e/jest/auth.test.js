@@ -44,7 +44,8 @@ describe('Authentication', () => {
     const { connectionRequest } = await phone.handleAuthCode({ code: url })
 
     // Approve it!
-    await phone.approveConnection(connectionRequest)
+    const approved = new Map() // no permissions in this connection
+    await phone.approveConnection(connectionRequest, approved)
 
     // Get connections again
     const connectionsAfter = await phone.getConnections()

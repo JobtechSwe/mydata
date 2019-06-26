@@ -43,8 +43,8 @@ export const initConnection = async authRequest => {
 export const approveConnection = async (connectionRequest, permissions) => {
   const connectionId = v4()
   const permissionsResult = await createPermissionResult(
-    permissions,
-    connectionRequest
+    connectionRequest,
+    permissions
   )
   const connection = await createConnection(
     connectionRequest,
