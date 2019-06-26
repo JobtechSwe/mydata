@@ -69,12 +69,12 @@ describe('Permissions', () => {
     // Scan auth and do ping-pong
     const { connectionRequest } = await phone.handleAuthCode({ code: url })
 
-    // Change from READ_PERMISSION_REQUEST to READ_PERMISSION
-    const approved = connectionRequest.permissions
-    approved[0].kid = approved[0].jwk.kid
-    delete approved[0].jwk
     // Approve it!
-    await phone.approveConnection(connectionRequest, { approved })
+    let approvalResponse = new Map()
+    connectionRequest.permissions.forEach(p => {
+      approvalResponse.set(p.id, true)
+    })
+    await phone.approveConnection(connectionRequest, approvalResponse)
 
     // After state, expect connection in client for the session id
     const connectionEntryInClient = await client.keyValueStore.load(`authentication|>${id}`)

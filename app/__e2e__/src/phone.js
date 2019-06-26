@@ -6,7 +6,7 @@ import * as storageService from '../../lib/services/storage'
 import Config from 'react-native-config'
 import AsyncStorage from '@react-native-community/async-storage'
 
-export async function createAccount ({ firstName, lastName }) {
+export async function createAccount({ firstName, lastName }) {
   const pds = { provider: 'memory', access_token: 'nope' }
   const acc = {
     firstName,
@@ -17,7 +17,7 @@ export async function createAccount ({ firstName, lastName }) {
   return account
 }
 
-export async function getAccount () {
+export async function getAccount() {
   return storageService.getAccount()
 }
 
@@ -25,7 +25,7 @@ export async function getAccountKeys() {
   return storageService.getAccountKeys()
 }
 
-export async function clearAccount () {
+export async function clearAccount() {
   return storageService.storeAccount()
 }
 
@@ -38,23 +38,25 @@ export const handleAuthCode = async ({ code }) => {
   return handle(token)
 }
 
-export const approveConnection = auth.approveConnection
+export const approveConnection = async (permissions, approved = {}) => {
+  return auth.approveConnection(permissions, new Map(Object.entries(approved)))
+}
 
 export const approveLogin = auth.approveLogin
 
-
-export async function setConfig (config) {
+export async function setConfig(config) {
   Object.entries(config).forEach(([key, val]) =>
-    Object.assign(Config, { [key]: val }))
+    Object.assign(Config, { [key]: val })
+  )
   return Config
 }
 
-export async function clearConfig () {
+export async function clearConfig() {
   Object.entries(Config).forEach(([key]) => delete Config[key])
   return Config
 }
 
-export async function getConfig () {
+export async function getConfig() {
   return Config
 }
 

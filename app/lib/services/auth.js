@@ -86,7 +86,11 @@ function mapReadKeys(permissions) {
     )
 }
 
-export async function createPermissionResult({ permissions = [] }, approved) {
+export async function createPermissionResult({ permissions }, approved) {
+  if (!permissions) {
+    return undefined
+  }
+
   const withJwk = async () => {
     const key = await generateKey({ use: 'enc' })
     await storeKey(key)
@@ -97,7 +101,7 @@ export async function createPermissionResult({ permissions = [] }, approved) {
 
   const readServiceReadKeysByArea = mapReadKeys(permissions)
 
-  return {
+  const permissionResult = await {
     approved: await Promise.all(
       permissions
         .filter(p => approved.get(p.id))
@@ -123,4 +127,5 @@ export async function createPermissionResult({ permissions = [] }, approved) {
         })
     ),
   }
+  return permissionResult.approved.length ? permissionResult : undefined
 }
