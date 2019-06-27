@@ -1,7 +1,7 @@
 const axios = require('axios')
 const appServerUrl = process.env.APP_SERVER_URL || 'http://localhost:1337'
 
-const serialize = (args) => args.map((arg) => ((arg instanceof Map) ? [...arg] : arg))
+const serialize = (args) => args.map((arg) => ((arg instanceof Map || arg instanceof Set) ? [...arg] : arg))
 
 const call = (method) =>
   (...args) => {

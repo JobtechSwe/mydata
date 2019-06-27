@@ -80,10 +80,9 @@ export const approveLogin = async ({ connection, sessionId }) => {
 function mapReadKeys(permissions) {
   return permissions
     .filter(p => p.type === 'READ')
-    .reduce(
-      (map, { domain, area, jwk }) => map.set(`${domain}|${area}`, jwk),
-      new Map()
-    )
+    .reduce((map, { domain, area, jwk }) => {
+      return map.set(`${domain}|${area}`, jwk)
+    }, new Map())
 }
 
 export async function createPermissionResult({ permissions }, approved) {
@@ -113,9 +112,12 @@ export async function createPermissionResult({ permissions }, approved) {
               }
             }
             // push service read-keys to jwks-keys
-            p.jwks.keys.push(
-              readServiceReadKeysByArea.get(`${p.domain}|${p.area}`)
+            const serviceReadKey = readServiceReadKeysByArea.get(
+              `${p.domain}|${p.area}`
             )
+            if (serviceReadKey) {
+              p.jwks.keys.push(serviceReadKey)
+            }
 
             // push user read-key
             p.jwks.keys.push(await withJwk())

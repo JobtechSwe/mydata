@@ -4,7 +4,10 @@ import Config from 'react-native-config'
 
 const nowSeconds = () => Math.round(Date.now() / 1000)
 
-export const createAccountRegistration = async (newAccount, { publicKey, privateKey }) => {
+export const createAccountRegistration = async (
+  newAccount,
+  { publicKey, privateKey }
+) => {
   return sign(
     {
       type: 'ACCOUNT_REGISTRATION',
@@ -43,19 +46,16 @@ export const createConnection = async (
   connectionId
 ) => {
   const { publicKey, privateKey } = await getAccountKeys()
+  const body = {
+    type: 'CONNECTION',
+    aud: iss,
+    iss: 'mydata://account',
+    sid,
+    sub: connectionId,
+    permissions,
+  }
 
-  return sign(
-    {
-      type: 'CONNECTION',
-      aud: iss,
-      iss: 'mydata://account',
-      sid,
-      sub: connectionId,
-      permissions,
-    },
-    privateKey,
-    { jwk: publicKey, alg: 'RS256' }
-  )
+  return sign(body, privateKey, { jwk: publicKey, alg: 'RS256' })
 }
 
 export const createConnectionResponse = async payload => {

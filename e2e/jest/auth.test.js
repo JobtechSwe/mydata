@@ -21,9 +21,9 @@ describe('Authentication', () => {
     await phone.clearStorage()
   })
 
-  afterAll(async (done) => {
+  afterAll(async () => {
     await clearOperatorDb()
-    client.server.close(done)
+    await new Promise((resolve) => client.server.close(resolve))
   })
 
   it('Client provides a proper auth url and id', async () => {

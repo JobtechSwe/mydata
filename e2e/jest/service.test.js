@@ -1,32 +1,32 @@
 const express = require('express')
 const { createClient } = require('./helpers/index')
-const { clearOperatorDb } = require('./helpers/operatorPostgres')
+const postgres = require('./helpers/operatorPostgres')
 
 describe('Service', () => {
   let server, client
 
-  beforeEach(done => {
-    // TODO: Tell Operator to reset db
-
+  beforeAll(async () => {
+    await postgres.createOperatorDb()
     const app = express()
-    server = app.listen(0, () => {
-      // Create client with the port that the current test server is using
-      client = createClient(server.address().port)
+    await new Promise((resolve, reject) => {
+      server = app.listen(0, (err) => {
+        if (err) {
+          return reject(err)
+        }
+        // Create client with the port that the current test server is using
+        client = createClient(server.address().port)
 
-      // Hook up routes
-      app.use(client.routes)
-
-      // Setup done
-      done()
+        // Hook up routes
+        app.use(client.routes)
+        resolve()
+      })
     })
   })
-
-  afterEach(done => {
-    server.close(done)
+  afterEach(async () => {
+    await postgres.clearOperatorDb()
   })
-
   afterAll(async () => {
-    await clearOperatorDb()
+    await new Promise((resolve) => server.close(resolve))
   })
 
   it('Can connect to operator', async () => {
