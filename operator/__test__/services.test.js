@@ -1,35 +1,42 @@
-const services = require('../lib/services')
-const jwt = require('../lib/services/jwt')
-const sqlStatements = require('../lib/sqlStatements')
-const { multiple, transaction } = require('../lib/adapters/postgres')
 const axios = require('axios')
-const { JWK } = require('@panva/jose')
+const { jwks } = require('@egendata/messaging')
+const services = require('../lib/services')
+const postgres = require('../lib/adapters/postgres')
+const jwt = require('../lib/services/jwt')
+const tokens = require('../lib/services/tokens')
+const sqlStatements = require('../lib/sqlStatements')
 
+jest.mock('@egendata/messaging', () => ({
+  jwks: {
+    getKeys: jest.fn().mockName('messaging/jwks.getKeys')
+  }
+}))
 jest.mock('../lib/adapters/postgres', () => ({
   query: jest.fn().mockResolvedValue(),
   multiple: jest.fn().mockResolvedValue([]),
   transaction: jest.fn().mockResolvedValue([])
 }))
 jest.mock('../lib/services/jwt', () => ({
-  loginEventToken: jest.fn().mockResolvedValue('login.event.token'),
-  connectionEventToken: jest.fn().mockResolvedValue('connection.event.token')
+  verify: jest.fn().mockName('jwt.verify'),
+  loginEventToken: jest.fn().mockName('jwt.loginEventToken').mockResolvedValue('login.event.token'),
+  connectionEventToken: jest.fn().mockName('jwt.connectionEventToken').mockResolvedValue('connection.event.token')
+}))
+jest.mock('../lib/services/tokens', () => ({
+  createConnectionEvent: jest.fn().mockName('tokens.createConnectionEvent')
+    .mockResolvedValue('connection.event.token'),
+  createLoginEvent: jest.fn().mockName('tokens.createLoginEvent')
+    .mockResolvedValue('login.event.token')
 }))
 jest.mock('../lib/sqlStatements', () => ({
-  accountKeyInsert: jest.fn().mockName('accountKeyInsert').mockReturnValue([]),
-  checkConnection: jest.fn().mockName('checkConnection').mockReturnValue([]),
-  connectionInsert: jest.fn().mockName('connectionInsert').mockReturnValue([]),
-  permissionInsert: jest.fn().mockName('permissionInsert').mockReturnValue([]),
+  accountKeyInsert: jest.fn().mockName('sqlStatements.accountKeyInsert').mockReturnValue([]),
+  checkConnection: jest.fn().mockName('sqlStatements.checkConnection').mockReturnValue([]),
+  connectionInserts: jest.fn().mockName('sqlStatements.connectionInserts').mockReturnValue([[]]),
+  permissionsInserts: jest.fn().mockName('permissionsInserts').mockReturnValue([[]]),
   serviceInsert: jest.fn().mockName('serviceInsert').mockReturnValue([])
 }))
 
 describe('services', () => {
   let header, payload, token, res
-
-  function jwk ({ domain = 'mydata://account/', use = 'sig' } = {}) {
-    const key = JWK.generateSync('RSA', 1024, { use })
-    const kid = `${domain}${key.thumbprint}`
-    return JWK.importKey(key.toJWK(), { kid }).toJWK()
-  }
 
   beforeEach(() => {
     res = {
@@ -72,226 +79,283 @@ describe('services', () => {
       })
     })
   })
-  describe('#accountConnect', () => {
-    let accountResponse, serviceResponse, connectionResponse
+  describe('#loginResponse', () => {
+    let loginResponse, login
+    let dbAccounts, dbServices, dbConnections
+    let res, next
     beforeEach(() => {
-      header = {
-        jwk: jwk()
+      loginResponse = {
+        iss: 'egendata://account/abcd',
+        payload: 'login.token'
       }
-      payload = {
-        type: 'CONNECT',
-        iss: `mydata://account`,
-        aud: ['https://smoothoperator.work', 'https://mycv.work'],
-        sub: 'd5502d22-cc18-4c3d-be38-d76ede4e78da',
-        jti: 'abcdef',
-        permissions: {
-          local: {
-            education: {
-              read: {
-                id: 'f9564663-120d-4e8a-9977-5d0566aed1fc',
-                purpose: 'Stuff',
-                lawfulBasis: 'CONSENT',
-                jwks: [jwk({ domain: 'https://mycv.work/jwks/', use: 'enc' }), jwk({ use: 'enc' })]
-              },
-              write: {
-                id: 'eedc56be-b128-4cfd-b7ea-06dc6f197c92',
-                description: 'Info',
-                lawfulBasis: 'CONSENT'
-              }
-            }
-          },
-          external: {
-            'https://monster.se': {
-              experience: {
-                read: {
-                  id: 'f97b6b6c-3c28-4e2f-bfee-ca987dc2a8ff',
-                  purpose: 'Good stuff',
-                  jwks: [jwk({ domain: 'https://monster.se/jwks/', use: 'enc' }), jwk({ domain: 'https://mycv.work/jwks/', use: 'enc' }), jwk({ use: 'enc' })],
-                  lawfulBasis: 'CONSENT'
-                }
-              }
-            }
-          }
-        }
+      login = {
+        aud: 'https://mycv.work',
+        sub: 'f3dd37fb-4e78-4dab-88b7-532e0377f7d7'
       }
-      accountResponse = { account_key: 'foo' }
-      serviceResponse = { events_uri: 'https://mycv.work/events' }
-      connectionResponse = { connection_id: 'ceca7b41-96ab-4439-82e1-7aa487fa2e4d' }
-      multiple.mockResolvedValue([
-        { rows: [accountResponse] },
-        { rows: [serviceResponse] },
-        { rows: [] }
+      jwt.verify.mockName('jwt.verify').mockResolvedValue({ payload: login })
+
+      dbAccounts = [{}]
+      dbServices = [{}]
+      dbConnections = [{}]
+      postgres.multiple.mockImplementation(async () => [
+        { rows: dbAccounts },
+        { rows: dbServices },
+        { rows: dbConnections }
       ])
+
+      res = {
+        sendStatus: jest.fn().mockName('res.sendStatus')
+      }
+      next = jest.fn().mockName('next')
     })
-    it('gets account, service and existing connection from db', async () => {
-      await services.accountConnect({ header, payload, token })
+    it('verifies payload', async () => {
+      await services.loginResponse({ payload: loginResponse }, res, next)
+
+      expect(jwt.verify).toHaveBeenCalledWith('login.token')
+    })
+    it('checks db for existing account, service and connection', async () => {
+      sqlStatements.checkConnection.mockReturnValue(['connection sql'])
+
+      await services.loginResponse({ payload: loginResponse }, res, next)
 
       expect(sqlStatements.checkConnection).toHaveBeenCalledWith({
-        accountId: header.jwk.kid,
-        serviceId: payload.aud[1]
+        accountId: 'egendata://account/abcd',
+        serviceId: 'https://mycv.work'
       })
+      expect(postgres.multiple).toHaveBeenCalledWith(['connection sql'])
     })
-    it('throws if account is missing', async () => {
-      multiple.mockResolvedValueOnce([
-        { rows: [] },
-        { rows: [serviceResponse] },
-        { rows: [] }
-      ])
-      await expect(services.accountConnect({ header, payload, token }))
-        .rejects.toThrow('No such account')
-    })
-    it('throws if service is missing', async () => {
-      multiple.mockResolvedValueOnce([
-        { rows: [accountResponse] },
-        { rows: [] },
-        { rows: [] }
-      ])
-      await expect(services.accountConnect({ header, payload, token }))
-        .rejects.toThrow('No such service')
-    })
-    it('throws if connection exists', async () => {
-      multiple.mockResolvedValueOnce([
-        { rows: [accountResponse] },
-        { rows: [serviceResponse] },
-        { rows: [connectionResponse] }
-      ])
-      await expect(services.accountConnect({ header, payload, token }))
-        .rejects.toThrow('Connection already exists')
-    })
-    it('calls jwt.connectionEventToken with correct arguments', async () => {
-      await services.accountConnect({ header, payload, token })
-      expect(jwt.connectionEventToken).toHaveBeenCalledWith(payload.aud[1], token)
-    })
-    it('sends a LOGIN_EVENT to service', async () => {
-      await services.accountConnect({ header, payload, token })
-      expect(axios.post)
-        .toHaveBeenCalledWith('https://mycv.work/events', 'connection.event.token', {
-          headers: { 'Content-Type': 'application/jwt' }
-        })
-    })
-    it('saves connection to db', async () => {
-      payload.permissions = {}
-      await services.accountConnect({ header, payload, token })
+    it('throws if no account exists', async () => {
+      dbAccounts = []
+      await services.loginResponse({ payload: loginResponse }, res, next)
 
-      expect(sqlStatements.connectionInsert).toHaveBeenCalledWith({
-        connectionId: payload.sub,
-        accountId: header.jwk.kid,
-        serviceId: payload.aud[1]
-      })
+      expect(next).toHaveBeenCalledWith(
+        new Error(`No such account ${loginResponse.iss}`)
+      )
     })
-    it.skip('saves permissions to db', async () => {
-      await services.accountConnect({ header, payload, token })
+    it('throws if no service exists', async () => {
+      dbServices = []
+      await services.loginResponse({ payload: loginResponse }, res, next)
 
-      expect(sqlStatements.accountKeyInsert)
-        .toHaveBeenCalledWith({
-          accountKeyId: '',
-          accountId: header.jwk.kid,
-          domain: payload.aud[1],
-          area: 'education',
-          readKey: ''
-        })
-      expect(sqlStatements.permissionInsert)
-        .toHaveBeenCalledWith({})
-      expect(transaction).toHaveBeenCalledWith([
-        expect.any(Array), // Connection
-        [expect.stringMatching(/INSERT INTO permissions/), [
-          payload.permissions.local.education.read.id,
-          payload.sub,
-          payload.aud[1],
-          'education',
-          'READ',
-          payload.permissions.local.education.read.purpose,
-          payload.permissions.local.education.read.legalBasis,
-          JSON.stringify(payload.permissions.local.education.read.jwks[0]),
-          'now()'
-        ]],
-        [expect.stringMatching(/INSERT INTO permissions/), [
-          payload.permissions.local.education.read.id,
-          payload.sub,
-          payload.aud[1],
-          'education',
-          'WRITE',
-          payload.permissions.local.education.read.purpose,
-          payload.permissions.local.education.read.legalBasis,
-          null,
-          'now()'
-        ]],
-        [expect.stringMatching(/INSERT INTO account_keys/), [
-          payload.permissions.local.education.read.jwks[1].kid,
-          header.jwk.kid,
-          payload.aud[1],
-          'education',
-          JSON.stringify(payload.permissions.local.education.read.jwks[1]),
-          'now()'
-        ]]
-      ])
+      expect(next).toHaveBeenCalledWith(
+        new Error(`No such service ${login.aud}`)
+      )
+    })
+    it('throws if connection already exists', async () => {
+      dbConnections = []
+      await services.loginResponse({ payload: loginResponse }, res, next)
+
+      expect(next).toHaveBeenCalledWith(
+        new Error('No connection exists')
+      )
+    })
+    it('creates a LOGIN_EVENT', async () => {
+      await services.loginResponse({ payload: loginResponse }, res, next)
+
+      expect(tokens.createLoginEvent).toHaveBeenCalledWith(
+        'https://mycv.work',
+        'login.token'
+      )
+    })
+    it('sends CONNECTION_EVENT to service', async () => {
+      dbServices = [{ events_uri: 'https://mycv.work/events' }]
+      tokens.createConnectionEvent.mockResolvedValue('connection.event.token')
+
+      await services.loginResponse({ payload: loginResponse }, res, next)
+
+      expect(axios.post).toHaveBeenCalledWith(
+        'https://mycv.work/events',
+        'login.event.token',
+        { headers: { 'content-type': 'application/jwt' } }
+      )
+    })
+    it('responds with 200 OK if all goes well', async () => {
+      await services.loginResponse({ payload: loginResponse }, res, next)
+
+      expect(res.sendStatus).toHaveBeenCalledWith(200)
     })
   })
-  describe('#accountLogin', () => {
-    let accountResponse, serviceResponse, connectionResponse
+  describe('#connectionResponse', () => {
+    let connectionResponse, connection
+    let accountKey, myCvEducationKey
+    let dbAccounts, dbServices, dbConnections
+    let res, next
     beforeEach(() => {
-      header = {
-        jwk: jwk()
+      accountKey = {
+        kid: 'egendata://jwks/abcd'
       }
-      payload = {
-        type: 'LOGIN',
-        iss: 'mydata://account/',
-        aud: ['https://smoothoperator.work', 'https://mycv.work'],
-        jti: 'abcdef'
+      myCvEducationKey = {
+        kid: 'https://mycv.work/jwks/abcd'
       }
-      accountResponse = { account_key: 'foo' }
-      serviceResponse = { events_uri: 'https://mycv.work/events' }
-      connectionResponse = { connection_id: 'ceca7b41-96ab-4439-82e1-7aa487fa2e4d' }
-      multiple.mockResolvedValue([
-        { rows: [accountResponse] },
-        { rows: [serviceResponse] },
-        { rows: [connectionResponse] }
+      connectionResponse = {
+        iss: 'egendata://account/9b517596-6348-4025-9324-9beefe2e4ac6',
+        payload: 'connectionToken'
+      }
+      connection = {
+        aud: 'https://mycv.work',
+        sub: '8953eb68-6eb0-4577-8b7d-a2599de962d4',
+        permissions: {
+          approved: [
+            {
+              id: '1fc622ab-ebdf-4f8d-a0dd-1afbfb492a5a',
+              domain: 'https://mycv.work',
+              area: 'education',
+              type: 'READ',
+              purpose: 'stuff',
+              lawfulBasis: 'CONSENT',
+              kid: myCvEducationKey.kid
+            },
+            {
+              id: '052bb693-de11-442c-a5b1-3fa9a36bc851',
+              domain: 'https://mycv.work',
+              area: 'education',
+              type: 'WRITE',
+              description: 'some data yo!',
+              lawfulBasis: 'CONSENT',
+              jwks: {
+                keys: [accountKey, myCvEducationKey]
+              }
+            },
+            {
+              id: '300b8097-53ba-49ee-8798-fc28170ea89c',
+              domain: 'https://mycv.work',
+              area: 'education',
+              type: 'PUBLISH',
+              purpose: 'lägg ut!',
+              lawfulBasis: 'CONSENT'
+            }
+          ]
+        }
+      }
+      jwt.verify.mockResolvedValue({ payload: connection })
+
+      dbAccounts = [{}]
+      dbServices = [{}]
+      dbConnections = []
+      postgres.multiple.mockImplementation(async () => [
+        { rows: dbAccounts },
+        { rows: dbServices },
+        { rows: dbConnections }
       ])
+
+      jwks.getKeys.mockResolvedValue({
+        'https://mycv.work/jwks/abcd': myCvEducationKey
+      })
+
+      res = {
+        sendStatus: jest.fn().mockName('res.sendStatus')
+      }
+      next = jest.fn().mockName('next')
     })
-    it('gets account, service and existing connection from db', async () => {
-      await services.accountLogin({ header, payload, token })
+    it('verifies payload', async () => {
+      await services.connectionResponse({ payload: connectionResponse }, res, next)
+
+      expect(jwt.verify).toHaveBeenCalledWith(connectionResponse.payload)
+    })
+    it('throws if payload verification fails', async () => {
+      jwt.verify.mockRejectedValue(new Error())
+      await services.connectionResponse({ payload: connectionResponse }, res, next)
+
+      expect(next).toHaveBeenCalledWith(
+        new Error('Could not verify CONNECTION payload')
+      )
+    })
+    it('checks db for existing account, service and connection', async () => {
+      await services.connectionResponse({ payload: connectionResponse }, res, next)
+
       expect(sqlStatements.checkConnection).toHaveBeenCalledWith({
-        accountId: header.jwk.kid,
+        accountId: connectionResponse.iss,
+        serviceId: connection.aud
+      })
+      expect(postgres.multiple).toHaveBeenCalled()
+    })
+    it('throws if no account exists', async () => {
+      dbAccounts = []
+      await services.connectionResponse({ payload: connectionResponse }, res, next)
+
+      expect(next).toHaveBeenCalledWith(
+        new Error(`No such account ${connectionResponse.iss}`)
+      )
+    })
+    it('throws if no service exists', async () => {
+      dbServices = []
+      await services.connectionResponse({ payload: connectionResponse }, res, next)
+
+      expect(next).toHaveBeenCalledWith(
+        new Error(`No such service ${connection.aud}`)
+      )
+    })
+    it('throws if connection already exists', async () => {
+      dbConnections = [{}]
+      await services.connectionResponse({ payload: connectionResponse }, res, next)
+
+      expect(next).toHaveBeenCalledWith(
+        new Error('Connection already exists')
+      )
+    })
+    it('creates sql for connection inserts', async () => {
+      await services.connectionResponse({ payload: connectionResponse }, res, next)
+
+      expect(sqlStatements.connectionInserts).toHaveBeenCalledWith({
+        connectionId: '8953eb68-6eb0-4577-8b7d-a2599de962d4',
+        accountId: 'egendata://account/9b517596-6348-4025-9324-9beefe2e4ac6',
         serviceId: 'https://mycv.work'
       })
     })
-    it('throws if account is missing', async () => {
-      multiple.mockResolvedValueOnce([
-        { rows: [] },
-        { rows: [serviceResponse] },
-        { rows: [connectionResponse] }
+    it('retrieves all read keys', async () => {
+      await services.connectionResponse({ payload: connectionResponse }, res, next)
+
+      expect(jwks.getKeys).toHaveBeenCalledWith(['https://mycv.work/jwks/abcd'])
+    })
+    it('creates sql for permissions inserts', async () => {
+      await services.connectionResponse({ payload: connectionResponse }, res, next)
+
+      const readKeys = {
+        'https://mycv.work/jwks/abcd': myCvEducationKey
+      }
+
+      expect(sqlStatements.permissionsInserts).toHaveBeenCalledWith(
+        connectionResponse, connection, readKeys
+      )
+    })
+    it('runs inserts as transaction', async () => {
+      const connectionInsertSql = 'INSERT INTO connections blah blah'
+      const connectionInsertValues = [1, 2, 3]
+      const permissionsInsertSql = 'INSERT INTO permissions blah blah'
+      const permissionsInsertValues = [4, 5, 6]
+      sqlStatements.connectionInserts.mockReturnValue([[connectionInsertSql, connectionInsertValues]])
+      sqlStatements.permissionsInserts.mockReturnValue([[permissionsInsertSql, permissionsInsertValues]])
+
+      await services.connectionResponse({ payload: connectionResponse }, res, next)
+
+      expect(postgres.transaction).toHaveBeenCalledWith([
+        [connectionInsertSql, connectionInsertValues],
+        [permissionsInsertSql, permissionsInsertValues]
       ])
-      await expect(services.accountLogin({ header, payload, token }))
-        .rejects.toThrow('No such account')
     })
-    it('throws if service is missing', async () => {
-      multiple.mockResolvedValueOnce([
-        { rows: [accountResponse] },
-        { rows: [] },
-        { rows: [connectionResponse] }
-      ])
-      await expect(services.accountLogin({ header, payload, token }))
-        .rejects.toThrow('No such service')
+    it('creates a CONNECTION_EVENT', async () => {
+      await services.connectionResponse({ payload: connectionResponse }, res, next)
+
+      expect(tokens.createConnectionEvent).toHaveBeenCalledWith(
+        'https://mycv.work',
+        'connectionToken'
+      )
     })
-    it('throws if connection is missing', async () => {
-      multiple.mockResolvedValueOnce([
-        { rows: [accountResponse] },
-        { rows: [serviceResponse] },
-        { rows: [] }
-      ])
-      await expect(services.accountLogin({ header, payload, token }))
-        .rejects.toThrow('No connection exists')
+    it('sends CONNECTION_EVENT to service', async () => {
+      dbServices = [{ events_uri: 'https://mycv.work/events' }]
+      tokens.createConnectionEvent.mockResolvedValue('connection.event.token')
+
+      await services.connectionResponse({ payload: connectionResponse }, res, next)
+
+      expect(axios.post).toHaveBeenCalledWith(
+        'https://mycv.work/events',
+        'connection.event.token',
+        { headers: { 'content-type': 'application/jwt' } }
+      )
     })
-    it('calls jwt.loginEventToken with correct arguments', async () => {
-      await services.accountLogin({ header, payload, token })
-      expect(jwt.loginEventToken).toHaveBeenCalledWith(payload.aud[1], token)
-    })
-    it('sends a LOGIN_EVENT to service', async () => {
-      await services.accountLogin({ header, payload, token })
-      expect(axios.post)
-        .toHaveBeenCalledWith('https://mycv.work/events', 'login.event.token', {
-          headers: { 'Content-Type': 'application/jwt' }
-        })
+    it('responds with 201 CREATED if all goes well', async () => {
+      await services.connectionResponse({ payload: connectionResponse }, res, next)
+
+      expect(res.sendStatus).toHaveBeenCalledWith(201)
     })
   })
 })

@@ -23,8 +23,9 @@
   ],
   "license": "Apache-2.0",
   "dependencies": {
-    "@egendata/messaging": "file:egendata-messaging-0.2.0.tgz",
-    "@react-native-community/async-storage": "1.4.2",
+    "@egendata/messaging": "file:../messaging/egendata-messaging-0.2.0.tgz",
+    "@react-native-community/async-storage": "1.4.0",
+    "@trackforce/react-native-crypto": "0.0.8",
     "@types/js-base64": "^2.3.1",
     "axios": "^0.18.0",
     "buffer": "^5.2.1",
@@ -42,7 +43,6 @@
     "react-native-json-tree": "^1.2.0",
     "react-native-modal": "^9.0.0",
     "react-native-qrcode-scanner": "^1.1.2",
-    "react-native-rsa-native": "^1.0.24",
     "react-native-securerandom": "^0.3.0",
     "react-native-svg": "^9.2.4",
     "react-native-svg-icon": "^0.8.1",
@@ -80,8 +80,10 @@
     "eslint-plugin-react": "^7.12.4",
     "eslint-plugin-standard": "^4.0.0",
     "express": "^4.16.4",
+    "husky": "^2.4.1",
     "isomorphic-webcrypto": "^1.6.1",
     "jest": "24.5.0",
+    "lint-staged": "^8.2.1",
     "lolex": "^3.1.0",
     "metro-react-native-babel-preset": "^0.53.1",
     "nodemon": "^1.18.10",
@@ -94,9 +96,24 @@
     "webpack": "^4.29.5",
     "webpack-cli": "^3.2.3"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "rnpm": {
     "assets": [
       "./assets/fonts/"
+    ]
+  },
+  "lint-staged": {
+    "*.{js,css}": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.js": [
+      "eslint --fix",
+      "git add"
     ]
   }
 }

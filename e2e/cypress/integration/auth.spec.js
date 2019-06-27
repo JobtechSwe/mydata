@@ -37,7 +37,13 @@ describe('Auth flow for example/cv', () => {
       .then(res => {
         const url = res[0].getAttribute('data-consent-request-url')
         return cy.handleAuthCode({ code: url })
-          .then(({ connectionRequest }) => cy.approveConnection(connectionRequest))
+          .then(({ connectionRequest }) => {
+            // Change from READ_PERMISSION_REQUEST to READ_PERMISSION
+            const approved = connectionRequest.permissions
+            approved[0].kid = approved[0].jwk.kid
+            delete approved[0].jwk
+            return cy.approveConnection(connectionRequest, { approved })
+          })
       })
 
     cy.getConnections()

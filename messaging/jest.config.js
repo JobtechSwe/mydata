@@ -1,6 +1,6 @@
 module.exports = {
   name: 'messaging',
-  displayName: 'Messaging',
+  displayName: '@egendata/messaging',
   rootDir: './',
   testEnvironment: 'node',
   testRegex: '\\.test\\.js$',

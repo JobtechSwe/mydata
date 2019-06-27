@@ -7,27 +7,30 @@ const PRIVATE_KEY = `-----BEGIN RSA PRIVATE KEY-----\nMIICXAIBAAKBgQDHKt4EE+WaaA
 
 const host = process.env.DOCKER ? ipHelper.getDockerInterfaceAddress() : 'localhost'
 
-const createClient = port => create({
-  displayName: 'The name of your service',
-  description: 'A nice description of your fantastic service',
-  iconURI: `http://${host}:${port}/icon.png`,
-  clientId: `http://${host}:${port}`,
-  operator: process.env.OPERATOR_URL,
-  clientKeys: {
-    publicKey: PUBLIC_KEY,
-    privateKey: PRIVATE_KEY
-  },
-  jwksPath: '/jwks',
-  eventsPath: '/events',
-  keyValueStore: createMemoryStore()
-})
+const createClient = (port, config = {}) => {
+  const defaultSettings = {
+    displayName: 'The name of your service',
+    description: 'A nice description of your fantastic service',
+    iconURI: `http://${host}:${port}/icon.png`,
+    clientId: `http://${host}:${port}`,
+    operator: process.env.OPERATOR_URL,
+    clientKeys: {
+      publicKey: PUBLIC_KEY,
+      privateKey: PRIVATE_KEY
+    },
+    jwksPath: '/jwks',
+    eventsPath: '/events',
+    keyValueStore: createMemoryStore()
+  }
+  return create({ ...defaultSettings, ...config })
+}
 
-const createClientWithServer = () => {
+const createClientWithServer = (serviceConfig) => {
   return new Promise((resolve, reject) => {
     const app = express()
     const server = app.listen(0, () => {
       // Create client with the port that the current test server is using
-      const client = createClient(server.address().port)
+      const client = createClient(server.address().port, serviceConfig)
 
       // Hook up routes
       app.use(client.routes)

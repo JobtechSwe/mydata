@@ -26,13 +26,14 @@
 
 const appServerUrl = Cypress.env('APP_SERVER_URL') || 'http://localhost:1337'
 
-function callMethod (method, args) {
+function callMethod (method, ...args) {
+  const serializable = args.map(a => (a instanceof Map || a instanceof Set) ? [...a] : a)
   return cy
     .request({
       url: `${appServerUrl}/${method}`,
       method: 'POST',
       body: {
-        args
+        args: serializable
       }
     })
     .then(res => res.body)

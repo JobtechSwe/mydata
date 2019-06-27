@@ -20,14 +20,10 @@ const StyledModal = styled(Modal)`
 `
 
 const ModalWrapper = styled(View)`
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
   margin-top: auto;
 `
 
 const ConsentHeader = styled(View)`
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
   background-color: ${({ theme }) => theme.colors.white};
   padding: 24px 36px;
 `

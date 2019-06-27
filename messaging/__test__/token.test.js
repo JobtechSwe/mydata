@@ -4,10 +4,12 @@ const { Base64: { encodeURI } } = require('js-base64')
 const axios = require('axios')
 
 const { verify, sign } = tokenService({
-  sign: JWT.sign,
-  decode: JWT.decode,
-  verify: JWT.verify,
-  importKey: JWK.importKey
+  sign: (payload, key, header) => JWT.sign(payload, JWK.importKey(key), { header }),
+  decode: (tok, opts) => {
+    const { payload, header, signature } = JWT.decode(tok, opts)
+    return { claimsSet: payload, header, signature }
+  },
+  verify: (tok, jwk) => JWT.verify(tok, JWK.importKey(jwk))
 })
 
 const defaultOptions = {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Scan, Connection, Login } from '../../components/Auth'
+import { Scan, ConsentRequest, Login } from '../../components/Auth'
 import { handle } from '../../services/index'
 
 const AuthScreen = props => {
@@ -15,7 +15,7 @@ const AuthScreen = props => {
       const view = existingConnection ? 'login' : 'connection'
       setState({ view, connectionRequest, existingConnection, sessionId })
     } catch (error) {
-      console.error('foo', error)
+      console.error('Error while initialiasing connectionRequest', error)
     }
   }
 
@@ -31,6 +31,7 @@ const AuthScreen = props => {
      */
     props.navigation.navigate('Hem')
   }
+
   const onError = () => {
     props.navigation.goBack()
   }
@@ -48,7 +49,7 @@ const AuthScreen = props => {
       )
     case 'connection':
       return (
-        <Connection
+        <ConsentRequest
           connectionRequest={state.connectionRequest}
           onApprove={onApprove}
           onCancel={onCancel}

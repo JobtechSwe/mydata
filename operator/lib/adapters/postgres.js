@@ -58,7 +58,12 @@ async function transaction (queries) {
     await conn.query('COMMIT')
     return results
   } catch (error) {
-    await conn.query('ROLLBACK')
+    console.error('transaction error, rolling back:', error)
+    try {
+      await conn.query('ROLLBACK')
+    } catch (error) {
+      console.error('rollback failed', error)
+    }
     throw error
   } finally {
     await conn.end()

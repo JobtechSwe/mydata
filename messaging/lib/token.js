@@ -1,4 +1,4 @@
-const axios = require('axios')
+const { getKey } = require('./jwks')
 const schemas = require('./schemas')
 
 async function verifyToken ({ decode, verify }, token) {
@@ -28,13 +28,7 @@ async function verifyToken ({ decode, verify }, token) {
   if (isDeviceIssued) {
     key = header.jwk
   } else {
-    try {
-      const { data } = await axios.get(kid)
-      key = data
-    } catch (error) {
-      console.error('error', error)
-      throw new Error(`No key found for kid: ${kid}`)
-    }
+    key = await getKey(kid)
   }
   if (!key) {
     throw Error('No signing key')

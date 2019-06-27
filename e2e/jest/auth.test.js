@@ -21,9 +21,9 @@ describe('Authentication', () => {
     await phone.clearStorage()
   })
 
-  afterAll(async (done) => {
+  afterAll(async () => {
     await clearOperatorDb()
-    client.server.close(done)
+    await new Promise((resolve) => client.server.close(resolve))
   })
 
   it('Client provides a proper auth url and id', async () => {
@@ -44,7 +44,8 @@ describe('Authentication', () => {
     const { connectionRequest } = await phone.handleAuthCode({ code: url })
 
     // Approve it!
-    await phone.approveConnection(connectionRequest)
+    const approved = new Map() // no permissions in this connection
+    await phone.approveConnection(connectionRequest, approved)
 
     // Get connections again
     const connectionsAfter = await phone.getConnections()

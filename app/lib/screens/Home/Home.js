@@ -4,11 +4,10 @@ import { Linking } from 'react-native'
 import { H1 } from '../../components/typography/Typography'
 import { Wrap, ScrollViewWrap } from '../../components/view/Wrapper'
 import ConsentList from '../../components/ConsentList/ConsentList'
-import { getAll } from '../../services/consents'
-import { getAccount } from '../../services/account'
+import { getAccount } from '../../services/storage'
 
 const HomeScreen = ({ navigation }) => {
-  const [consents, setConsents] = useState([])
+  const [consents, _setConsents] = useState([])
 
   const handleOpenURL = event => {
     const { navigate } = navigation
