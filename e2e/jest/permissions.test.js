@@ -17,10 +17,6 @@ describe('Permissions', () => {
     await phone.clearStorage()
     await postgres.createOperatorDb()
   })
-  afterAll(async () => {
-    await phone.clearStorage()
-    await postgres.clearOperatorDb()
-  })
 
   it('correctly stores default READ permissions', async (done) => {
     const serviceConfig = {
