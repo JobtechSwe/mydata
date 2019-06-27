@@ -15,7 +15,7 @@ const Register = ({ onSubmit }) => {
 
   return (
     <>
-      <H1>MyData</H1>
+      <H1>Egendata</H1>
       <Input
         name="firstName"
         onChangeText={firstName => setFirstName(firstName)}

@@ -1,4 +1,4 @@
-package work.mydata;
+package com.egendata;
 
 import android.app.Application;
 

@@ -18,6 +18,7 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     Linking.addEventListener('url', handleOpenURL)
+
     getAccount().then(console.log)
     // TODO: Uncomment =)
     // const subscription = navigation.addListener('willFocus', updateConsents)
@@ -27,12 +28,12 @@ const HomeScreen = ({ navigation }) => {
       Linking.removeEventListener('url', handleOpenURL)
       // subscription.remove()
     }
-  }, [])
+  }, [navigation])
 
   return (
     <Wrap style={{ justifyContent: 'flex-start', paddingHorizontal: 26 }}>
       <ScrollViewWrap contentContainerStyle={{ justifyContent: 'flex-start' }}>
-        <H1 style={{ marginTop: 64 }}>MyData</H1>
+        <H1 style={{ marginTop: 64 }}>Egendata</H1>
         <ConsentList consents={consents} />
       </ScrollViewWrap>
     </Wrap>

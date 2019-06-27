@@ -1,4 +1,4 @@
-# mydata-operator
+# Egendata-operator
 Backend for managing consents and data flow
 
 ## Configuration

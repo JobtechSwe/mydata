@@ -1,6 +1,6 @@
 const { decryptDocumentKey, generateJwkPair } = require('./crypto')
 const { serialize } = require('jwks-provider')
-const Joi = require('joi')
+const Joi = require('@hapi/joi')
 const { JWK } = require('@panva/jose')
 
 const KEY_PREFIX = 'key|>'

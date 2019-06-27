@@ -143,7 +143,7 @@ export default class ScanQRCode extends Component {
             <Paragraph style={{ marginBottom: 24 }}>
               En QR-kod är en form av streckkod som används för att tolka data.
               Rikta kameran mot QR-koden för att logga in eller registrera dig
-              med MyData.
+              med Egendata.
             </Paragraph>
             <PrimaryButton onPress={() => this.helpModalToggle()}>
               Ok, jag förstår!

@@ -1,4 +1,4 @@
-# mydata-cv
+# Egendata-cv
 
 A Data Source/Data Sink offering a searchable CV
 

@@ -26,6 +26,9 @@ const AuthScreen = props => {
 
   const onApprove = () => {
     setState({ view: 'enter' })
+    /* TODO: Add me
+     * Linking.openURL(redirectUrl)
+     */
     props.navigation.navigate('Hem')
   }
 
