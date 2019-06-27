@@ -10,9 +10,11 @@ describe('Permissions', () => {
     await phone.clearStorage()
     await postgres.createOperatorDb()
   })
+
   beforeEach(async () => {
     await phone.createAccount({ firstName: 'Foo', lastName: 'Barsson' })
   })
+
   afterEach(async () => {
     await phone.clearStorage()
     await postgres.createOperatorDb()

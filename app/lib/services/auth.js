@@ -63,6 +63,7 @@ export const approveConnection = async (connectionRequest, approved) => {
       serviceId: connectionRequest.iss,
       connectionId,
     })
+    return connectionId
   } catch (error) {
     console.error(error)
     throw error

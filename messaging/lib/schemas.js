@@ -245,7 +245,7 @@ const ACCESS_TOKEN = Joi.object({
 const DATA_READ = Joi.object({
   ...JWT_DEFAULTS,
   type: 'DATA_READ',
-  sub: Joi.string().uuid({ version: 'uuidv4' }).required(),
+  sub: Joi.string().uuid({ version: 'uuidv4' }).required(), // connection id
   path: Joi.string().required()
 }).required()
 
@@ -253,7 +253,7 @@ const DATA_READ = Joi.object({
 const DATA_WRITE = Joi.object({
   ...JWT_DEFAULTS,
   type: 'DATA_WRITE',
-  sub: Joi.string().uuid({ version: 'uuidv4' }).required(),
+  sub: Joi.string().uuid({ version: 'uuidv4' }).required(), // connection id
   path: Joi.string().required(),
   data: JWE.required()
 }).required()

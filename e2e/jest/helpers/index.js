@@ -43,22 +43,7 @@ const createClientWithServer = (serviceConfig) => {
   })
 }
 
-const createSampleRequest = clientId => ({
-  scope: [
-    {
-      domain: clientId,
-      area: 'test-data',
-      description: 'Test data lives a happy life here.',
-      permissions: [ 'write' ],
-      purpose: 'Because I say so.',
-      lawfulBasis: 'CONSENT'
-    }
-  ],
-  expiry: 12352134153
-})
-
 module.exports = {
   createClient,
-  createClientWithServer,
-  createSampleRequest
+  createClientWithServer
 }
