@@ -52,7 +52,7 @@ export function toViewModel(data) {
   return normalisedData
 }
 
-export function toResponse({ local, external }) {
+export function toResponse({ local = [], external = [] }) {
   return [...local, ...external].reduce((map, area) => {
     if (area.read) {
       map.set(area.read.id, area.read.approved)

@@ -41,27 +41,32 @@ export const initConnection = async authRequest => {
 }
 
 export const approveConnection = async (connectionRequest, approved) => {
-  const connectionId = v4()
-  const permissionsResult = await createPermissionResult(
-    connectionRequest,
-    approved
-  )
-  const connection = await createConnection(
-    connectionRequest,
-    permissionsResult,
-    connectionId
-  )
+  try {
+    const connectionId = v4()
+    const permissionsResult = await createPermissionResult(
+      connectionRequest,
+      approved
+    )
+    const connection = await createConnection(
+      connectionRequest,
+      permissionsResult,
+      connectionId
+    )
 
-  const connectionResponse = await createConnectionResponse(connection)
+    const connectionResponse = await createConnectionResponse(connection)
 
-  await axios.post(Config.OPERATOR_URL, connectionResponse, {
-    headers: { 'content-type': 'application/jwt' },
-  })
+    await axios.post(Config.OPERATOR_URL, connectionResponse, {
+      headers: { 'content-type': 'application/jwt' },
+    })
 
-  await storeConnection({
-    serviceId: connectionRequest.iss,
-    connectionId,
-  })
+    await storeConnection({
+      serviceId: connectionRequest.iss,
+      connectionId,
+    })
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
 }
 
 export const approveLogin = async ({ connection, sessionId }) => {
