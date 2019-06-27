@@ -56,7 +56,6 @@ async function loginResponse({ payload }, res, next) {
 }
 
 async function connectionResponse({ payload: connection_token }, res, next) {
-  // todo: verify that payload is a CONNECTION_RESPONSE
   try {
     let connection
     try {
