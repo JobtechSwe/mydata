@@ -256,7 +256,7 @@ describe('services', () => {
       await services.connectionResponse({ payload: connectionResponse }, res, next)
 
       expect(next).toHaveBeenCalledWith(
-        new Error('Could not verify CONNECTION_RESPONSE payload')
+        new Error('Could not verify CONNECTION payload')
       )
     })
     it('checks db for existing account, service and connection', async () => {
