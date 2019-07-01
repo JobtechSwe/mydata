@@ -5,8 +5,8 @@ const KeyProvider = require('./keyProvider')
 const { EventEmitter } = require('events')
 const { configSchema } = require('./schemas')
 const { v4 } = require('uuid')
-const { createAuthenticationRequest, createAuthenticationUrl } = require('./auth')
-const { createServiceRegistration } = require('./serviceRegistration')
+const { createAuthenticationUrl } = require('./auth')
+const tokens = require('./tokens')
 
 const defaults = {
   jwksPath: '/jwks',
@@ -22,20 +22,21 @@ class Client {
     }
     this.connected = false
     this.connecting = false
-    this.config.jwksUrl = `${config.clientId}${config.jwksPath}`
-    this.config.eventsUrl = `${config.clientId}${config.eventsPath}`
+    this.config.jwksURI = `${config.clientId}${config.jwksPath}`
+    this.config.eventsURI = `${config.clientId}${config.eventsPath}`
     this.keyProvider = new KeyProvider(this.config)
     this.routes = routes(this)
     this.data = data(this)
     this.events = new EventEmitter()
     this.keyValueStore = config.keyValueStore
+    this.tokens = tokens(this)
 
     this.connect = this.connect.bind(this)
   }
 
   async initializeAuthentication () {
     const id = v4()
-    const authReq = await createAuthenticationRequest(this, id)
+    const authReq = await this.tokens.createAuthenticationRequest(id)
     const url = createAuthenticationUrl(authReq)
 
     const AUTHENTICATION_REQUEST_ID_PREFIX = 'authenticationRequest|>'
@@ -64,7 +65,7 @@ class Client {
     }
     this.connecting = true
 
-    const serviceRegistration = await createServiceRegistration(this)
+    const serviceRegistration = await this.tokens.createServiceRegistration()
     try {
       this.events.emit('CONNECTING', retry)
       const result = await axios.post(`${this.config.operator}/api`, serviceRegistration, { headers: { 'content-type': 'application/jwt' } })

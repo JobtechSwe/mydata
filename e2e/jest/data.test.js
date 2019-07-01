@@ -71,7 +71,7 @@ describe('data', () => {
 
   describe('#read', () => {
     let domain, area, data
-    beforeEach(async () => {
+    beforeAll(async () => {
       domain = serviceClient.config.clientId
       area = 'favorite_cats'
       data = ['All of them']

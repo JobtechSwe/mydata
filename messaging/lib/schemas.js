@@ -46,7 +46,7 @@ const JOSE_HEADER = Joi.object({
 const JWE_RECIPIENT = Joi.object({
   encrypted_key: Joi.string().required(),
   header: Joi.object({
-    alg: Joi.string().valid('RSA1_5').required(),
+    alg: Joi.string().valid('RSA1_5', 'RSA-OAEP').required(),
     kid: Joi.string().uri(),
     jwk: JWK
   }).or('kid', 'jwk')
@@ -246,7 +246,8 @@ const DATA_READ = Joi.object({
   ...JWT_DEFAULTS,
   type: 'DATA_READ',
   sub: Joi.string().uuid({ version: 'uuidv4' }).required(), // connection id
-  path: Joi.string().required()
+  domain: Joi.string().uri().required(),
+  area: Joi.string().required()
 }).required()
 
 // service -> operator
@@ -254,7 +255,8 @@ const DATA_WRITE = Joi.object({
   ...JWT_DEFAULTS,
   type: 'DATA_WRITE',
   sub: Joi.string().uuid({ version: 'uuidv4' }).required(), // connection id
-  path: Joi.string().required(),
+  domain: Joi.string().uri().required(),
+  area: Joi.string().required(),
   data: JWE.required()
 }).required()
 

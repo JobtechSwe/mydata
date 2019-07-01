@@ -64,6 +64,8 @@ describe('connection', () => {
       })
       it('creates a valid jwt', async () => {
         await handle({ payload }, res, next)
+        expect(next).not.toHaveBeenCalled()
+
         const [ token ] = res.write.mock.calls[0]
         const result = JWT.decode(token)
 
@@ -71,6 +73,8 @@ describe('connection', () => {
       })
       it('creates a valid message', async () => {
         await handle({ payload }, res, next)
+        expect(next).not.toHaveBeenCalled()
+
         const [token] = res.write.mock.calls[0]
         const result = JWT.decode(token)
 
@@ -79,6 +83,7 @@ describe('connection', () => {
       })
       it('sets the correct content-type', async () => {
         await handle({ payload }, res, next)
+        expect(next).not.toHaveBeenCalled()
 
         expect(res.setHeader).toHaveBeenCalledWith('content-type', 'application/jwt')
       })

@@ -17,6 +17,7 @@ describe('client', () => {
       operator: 'https://smoothoperator.work',
       jwksPath: '/jwks',
       eventsPath: '/events',
+      iconURI: 'https://mycv.work/favicon.png',
       clientKeys: clientKeys,
       keyValueStore: createMemoryStore(),
       keyOptions: { modulusLength: 1024 }
@@ -42,7 +43,8 @@ describe('client', () => {
         clientId,
         operator,
         clientKeys,
-        keyValueStore
+        keyValueStore,
+        iconURI
       } = config
       client = createClient({
         displayName,
@@ -50,7 +52,8 @@ describe('client', () => {
         clientId,
         operator,
         clientKeys,
-        keyValueStore
+        keyValueStore,
+        iconURI
       })
       expect(client.config.jwksPath).toEqual('/jwks')
       expect(client.config.eventsPath).toEqual('/events')

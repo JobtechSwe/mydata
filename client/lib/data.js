@@ -1,5 +1,6 @@
 // const axios = require('axios')
 const { JWS, JWE, JWK } = require('@panva/jose')
+const { createWriteDataToken, send } = require('./tokens')
 
 const read = () => async (connectionId, { domain, area }) => {
   return null
@@ -21,11 +22,10 @@ const write = (config, keyProvider) => async (connectionId, { domain, area, data
   }
 
   const payload = encryptor.encrypt('general') // Only general serialization allowed for multiple recipients
-  
+
   const token = createWriteDataToken(connectionId, domain, area, payload)
-
-
-  return null
+  const result = await send(token)
+  return result
 }
 
 module.exports = ({ config, keyProvider }) => ({
