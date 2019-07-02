@@ -1,11 +1,7 @@
-const { decryptDocumentKey, generateJwkPair } = require('./crypto')
-const { serialize } = require('jwks-provider')
+const { generateKey, importPEM, toPublicKey } = require('./crypto')
 const Joi = require('@hapi/joi')
-const { JWK } = require('@panva/jose')
 
 const KEY_PREFIX = 'key|>'
-const ACCESS_KEY_IDS_PREFIX = 'accessKeyIds|>'
-const DOCUMENT_KEYS_PREFIX = 'documentKeys|>'
 const CONSENT_KEY_ID_PREFIX = 'consentKeyId|>'
 
 const defaults = {
@@ -23,18 +19,28 @@ async function isUrl (kid) {
   }
 }
 
+const rxPEM = /^-----BEGIN RSA PRIVATE KEY-----\n([a-zA-Z0-9\+\/\=]*\n)*-----END RSA PRIVATE KEY-----\n$/
+
 const jsonToBase64 = (obj) => Buffer.from(JSON.stringify(obj), 'utf8').toString('base64')
 const base64ToJson = (str) => JSON.parse(Buffer.from(str, 'base64').toString('utf8'))
 
-class KeyProvider {
-  constructor ({ clientKeys, keyValueStore, keyOptions, jwksURI, alg }) {
-    this.jwksURI = jwksURI
-    this.clientKeys = {
-      use: 'sig',
-      kid: `${jwksURI}/client_key`,
-      publicKey: clientKeys.publicKey,
-      privateKey: clientKeys.privateKey
+function importKey (key, jwksURI, options = {}) {
+  if (typeof key === 'string' && rxPEM.test(key)) {
+    return importPEM(key, jwksURI, options)
+  } else if (typeof key === 'object') {
+    return {
+      ...key,
+      ...options
     }
+  } else {
+    throw new Error('Unknown key format')
+  }
+}
+
+class KeyProvider {
+  constructor ({ clientKey, keyValueStore, keyOptions, jwksURI, alg }) {
+    this.jwksURI = jwksURI
+    this.clientKey = importKey(clientKey, jwksURI, { use: 'sig' })
     this.options = Object.assign({}, defaults, keyOptions)
     this.keyValueStore = keyValueStore
     this.alg = alg
@@ -48,7 +54,7 @@ class KeyProvider {
   }
   async getKey (kid) {
     if (kid === 'client_key') {
-      return this.clientKeys
+      return this.clientKey
     }
     if (!await isUrl(kid)) {
       kid = `${this.jwksURI}/${kid}`
@@ -56,14 +62,14 @@ class KeyProvider {
     return this.load(`${KEY_PREFIX}${kid}`)
   }
   async generatePersistentKey ({ use }) {
-    const keyPair = await generateJwkPair(this.jwksURI, { use }, this.options.modulusLength)
-    await this.save(`${KEY_PREFIX}${keyPair.publicKey.kid}`, keyPair)
-    return keyPair
+    const key = await generateKey(this.jwksURI, { use }, this.options.modulusLength)
+    await this.save(`${KEY_PREFIX}${key.kid}`, key)
+    return key
   }
   async generateTemporaryKey ({ use }) {
-    const keyPair = await generateJwkPair(this.jwksURI, { use }, this.options.modulusLength)
-    await this.save(`${KEY_PREFIX}${keyPair.publicKey.kid}`, keyPair, this.options.tempKeyExpiry)
-    return keyPair
+    const key = await generateKey(this.jwksURI, { use }, this.options.modulusLength)
+    await this.save(`${KEY_PREFIX}${key.kid}`, key, this.options.tempKeyExpiry)
+    return key
   }
   async makeKeyPermanent (kid) {
     const key = await this.getKey(kid)
@@ -88,62 +94,17 @@ class KeyProvider {
     }
     return consentKeyId
   }
-  async saveAccessKeyIds (consentId, domain, area, keys) {
-    const key = [consentId, domain, area].join('|')
-    return this.save(`${ACCESS_KEY_IDS_PREFIX}${key}`, keys)
-  }
-  async getAccessKeyIds (consentId, domain, area) {
-    const key = [consentId, domain, area].join('|')
-    const accessKeyIds = await this.load(`${ACCESS_KEY_IDS_PREFIX}${key}`)
-    return accessKeyIds || []
-  }
-  async getAccessKeys (consentId, domain, area) {
-    const accessKeyIds = await this.getAccessKeyIds(consentId, domain, area)
-    return Promise.all(
-      accessKeyIds.map(async (kid) => this.load(`${KEY_PREFIX}${kid}`))
-    )
-  }
-  async saveDocumentKeys (consentId, domain, area, keys) {
-    const key = [consentId, domain, area].join('|')
-    return this.save(`${DOCUMENT_KEYS_PREFIX}${key}`, keys)
-  }
-  async getDocumentKeys (consentId, domain, area) {
-    const key = [consentId, domain, area].join('|')
-    return this.load(`${DOCUMENT_KEYS_PREFIX}${key}`)
-  }
-  async getDocumentEncryptionKey (consentId, domain, area) {
-    const documentKeys = await this.getDocumentKeys(consentId, domain, area)
-    const [kid, encDocumentKey] = Object
-      .entries(documentKeys)
-      .find(([kid]) => kid.match(new RegExp(`^${this.jwksURI}`)))
-    const keyPair = await this.getKey(kid)
-    return decryptDocumentKey(encDocumentKey, keyPair.privateKey)
-  }
-  async getDocumentDecryptionKey (b64DocumentKeys, consentKid) {
-    if (!consentKid) {
-      throw new Error('No consent key id provided')
-    }
-    const documentKeys = base64ToJson(b64DocumentKeys)
-    if (!documentKeys) {
-      throw new Error('No document keys found')
-    }
-    const encDocumentKey = documentKeys[consentKid]
-    if (!encDocumentKey) {
-      throw new Error('No matching decryption key found')
-    }
-    const keyPair = await this.getKey(consentKid)
-    return decryptDocumentKey(encDocumentKey, keyPair.privateKey)
-  }
   async jwksKeyList () {
-    return serialize([this.clientKeys])
+    return { keys: [ toPublicKey(this.clientKey) ] }
   }
   async jwksKey (kid) {
+    let key
     if (kid === 'client_key') {
-      return JWK.importKey(this.clientKeys.publicKey, { kid: `${this.jwksURI}/client_key`, alg: this.alg })
+      key = this.clientKey
     } else {
-      const key = await this.getKey(kid)
-      return key && key.publicKey
+      key = await this.load(`${KEY_PREFIX}${kid}`)
     }
+    return key && toPublicKey(key)
   }
 }
 

@@ -1,4 +1,5 @@
 const { v4 } = require('uuid')
+const { toPublicKey } = require('./crypto')
 
 const createPermissions = async (shorthandPermissions, clientId, keyProvider) => {
   return shorthandPermissions
@@ -18,7 +19,7 @@ const createPermissions = async (shorthandPermissions, clientId, keyProvider) =>
             try {
               permission.jwk = await keyProvider
                 .generateTemporaryKey({ use: 'enc' })
-                .then((keyPair) => keyPair.publicKey)
+                .then((key) => toPublicKey(key))
             } catch (error) {
               console.error(error)
               throw Error('Could not generate key for permission')

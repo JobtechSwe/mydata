@@ -19,7 +19,7 @@ const JWK = Joi.object({
 const JWK_PRIVATE = Joi.object({
   kid: Joi.string().uri().required(),
   kty: Joi.string().valid('RSA').required(),
-  use: Joi.string().valid(['sig', 'enc']).required(),
+  use: Joi.string().valid('sig', 'enc').required(),
   e: Joi.string().valid('AQAB').required(),
   n: Joi.string().required(),
   d: Joi.string().required(),
