@@ -8,12 +8,6 @@ const createServiceRegistration = (client) => async () => {
     iss: client.config.clientId
   }
 
-  const kid = `${client.config.jwksURI}/client_key`
-
-  const privateKey = JWK.importKey(client.config.clientKeys.privateKey, {
-    kid
-  })
-
   const claimsSet = {
     type: 'SERVICE_REGISTRATION',
     displayName: client.config.displayName,
@@ -24,7 +18,8 @@ const createServiceRegistration = (client) => async () => {
     ...jwtStuff
   }
 
-  return sign(claimsSet, privateKey, { kid })
+  const key = client.keyProvider.clientKey
+  return sign(claimsSet, key, { kid: key.kid })
 }
 
 const createAuthenticationRequest = (client) => async (id) => {
@@ -36,13 +31,8 @@ const createAuthenticationRequest = (client) => async (id) => {
     eventsURI: client.config.eventsURI
   }
 
-  const kid = `${client.config.jwksURI}/client_key`
-
-  const privateKey = JWK.importKey(client.config.clientKeys.privateKey, {
-    kid
-  })
-
-  return sign(claimsSet, privateKey, { kid })
+  const key = client.keyProvider.clientKey
+  return sign(claimsSet, key, { kid: key.kid })
 }
 
 const createConnectionRequest = (client) => (sid, permissions) => {
@@ -57,13 +47,8 @@ const createConnectionRequest = (client) => (sid, permissions) => {
     permissions
   }
 
-  const kid = `${client.config.jwksURI}/client_key`
-
-  const privateKey = JWK.importKey(client.config.clientKeys.privateKey, {
-    kid
-  })
-
-  return sign(claimsSet, privateKey, { kid })
+  const key = client.keyProvider.clientKey
+  return sign(claimsSet, key, { kid: key.kid })
 }
 
 const createWriteDataToken = (client) =>

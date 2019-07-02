@@ -1,6 +1,5 @@
 const createClient = require('../lib/client')
 const { createMemoryStore } = require('../lib/memoryStore')
-const { generateKeyPair } = require('./_helpers')
 const { JWT } = require('@panva/jose')
 const { connectionInitHandler, connectionEventHandler } = require('./../lib/connection')
 const { sign } = require('../lib/jwt')
@@ -10,11 +9,11 @@ const { schemas } = require('@egendata/messaging')
 jest.useFakeTimers()
 
 describe('connection', () => {
-  let clientKeys, accountKey, permissionKey, config, client, handle, res, next
+  let clientKey, accountKey, permissionKey, config, client, handle, res, next
   beforeAll(async () => {
     accountKey = await generateKey('egendata://jwks', { use: 'sig' })
     permissionKey = await generateKey('http://localhost:4000/jwks', { use: 'enc' })
-    clientKeys = await generateKeyPair({ kid: '' })
+    clientKey = await generateKey('http://localhost:4000/jwks', { use: 'sig', kid: 'http://localhost:4000/jwks/client_key' })
   })
   beforeEach(() => {
     config = {
@@ -25,7 +24,7 @@ describe('connection', () => {
       operator: 'https://smoothoperator.work',
       jwksPath: '/jwks',
       eventsPath: '/events',
-      clientKeys: clientKeys,
+      clientKey: clientKey,
       keyValueStore: createMemoryStore(),
       keyOptions: { modulusLength: 1024 }
     }
@@ -44,7 +43,6 @@ describe('connection', () => {
     res.end.mockReset()
     next.mockReset()
   })
-
   describe('#connectionInitHandler', () => {
     let payload
     beforeEach(() => {
@@ -114,6 +112,8 @@ describe('connection', () => {
       })
       it('creates a valid jwt', async () => {
         await handle({ payload }, res, next)
+        expect(next).not.toHaveBeenCalled()
+
         const [token] = res.write.mock.calls[0]
         const result = JWT.decode(token)
 
@@ -121,6 +121,8 @@ describe('connection', () => {
       })
       it('creates a valid message', async () => {
         await handle({ payload }, res, next)
+        expect(next).not.toHaveBeenCalled()
+
         const [token] = res.write.mock.calls[0]
         const result = JWT.decode(token)
 
@@ -129,6 +131,8 @@ describe('connection', () => {
       })
       it('adds permissions if default permissions are configured', async () => {
         await handle({ payload }, res, next)
+        expect(next).not.toHaveBeenCalled()
+
         const [token] = res.write.mock.calls[0]
         const result = JWT.decode(token)
 
@@ -136,17 +140,20 @@ describe('connection', () => {
       })
       it('sets the correct content-type', async () => {
         await handle({ payload }, res, next)
+        expect(next).not.toHaveBeenCalled()
 
         expect(res.setHeader).toHaveBeenCalledWith('content-type', 'application/jwt')
       })
       it('ends the response', async () => {
         await handle({ payload }, res, next)
+        expect(next).not.toHaveBeenCalled()
 
         expect(res.end).toHaveBeenCalled()
       })
       it('passes any errors to next middleware', async () => {
         const error = new Error('b0rk')
         res.setHeader.mockImplementation(() => { throw error })
+
         await handle({ payload }, res, next)
 
         expect(next).toHaveBeenCalledWith(error)
