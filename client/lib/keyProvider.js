@@ -27,11 +27,11 @@ const jsonToBase64 = (obj) => Buffer.from(JSON.stringify(obj), 'utf8').toString(
 const base64ToJson = (str) => JSON.parse(Buffer.from(str, 'base64').toString('utf8'))
 
 class KeyProvider {
-  constructor ({ clientKeys, keyValueStore, keyOptions, jwksUrl, alg }) {
-    this.jwksUrl = jwksUrl
+  constructor ({ clientKeys, keyValueStore, keyOptions, jwksURI, alg }) {
+    this.jwksURI = jwksURI
     this.clientKeys = {
       use: 'sig',
-      kid: `${jwksUrl}/client_key`,
+      kid: `${jwksURI}/client_key`,
       publicKey: clientKeys.publicKey,
       privateKey: clientKeys.privateKey
     }
@@ -51,17 +51,17 @@ class KeyProvider {
       return this.clientKeys
     }
     if (!await isUrl(kid)) {
-      kid = `${this.jwksUrl}/${kid}`
+      kid = `${this.jwksURI}/${kid}`
     }
     return this.load(`${KEY_PREFIX}${kid}`)
   }
   async generatePersistentKey ({ use }) {
-    const keyPair = await generateJwkPair(this.jwksUrl, { use }, this.options.modulusLength)
+    const keyPair = await generateJwkPair(this.jwksURI, { use }, this.options.modulusLength)
     await this.save(`${KEY_PREFIX}${keyPair.publicKey.kid}`, keyPair)
     return keyPair
   }
   async generateTemporaryKey ({ use }) {
-    const keyPair = await generateJwkPair(this.jwksUrl, { use }, this.options.modulusLength)
+    const keyPair = await generateJwkPair(this.jwksURI, { use }, this.options.modulusLength)
     await this.save(`${KEY_PREFIX}${keyPair.publicKey.kid}`, keyPair, this.options.tempKeyExpiry)
     return keyPair
   }
@@ -115,7 +115,7 @@ class KeyProvider {
     const documentKeys = await this.getDocumentKeys(consentId, domain, area)
     const [kid, encDocumentKey] = Object
       .entries(documentKeys)
-      .find(([kid]) => kid.match(new RegExp(`^${this.jwksUrl}`)))
+      .find(([kid]) => kid.match(new RegExp(`^${this.jwksURI}`)))
     const keyPair = await this.getKey(kid)
     return decryptDocumentKey(encDocumentKey, keyPair.privateKey)
   }
@@ -137,10 +137,9 @@ class KeyProvider {
   async jwksKeyList () {
     return serialize([this.clientKeys])
   }
-
   async jwksKey (kid) {
     if (kid === 'client_key') {
-      return JWK.importKey(this.clientKeys.publicKey, { kid: `${this.jwksUrl}/client_key`, alg: this.alg })
+      return JWK.importKey(this.clientKeys.publicKey, { kid: `${this.jwksURI}/client_key`, alg: this.alg })
     } else {
       const key = await this.getKey(kid)
       return key && key.publicKey

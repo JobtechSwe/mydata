@@ -8,15 +8,15 @@ describe('crypto', () => {
     keys.push(await generateKeyPair())
   })
   describe('#generateJwkPair', () => {
-    const jwksUrl = 'http://localhost:4000/jwks'
+    const jwksURI = 'http://localhost:4000/jwks'
 
     it('generates valid public key', async () => {
-      const keys = await crypto.generateJwkPair(jwksUrl, { kid: 'foo', use: 'enc' }, 1024)
+      const keys = await crypto.generateJwkPair(jwksURI, { kid: 'foo', use: 'enc' }, 1024)
 
       await schemas.JWK.validate(keys.publicKey)
     })
     it('generates valid private key', async () => {
-      const keys = await crypto.generateJwkPair(jwksUrl, { kid: 'foo', use: 'enc' }, 1024)
+      const keys = await crypto.generateJwkPair(jwksURI, { kid: 'foo', use: 'enc' }, 1024)
       await schemas.JWK_PRIVATE.validate(keys.privateKey)
     })
 
@@ -29,9 +29,9 @@ describe('crypto', () => {
     })
 
     it('correctly names enc key as absolute url', async () => {
-      const { privateKey, publicKey } = await crypto.generateJwkPair(jwksUrl, { use: 'enc' }, 1024)
-      expect(privateKey.kid).toEqual(expect.stringMatching(new RegExp(`^${jwksUrl}/enc_`)))
-      expect(publicKey.kid).toEqual(expect.stringMatching(new RegExp(`^${jwksUrl}/enc_`)))
+      const { privateKey, publicKey } = await crypto.generateJwkPair(jwksURI, { use: 'enc' }, 1024)
+      expect(privateKey.kid).toEqual(expect.stringMatching(new RegExp(`^${jwksURI}/enc_`)))
+      expect(publicKey.kid).toEqual(expect.stringMatching(new RegExp(`^${jwksURI}/enc_`)))
     })
   })
   describe('#generateDocumentKey', () => {

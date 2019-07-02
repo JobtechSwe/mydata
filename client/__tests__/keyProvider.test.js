@@ -32,7 +32,7 @@ const jwkPair = {
 }
 
 describe('KeyProvider', () => {
-  let keyProvider, clientKeys, keyValueStore, domain, jwksUrl
+  let keyProvider, clientKeys, keyValueStore, domain, jwksURI
   beforeEach(async () => {
     clientKeys = await generateKeyPair()
     keyValueStore = {
@@ -45,8 +45,8 @@ describe('KeyProvider', () => {
       tempKeyExpiry: 100
     }
     domain = 'http://localhost:4000'
-    jwksUrl = `${domain}/jwks`
-    keyProvider = new KeyProvider({ clientKeys, keyValueStore, keyOptions, jwksUrl })
+    jwksURI = `${domain}/jwks`
+    keyProvider = new KeyProvider({ clientKeys, keyValueStore, keyOptions, jwksURI })
   })
   describe('#getKey', () => {
     it('calls load with kid', async () => {
@@ -215,7 +215,7 @@ describe('KeyProvider', () => {
     it('returns decrypted aes document key', async () => {
       const consentId = '19e82885-abfc-4e43-b35c-6d3807b5ebeb'
       const area = 'cv'
-      const consentKeyPair = await generateKeyPair({ kid: `${jwksUrl}/enc_consent` })
+      const consentKeyPair = await generateKeyPair({ kid: `${jwksURI}/enc_consent` })
       const accountKeyPair = await generateKeyPair({ kid: `mydata://${consentId}/account_key` })
       const aesDocumentKey = await crypto.generateDocumentKey()
       const documentKeys = {
@@ -239,7 +239,7 @@ describe('KeyProvider', () => {
   describe.skip('#getDocumentDecryptionKey', () => {
     it('returns decrypted aes document key', async () => {
       const consentId = '19e82885-abfc-4e43-b35c-6d3807b5ebeb'
-      const consentKeyPair = await generateKeyPair({ kid: `${jwksUrl}/enc_consent` })
+      const consentKeyPair = await generateKeyPair({ kid: `${jwksURI}/enc_consent` })
       const accountKeyPair = await generateKeyPair({ kid: `mydata://${consentId}/account_key` })
       const aesDocumentKey = await crypto.generateDocumentKey()
       const documentKeys = {
@@ -257,8 +257,8 @@ describe('KeyProvider', () => {
     })
     it('it does not return decrypted aes document key if none exists for current account', async () => {
       const consentId = '19e82885-abfc-4e43-b35c-6d3807b5ebeb'
-      const consentKeyPair = await generateKeyPair({ kid: `${jwksUrl}/enc_consent` })
-      const consentKeyPair2 = await generateKeyPair({ kid: `${jwksUrl}/enc_consent2` })
+      const consentKeyPair = await generateKeyPair({ kid: `${jwksURI}/enc_consent` })
+      const consentKeyPair2 = await generateKeyPair({ kid: `${jwksURI}/enc_consent2` })
       const accountKeyPair = await generateKeyPair({ kid: `mydata://${consentId}/account_key` })
       const aesDocumentKey = await crypto.generateDocumentKey()
       const documentKeys = {

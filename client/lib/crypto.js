@@ -47,7 +47,7 @@ function decryptDocument (aesKey, data) {
   return JSON.parse(dataString)
 }
 
-async function generateJwkPair (jwksUrl, { use }, modulusLength) {
+async function generateJwkPair (jwksURI, { use }, modulusLength) {
   if (!(use === 'enc' || use === 'sig')) {
     throw Error('"use" has to be "enc" or "sig"')
   }
@@ -60,7 +60,7 @@ async function generateJwkPair (jwksUrl, { use }, modulusLength) {
     privateKeyEncoding: { type: 'pkcs1', format: 'pem' }
   })
 
-  const kid = `${jwksUrl}/${use}_${createHash('SHA256').update(publicKey).digest('hex')}`
+  const kid = `${jwksURI}/${use}_${createHash('SHA256').update(publicKey).digest('hex')}`
 
   return {
     publicKey: pem2jwk(publicKey, { use, kid }),
