@@ -1,7 +1,7 @@
 let storage = {}
 
 const AsyncStorage = {
-  getItem: async (key) => {
+  getItem: async key => {
     return storage[key]
   },
   setItem: async (key, value) => {

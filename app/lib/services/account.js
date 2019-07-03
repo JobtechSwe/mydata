@@ -5,7 +5,7 @@ import { generateKey, toPublicKey } from './crypto'
 import { storeAccount, storeKey } from './storage'
 import { createAccountRegistration } from './tokens'
 
-export async function save (account) {
+export async function save(account) {
   try {
     if (account.id) {
       throw Error('An account already exist on this phone')
@@ -19,8 +19,13 @@ export async function save (account) {
 
     await storeAccount(account)
 
-    const jwt = await createAccountRegistration(account, { privateKey, publicKey })
-    await axios.post(Config.OPERATOR_URL, jwt, { headers: { 'content-type': 'application/jwt' } })
+    const jwt = await createAccountRegistration(account, {
+      privateKey,
+      publicKey,
+    })
+    await axios.post(Config.OPERATOR_URL, jwt, {
+      headers: { 'content-type': 'application/jwt' },
+    })
 
     return account
   } catch (err) {

@@ -68,9 +68,7 @@ function Settings({ navigation }) {
           <H2 style={{ alignSelf: 'flex-start', marginTop: 64 }}>
             Inställningar
           </H2>
-          <Paragraph align="left">{`${account.firstName} ${
-            account.lastName
-          }`}</Paragraph>
+          <Paragraph align="left">{`${account.firstName} ${account.lastName}`}</Paragraph>
           <H3 style={{ marginTop: 32 }}>PDS</H3>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <SvgUri

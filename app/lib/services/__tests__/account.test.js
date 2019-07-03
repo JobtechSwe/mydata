@@ -15,13 +15,20 @@ jest.mock('../crypto', () => ({
   toPublicKey: jest.fn().mockName('crypto.toPublicKey'),
 }))
 jest.mock('../storage', () => ({
-  storeAccount: jest.fn().mockName('storage.storeAccount').mockResolvedValue(),
-  storeKey: jest.fn().mockName('storage.storeKey').mockResolvedValue(),
+  storeAccount: jest
+    .fn()
+    .mockName('storage.storeAccount')
+    .mockResolvedValue(),
+  storeKey: jest
+    .fn()
+    .mockName('storage.storeKey')
+    .mockResolvedValue(),
 }))
 jest.mock('../tokens', () => ({
-  createAccountRegistration: jest.fn().mockName('tokens.createAccountRegistration'),
+  createAccountRegistration: jest
+    .fn()
+    .mockName('tokens.createAccountRegistration'),
 }))
-
 
 Config.OPERATOR_URL = 'aTotallyLegitOperatorUrl'
 
@@ -50,7 +57,8 @@ describe('account', () => {
         n: 'abcd4',
         use: 'sig',
       }
-      jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+      jwt =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
       id = '74837a38-c61e-46c1-a1c7-bf3f66450406'
 
       uuid.v4.mockReturnValue(id)
@@ -81,8 +89,10 @@ describe('account', () => {
       })
       it('generates a token', async () => {
         const result = await accountService.save(account)
-        expect(tokens.createAccountRegistration)
-          .toHaveBeenCalledWith(result, { publicKey, privateKey })
+        expect(tokens.createAccountRegistration).toHaveBeenCalledWith(result, {
+          publicKey,
+          privateKey,
+        })
       })
       it('saves account to storage', async () => {
         const result = await accountService.save(account)

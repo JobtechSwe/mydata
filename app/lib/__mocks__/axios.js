@@ -1,4 +1,3 @@
-
 const axios = {
   get: jest.fn().mockResolvedValue({ status: 200, data: null }),
   post: jest.fn().mockResolvedValue({ status: 200, data: null }),

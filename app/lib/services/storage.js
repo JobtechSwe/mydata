@@ -22,16 +22,16 @@ export const storeConnection = async ({ serviceId, connectionId }) => {
   )
 }
 
-export const storeKey = async (key) => {
+export const storeKey = async key => {
   return AsyncStorage.setItem(`jwks/${key.kid}`, JSON.stringify(key))
 }
 
-export const getPrivateKey = async (kid) => {
+export const getPrivateKey = async kid => {
   const result = await AsyncStorage.getItem(`jwks/${kid}`)
   return result ? JSON.parse(result) : undefined
 }
 
-export const getPublicKey = async (kid) => {
+export const getPublicKey = async kid => {
   const privateKey = await getPrivateKey(kid)
   return privateKey ? toPublicKey(privateKey) : undefined
 }

@@ -46,9 +46,11 @@ For Android:
 
 * Start the device that will run the app from Android Studio. Virtual devices are under Tools->AVD Manager (if you do not see `AVD Manager`, go to `Help` and use `Find action`)
 
+Run apps:
+
 ```bash
-react-native run-ios
-react-native run-android
+npm run ios
+npm run android
 ```
 
 If the app doesn't open automatically go into apps and find MyData
@@ -99,11 +101,11 @@ fastlane beta
 
 1. Download the Google Play JSON-file (it's in LastPass)
   - Place the `.json`-file somewhere, you'll need to point to it from `android/fastlane/Appfile`
-    `json_key_file("/path/to/egendata_google_play.json")` 
+    `json_key_file("/path/to/egendata_google_play.json")`
   - Place the `release.keystore` in `android/app`
   - Place `gradle.properties` in `android`
-  
-2. 
+
+2.
 ```
 cd android
 fastlane beta

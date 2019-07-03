@@ -1,6 +1,6 @@
 const authenticationUrlRegex = /^mydata:\/\/account\/(.*)$/
 
-export const parse = (url) => {
+export const parse = url => {
   try {
     const [, code] = url.match(authenticationUrlRegex)
 
