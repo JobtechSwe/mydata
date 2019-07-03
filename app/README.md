@@ -46,9 +46,11 @@ For Android:
 
 * Start the device that will run the app from Android Studio. Virtual devices are under Tools->AVD Manager (if you do not see `AVD Manager`, go to `Help` and use `Find action`)
 
+Run apps:
+
 ```bash
-react-native run-ios
-react-native run-android
+npm run ios
+npm run android
 ```
 
 If the app doesn't open automatically go into apps and find MyData
@@ -101,5 +103,5 @@ fastlane beta
 3. Log in to Google Play-console and select the "MyData"-app
   - Select an appropriate release-type and upload the exported .apk-file from the previous step.
 
-  
+
 
