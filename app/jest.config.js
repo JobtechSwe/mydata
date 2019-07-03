@@ -6,7 +6,14 @@ module.exports = {
   clearMocks: true,
   preset: 'react-native',
   moduleFileExtensions: ['js'],
-  testMatch: ['**/__tests__/**/*.test.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
-  testPathIgnorePatterns: ['\\.snap$', '<rootDir>/node_modules/', '<rootDir>/__e2e__/'],
+  testMatch: [
+    '**/__tests__/**/*.test.[jt]s?(x)',
+    '**/?(*.)+(spec|test).[jt]s?(x)',
+  ],
+  testPathIgnorePatterns: [
+    '\\.snap$',
+    '<rootDir>/node_modules/',
+    '<rootDir>/__e2e__/',
+  ],
   cacheDirectory: '.jest/cache',
 }

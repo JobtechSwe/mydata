@@ -1,7 +1,4 @@
-import {
-  generateKey,
-  toPublicKey,
-} from '../crypto'
+import { generateKey, toPublicKey } from '../crypto'
 
 describe('services/crypto', () => {
   describe('#generateKey', () => {

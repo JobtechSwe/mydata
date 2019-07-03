@@ -8,10 +8,12 @@ jest.mock('@react-native-community/async-storage', () => {
   const storage = {}
   return {
     setItem: jest.fn(async (key, val) => {
-      return storage[key] = val}
-      ),
+      return (storage[key] = val)
+    }),
     getItem: jest.fn(async key => storage[key]),
-    removeItem: jest.fn(async key => { storage[key] = undefined }),
+    removeItem: jest.fn(async key => {
+      storage[key] = undefined
+    }),
   }
 })
 

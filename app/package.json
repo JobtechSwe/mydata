@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "ios": "node node_modules/react-native/local-cli/cli.js run-ios",
+    "preandroid": "npx jetify",
     "android": "node node_modules/react-native/local-cli/cli.js run-android",
     "link": "node node_modules/react-native/local-cli/cli.js link",
     "test": "NODE_ENV=test jest",
@@ -83,6 +84,7 @@
     "husky": "^2.4.1",
     "isomorphic-webcrypto": "^1.6.1",
     "jest": "24.5.0",
+    "jetifier": "^1.6.1",
     "lint-staged": "^8.2.1",
     "lolex": "^3.1.0",
     "metro-react-native-babel-preset": "^0.53.1",

@@ -2,7 +2,10 @@ import { Rsa, Sha } from '@trackforce/react-native-crypto'
 import pem2jwk from 'simple-pem2jwk'
 
 export function toBase64Url(base64) {
-  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '')
+  return base64
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=/g, '')
 }
 
 export async function generateKeys(modulusLength = 2048) {
@@ -26,6 +29,6 @@ export async function generateKey(options = {}, modulusLength = 2048) {
   return key
 }
 
-export function toPublicKey ({ e, kid, kty, n, use }) {
+export function toPublicKey({ e, kid, kty, n, use }) {
   return { e, kid, kty, n, use }
 }
