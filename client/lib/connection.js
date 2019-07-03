@@ -35,8 +35,13 @@ const connectionEventHandler = (client) => async ({ payload }, res, next) => {
     client.keyValueStore.save(`${CONNECTION_PREFIX}${sub}`, JSON.stringify(connection))
 
     if (permissions && permissions.approved) {
-      for (let permission of permissions.approved.filter((p) => p.type === 'READ')) {
-        await client.keyProvider.makeKeyPermanent(permission.kid)
+      for (let permission of permissions.approved) {
+        if (permission.type === 'READ') {
+          await client.keyProvider.makeKeyPermanent(permission.kid)
+        } else if (permission.type === 'WRITE') {
+          await client.keyProvider
+            .saveWriteKeys(permission.domain, permission.area, permission.jwks)
+        }
       }
     }
 

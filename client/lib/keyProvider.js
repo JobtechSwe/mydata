@@ -2,7 +2,7 @@ const { generateKey, importPEM, toPublicKey } = require('./crypto')
 const Joi = require('@hapi/joi')
 
 const KEY_PREFIX = 'key|>'
-const CONSENT_KEY_ID_PREFIX = 'consentKeyId|>'
+const WRITE_KEYS_PREFIX = 'permissionId|>'
 
 const defaults = {
   tempKeyExpiry: 10 * 60 * 1000,
@@ -19,12 +19,13 @@ async function isUrl (kid) {
   }
 }
 
-const rxPEM = /^-----BEGIN RSA PRIVATE KEY-----\n([a-zA-Z0-9\+\/\=]*\n)*-----END RSA PRIVATE KEY-----\n$/
+const rxPEM = /^-----BEGIN RSA PRIVATE KEY-----\n([a-zA-Z0-9\+\/\=]*\n)*-----END RSA PRIVATE KEY-----\n?$/
 
 const jsonToBase64 = (obj) => Buffer.from(JSON.stringify(obj), 'utf8').toString('base64')
 const base64ToJson = (str) => JSON.parse(Buffer.from(str, 'base64').toString('utf8'))
 
-function importKey (key, jwksURI, options = {}) {
+function importClientKey (key, jwksURI) {
+  const options = { use: 'sig', kid: `${jwksURI}/client_key` }
   if (typeof key === 'string' && rxPEM.test(key)) {
     return importPEM(key, jwksURI, options)
   } else if (typeof key === 'object') {
@@ -40,7 +41,7 @@ function importKey (key, jwksURI, options = {}) {
 class KeyProvider {
   constructor ({ clientKey, keyValueStore, keyOptions, jwksURI, alg }) {
     this.jwksURI = jwksURI
-    this.clientKey = importKey(clientKey, jwksURI, { use: 'sig' })
+    this.clientKey = importClientKey(clientKey, jwksURI)
     this.options = Object.assign({}, defaults, keyOptions)
     this.keyValueStore = keyValueStore
     this.alg = alg
@@ -84,15 +85,12 @@ class KeyProvider {
   async removeKey (kid) {
     await this.keyValueStore.remove(`${KEY_PREFIX}${kid}`)
   }
-  async saveConsentKeyId (consentId, kid) {
-    return this.save(`${CONSENT_KEY_ID_PREFIX}${consentId}`, kid)
+  async saveWriteKeys (domain, area, jwks) {
+    await this.save(`${WRITE_KEYS_PREFIX}${domain}|${area}`, jwks)
+    return jwks
   }
-  async getConsentKeyId (consentId) {
-    const consentKeyId = await this.load(`${CONSENT_KEY_ID_PREFIX}${consentId}`)
-    if (!consentKeyId) {
-      throw new Error('No key found for consent')
-    }
-    return consentKeyId
+  async getWriteKeys (domain, area) {
+    return this.load(`${WRITE_KEYS_PREFIX}${domain}|${area}`)
   }
   async jwksKeyList () {
     return { keys: [ toPublicKey(this.clientKey) ] }
@@ -105,6 +103,11 @@ class KeyProvider {
       key = await this.load(`${KEY_PREFIX}${kid}`)
     }
     return key && toPublicKey(key)
+  }
+  async getSigningKey (/* domain, area */) {
+    // TODO: Create different signing keys for different domains/areas
+    //          and/or rotate
+    return this.clientKey
   }
 }
 

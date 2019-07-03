@@ -135,10 +135,37 @@ function serviceInsert ({
   ]
 }
 
+function writePermission ({ connectionId, domain, area, serviceId }) {
+  return [
+    `
+    SELECT
+      a.pds_provider,
+      a.pds_credentials,
+      p."domain",
+      p.area
+    FROM permissions as p
+      INNER JOIN connections as c ON p.connection_id = c.connection_id
+      INNER JOIN services as s ON c.service_id = s.service_id
+      INNER JOIN accounts as a ON c.account_id = a.account_id
+    WHERE c.connection_id = $1
+      AND p."domain" = $2
+      AND p.area = $3
+      AND p.type = 'WRITE'
+      AND p.approved_at IS NOT NULL
+      AND p.rejected IS NULL
+      AND p.revoked IS NULL
+      AND (p.expires IS NULL OR p.expires > NOW())
+      AND s.service_id = $4
+    `,
+    [ connectionId, domain, area, serviceId ]
+  ]
+}
+
 module.exports = {
   accountKeyInsert,
   checkConnection,
   connectionInserts,
   permissionsInserts,
-  serviceInsert
+  serviceInsert,
+  writePermission
 }

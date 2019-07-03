@@ -257,6 +257,7 @@ describe('connection', () => {
       })
       it('saves authentication to db', async () => {
         await handle({ payload }, res, next)
+        expect(next).not.toHaveBeenCalled()
 
         const sub = await config.keyValueStore.load(`authentication|>${connection.sid}`)
 
@@ -264,6 +265,7 @@ describe('connection', () => {
       })
       it('saves connection to db', async () => {
         await handle({ payload }, res, next)
+        expect(next).not.toHaveBeenCalled()
 
         const connectionKey = `connection|>${connection.sub}`
         const conn = JSON.parse(await config.keyValueStore.load(connectionKey))
@@ -274,14 +276,31 @@ describe('connection', () => {
       })
       it('saves approved read-keys permanently', async () => {
         await handle({ payload }, res, next)
+        expect(next).not.toHaveBeenCalled()
 
         jest.runAllTimers()
 
         const key = await client.keyProvider.getKey(permissionKey.kid)
         expect(key).toEqual(permissionKey)
       })
+      it('saves write keys', async () => {
+        await handle({ payload }, res, next)
+        expect(next).not.toHaveBeenCalled()
+
+        jest.runAllTimers()
+
+        const { domain, area } = connection.permissions.approved[1]
+        await expect(client.keyProvider.getWriteKeys(domain, area))
+          .resolves.toEqual({
+            keys: [
+              toPublicKey(accountKey),
+              toPublicKey(permissionKey)
+            ]
+          })
+      })
       it('sends a 204 (No content) on success', async () => {
         await handle({ payload }, res, next)
+        expect(next).not.toHaveBeenCalled()
 
         expect(res.sendStatus).toHaveBeenCalledWith(204)
       })

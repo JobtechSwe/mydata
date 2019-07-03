@@ -1,4 +1,3 @@
-const { JWK } = require('@panva/jose')
 const axios = require('axios')
 const { sign } = require('./jwt')
 
@@ -63,14 +62,8 @@ const createWriteDataToken = (client) =>
       area,
       data
     }
-
-    const kid = `${client.config.jwksURI}/client_key`
-
-    const privateKey = JWK.importKey(client.config.clientKeys.privateKey, {
-      kid
-    })
-
-    return sign(claimsSet, privateKey, { kid })
+    const key = client.keyProvider.clientKey
+    return sign(claimsSet, key, { kid: key.kid })
   }
 
 const send = async (url, token) => {

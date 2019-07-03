@@ -27,8 +27,8 @@ describe('crypto', () => {
     beforeEach(() => {
       pem = '-----BEGIN RSA PRIVATE KEY-----\nMIICXgIBAAKBgQDIp5d0w4c8v4Wa/tma1DML3hvtXmsLB6sVFzrHagESn7AR00WB\nT6/hln3/YjXs1OcgQTkbXP41Zz8LaP5QYZ9voywrXD7iuaHfABHolhiW3y9p6fD9\nP6oNDvNKoS6zFOO7rqBHU3vZm5wfAPjeDqwtloTwY983fcgKdcyzTzpOjQIDAQAB\nAoGBALGfGYV1KJvv9jdUbhCO03kn7pTbReqHqTyMSa4I+lYgId5FpXtorQsHCxYt\nPAsgFFELK6A7W5SuhrJ1CNri8Bxzh/7gYyj7njBTsjNfuoiK3cIkZBoTvY9K/OB+\nzinNKibWf3SZv9l1qFkaJvaC/+R5DMLb9RXUiWJbhOHqTThJAkEA5i5IOpmUmDl1\nHkYaf1cHbmCdnuQHI1YTlANAk/QsAdzfExK6tsTgIqSq5qd+Q38xtZJQrTvTT6p7\nJX+WQflunwJBAN8pdOrdr1tr1o8m958uLs33zjLk75ScnL+tqlCFEtZTVZWIXScB\n9YVZff5yYONfkuDK0kw631UMSxSA14vL71MCQQCbb+WWrN+LbEGKkAyUsVBzWQsX\noSSw2A+ghBG318tf9qctWhh8E7bHris6VyEMs3f+BTA1y5CG27kNOXteUfJBAkEA\n2QQDwvLaONlhycxnOdE7iujVCQFBSxASDwTff3Ypn2ti6wu1Kt3o2UjyEaNBPVwQ\nBbK3V5JY5OgTi1jQRA6KKQJAQiTQR1sA2xiUhYwF6K4hnojGW1Ew0ZBLND+APkej\nufcVAF5yh+ACYQPUMrgNwgcHFshCEJ9cpePZMotVy7zSFQ==\n-----END RSA PRIVATE KEY-----\n'
     })
-    it('creates a valid jwk', async () => {
-      const jwk = await crypto.importPEM(pem, jwksURI, { use: 'sig' })
+    it('creates a valid jwk', () => {
+      const jwk = crypto.importPEM(pem, jwksURI, { use: 'sig' })
       expect(jwk).toEqual({
         kid: expect.stringMatching(/^http:\/\/localhost:4000\/jwks\//),
         kty: 'RSA',
@@ -43,17 +43,14 @@ describe('crypto', () => {
         qi: expect.any(String)
       })
     })
-    it('throws if jwksURI is missing', async () => {
-      await expect(crypto.importPEM(pem, null, { use: 'sig' }))
-        .rejects.toThrow()
+    it('throws if jwksURI is missing', () => {
+      expect(() => crypto.importPEM(pem, null, { use: 'sig' })).toThrow()
     })
-    it('throws if options is missing', async () => {
-      await expect(crypto.importPEM(pem, jwksURI))
-        .rejects.toThrow()
+    it('throws if options is missing', () => {
+      expect(() => crypto.importPEM(pem, jwksURI)).toThrow()
     })
-    it('throws if { use } is missing', async () => {
-      await expect(crypto.importPEM(pem, jwksURI, {}))
-        .rejects.toThrow()
+    it('throws if { use } is missing', () => {
+      expect(() => crypto.importPEM(pem, jwksURI, {})).toThrow()
     })
   })
 })

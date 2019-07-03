@@ -26,10 +26,10 @@ class Client {
     this.config.eventsURI = `${config.clientId}${config.eventsPath}`
     this.keyProvider = new KeyProvider(this.config)
     this.routes = routes(this)
+    this.tokens = tokens(this)
     this.data = data(this)
     this.events = new EventEmitter()
     this.keyValueStore = config.keyValueStore
-    this.tokens = tokens(this)
 
     this.connect = this.connect.bind(this)
   }

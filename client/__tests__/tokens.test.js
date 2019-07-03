@@ -1,30 +1,22 @@
-const { JWT, JWK, JWS, JWE } = require('@panva/jose')
+const { JWT, JWS, JWE, JWK } = require('@panva/jose')
 const { schemas } = require('@egendata/messaging')
 const axios = require('axios')
 const createClient = require('../lib/client')
 const { createMemoryStore } = require('../lib/memoryStore')
-const { generateKeyPair } = require('./_helpers')
+const { generateKey } = require('../lib/crypto')
 const { v4 } = require('uuid')
 
 jest.mock('axios', () => ({
   post: jest.fn().mockName('axios.post').mockResolvedValue()
 }))
 
-async function generateJWK (domain, use) {
-  const key = await JWK.generate('RSA', 1024, { use }, true)
-  return JWK.importKey({
-    ...key.toJWK(true),
-    kid: `${domain}jwks/${key.kid}`
-  })
-}
-
 describe('tokens', () => {
-  let clientKeys, accountEncryptionKey, serviceSigningKey, serviceEncryptionKey, config, client
+  let clientKey, accountEncryptionKey, serviceSigningKey, serviceEncryptionKey, config, client
   beforeAll(async () => {
-    clientKeys = await generateKeyPair()
-    accountEncryptionKey = await generateJWK('egendata://', 'enc')
-    serviceSigningKey = await generateJWK('https://mycv.work', 'sig')
-    serviceEncryptionKey = await generateJWK('https://mycv.work', 'enc')
+    clientKey = await generateKey('https://mycv.work/jwks', { use: 'sig', kid: 'https://mycv.work/jwks/client_key' })
+    accountEncryptionKey = await generateKey('egendata://jwks', { use: 'enc' })
+    serviceSigningKey = await generateKey('https://mycv.work/jwks', { use: 'sig' })
+    serviceEncryptionKey = await generateKey('https://mycv.work/jwks', { use: 'enc' })
     config = {
       displayName: 'CV app',
       description: 'A CV app with a description which is longer than 10 chars',
@@ -33,7 +25,7 @@ describe('tokens', () => {
       jwksPath: '/jwks',
       eventsPath: '/events',
       iconURI: 'https://mycv.work/favicon.png',
-      clientKeys: clientKeys,
+      clientKey: clientKey,
       keyValueStore: createMemoryStore(),
       keyOptions: { modulusLength: 1024 }
     }
@@ -215,10 +207,10 @@ describe('tokens', () => {
       domain = 'https://mycv.work'
       area = 'edumacation'
       data = ['Jag älskar hästar']
-      const signedData = await JWS.sign(JSON.stringify(data), serviceSigningKey, { kid: serviceSigningKey.kid })
+      const signedData = await JWS.sign(JSON.stringify(data), JWK.importKey(serviceSigningKey), { kid: serviceSigningKey.kid })
       const encrypt = new JWE.Encrypt(signedData)
-      encrypt.recipient(accountEncryptionKey, { kid: accountEncryptionKey.kid })
-      encrypt.recipient(serviceEncryptionKey, { kid: serviceEncryptionKey.kid })
+      encrypt.recipient(JWK.importKey(accountEncryptionKey), { kid: accountEncryptionKey.kid })
+      encrypt.recipient(JWK.importKey(serviceEncryptionKey), { kid: serviceEncryptionKey.kid })
       jwe = encrypt.encrypt('general')
     })
     it('creates a valid jwt', async () => {

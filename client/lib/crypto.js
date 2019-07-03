@@ -17,7 +17,7 @@ function thumbprint ({ e, kty, n }) {
 }
 
 async function generateKey (jwksURI, options = {}, modulusLength = 2048) {
-  if (!jwksURI) {
+  if (!jwksURI && !options.kid) {
     throw new Error('jwksURI must be passed in')
   }
   if (!options || !options.use) {
@@ -29,7 +29,9 @@ async function generateKey (jwksURI, options = {}, modulusLength = 2048) {
     privateKeyEncoding: { type: 'pkcs1', format: 'pem' }
   })
   const key = pem2jwk(privateKey, options)
-  key.kid = `${jwksURI}/${await thumbprint(key)}`
+  if (!key.kid) {
+    key.kid = `${jwksURI}/${await thumbprint(key)}`
+  }
 
   return key
 }
@@ -48,8 +50,8 @@ function importPEM (pem, jwksURI, options) {
   const jwk = pem2jwk(pem)
   return {
     ...jwk,
-    ...options,
-    kid: `${jwksURI}/${thumbprint(jwk)}`
+    kid: `${jwksURI}/${thumbprint(jwk)}`,
+    ...options
   }
 }
 
