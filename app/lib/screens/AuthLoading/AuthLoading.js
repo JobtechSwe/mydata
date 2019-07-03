@@ -1,6 +1,6 @@
 import React from 'react'
 import { StatusBar } from 'react-native'
-import { Wrap } from '../../components/View/Wrapper'
+import { Wrap } from '../../components/view/Wrapper'
 import { Spinner } from '../../components/elements/Spinner/Spinner'
 import { getAccount } from '../../services/storage'
 
@@ -12,7 +12,6 @@ class AuthLoading extends React.Component {
 
   _bootstrapAsync = async () => {
     const user = await getAccount()
-
     this.props.navigation.navigate(user ? 'App' : 'Register')
   }
 

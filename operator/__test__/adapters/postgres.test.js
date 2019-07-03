@@ -31,12 +31,12 @@ describe('adapters/postgres', () => {
     it('closes the connection after result', async () => {
       pg.client.query.mockResolvedValue({ metaData: [], rows: [] })
       await postgres.query('SQL', [1])
-      expect(pg.client.end).toBeCalledTimes(1)
+      expect(pg.client.end).toHaveBeenCalledTimes(1)
     })
     it('closes the connection after error', async () => {
       pg.client.query.mockRejectedValue(new Error('some error'))
       await postgres.query('SQL', [1]).catch(() => {})
-      expect(pg.client.end).toBeCalledTimes(1)
+      expect(pg.client.end).toHaveBeenCalledTimes(1)
     })
   })
   describe('#transaction', () => {
@@ -83,6 +83,9 @@ describe('adapters/postgres', () => {
       expect(response).toEqual(results)
     })
     it('calls ROLLBACK if one query fails', async () => {
+      const originalConsoleError = console.error
+      console.error = () => {}
+
       pg.connection.query.mockResolvedValueOnce(empty)
       pg.connection.query.mockResolvedValueOnce(results[0])
       pg.connection.query.mockRejectedValueOnce(new Error())
@@ -92,13 +95,19 @@ describe('adapters/postgres', () => {
       } catch (_) {}
 
       expect(pg.client.query).toHaveBeenNthCalledWith(4, 'ROLLBACK')
+
+      console.error = originalConsoleError
     })
     it('throws the error', async () => {
+      const originalConsoleError = console.error
+      console.error = () => {}
+
       pg.connection.query.mockResolvedValueOnce(empty)
       pg.connection.query.mockResolvedValueOnce(results[0])
       pg.connection.query.mockRejectedValueOnce(new Error('b0rk'))
 
       await expect(postgres.transaction(queries)).rejects.toThrow('b0rk')
+      console.error = originalConsoleError
     })
     it('closes the connection on success', async () => {
       pg.client.end.mockClear() // WHY???
@@ -107,6 +116,9 @@ describe('adapters/postgres', () => {
       expect(pg.client.end).toHaveBeenCalledTimes(1)
     })
     it('closes the connection on failure', async () => {
+      const originalConsoleError = console.error
+      console.error = () => {}
+
       pg.connection.query.mockResolvedValueOnce(empty)
       pg.connection.query.mockResolvedValueOnce(results[0])
       pg.connection.query.mockRejectedValueOnce(new Error('b0rk'))
@@ -114,6 +126,7 @@ describe('adapters/postgres', () => {
         await postgres.transaction(queries)
       } catch (_) {}
       expect(pg.client.end).toHaveBeenCalledTimes(1)
+      console.error = originalConsoleError
     })
   })
 })

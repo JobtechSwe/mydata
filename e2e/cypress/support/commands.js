@@ -24,13 +24,16 @@
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
-function callMethod (method, args) {
+const appServerUrl = Cypress.env('APP_SERVER_URL') || 'http://localhost:1337'
+
+function callMethod (method, ...args) {
+  const serializable = args.map(a => (a instanceof Map || a instanceof Set) ? [...a] : a)
   return cy
     .request({
-      url: `http://localhost:1337/${method}`,
+      url: `${appServerUrl}/${method}`,
       method: 'POST',
       body: {
-        args
+        args: serializable
       }
     })
     .then(res => res.body)
@@ -56,10 +59,22 @@ Cypress.Commands.add('clearAccount', (args) => {
   return callMethod('clearAccount', args)
 })
 
-Cypress.Commands.add('getConsentRequest', (args) => {
-  return callMethod('getConsentRequest', args)
+Cypress.Commands.add('clearStorage', (args) => {
+  return callMethod('clearStorage', args)
 })
 
-Cypress.Commands.add('approveConsentRequest', (args) => {
-  return callMethod('approveConsentRequest', args)
+Cypress.Commands.add('getConnections', (args) => {
+  return callMethod('getConnections', args)
+})
+
+Cypress.Commands.add('handleAuthCode', (args) => {
+  return callMethod('handleAuthCode', args)
+})
+
+Cypress.Commands.add('approveConnection', (args) => {
+  return callMethod('approveConnection', args)
+})
+
+Cypress.Commands.add('approveLogin', (args) => {
+  return callMethod('approveLogin', args)
 })

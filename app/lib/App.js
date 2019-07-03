@@ -7,8 +7,9 @@ import {
   createBottomTabNavigator,
 } from 'react-navigation'
 import Home from './screens/Home/Home'
+import Settings from './screens/Settings/Settings'
 import Wizard from './screens/Account/Account'
-import ConsentRequest from './screens/ConsentRequest/ConsentRequest'
+import Auth from './screens/Auth/Auth'
 import AuthLoading from './screens/AuthLoading/AuthLoading'
 import { ThemeProvider, theme as myDataTheme } from './theme'
 import { NavbarIcon } from './components/elements/Icon/Icon'
@@ -24,7 +25,7 @@ const AppStack = createBottomTabNavigator(
   {
     Hem: { screen: Home },
     'QR-kod': {
-      screen: ConsentRequest,
+      screen: Auth,
       navigationOptions: () => ({
         tabBarIcon: <QRIcon />,
         tabBarOptions: {
@@ -35,9 +36,10 @@ const AppStack = createBottomTabNavigator(
           inactiveTintColor: myDataTheme.colors.lightGrey,
           activeTintColor: myDataTheme.colors.lightGrey,
         },
+        tabBarVisible: false,
       }),
     },
-    Konto: { screen: Wizard },
+    Konto: { screen: Settings },
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({

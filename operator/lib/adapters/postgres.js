@@ -32,6 +32,20 @@ async function query (sql, params = []) {
   }
 }
 
+async function multiple (queries) {
+  const conn = await connect()
+  try {
+    const results = []
+    for (const args of queries) {
+      let result = await conn.query(...args)
+      results.push(result)
+    }
+    return results
+  } finally {
+    await conn.end()
+  }
+}
+
 async function transaction (queries) {
   const conn = await connect()
   try {
@@ -44,11 +58,16 @@ async function transaction (queries) {
     await conn.query('COMMIT')
     return results
   } catch (error) {
-    await conn.query('ROLLBACK')
+    console.error('transaction error, rolling back:', error)
+    try {
+      await conn.query('ROLLBACK')
+    } catch (error) {
+      console.error('rollback failed', error)
+    }
     throw error
   } finally {
     await conn.end()
   }
 }
 
-module.exports = { query, transaction }
+module.exports = { query, multiple, transaction }

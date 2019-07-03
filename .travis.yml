@@ -1,109 +1,92 @@
 env:
-  - DOCKER_COMPOSE_VERSION=1.23.2
+- DOCKER_COMPOSE_VERSION=1.23.2
 
 # The jobs section declares jobs available in this build context
 jobs:
   include:
-    # code linter
-    - stage: "lint"
-      name: "Ensure code maintains the linting rules"
-      cache: npm
-      language: node_js
-      install:
-        - npm run install-all
-      test: skip
-      script:
-        - npm run lint-all
+  # lint and run end-to-end tests
+  - stage: "lint-and-test"
+    name: "Lint, run end-to-end and integration tests"
+    cache:
+      npm: true
+      directories:
+      - ~/.cache/docker
+      - ~/.nvm
+    language: node_js
+    services:
+    # Require docker to be running in the build context
+    - docker
+    before_install:
+    # Install a newer version of docker-compose than the one provided by Travis
+    - sudo rm /usr/local/bin/docker-compose
+    - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+    - chmod +x docker-compose
+    - sudo mv docker-compose /usr/local/bin
+    - if ! [ -x "$(command -v lerna)" ]; then npm install -g lerna; fi
+    - sudo apt-get install libgconf-2-4
+    install:
+    - docker load -i ~/.cache/docker/node.tar || true
+    - docker load -i ~/.cache/docker/redis.tar || true
+    - docker load -i ~/.cache/docker/postgres.tar || true
+    - npm run install
+    script:
+    - npm run lint
+    - npm run test:e2e
+    after_script:
+    - docker save node -o ~/.cache/docker/node.tar
+    - docker save redis -o ~/.cache/docker/redis.tar
+    - docker save postgres -o ~/.cache/docker/postgres.tar
 
-    # end-to-end tests
-    - stage: "end-2-end"
-      name: "Run end-to-end tests"
-      cache: npm
-      language: node_js
-      services:
-        # Require docker to be running in the build context
-        - docker
-      before_install:
-        # Install a fresh version of docker-compose
-        - sudo rm /usr/local/bin/docker-compose
-        - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-        - chmod +x docker-compose
-        - sudo mv docker-compose /usr/local/bin
-      install:
-        - npm run install-all
-      test: skip
-      script:
-        - npm run test-all:e2e
+  # build and deploy things
+  - stage: deliver
+    name: "Build and deploy code that has been updated"
+    language: node_js
+    cache:
+      directories:
+      - ~/.cache/docker
+    install:
+    # Install a new version of the openshift cli
+    - mkdir -p /opt/openshift
+    - wget -qO- https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz | tar xvzf - -C /opt/openshift --strip-components=1
+    - export PATH=$PATH:/opt/openshift
+    services:
+    # Require docker to be running in the build context
+    - docker
+    script:
+    # Authenticate towards Docker Hub
+    - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
 
-    # build docker image(s)
-    - stage: build
-      name: "Build Docker images and push them to Docker Hub"
-      install: skip
-      test: skip
-      services:
-        # Require docker to be running in the build context
-        - docker
-      script:
-        # Authenticate towards Docker Hub
-        - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
+    # Authenticate towards OpenShift
+    - oc login $OPENSHIFT_URL --token=$OPENSHIFT_TOKEN --insecure-skip-tls-verify=true
 
-        # Set the $TAG variable that controls the output docker image tag(s)
-        - export TAG=latest
-        - if [ ! -z "$TRAVIS_TAG" ]; then export TAG="latest-tag"; fi
-        
-        # Pull old images to benefit from layer cache
-        - docker pull jobtechswe/mydata-app:$TAG
-        - docker pull jobtechswe/mydata-cv:$TAG
-        - docker pull jobtechswe/mydata-operator:$TAG
+    # If this is not a tag, build images tagged :latest
+    - export PHASE="ci"
+    # If this is a tag, build images tagged v<tag> and :latest-tag
+    - if [ ! -z "$TRAVIS_TAG" ]; then export PHASE="test"; fi
 
-        # Build images
-        - docker build app -t jobtechswe/mydata-app:$TAG --cache-from jobtechswe/mydata-app:$TAG --pull
-        - docker build examples/cv -t jobtechswe/mydata-cv:$TAG --cache-from jobtechswe/mydata-cv:$TAG --pull
-        - docker build operator -t jobtechswe/mydata-operator:$TAG --cache-from jobtechswe/mydata-operator:$TAG --pull
+    - bash .deliver-$PHASE.bash app/ jobtechswe/mydata-app
+    - bash .deliver-$PHASE.bash operator/ jobtechswe/mydata-operator
+    - bash .deliver-$PHASE.bash . jobtechswe/mydata-cv examples/cv/Dockerfile
+    - bash .deliver-$PHASE.bash . jobtechswe/mydata-natreg examples/national-registration/Dockerfile
 
-        # Push images to Docker Hub
-        - docker push jobtechswe/mydata-cv:$TAG
-        - docker push jobtechswe/mydata-app:$TAG
-        - docker push jobtechswe/mydata-operator:$TAG
-
-        # If tag build, tag images as latest-tag
-        - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-cv:$TAG jobtechswe/mydata-cv:$TRAVIS_TAG && docker push jobtechswe/mydata-cv:$TRAVIS_TAG; fi
-        - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-app:$TAG jobtechswe/mydata-app:$TRAVIS_TAG && docker push jobtechswe/mydata-app:$TRAVIS_TAG; fi
-        - if [ ! -z "$TRAVIS_TAG" ]; then docker tag jobtechswe/mydata-operator:$TAG jobtechswe/mydata-operator:$TRAVIS_TAG && docker push jobtechswe/mydata-operator:$TRAVIS_TAG; fi
-        
-        # ...and finally remove cached credentials
-        - docker logout
-
-    # update openshift DeployConfig(s)
-    - stage: deploy
-      name: "Update deployments in OpenShift"
-      install:
-        # Install a fresh version of the openshift cli
-        - mkdir -p /opt/openshift
-        - wget -qO- https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz | tar xvzf - -C /opt/openshift --strip-components=1
-        - export PATH=$PATH:/opt/openshift
-      script:
-        # Authenticate towards OpenShift
-        - oc login $OPENSHIFT_URL --token=$OPENSHIFT_TOKEN --insecure-skip-tls-verify=true
-
-        # Set the $PHASE variable that controls which DeploymentConfigs are affected
-        - if [ ! -z "$TRAVIS_TAG" ]; then export PHASE=test; else PHASE=ci; fi
-
-        # Tell CV and Operator to deploy, making them pull the latest images from Docker Hub
-        - oc rollout latest cv-$PHASE -n mydata
-        - oc rollout latest operator-$PHASE -n mydata
-
-        # ...and finally remove cached credentials
-        - oc logout
+    - echo "Redeploying..."
+    - oc rollout latest operator-$PHASE -n mydata
+    - oc rollout latest cv-$PHASE -n mydata
+    - oc rollout latest natreg-$PHASE -n mydata
+    after_script:
+    # ...and finally remove cached credentials
+    - oc logout
+    - docker logout
 
 # Flow control
 # This section defines the order in which stages are run and when to run certain stages
 stages:
-  - name: lint
-    if: branch != master AND tag IS NOT present
-  - name: end-2-end
-    if: branch != master
-  - name: build
-    if: (branch = master AND type != pull_request) OR tag IS present
-  - name: deploy
-    if: (branch = master AND type != pull_request) OR tag IS present
+- name: lint-and-test
+  if: branch != master
+- name: deliver
+  if: (branch = master AND type != pull_request) OR tag IS present
+
+notifications:
+  email:
+    on_success: never
+    on_failure: change

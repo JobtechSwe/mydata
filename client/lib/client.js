@@ -1,16 +1,17 @@
 const axios = require('axios')
-const { createSign } = require('crypto')
 const routes = require('./routes')
-const consents = require('./consents')
 const data = require('./data')
 const KeyProvider = require('./keyProvider')
 const { EventEmitter } = require('events')
 const { configSchema } = require('./schemas')
+const { v4 } = require('uuid')
+const { createAuthenticationRequest, createAuthenticationUrl } = require('./auth')
+const { createServiceRegistration } = require('./serviceRegistration')
 
 const defaults = {
   jwksPath: '/jwks',
   eventsPath: '/events',
-  alg: 'RSA-SHA512'
+  alg: 'RS256'
 }
 
 class Client {
@@ -25,29 +26,31 @@ class Client {
     this.config.eventsUrl = `${config.clientId}${config.eventsPath}`
     this.keyProvider = new KeyProvider(this.config)
     this.routes = routes(this)
-    this.consents = consents(this)
     this.data = data(this)
     this.events = new EventEmitter()
+    this.keyValueStore = config.keyValueStore
 
     this.connect = this.connect.bind(this)
-    this.sign = this.sign.bind(this)
-
-    this.events.on('CONSENT_APPROVED', this.consents.onApprove.bind(this))
   }
-  async sign (data, kid) {
-    const keyPair = await this.keyProvider.getKey(kid)
+
+  async initializeAuthentication () {
+    const id = v4()
+    const authReq = await createAuthenticationRequest(this, id)
+    const url = createAuthenticationUrl(authReq)
+
+    const AUTHENTICATION_REQUEST_ID_PREFIX = 'authenticationRequest|>'
+    const seconds = 5 * 60
+    this.keyValueStore.save(`${AUTHENTICATION_REQUEST_ID_PREFIX}${id}`, authReq, seconds)
 
     return {
-      kid: keyPair.kid,
-      alg: this.config.alg,
-      data: createSign(this.config.alg)
-        .update(JSON.stringify(data))
-        .sign(keyPair.privateKey, 'base64')
+      id,
+      url
     }
   }
 
-  async onConsentApproved (payload) {
-    await this.consents.onApprove(payload)
+  async getAuthentication (id) {
+    const AUTHENTICATION_ID_PREFIX = 'authentication|>'
+    return this.keyValueStore.load(`${AUTHENTICATION_ID_PREFIX}${id}`)
   }
 
   async connect (retry = 0, reconnect = false) {
@@ -60,14 +63,11 @@ class Client {
       })
     }
     this.connecting = true
-    const {
-      operator, displayName, description, clientId, jwksUrl, eventsUrl
-    } = this.config
-    const data = { displayName, description, clientId, jwksUrl, eventsUrl }
-    const signature = await this.sign(data, 'client_key')
+
+    const serviceRegistration = await createServiceRegistration(this)
     try {
       this.events.emit('CONNECTING', retry)
-      const result = await axios.post(`${operator}/api/clients`, { data, signature })
+      const result = await axios.post(`${this.config.operator}/api`, serviceRegistration, { headers: { 'content-type': 'application/jwt' } })
       this.connected = true
       this.connecting = false
       this.events.emit('CONNECTED', result)

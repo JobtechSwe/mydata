@@ -1,69 +1,35 @@
 import axios from 'axios'
 import Config from 'react-native-config'
-import { sign } from './crypto'
-import { Base64 } from 'js-base64'
-
-async function pluckAndSign(account) {
-  const data = pluck(account)
-  const signature = await sign(data, 'account_key', account.keys.privateKey)
-
-  return {
-    data,
-    signature,
-  }
-}
-
-function pluck(account) {
-  const data = {
-    firstName: account.firstName,
-    lastName: account.lastName,
-    accountKey: Base64.encode(account.keys.publicKey),
-    pds: {
-      provider: account.pds.provider,
-      access_token: account.pds.access_token,
-    },
-  }
-  return data
-}
-
-export async function register(account) {
-  const url = `${Config.OPERATOR_URL}/accounts`
-  const payload = await pluckAndSign(account)
-  try {
-    const {
-      data: {
-        data: { id },
-      },
-    } = await axios.post(url, payload)
-    return id
-  } catch (error) {
-    console.error('POST', url, payload, error.message)
-    throw error
-  }
-}
-
-export async function update(account) {
-  const url = `${Config.OPERATOR_URL}/accounts/${account.id}`
-  let payload
-  try {
-    payload = await pluckAndSign(account)
-    await axios.put(url, payload)
-  } catch (error) {
-    console.error('PUT', url, payload, error.message)
-    throw error
-  }
-}
+import { v4 } from 'uuid'
+import { generateKey, toPublicKey } from './crypto'
+import { storeAccount, storeKey } from './storage'
+import { createAccountRegistration } from './tokens'
 
 export async function save(account) {
   try {
     if (account.id) {
-      await update(account)
-    } else {
-      account.id = await register(account)
+      throw Error('An account already exist on this phone')
     }
+
+    account = { ...account, id: v4() }
+    const privateKey = await generateKey({ use: 'sig' })
+    const publicKey = toPublicKey(privateKey)
+    await storeKey(privateKey)
+    account.kid = privateKey.kid
+
+    await storeAccount(account)
+
+    const jwt = await createAccountRegistration(account, {
+      privateKey,
+      publicKey,
+    })
+    await axios.post(Config.OPERATOR_URL, jwt, {
+      headers: { 'content-type': 'application/jwt' },
+    })
 
     return account
   } catch (err) {
+    console.error(err)
     throw err
   }
 }

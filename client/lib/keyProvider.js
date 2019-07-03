@@ -1,8 +1,7 @@
-const { generateKeyPair, createHash } = require('crypto')
-const { decryptDocumentKey } = require('./crypto')
-const { promisify } = require('util')
+const { decryptDocumentKey, generateJwkPair } = require('./crypto')
 const { serialize } = require('jwks-provider')
-const Joi = require('joi')
+const Joi = require('@hapi/joi')
+const { JWK } = require('@panva/jose')
 
 const KEY_PREFIX = 'key|>'
 const ACCESS_KEY_IDS_PREFIX = 'accessKeyIds|>'
@@ -10,14 +9,8 @@ const DOCUMENT_KEYS_PREFIX = 'documentKeys|>'
 const CONSENT_KEY_ID_PREFIX = 'consentKeyId|>'
 
 const defaults = {
-  modulusLength: 2048,
-  publicKeyEncoding: { type: 'pkcs1', format: 'pem' },
-  privateKeyEncoding: { type: 'pkcs1', format: 'pem' },
-  tempKeyExpiry: 10 * 60 * 1000
-}
-
-function generateKid (jwksUrl, use, publicKey) {
-  return `${jwksUrl}/${use}_${createHash('SHA256').update(publicKey).digest('hex')}`
+  tempKeyExpiry: 10 * 60 * 1000,
+  modulusLength: 2048
 }
 
 async function isUrl (kid) {
@@ -30,29 +23,11 @@ async function isUrl (kid) {
   }
 }
 
-async function generateKeyPairObject (jwksUrl, { kid, use }, { modulusLength, publicKeyEncoding, privateKeyEncoding }) {
-  const { publicKey, privateKey } = await promisify(generateKeyPair)('rsa', {
-    modulusLength,
-    publicKeyEncoding,
-    privateKeyEncoding
-  })
-  kid = kid || generateKid(jwksUrl, use, publicKey)
-  if (!await isUrl(kid)) {
-    kid = `${jwksUrl}/${kid}`
-  }
-  return {
-    publicKey,
-    privateKey,
-    use,
-    kid
-  }
-}
-
 const jsonToBase64 = (obj) => Buffer.from(JSON.stringify(obj), 'utf8').toString('base64')
 const base64ToJson = (str) => JSON.parse(Buffer.from(str, 'base64').toString('utf8'))
 
 class KeyProvider {
-  constructor ({ clientKeys, keyValueStore, keyOptions, jwksUrl }) {
+  constructor ({ clientKeys, keyValueStore, keyOptions, jwksUrl, alg }) {
     this.jwksUrl = jwksUrl
     this.clientKeys = {
       use: 'sig',
@@ -62,6 +37,7 @@ class KeyProvider {
     }
     this.options = Object.assign({}, defaults, keyOptions)
     this.keyValueStore = keyValueStore
+    this.alg = alg
   }
   async load (key) {
     const value = await this.keyValueStore.load(key)
@@ -79,15 +55,22 @@ class KeyProvider {
     }
     return this.load(`${KEY_PREFIX}${kid}`)
   }
-  async generateKey ({ use, kid }) {
-    const key = await generateKeyPairObject(this.jwksUrl, { use, kid }, this.options)
-    await this.save(`${KEY_PREFIX}${key.kid}`, key)
-    return key
+  async generatePersistentKey ({ use }) {
+    const keyPair = await generateJwkPair(this.jwksUrl, { use }, this.options.modulusLength)
+    await this.save(`${KEY_PREFIX}${keyPair.publicKey.kid}`, keyPair)
+    return keyPair
   }
-  async generateTempKey ({ use, kid }) {
-    const key = await generateKeyPairObject(this.jwksUrl, { use, kid }, this.options)
-    await this.save(`${KEY_PREFIX}${key.kid}`, key, this.options.tempKeyExpiry)
-    return key
+  async generateTemporaryKey ({ use }) {
+    const keyPair = await generateJwkPair(this.jwksUrl, { use }, this.options.modulusLength)
+    await this.save(`${KEY_PREFIX}${keyPair.publicKey.kid}`, keyPair, this.options.tempKeyExpiry)
+    return keyPair
+  }
+  async makeKeyPermanent (kid) {
+    const key = await this.getKey(kid)
+    if (!key) {
+      throw new Error(`No such key [${kid}]`)
+    }
+    await this.saveKey(key)
   }
   async saveKey (key) {
     return this.save(`${KEY_PREFIX}${key.kid}`, key)
@@ -154,10 +137,14 @@ class KeyProvider {
   async jwksKeyList () {
     return serialize([this.clientKeys])
   }
-  async jwksKey (kid) {
-    const key = await this.getKey(kid)
 
-    return key ? serialize([key]).keys[0] : null
+  async jwksKey (kid) {
+    if (kid === 'client_key') {
+      return JWK.importKey(this.clientKeys.publicKey, { kid: `${this.jwksUrl}/client_key`, alg: this.alg })
+    } else {
+      const key = await this.getKey(kid)
+      return key && key.publicKey
+    }
   }
 }
 

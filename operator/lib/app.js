@@ -2,11 +2,14 @@ const createError = require('http-errors')
 const express = require('express')
 const cors = require('cors')
 const routes = require('./routes')
+const bodyParser = require('body-parser')
 
 const app = express()
 app.locals.name = 'Smooth Operator'
 
 app.use(express.json())
+app.use(bodyParser.text({ type: 'application/jwt' }))
+app.use(express.static('lib/public'))
 
 app.use(cors())
 app.use('/', routes)

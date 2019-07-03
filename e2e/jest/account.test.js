@@ -1,19 +1,20 @@
 const phone = require('./helpers/phone')
 const { v4Regexp } = require('./helpers/regexp')
-const { clearOperatorDb } = require('./helpers/operatorPostgres')
+const postgres = require('./helpers/operatorPostgres')
 
 describe('Account', () => {
   beforeAll(async () => {
+    await postgres.createOperatorDb()
+    await phone.clearStorage()
   })
-
-  afterAll(async () => {
-    await phone.clearAccount()
-    await clearOperatorDb()
+  afterEach(async () => {
+    await phone.clearStorage()
+    await postgres.clearOperatorDb()
   })
 
   it('Can create account', async () => {
-    const { data } = await phone.createAccount({ firstName: 'Foo', lastName: 'Barsson' })
+    const account = await phone.createAccount({ firstName: 'Foo', lastName: 'Barsson' })
 
-    expect(data.id).toMatch(v4Regexp)
+    expect(account.id).toMatch(v4Regexp)
   })
 })

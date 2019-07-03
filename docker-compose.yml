@@ -1,7 +1,7 @@
 version: '3.5'
 services:
   apm-server:
-    image: docker.elastic.co/apm/apm-server:6.5.4
+    image: docker.elastic.co/apm/apm-server:7.0.0
     ports:
       - 8200:8200
     depends_on:
@@ -20,8 +20,11 @@ services:
       - mydata
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.4
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.0.0
     environment:
+      - node.name=elasticsearch
+      - cluster.initial_master_nodes=elasticsearch
+      - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
@@ -39,7 +42,7 @@ services:
       - mydata
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:6.5.4
+    image: docker.elastic.co/kibana/kibana:7.0.0
     environment:
       SERVER_NAME: kibana
       ELASTICSEARCH_URL: http://elasticsearch:9200

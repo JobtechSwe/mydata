@@ -1,0 +1,148 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/Consent/ConsentModal should render without errors 1`] = `
+<ForwardRef>
+  <ForwardRef
+    animationType="slide"
+    backdropOpacity={0.6}
+    isVisible={true}
+  >
+    <ForwardRef>
+      <ForwardRef
+        style={
+          Object {
+            "marginBottom": 0,
+            "marginTop": 0,
+          }
+        }
+      />
+      <ForwardRef>
+        <Image
+          source={
+            Object {
+              "uri": "https://mycv.work/android-icon-96x96.png",
+            }
+          }
+          style={
+            Object {
+              "height": 64,
+              "marginRight": 12,
+              "width": 64,
+            }
+          }
+        />
+        <ForwardRef>
+          <ForwardRef
+            style={
+              Object {
+                "marginBottom": 8,
+              }
+            }
+          >
+            My CV
+          </ForwardRef>
+          <Paragraph
+            align="left"
+          >
+            An app for your CV online
+          </Paragraph>
+        </ForwardRef>
+      </ForwardRef>
+      <ForwardRef
+        style={
+          Object {
+            "marginBottom": 0,
+            "marginTop": 0,
+          }
+        }
+      />
+      <ScrollViewWrap
+        contentContainerStyle={
+          Object {
+            "alignItems": "stretch",
+            "width": "100%",
+          }
+        }
+        style={
+          Object {
+            "backgroundColor": "#F9F9FB",
+            "paddingTop": 24,
+          }
+        }
+      >
+        <ScopeItem
+          lastItem={false}
+          scope={
+            Object {
+              "area": "baseData",
+              "description": "Personal information.",
+              "read": Object {
+                "area": "baseData",
+                "domain": "https://mycv.work",
+                "id": "18710e28-7d6c-49cf-941e-0f954bb179ae",
+                "kid": "http://localhost:4000/jwks/enc_1d2cbc575751efb6e498f5c00c5108d48fa94dbf3994fa9ea06bbf3c97f6aa05",
+                "lawfulBasis": "CONSENT",
+                "purpose": "In order to create a CV using our website.",
+                "type": "READ",
+              },
+              "write": Object {
+                "area": "baseData",
+                "description": "Personal information.",
+                "domain": "https://mycv.work",
+                "id": "1712ec0c-9ae6-472f-9e14-46088e51f505",
+                "lawfulBasis": "CONSENT",
+                "type": "WRITE",
+              },
+            }
+          }
+        />
+        <ScopeItem
+          lastItem={true}
+          scope={
+            Object {
+              "area": "experience",
+              "description": "A list of your work experiences.",
+              "read": Object {
+                "area": "experience",
+                "domain": "https://mycv.work",
+                "id": "55c24372-6956-4891-b5ff-a6cf69fb5c8b",
+                "kid": "http://localhost:4000/jwks/enc_1d2cbc575751efb6e498f5c00c5108d48fa94dbf3994fa9ea06bbf3c97f6aa05",
+                "lawfulBasis": "CONSENT",
+                "purpose": "In order to create a CV using our website.",
+                "type": "READ",
+              },
+              "write": Object {
+                "area": "experience",
+                "description": "A list of your work experiences.",
+                "domain": "https://mycv.work",
+                "id": "d5dab30d-b0ac-43e3-9ac8-cff8b39ca560",
+                "lawfulBasis": "CONSENT",
+                "type": "WRITE",
+              },
+            }
+          }
+        />
+      </ScrollViewWrap>
+      <ForwardRef>
+        <AcceptConsentButton
+          onPress={[Function]}
+        >
+          Tillåt
+        </AcceptConsentButton>
+        <ForwardRef
+          style={
+            Object {
+              "marginBottom": 0,
+              "marginTop": 0,
+            }
+          }
+          vertical={true}
+        />
+        <DenyConsentButton>
+          Neka
+        </DenyConsentButton>
+      </ForwardRef>
+    </ForwardRef>
+  </ForwardRef>
+</ForwardRef>
+`;

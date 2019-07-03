@@ -1,9 +1,8 @@
 import React from 'react'
 import { Box, Typography, Button, theme, styled } from '@smooth-ui/core-sc'
-import Login from '../components/Login'
 
 const Background = styled.div`
-  background-image: url('/static/landing-page.jpg');
+  background-image: url('/landing-page.jpg');
   background-size: cover;
   height: 100vh;
   width: 100vw;
@@ -27,7 +26,7 @@ export default () => {
           <Typography variant="h1">
             C:V - Create your digital <span style={{ color: theme.brick }}>Curriculum Vitae</span>
           </Typography>
-          <p>Integrates with MyData - you are in complete control</p>
+          <p>Integrates with Egendata - you are in complete control</p>
           <ul style={{ listStyleType: 'circle' }}>
             <li>Create, view and edit your CV in a convenient editor</li>
             <li>Build upon other existing CV data</li>
@@ -35,9 +34,8 @@ export default () => {
             <li>Share your CV with whoever you want</li>
             <li>And more</li>
           </ul>
-          <Button variant="success" onClick={() => window.location.assign('/auth')} style={{ marginTop: 10 + 'px' }}>Sign up with Mydata</Button>
+          <Button variant="success" onClick={() => window.location.assign('/auth')} style={{ marginTop: 10 + 'px' }}>Login with Egendata</Button>
         </Box>
-        <Login />
       </Box>
     </React.Fragment>
   )

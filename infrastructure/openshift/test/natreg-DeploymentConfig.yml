@@ -1,0 +1,75 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: TEST
+  name: natreg-test
+spec:
+  replicas: 1
+  selector:
+    app: TEST
+    deploymentconfig: natreg-test
+  strategy:
+    activeDeadlineSeconds: 21600
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      labels:
+        app: TEST
+        deploymentconfig: natreg-test
+    spec:
+      containers:
+        - env:
+          - name: PORT
+            value: '5000'
+          - name: APM_SERVER
+            value: 'https://f7a3f8bb7ac7404eb669a8798e460701.apm.eu-west-1.aws.cloud.es.io:443'
+          - name: APM_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: apm
+                key: token
+          - name: APP_NAME
+            value: mydata-natreg
+          - name: NODE_ENV
+            value: production
+          - name: OPERATOR_URL
+            value: 'http://operator-test.mydata.svc:3000'
+          - name: CLIENT_ID
+            value: https://natreg-test.dev.services.jtech.se
+          - name: NO_UPDATE_NOTIFIER
+            value: 'true'
+          - name: PUBLIC_KEY
+            valueFrom:
+              secretKeyRef:
+                name: natreg
+                key: public.key
+          - name: PRIVATE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: natreg
+                key: private.key
+          image: jobtechswe/mydata-natreg:latest-tag
+          imagePullPolicy: Always
+          name: natreg-test
+          ports:
+            - containerPort: 5000
+              name: http
+              protocol: TCP
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          resources:
+            limits:
+              memory: 400Mi
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
+  triggers:
+    - type: ConfigChange

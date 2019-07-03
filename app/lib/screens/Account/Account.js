@@ -1,10 +1,10 @@
-import Finished from '../../components/Finished/Finished'
+import Finished from '../../components/wizard/Finished'
 import KeyPair from '../../components/KeyPair'
-import PDS from '../../components/PDS/PDS'
+import PDS from '../../components/wizard/PDS'
 import React from 'react'
-import Register from '../../components/Register/Register'
+import Register from '../../components/Account/Register'
 import { Alert } from 'react-native'
-import { Wrap, ScrollViewWrap } from '../../components/View/Wrapper'
+import { Wrap, ScrollViewWrap } from '../../components/view/Wrapper'
 import { save } from '../../services/account'
 import { storeAccount } from '../../services/storage'
 
@@ -47,7 +47,7 @@ export default class AccountScreen extends React.Component {
     this.saveAccount({ ...this.state.account, keys })
   }
 
-  onDropboxConnect = pds => {
+  onConnectPDS = pds => {
     this.saveAccount({ ...this.state.account, pds })
   }
 
@@ -59,7 +59,7 @@ export default class AccountScreen extends React.Component {
         return <KeyPair onGenerate={this.onGenerateKeys} />
       case 'choosePds':
         return (
-          <PDS pds={this.state.account.pds} onConnect={this.onDropboxConnect} />
+          <PDS pds={this.state.account.pds} onConnect={this.onConnectPDS} />
         )
       case 'finished':
         return (

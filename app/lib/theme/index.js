@@ -15,6 +15,7 @@ const colors = {
 const fontSize = {
   small: '14px',
   regular: '18px',
+  medium: '32px',
   large: '48px',
 }
 
