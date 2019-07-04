@@ -9,7 +9,7 @@ const JWT_DEFAULTS = {
 }
 
 const JWK = Joi.object({
-  kid: Joi.string().uri().required(),
+  kid: Joi.string().required(),
   kty: Joi.string().valid('RSA').required(),
   use: Joi.string().valid('sig', 'enc').required(),
   e: Joi.string().valid('AQAB').required(),
@@ -17,7 +17,7 @@ const JWK = Joi.object({
 })
 
 const JWK_PRIVATE = Joi.object({
-  kid: Joi.string().uri().required(),
+  kid: Joi.string().required(),
   kty: Joi.string().valid('RSA').required(),
   use: Joi.string().valid('sig', 'enc').required(),
   e: Joi.string().valid('AQAB').required(),
