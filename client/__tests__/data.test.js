@@ -17,7 +17,7 @@ describe('data', () => {
 
   let config, keyProvider, tokens
   let connectionId, domain, area, payload
-  let read, write
+  let read, write, auth
   beforeEach(() => {
     config = {
       clientId: 'https://mycv.work',
@@ -46,7 +46,7 @@ describe('data', () => {
         .mockResolvedValue({})
     }
     const client = { config, keyProvider, tokens }
-    ;({ read, write } = data(client))
+    ;({ auth, read, write } = data(client))
 
     connectionId = 'd52da47c-8895-4db8-ae04-7434f21fd118'
     domain = 'https://somotherdomain.org'
@@ -92,11 +92,7 @@ describe('data', () => {
       beforeEach(() => {
         data = ['I love horses']
         tokens.send.mockResolvedValue('read.response.token')
-        verify.mockImplementation(() => ({
-          payload: {
-            data: createJWE(data)
-          }
-        }))
+        verify.mockImplementation(() => ({ payload: { data: createJWE(data) } }))
       })
       it('creates a token with the correct arguments', async () => {
         await read(connectionId, { domain, area })
@@ -139,9 +135,7 @@ describe('data', () => {
     describe('without data', () => {
       beforeEach(() => {
         tokens.send.mockResolvedValue('read.response.token')
-        verify.mockImplementation(() => ({
-          payload: {}
-        }))
+        verify.mockImplementation(() => ({ payload: {} }))
       })
       it('creates a token with the correct arguments', async () => {
         await read(connectionId, { domain, area })
@@ -174,6 +168,164 @@ describe('data', () => {
         const decrypted = await read(connectionId, { domain, area })
 
         expect(decrypted).toBeUndefined()
+      })
+    })
+  })
+  describe('#auth', () => {
+    let accessToken
+    beforeEach(() => {
+      accessToken = 'access.token'
+      verify.mockResolvedValue({ payload: { sub: connectionId } })
+    })
+    describe('#write', () => {
+      it('calls verify to unpack the access token', async () => {
+        await auth(accessToken).write({ domain, area, data: payload })
+
+        expect(verify).toHaveBeenCalledWith(accessToken)
+      })
+      it('creates a token with the correct arguments', async () => {
+        await auth(accessToken).write({ domain, area, data: payload })
+
+        expect(tokens.createWriteDataToken).toHaveBeenCalledWith(
+          connectionId, domain, area, expect.any(Object)
+        )
+      })
+      it('creates a token with the correct arguments without domain', async () => {
+        await auth(accessToken).write({ area, data: payload })
+
+        expect(tokens.createWriteDataToken).toHaveBeenCalledWith(
+          connectionId, config.clientId, area, expect.any(Object)
+        )
+      })
+      it('posts to operator', async () => {
+        await auth(accessToken).write({ domain, area, data: payload })
+
+        expect(tokens.send).toHaveBeenCalledWith(
+          'https://smoothoperator.com/api',
+          'write.data.token'
+        )
+      })
+    })
+    describe('#read', () => {
+      let data
+      function createJWE (data) {
+        const signed = JWS.sign(JSON.stringify(data), JWK.importKey(signingKey), { kid: signingKey.kid })
+        const encryptor = new JWE.Encrypt(signed)
+        encryptor.recipient(JWK.importKey(toPublicKey(accountEncryptionKey)),
+          { kid: accountEncryptionKey.kid })
+        encryptor.recipient(JWK.importKey(toPublicKey(serviceEncryptionKey)),
+          { kid: serviceEncryptionKey.kid })
+        return encryptor.encrypt('general')
+      }
+      describe('with data', () => {
+        beforeEach(() => {
+          data = ['I love horses']
+          tokens.send.mockResolvedValue('read.response.token')
+          verify.mockImplementation(async (token) => {
+            switch (token) {
+              case 'access.token':
+                return { payload: { sub: connectionId } }
+              case 'read.response.token':
+                return { payload: { data: createJWE(data) } }
+              default:
+                throw new Error('Unmocked token')
+            }
+          })
+        })
+        it('calls verify to unpack the access token', async () => {
+          await auth(accessToken).read({ domain, area })
+
+          expect(verify).toHaveBeenCalledWith(accessToken)
+        })
+        it('creates a token with the correct arguments', async () => {
+          await auth(accessToken).read({ domain, area })
+
+          expect(tokens.createReadDataToken).toHaveBeenCalledWith(
+            connectionId, domain, area
+          )
+        })
+        it('creates a token with the correct arguments without domain', async () => {
+          await auth(accessToken).read({ area })
+
+          expect(tokens.createReadDataToken).toHaveBeenCalledWith(
+            connectionId, config.clientId, area
+          )
+        })
+        it('posts to operator', async () => {
+          await auth(accessToken).read({ domain, area })
+
+          expect(tokens.send).toHaveBeenCalledWith(
+            'https://smoothoperator.com/api',
+            'read.data.token'
+          )
+        })
+        it('verifies the returned payload', async () => {
+          await auth(accessToken).read({ domain, area })
+
+          expect(verify).toHaveBeenCalledWith('read.response.token')
+        })
+        it('gets the correct decryption key', async () => {
+          await auth(accessToken).read({ domain, area })
+
+          expect(keyProvider.getKey).toHaveBeenCalledWith(serviceEncryptionKey.kid)
+        })
+        it('decrypts, parses and returns the data', async () => {
+          const decrypted = await auth(accessToken).read({ domain, area })
+
+          expect(decrypted).toEqual(data)
+        })
+      })
+      describe('without data', () => {
+        beforeEach(() => {
+          tokens.send.mockResolvedValue('read.response.token')
+          verify.mockImplementation(async (token) => {
+            switch (token) {
+              case 'access.token':
+                return { payload: { sub: connectionId } }
+              case 'read.response.token':
+                return { payload: {} }
+              default:
+                throw new Error('Unmocked token')
+            }
+          })
+        })
+        it('calls verify to unpack the access token', async () => {
+          await auth(accessToken).read({ domain, area })
+
+          expect(verify).toHaveBeenCalledWith(accessToken)
+        })
+        it('creates a token with the correct arguments', async () => {
+          await auth(accessToken).read({ domain, area })
+
+          expect(tokens.createReadDataToken).toHaveBeenCalledWith(
+            connectionId, domain, area
+          )
+        })
+        it('creates a token with the correct arguments without domain', async () => {
+          await auth(accessToken).read({ area })
+
+          expect(tokens.createReadDataToken).toHaveBeenCalledWith(
+            connectionId, config.clientId, area
+          )
+        })
+        it('posts to operator', async () => {
+          await auth(accessToken).read({ domain, area })
+
+          expect(tokens.send).toHaveBeenCalledWith(
+            'https://smoothoperator.com/api',
+            'read.data.token'
+          )
+        })
+        it('verifies the returned payload', async () => {
+          await auth(accessToken).read({ domain, area })
+
+          expect(verify).toHaveBeenCalledWith('read.response.token')
+        })
+        it('returns undefined', async () => {
+          const decrypted = await auth(accessToken).read({ domain, area })
+
+          expect(decrypted).toBeUndefined()
+        })
       })
     })
   })

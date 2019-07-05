@@ -292,6 +292,44 @@ describe('tokens', () => {
       expect(payload.iss).toBe('https://mycv.work')
     })
   })
+  describe('#createAccessToken', () => {
+    let sub
+    beforeEach(() => {
+      sub = '50845c51-cf97-4c55-9198-dcb3f61f2bf8'
+    })
+    it('creates a valid jwt', async () => {
+      const accessToken = await client.tokens.createAccessToken(sub)
+
+      const payload = JWT.decode(accessToken)
+      expect(payload).not.toBe(null)
+
+      await expect(schemas[payload.type].validate(payload))
+        .resolves.not.toThrow()
+    })
+    it('creates header with correct kid', async () => {
+      const accessToken = await client.tokens.createAccessToken(sub)
+
+      const { header } = JWT.decode(accessToken, { complete: true })
+
+      expect(header.kid).toEqual('https://mycv.work/jwks/client_key')
+    })
+    it('creates header with correct type', async () => {
+      const accessToken = await client.tokens.createAccessToken(sub)
+
+      const { type } = JWT.decode(accessToken)
+
+      expect(type).toEqual('ACCESS_TOKEN')
+    })
+    it('creates the correct jwt claimsSet', async () => {
+      const accessToken = await client.tokens.createAccessToken(sub)
+
+      const payload = JWT.decode(accessToken)
+
+      expect(payload.aud).toBe('https://mycv.work')
+      expect(payload.iss).toBe('https://mycv.work')
+      expect(payload.sub).toBe(sub)
+    })
+  })
   describe('#send', () => {
     beforeEach(() => {
       axios.post.mockRestore()

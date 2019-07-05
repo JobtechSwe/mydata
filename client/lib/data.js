@@ -10,23 +10,22 @@ const read = (config, keyProvider, tokens) => async (connectionId, { domain, are
   const responseToken = await tokens.send(`${config.operator}/api`, token)
 
   // Parse the response token
-  const { payload } = await verify(responseToken)
+  const { payload: { data } } = await verify(responseToken)
 
   // If no data, return undefined
-  if (!payload.data) {
+  if (!data) {
     return undefined
   }
 
   // Find the correct decryption key
-  const jwe = payload.data
   const rxServiceKey = new RegExp(`^${config.jwksURI}/`)
-  const decryptionKeyId = jwe.recipients
+  const decryptionKeyId = data.recipients
     .map((recipient) => recipient.header.kid)
     .find((kid) => rxServiceKey.test(kid))
   const decryptionKey = await keyProvider.getKey(decryptionKeyId)
 
   // Use the key to decrypt the content
-  const decrypted = JWE.decrypt(jwe, JWK.importKey(decryptionKey))
+  const decrypted = JWE.decrypt(data, JWK.importKey(decryptionKey))
   const jws = decrypted.toString('utf8')
 
   // TODO: Verify the signature
@@ -59,7 +58,21 @@ const write = (config, keyProvider, tokens) => async (connectionId, { domain, ar
   return result
 }
 
+const auth = (config, keyProvider, tokens) => (token) => {
+  return {
+    read: async (options) => {
+      const { payload: { sub } } = await verify(token)
+      return read(config, keyProvider, tokens)(sub, options)
+    },
+    write: async (options) => {
+      const { payload: { sub } } = await verify(token)
+      return write(config, keyProvider, tokens)(sub, options)
+    }
+  }
+}
+
 module.exports = ({ config, keyProvider, tokens }) => ({
   read: read(config, keyProvider, tokens),
-  write: write(config, keyProvider, tokens)
+  write: write(config, keyProvider, tokens),
+  auth: auth(config, keyProvider, tokens)
 })

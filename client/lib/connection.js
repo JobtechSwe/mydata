@@ -29,7 +29,8 @@ const connectionEventHandler = (client) => async ({ payload }, res, next) => {
   try {
     const { payload: { sub, sid, permissions } } = await verify(payload.payload)
 
-    client.keyValueStore.save(`${AUTHENTICATION_PREFIX}${sid}`, sub)
+    const accessToken = await client.tokens.createAccessToken(sub)
+    client.keyValueStore.save(`${AUTHENTICATION_PREFIX}${sid}`, accessToken)
 
     const connection = { permissions }
     client.keyValueStore.save(`${CONNECTION_PREFIX}${sub}`, JSON.stringify(connection))

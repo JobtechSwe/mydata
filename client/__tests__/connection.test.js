@@ -191,7 +191,8 @@ describe('connection', () => {
       it('saves authentication to db', async () => {
         await handle({ payload }, res, next)
 
-        const sub = await config.keyValueStore.load(`authentication|>${connection.sid}`)
+        const accessToken = await config.keyValueStore.load(`authentication|>${connection.sid}`)
+        const { sub } = JWT.decode(accessToken)
 
         expect(sub).toEqual(connection.sub)
       })
@@ -259,7 +260,8 @@ describe('connection', () => {
         await handle({ payload }, res, next)
         expect(next).not.toHaveBeenCalled()
 
-        const sub = await config.keyValueStore.load(`authentication|>${connection.sid}`)
+        const accessToken = await config.keyValueStore.load(`authentication|>${connection.sid}`)
+        const { sub } = JWT.decode(accessToken)
 
         expect(sub).toEqual(connection.sub)
       })

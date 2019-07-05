@@ -81,6 +81,17 @@ const createReadDataToken = (client) =>
     return sign(claimsSet, key, { kid: key.kid })
   }
 
+const createAccessToken = (client) => async (sub) => {
+  const claimsSet = {
+    type: 'ACCESS_TOKEN',
+    sub,
+    aud: client.config.clientId,
+    iss: client.config.clientId
+  }
+  const key = client.keyProvider.clientKey
+  return sign(claimsSet, key, { kid: key.kid })
+}
+
 const send = async (url, token) => {
   const headers = { 'content-type': 'application/jwt' }
   const response = await axios.post(url, token, { headers })
@@ -93,5 +104,6 @@ module.exports = (client) => ({
   createConnectionRequest: createConnectionRequest(client),
   createWriteDataToken: createWriteDataToken(client),
   createReadDataToken: createReadDataToken(client),
+  createAccessToken: createAccessToken(client),
   send
 })
