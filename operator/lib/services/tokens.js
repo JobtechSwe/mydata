@@ -23,7 +23,22 @@ const createLoginEvent = async (serviceId, payload) => {
   })
 }
 
+const createDataReadResponse = async ({ iss, sub, domain, area }, data) => {
+  return sign({
+    type: 'DATA_READ_RESPONSE',
+    aud: iss,
+    iss: host,
+    sub,
+    domain,
+    area,
+    data
+  }, keys.privateKey, {
+    kid: keys.publicKey.kid
+  })
+}
+
 module.exports = {
   createConnectionEvent,
-  createLoginEvent
+  createLoginEvent,
+  createDataReadResponse
 }

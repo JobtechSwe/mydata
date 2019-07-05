@@ -11,9 +11,14 @@ const read = (config, keyProvider, tokens) => async (connectionId, { domain, are
 
   // Parse the response token
   const { payload } = await verify(responseToken)
-  const jwe = JSON.parse(payload.data)
+
+  // If no data, return undefined
+  if (!payload.data) {
+    return undefined
+  }
 
   // Find the correct decryption key
+  const jwe = payload.data
   const rxServiceKey = new RegExp(`^${config.jwksURI}/`)
   const decryptionKeyId = jwe.recipients
     .map((recipient) => recipient.header.kid)
@@ -47,7 +52,7 @@ const write = (config, keyProvider, tokens) => async (connectionId, { domain, ar
     encryptor.recipient(key, { kid: key.kid })
   }
 
-  const payload = JSON.stringify(encryptor.encrypt('general')) // Only general serialization allowed for multiple recipients
+  const payload = encryptor.encrypt('general') // Only general serialization allowed for multiple recipients
 
   const token = await tokens.createWriteDataToken(connectionId, domain, area, payload)
   const result = await tokens.send(`${config.operator}/api`, token)

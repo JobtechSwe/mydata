@@ -4,7 +4,7 @@ const services = require('./services')
 
 const handlers = {
   ACCOUNT_REGISTRATION: accounts.registerAccount,
-  DATA_READ: data.read,
+  DATA_READ_REQUEST: data.read,
   DATA_WRITE: data.write,
   LOGIN_RESPONSE: services.loginResponse,
   CONNECTION_RESPONSE: services.connectionResponse,

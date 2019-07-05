@@ -58,14 +58,14 @@ describe('data', () => {
       await write(connectionId, { domain, area, data: payload })
 
       expect(tokens.createWriteDataToken).toHaveBeenCalledWith(
-        connectionId, domain, area, expect.any(String)
+        connectionId, domain, area, expect.any(Object)
       )
     })
     it('creates a token with the correct arguments without domain', async () => {
       await write(connectionId, { area, data: payload })
 
       expect(tokens.createWriteDataToken).toHaveBeenCalledWith(
-        connectionId, config.clientId, area, expect.any(String)
+        connectionId, config.clientId, area, expect.any(Object)
       )
     })
     it('posts to operator', async () => {
@@ -94,7 +94,7 @@ describe('data', () => {
         tokens.send.mockResolvedValue('read.response.token')
         verify.mockImplementation(() => ({
           payload: {
-            data: JSON.stringify(createJWE(data))
+            data: createJWE(data)
           }
         }))
       })
@@ -134,6 +134,46 @@ describe('data', () => {
         const decrypted = await read(connectionId, { domain, area })
 
         expect(decrypted).toEqual(data)
+      })
+    })
+    describe('without data', () => {
+      beforeEach(() => {
+        tokens.send.mockResolvedValue('read.response.token')
+        verify.mockImplementation(() => ({
+          payload: {}
+        }))
+      })
+      it('creates a token with the correct arguments', async () => {
+        await read(connectionId, { domain, area })
+
+        expect(tokens.createReadDataToken).toHaveBeenCalledWith(
+          connectionId, domain, area
+        )
+      })
+      it('creates a token with the correct arguments without domain', async () => {
+        await read(connectionId, { area })
+
+        expect(tokens.createReadDataToken).toHaveBeenCalledWith(
+          connectionId, config.clientId, area
+        )
+      })
+      it('posts to operator', async () => {
+        await read(connectionId, { domain, area })
+
+        expect(tokens.send).toHaveBeenCalledWith(
+          'https://smoothoperator.com/api',
+          'read.data.token'
+        )
+      })
+      it('verifies the returned payload', async () => {
+        await read(connectionId, { domain, area })
+
+        expect(verify).toHaveBeenCalledWith('read.response.token')
+      })
+      it('returns undefined', async () => {
+        const decrypted = await read(connectionId, { domain, area })
+
+        expect(decrypted).toBeUndefined()
       })
     })
   })
