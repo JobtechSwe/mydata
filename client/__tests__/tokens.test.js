@@ -249,6 +249,49 @@ describe('tokens', () => {
       expect(payload.iss).toBe('https://mycv.work')
     })
   })
+  describe('#createReadDataToken', () => {
+    let connectionId, domain, area
+    beforeEach(async () => {
+      connectionId = 'ef1970af-8f75-4b89-bcee-b30908d02e07'
+      domain = 'https://mycv.work'
+      area = 'edumacation'
+    })
+    it('creates a valid jwt', async () => {
+      const authReq = await client.tokens
+        .createReadDataToken(connectionId, domain, area)
+
+      const payload = JWT.decode(authReq)
+      expect(payload).not.toBe(null)
+
+      await expect(schemas[payload.type].validate(payload))
+        .resolves.not.toThrow()
+    })
+    it('creates header with correct kid', async () => {
+      const authReq = await client.tokens
+        .createReadDataToken(connectionId, domain, area)
+
+      const { header } = JWT.decode(authReq, { complete: true })
+
+      expect(header.kid).toEqual('https://mycv.work/jwks/client_key')
+    })
+    it('creates header with correct type', async () => {
+      const authReq = await client.tokens
+        .createReadDataToken(connectionId, domain, area)
+
+      const { type } = JWT.decode(authReq)
+
+      expect(type).toEqual('DATA_READ_REQUEST')
+    })
+    it('creates the correct jwt claimsSet', async () => {
+      const authReq = await client.tokens
+        .createReadDataToken(connectionId, domain, area)
+
+      const payload = JWT.decode(authReq)
+
+      expect(payload.aud).toBe('https://smoothoperator.work')
+      expect(payload.iss).toBe('https://mycv.work')
+    })
+  })
   describe('#send', () => {
     beforeEach(() => {
       axios.post.mockRestore()

@@ -1,12 +1,18 @@
+const { JWE, JWS, JWK } = require('@panva/jose')
 const data = require('../lib/data')
 const { generateKey, toPublicKey } = require('../lib/crypto')
+const { verify } = require('../lib/jwt')
+
+jest.mock('../lib/jwt', () => ({
+  verify: jest.fn().mockName('jwt.verify')
+}))
 
 describe('data', () => {
-  let signingKey, accountWriteKey, serviceWriteKey
+  let signingKey, accountEncryptionKey, serviceEncryptionKey
   beforeAll(async () => {
     signingKey = await generateKey('https://mycv.work', { use: 'sig' })
-    accountWriteKey = await generateKey('egendata://jwks', { use: 'enc' })
-    serviceWriteKey = await generateKey('https://mycv.work/jwks', { use: 'enc' })
+    accountEncryptionKey = await generateKey('egendata://jwks', { use: 'enc' })
+    serviceEncryptionKey = await generateKey('https://mycv.work/jwks', { use: 'enc' })
   })
 
   let config, keyProvider, tokens
@@ -15,6 +21,7 @@ describe('data', () => {
   beforeEach(() => {
     config = {
       clientId: 'https://mycv.work',
+      jwksURI: 'https://mycv.work/jwks',
       operator: 'https://smoothoperator.com'
     }
     keyProvider = {
@@ -23,14 +30,18 @@ describe('data', () => {
       getWriteKeys: jest.fn().mockName('keyProvider.getWriteKeys')
         .mockResolvedValue({
           keys: [
-            toPublicKey(accountWriteKey),
-            toPublicKey(serviceWriteKey)
+            toPublicKey(accountEncryptionKey),
+            toPublicKey(serviceEncryptionKey)
           ]
-        })
+        }),
+      getKey: jest.fn().mockName('keyProvider.getKey')
+        .mockResolvedValue(serviceEncryptionKey)
     }
     tokens = {
       createWriteDataToken: jest.fn().mockName('tokens.createWriteDataToken')
         .mockResolvedValue('write.data.token'),
+      createReadDataToken: jest.fn().mockName('tokens.createReadDataToken')
+        .mockResolvedValue('read.data.token'),
       send: jest.fn().mockName('tokens.send')
         .mockResolvedValue({})
     }
@@ -50,6 +61,13 @@ describe('data', () => {
         connectionId, domain, area, expect.any(String)
       )
     })
+    it('creates a token with the correct arguments without domain', async () => {
+      await write(connectionId, { area, data: payload })
+
+      expect(tokens.createWriteDataToken).toHaveBeenCalledWith(
+        connectionId, config.clientId, area, expect.any(String)
+      )
+    })
     it('posts to operator', async () => {
       await write(connectionId, { domain, area, data: payload })
 
@@ -57,6 +75,66 @@ describe('data', () => {
         'https://smoothoperator.com/api',
         'write.data.token'
       )
+    })
+  })
+  describe('#read', () => {
+    let data
+    function createJWE (data) {
+      const signed = JWS.sign(JSON.stringify(data), JWK.importKey(signingKey), { kid: signingKey.kid })
+      const encryptor = new JWE.Encrypt(signed)
+      encryptor.recipient(JWK.importKey(toPublicKey(accountEncryptionKey)),
+        { kid: accountEncryptionKey.kid })
+      encryptor.recipient(JWK.importKey(toPublicKey(serviceEncryptionKey)),
+        { kid: serviceEncryptionKey.kid })
+      return encryptor.encrypt('general')
+    }
+    describe('with data', () => {
+      beforeEach(() => {
+        data = ['I love horses']
+        tokens.send.mockResolvedValue('read.response.token')
+        verify.mockImplementation(() => ({
+          payload: {
+            data: JSON.stringify(createJWE(data))
+          }
+        }))
+      })
+      it('creates a token with the correct arguments', async () => {
+        await read(connectionId, { domain, area })
+
+        expect(tokens.createReadDataToken).toHaveBeenCalledWith(
+          connectionId, domain, area
+        )
+      })
+      it('creates a token with the correct arguments without domain', async () => {
+        await read(connectionId, { area })
+
+        expect(tokens.createReadDataToken).toHaveBeenCalledWith(
+          connectionId, config.clientId, area
+        )
+      })
+      it('posts to operator', async () => {
+        await read(connectionId, { domain, area })
+
+        expect(tokens.send).toHaveBeenCalledWith(
+          'https://smoothoperator.com/api',
+          'read.data.token'
+        )
+      })
+      it('verifies the returned payload', async () => {
+        await read(connectionId, { domain, area })
+
+        expect(verify).toHaveBeenCalledWith('read.response.token')
+      })
+      it('gets the correct decryption key', async () => {
+        await read(connectionId, { domain, area })
+
+        expect(keyProvider.getKey).toHaveBeenCalledWith(serviceEncryptionKey.kid)
+      })
+      it('decrypts, parses and returns the data', async () => {
+        const decrypted = await read(connectionId, { domain, area })
+
+        expect(decrypted).toEqual(data)
+      })
     })
   })
 })

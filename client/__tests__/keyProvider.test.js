@@ -24,7 +24,7 @@ describe('KeyProvider', () => {
       publicKeyEncoding: { type: 'pkcs1', format: 'pem' },
       privateKeyEncoding: { type: 'pkcs1', format: 'pem' }
     }).privateKey
-    clientKey = importPEM(pemKey, jwksURI, { use: 'sig' })
+    clientKey = importPEM(pemKey, jwksURI, { use: 'sig', kid: `${jwksURI}/client_key` })
     keyProvider = new KeyProvider({ clientKey: pemKey, keyValueStore, keyOptions, jwksURI })
   })
   it('works with a PEM client key', () => {

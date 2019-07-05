@@ -166,25 +166,6 @@ const CONNECTION_REQUEST = Joi.object({
   iconURI: Joi.string().required()
 }).required()
 
-// device -> operator
-const CONTENT_REQUEST = Joi.object({
-  ...JWT_DEFAULTS,
-  type: 'CONTENT_REQUEST',
-  contentPaths: Joi.array()
-    .items(Joi.object({ ...CONTENT_PATH }))
-    .min(1).required()
-}).required()
-
-// operator -> device
-const CONTENT = Joi.object({
-  ...JWT_DEFAULTS,
-  type: 'CONTENT',
-  content: Joi.array().items(Joi.object({
-    ...CONTENT_PATH,
-    data: JWE
-  }))
-}).required()
-
 // device -> (operator) -> service
 const CONNECTION = Joi.object({
   ...JWT_DEFAULTS,
@@ -242,21 +223,27 @@ const ACCESS_TOKEN = Joi.object({
 }).required()
 
 // service -> operator
-const DATA_READ = Joi.object({
+const DATA_READ_REQUEST = Joi.object({
   ...JWT_DEFAULTS,
-  type: 'DATA_READ',
-  sub: Joi.string().uuid({ version: 'uuidv4' }).required(), // connection id
-  domain: Joi.string().uri().required(),
-  area: Joi.string().required()
+  ...CONTENT_PATH,
+  type: 'DATA_READ_REQUEST',
+  sub: Joi.string().uuid({ version: 'uuidv4' }).required() // connection id
 }).required()
+
+const DATA_READ_RESPONSE = Joi.object({
+  ...JWT_DEFAULTS,
+  ...CONTENT_PATH,
+  type: 'DATA_READ_RESPONSE',
+  sub: Joi.string().uuid({ version: 'uuidv4' }).required(), // connection id
+  data: JWE.optional()
+})
 
 // service -> operator
 const DATA_WRITE = Joi.object({
   ...JWT_DEFAULTS,
+  ...CONTENT_PATH,
   type: 'DATA_WRITE',
   sub: Joi.string().uuid({ version: 'uuidv4' }).required(), // connection id
-  domain: Joi.string().uri().required(),
-  area: Joi.string().required(),
   data: JWE.required()
 }).required()
 
@@ -273,9 +260,8 @@ module.exports = {
   CONNECTION_INIT,
   CONNECTION_REQUEST,
   CONNECTION_RESPONSE,
-  CONTENT_REQUEST,
-  CONTENT,
-  DATA_READ,
+  DATA_READ_REQUEST,
+  DATA_READ_RESPONSE,
   DATA_WRITE,
   JOSE_HEADER,
   JWK,
