@@ -30,7 +30,7 @@ describe('data', () => {
     await serviceClient.connect()
 
     // Get QR code
-    const { url, id } = await serviceClient.initializeAuthentication()
+    const { url } = await serviceClient.initializeAuthentication()
 
     // Send it to phone
     const { connectionRequest } = await phone.handleAuthCode({ code: url })

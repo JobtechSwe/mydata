@@ -75,7 +75,7 @@ class Client {
     } catch (err) {
       this.events.emit('CONNECTION ERROR', err)
       const timeout = Math.min(1000 * Math.pow(2, retry++), 5000)
-      await new Promise(resolve => setTimeout(resolve, timeout))
+      await new Promise((resolve) => setTimeout(resolve, timeout))
       return this.connect(retry, true)
     }
   }

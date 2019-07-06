@@ -19,7 +19,7 @@ async function isUrl (kid) {
   }
 }
 
-const rxPEM = /^-----BEGIN RSA PRIVATE KEY-----\n([a-zA-Z0-9\+\/\=]*\n)*-----END RSA PRIVATE KEY-----\n?$/
+const rxPEM = /^-----BEGIN RSA PRIVATE KEY-----\n([a-zA-Z0-9+/=]*\n)*-----END RSA PRIVATE KEY-----\n?$/
 
 const jsonToBase64 = (obj) => Buffer.from(JSON.stringify(obj), 'utf8').toString('base64')
 const base64ToJson = (str) => JSON.parse(Buffer.from(str, 'base64').toString('utf8'))
