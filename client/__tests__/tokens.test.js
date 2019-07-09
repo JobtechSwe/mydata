@@ -215,7 +215,7 @@ describe('tokens', () => {
     })
     it('creates a valid jwt', async () => {
       const authReq = await client.tokens
-        .createWriteDataToken(connectionId, domain, area, jwe)
+        .createWriteDataToken(connectionId, [ { domain, area, data: jwe } ])
 
       const payload = JWT.decode(authReq)
       expect(payload).not.toBe(null)
@@ -225,7 +225,7 @@ describe('tokens', () => {
     })
     it('creates header with correct kid', async () => {
       const authReq = await client.tokens
-        .createWriteDataToken(connectionId, domain, area, jwe)
+        .createWriteDataToken(connectionId, [ { domain, area, data: jwe } ])
 
       const { header } = JWT.decode(authReq, { complete: true })
 
@@ -233,7 +233,7 @@ describe('tokens', () => {
     })
     it('creates header with correct type', async () => {
       const authReq = await client.tokens
-        .createWriteDataToken(connectionId, domain, area, jwe)
+        .createWriteDataToken(connectionId, [ { domain, area, data: jwe } ])
 
       const { type } = JWT.decode(authReq)
 
@@ -241,12 +241,15 @@ describe('tokens', () => {
     })
     it('creates the correct jwt claimsSet', async () => {
       const authReq = await client.tokens
-        .createWriteDataToken(connectionId, domain, area, jwe)
+        .createWriteDataToken(connectionId, [ { domain, area, data: jwe } ])
 
       const payload = JWT.decode(authReq)
 
       expect(payload.aud).toBe('https://smoothoperator.work')
       expect(payload.iss).toBe('https://mycv.work')
+      expect(payload.paths).toEqual([
+        { domain, area, data: expect.any(Object) }
+      ])
     })
   })
   describe('#createReadDataToken', () => {
@@ -258,7 +261,7 @@ describe('tokens', () => {
     })
     it('creates a valid jwt', async () => {
       const authReq = await client.tokens
-        .createReadDataToken(connectionId, domain, area)
+        .createReadDataToken(connectionId, [ { domain, area } ])
 
       const payload = JWT.decode(authReq)
       expect(payload).not.toBe(null)
@@ -268,7 +271,7 @@ describe('tokens', () => {
     })
     it('creates header with correct kid', async () => {
       const authReq = await client.tokens
-        .createReadDataToken(connectionId, domain, area)
+        .createReadDataToken(connectionId, [ { domain, area } ])
 
       const { header } = JWT.decode(authReq, { complete: true })
 
@@ -276,7 +279,7 @@ describe('tokens', () => {
     })
     it('creates header with correct type', async () => {
       const authReq = await client.tokens
-        .createReadDataToken(connectionId, domain, area)
+        .createReadDataToken(connectionId, [ { domain, area } ])
 
       const { type } = JWT.decode(authReq)
 
@@ -284,12 +287,13 @@ describe('tokens', () => {
     })
     it('creates the correct jwt claimsSet', async () => {
       const authReq = await client.tokens
-        .createReadDataToken(connectionId, domain, area)
+        .createReadDataToken(connectionId, [ { domain, area } ])
 
       const payload = JWT.decode(authReq)
 
       expect(payload.aud).toBe('https://smoothoperator.work')
       expect(payload.iss).toBe('https://mycv.work')
+      expect(payload.paths).toEqual([ { domain, area } ])
     })
   })
   describe('#createAccessToken', () => {

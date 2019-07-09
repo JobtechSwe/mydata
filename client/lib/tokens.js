@@ -51,31 +51,32 @@ const createConnectionRequest = (client) => (sid, permissions) => {
 }
 
 const createWriteDataToken = (client) =>
-  async (connectionId, domain, area, data) => {
-    domain = domain || client.config.clientId
+  async (connectionId, paths) => {
     const claimsSet = {
       type: 'DATA_WRITE',
       sub: connectionId,
       aud: client.config.operator,
       iss: client.config.clientId,
-      domain,
-      area,
-      data
+      paths: paths.map(({ domain, area, data }) => {
+        domain = domain || client.config.clientId
+        return { domain, area, data }
+      })
     }
     const key = client.keyProvider.clientKey
     return sign(claimsSet, key, { kid: key.kid })
   }
 
 const createReadDataToken = (client) =>
-  async (connectionId, domain, area) => {
-    domain = domain || client.config.clientId
+  async (connectionId, paths) => {
     const claimsSet = {
       type: 'DATA_READ_REQUEST',
       sub: connectionId,
       aud: client.config.operator,
       iss: client.config.clientId,
-      domain,
-      area
+      paths: paths.map(({ domain, area }) => {
+        domain = domain || client.config.clientId
+        return { domain, area }
+      })
     }
     const key = client.keyProvider.clientKey
     return sign(claimsSet, key, { kid: key.kid })

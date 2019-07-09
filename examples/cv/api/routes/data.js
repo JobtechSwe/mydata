@@ -10,8 +10,12 @@ module.exports = operator => {
     }
 
     try {
-      const data = await operator.data.auth(accessToken).read({ domain })
-      res.send(data[domain])
+      const data = await operator.data.auth(accessToken).read({ domain, area })
+      const map = data.reduce((map, { area, data }) => ({
+        ...map,
+        [area]: data
+      }), {})
+      res.send(map)
     } catch (error) {
       next(error)
     }

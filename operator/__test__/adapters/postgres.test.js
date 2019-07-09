@@ -39,6 +39,67 @@ describe('adapters/postgres', () => {
       expect(pg.client.end).toHaveBeenCalledTimes(1)
     })
   })
+  describe('#multiple', () => {
+    let queries, results
+    beforeEach(() => {
+      queries = [
+        ['INSERT INTO foo(id, val) VALUES($1, $2)', [1, 2]],
+        ['INSERT INTO herp(id, val) VALUES($1, $2)', [1, 2]],
+        ['SELECT * FROM bar']
+      ]
+      results = [
+        { metaData: [], rows: [], rowCount: 1 },
+        { metaData: [], rows: [], rowCount: 2 },
+        { metaData: [], rows: [{ id: 1 }], rowCount: 1 }
+      ]
+    })
+    it('connects', async () => {
+      await postgres.multiple(queries)
+      expect(pg.client.connect).toHaveBeenCalledTimes(1)
+    })
+    it('executes all queries', async () => {
+      await postgres.multiple(queries)
+      expect(pg.client.query).toHaveBeenNthCalledWith(1, ...queries[0])
+      expect(pg.client.query).toHaveBeenNthCalledWith(2, ...queries[1])
+      expect(pg.client.query).toHaveBeenNthCalledWith(3, ...queries[2])
+    })
+    it('returns the results', async () => {
+      pg.connection.query.mockResolvedValueOnce(results[0])
+      pg.connection.query.mockResolvedValueOnce(results[1])
+      pg.connection.query.mockResolvedValueOnce(results[2])
+
+      const response = await postgres.multiple(queries)
+      expect(response).toEqual(results)
+    })
+    it('throws the error', async () => {
+      const originalConsoleError = console.error
+      console.error = () => { }
+
+      pg.connection.query.mockResolvedValueOnce(results[0])
+      pg.connection.query.mockRejectedValueOnce(new Error('b0rk'))
+
+      await expect(postgres.multiple(queries)).rejects.toThrow('b0rk')
+      console.error = originalConsoleError
+    })
+    it('closes the connection on success', async () => {
+      pg.client.end.mockClear() // WHY???
+
+      await postgres.multiple(queries)
+      expect(pg.client.end).toHaveBeenCalledTimes(1)
+    })
+    it('closes the connection on failure', async () => {
+      const originalConsoleError = console.error
+      console.error = () => { }
+
+      pg.connection.query.mockResolvedValueOnce(results[0])
+      pg.connection.query.mockRejectedValueOnce(new Error('b0rk'))
+      try {
+        await postgres.multiple(queries)
+      } catch (_) { }
+      expect(pg.client.end).toHaveBeenCalledTimes(1)
+      console.error = originalConsoleError
+    })
+  })
   describe('#transaction', () => {
     let queries, empty, results
     beforeEach(() => {

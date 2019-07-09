@@ -23,15 +23,13 @@ const createLoginEvent = async (serviceId, payload) => {
   })
 }
 
-const createDataReadResponse = async ({ iss, sub, domain, area }, data) => {
+const createDataReadResponse = async ({ iss, sub }, paths) => {
   return sign({
     type: 'DATA_READ_RESPONSE',
     aud: iss,
     iss: host,
     sub,
-    domain,
-    area,
-    data
+    paths
   }, keys.privateKey, {
     kid: keys.publicKey.kid
   })
