@@ -58,14 +58,29 @@ describe('data', () => {
       await write(connectionId, { domain, area, data: payload })
 
       expect(tokens.createWriteDataToken).toHaveBeenCalledWith(
-        connectionId, domain, area, expect.any(Object)
+        connectionId, [ { domain, area, data: expect.any(Object) } ]
       )
     })
     it('creates a token with the correct arguments without domain', async () => {
       await write(connectionId, { area, data: payload })
 
       expect(tokens.createWriteDataToken).toHaveBeenCalledWith(
-        connectionId, config.clientId, area, expect.any(Object)
+        connectionId, [
+          { domain: config.clientId, area, data: expect.any(Object) }
+        ]
+      )
+    })
+    it('creates a correct token with multiple paths', async () => {
+      const area2 = 'experience'
+      await write(connectionId,
+        { area, data: payload },
+        { area: area2, data: payload })
+
+      expect(tokens.createWriteDataToken).toHaveBeenCalledWith(
+        connectionId, [
+          { domain: config.clientId, area, data: expect.any(Object) },
+          { domain: config.clientId, area: area2, data: expect.any(Object) }
+        ]
       )
     })
     it('posts to operator', async () => {
@@ -92,20 +107,34 @@ describe('data', () => {
       beforeEach(() => {
         data = ['I love horses']
         tokens.send.mockResolvedValue('read.response.token')
-        verify.mockImplementation(() => ({ payload: { data: createJWE(data) } }))
+        verify.mockImplementation(() => ({
+          payload: {
+            paths: [ { domain, area, data: createJWE(data) } ]
+          }
+        }))
       })
       it('creates a token with the correct arguments', async () => {
         await read(connectionId, { domain, area })
 
         expect(tokens.createReadDataToken).toHaveBeenCalledWith(
-          connectionId, domain, area
+          connectionId, [ { domain, area } ]
         )
       })
       it('creates a token with the correct arguments without domain', async () => {
         await read(connectionId, { area })
 
         expect(tokens.createReadDataToken).toHaveBeenCalledWith(
-          connectionId, config.clientId, area
+          connectionId, [ { domain: config.clientId, area } ]
+        )
+      })
+      it('creates a token with the correct arguments with multiple paths', async () => {
+        await read(connectionId, { area }, { domain, area: 'experience' })
+
+        expect(tokens.createReadDataToken).toHaveBeenCalledWith(
+          connectionId, [
+            { domain: config.clientId, area },
+            { domain, area: 'experience' }
+          ]
         )
       })
       it('posts to operator', async () => {
@@ -127,28 +156,32 @@ describe('data', () => {
         expect(keyProvider.getKey).toHaveBeenCalledWith(serviceEncryptionKey.kid)
       })
       it('decrypts, parses and returns the data', async () => {
-        const decrypted = await read(connectionId, { domain, area })
+        const [decrypted] = await read(connectionId, { domain, area })
 
-        expect(decrypted).toEqual(data)
+        expect(decrypted).toEqual({ domain, area, data })
       })
     })
     describe('without data', () => {
       beforeEach(() => {
         tokens.send.mockResolvedValue('read.response.token')
-        verify.mockImplementation(() => ({ payload: {} }))
+        verify.mockImplementation(() => ({
+          payload: {
+            paths: [ { domain, area } ]
+          }
+        }))
       })
       it('creates a token with the correct arguments', async () => {
         await read(connectionId, { domain, area })
 
         expect(tokens.createReadDataToken).toHaveBeenCalledWith(
-          connectionId, domain, area
+          connectionId, [ { domain, area } ]
         )
       })
       it('creates a token with the correct arguments without domain', async () => {
         await read(connectionId, { area })
 
         expect(tokens.createReadDataToken).toHaveBeenCalledWith(
-          connectionId, config.clientId, area
+          connectionId, [ { domain: config.clientId, area } ]
         )
       })
       it('posts to operator', async () => {
@@ -163,11 +196,6 @@ describe('data', () => {
         await read(connectionId, { domain, area })
 
         expect(verify).toHaveBeenCalledWith('read.response.token')
-      })
-      it('returns undefined', async () => {
-        const decrypted = await read(connectionId, { domain, area })
-
-        expect(decrypted).toBeUndefined()
       })
     })
   })
@@ -187,14 +215,14 @@ describe('data', () => {
         await auth(accessToken).write({ domain, area, data: payload })
 
         expect(tokens.createWriteDataToken).toHaveBeenCalledWith(
-          connectionId, domain, area, expect.any(Object)
+          connectionId, [ { domain, area, data: expect.any(Object) } ]
         )
       })
       it('creates a token with the correct arguments without domain', async () => {
         await auth(accessToken).write({ area, data: payload })
 
         expect(tokens.createWriteDataToken).toHaveBeenCalledWith(
-          connectionId, config.clientId, area, expect.any(Object)
+          connectionId, [ { domain: config.clientId, area, data: expect.any(Object) } ]
         )
       })
       it('posts to operator', async () => {
@@ -226,7 +254,9 @@ describe('data', () => {
               case 'access.token':
                 return { payload: { sub: connectionId } }
               case 'read.response.token':
-                return { payload: { data: createJWE(data) } }
+                return { payload: {
+                  paths: [ { domain, area, data: createJWE(data) } ]
+                } }
               default:
                 throw new Error('Unmocked token')
             }
@@ -241,14 +271,14 @@ describe('data', () => {
           await auth(accessToken).read({ domain, area })
 
           expect(tokens.createReadDataToken).toHaveBeenCalledWith(
-            connectionId, domain, area
+            connectionId, [ { domain, area } ]
           )
         })
         it('creates a token with the correct arguments without domain', async () => {
           await auth(accessToken).read({ area })
 
           expect(tokens.createReadDataToken).toHaveBeenCalledWith(
-            connectionId, config.clientId, area
+            connectionId, [ { domain: config.clientId, area } ]
           )
         })
         it('posts to operator', async () => {
@@ -270,9 +300,9 @@ describe('data', () => {
           expect(keyProvider.getKey).toHaveBeenCalledWith(serviceEncryptionKey.kid)
         })
         it('decrypts, parses and returns the data', async () => {
-          const decrypted = await auth(accessToken).read({ domain, area })
+          const [decrypted] = await auth(accessToken).read({ domain, area })
 
-          expect(decrypted).toEqual(data)
+          expect(decrypted).toEqual({ domain, area, data })
         })
       })
       describe('without data', () => {
@@ -283,7 +313,7 @@ describe('data', () => {
               case 'access.token':
                 return { payload: { sub: connectionId } }
               case 'read.response.token':
-                return { payload: {} }
+                return { payload: { paths: [ { domain, area } ] } }
               default:
                 throw new Error('Unmocked token')
             }
@@ -298,14 +328,14 @@ describe('data', () => {
           await auth(accessToken).read({ domain, area })
 
           expect(tokens.createReadDataToken).toHaveBeenCalledWith(
-            connectionId, domain, area
+            connectionId, [ { domain, area } ]
           )
         })
         it('creates a token with the correct arguments without domain', async () => {
           await auth(accessToken).read({ area })
 
           expect(tokens.createReadDataToken).toHaveBeenCalledWith(
-            connectionId, config.clientId, area
+            connectionId, [ { domain: config.clientId, area } ]
           )
         })
         it('posts to operator', async () => {
@@ -322,9 +352,9 @@ describe('data', () => {
           expect(verify).toHaveBeenCalledWith('read.response.token')
         })
         it('returns undefined', async () => {
-          const decrypted = await auth(accessToken).read({ domain, area })
+          const [decrypted] = await auth(accessToken).read({ domain, area })
 
-          expect(decrypted).toBeUndefined()
+          expect(decrypted).toEqual({ domain, area })
         })
       })
     })

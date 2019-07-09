@@ -8,7 +8,6 @@ describe('tokens', () => {
     const token = await tokens.createConnectionEvent('http://mycv.work', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c')
     expect(token).toEqual(expect.any(String))
   })
-
   describe('#createLoginEvent', () => {
     it('Happy path', async () => {
       const payload = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
@@ -48,15 +47,19 @@ describe('tokens', () => {
     })
   })
   describe('#createDataReadResponse', () => {
-    let readDataRequest, data
+    let readDataRequest, domain, area, data
     beforeEach(async () => {
+      domain = 'https://mycv.work'
+      area = 'favorite_cats'
       readDataRequest = {
         type: 'DATA_READ_REQUEST',
         sub: 'd82054d3-4115-49a0-ac5c-3325273d53b2',
         aud: 'https://smoothoperator.com',
         iss: 'https://mycv.work',
-        domain: 'https://mycv.work',
-        area: 'favorite_cats',
+        paths: [ {
+          domain,
+          area
+        } ],
         iat: 1562323351,
         exp: 1562326951
       }
@@ -93,14 +96,16 @@ describe('tokens', () => {
         .resolves.not.toThrow()
     })
     it('creates valid DATA_READ_RESPONSE token with data', async () => {
-      const token = await tokens.createDataReadResponse(readDataRequest, data)
+      const token = await tokens.createDataReadResponse(readDataRequest, [
+        { domain, area, data }
+      ])
       const { payload } = JWT.decode(token, { complete: true })
       const expectedType = 'DATA_READ_RESPONSE'
 
       expect(payload.type).toEqual(expectedType)
       await expect(schemas[expectedType].validate(payload))
         .resolves.not.toThrow()
-      expect(payload.data).toEqual(data)
+      expect(payload.paths[0]).toEqual({ domain, area, data })
     })
   })
 })

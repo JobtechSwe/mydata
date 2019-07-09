@@ -1,43 +1,76 @@
 const { camelCase } = require('changecase-objects')
 const { writePermission, readPermission } = require('./sqlStatements')
-const { query } = require('./adapters/postgres')
+const { multiple } = require('./adapters/postgres')
 const { get } = require('./adapters/pds')
 const { createDataReadResponse } = require('./services/tokens')
 
 async function read ({ payload }, res, next) {
   const connectionId = payload.sub
-  const [sql, params] = readPermission({
+  const statements = payload.paths.map(({ domain, area }) => readPermission({
     connectionId,
-    domain: payload.domain,
-    area: payload.area,
+    domain,
+    area,
     serviceId: payload.iss
-  })
-  const { rows } = await query(sql, params)
-  const { pdsProvider, pdsCredentials, domain, area } = camelCase(rows[0])
-  const { readFile } = get({ pdsProvider, pdsCredentials })
+  }))
+  const result = await multiple(statements)
+  const reads = []
+  for (let { rows } of result) {
+    for (let row of rows) {
+      const { pdsProvider, pdsCredentials, domain, area } = camelCase(row)
+      const { readFile } = get({ pdsProvider, pdsCredentials })
 
-  const path = `/data/${encodeURIComponent(connectionId)}/${encodeURIComponent(domain)}/${encodeURIComponent(area)}/data.json`
-  const file = await readFile(path, 'utf8')
+      const path = `/data/${encodeURIComponent(connectionId)}/${encodeURIComponent(domain)}/${encodeURIComponent(area)}/data.json`
+      reads.push(
+        readFile(path, 'utf8').then((data) => ({
+          domain,
+          area,
+          data: data && JSON.parse(data)
+        }))
+      )
+    }
+  }
+  const paths = await Promise.all(reads)
 
-  const token = await createDataReadResponse(payload, file && JSON.parse(file))
+  const token = await createDataReadResponse(payload, paths)
 
   res.status(200).set('Content-Type', 'application/jwt').send(token)
 }
 
+function toDataMap (paths) {
+  const map = {}
+  for (let { domain, area, data } of paths) {
+    if (!map[domain]) {
+      map[domain] = {}
+    }
+    map[domain][area] = data
+  }
+  return map
+}
+
 async function write ({ payload }, res, next) {
   const connectionId = payload.sub
-  const [sql, params] = writePermission({
+  const statements = payload.paths.map(({ domain, area }) => writePermission({
     connectionId,
-    domain: payload.domain,
-    area: payload.area,
+    domain,
+    area,
     serviceId: payload.iss
-  })
-  const { rows } = await query(sql, params)
-  const { pdsProvider, pdsCredentials, domain, area } = camelCase(rows[0])
-  const { outputFile } = get({ pdsProvider, pdsCredentials })
+  }))
+  const dataMap = toDataMap(payload.paths)
+  const results = await multiple(statements)
+  const writes = []
+  for (let { rows } of results) {
+    for (let row of rows) {
+      const { pdsProvider, pdsCredentials, domain, area } = camelCase(row)
+      const { outputFile } = get({ pdsProvider, pdsCredentials })
 
-  const path = `/data/${encodeURIComponent(connectionId)}/${encodeURIComponent(domain)}/${encodeURIComponent(area)}/data.json`
-  await outputFile(path, JSON.stringify(payload.data), 'utf8')
+      const path = `/data/${encodeURIComponent(connectionId)}/${encodeURIComponent(domain)}/${encodeURIComponent(area)}/data.json`
+      const data = dataMap[domain] && dataMap[domain][area]
+      if (data) {
+        writes.push(outputFile(path, JSON.stringify(data), 'utf8'))
+      }
+    }
+  }
+  await Promise.all(writes)
 
   res.sendStatus(200)
 }

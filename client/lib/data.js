@@ -1,59 +1,82 @@
 const { JWS, JWE, JWK } = require('@panva/jose')
 const { verify } = require('./jwt')
 
-const read = (config, keyProvider, tokens) => async (connectionId, { domain, area }) => {
+const read = (config, keyProvider, tokens) => async (connectionId, ...paths) => {
   // Default domain to clients own
-  domain = domain || config.clientId
+  const withDomain = paths.map(({ domain, area }) => {
+    domain = domain || config.clientId
+    return { domain, area }
+  })
 
   // Send token to operator
-  const token = await tokens.createReadDataToken(connectionId, domain, area)
+  const token = await tokens.createReadDataToken(connectionId, withDomain)
   const responseToken = await tokens.send(`${config.operator}/api`, token)
 
   // Parse the response token
-  const { payload: { data } } = await verify(responseToken)
+  const { payload: response } = await verify(responseToken)
 
   // If no data, return undefined
-  if (!data) {
+  if (!response.paths) {
     return undefined
   }
 
-  // Find the correct decryption key
-  const rxServiceKey = new RegExp(`^${config.jwksURI}/`)
-  const decryptionKeyId = data.recipients
-    .map((recipient) => recipient.header.kid)
-    .find((kid) => rxServiceKey.test(kid))
-  const decryptionKey = await keyProvider.getKey(decryptionKeyId)
+  // Iterate through the paths
+  const result = []
+  for (let { domain, area, data } of response.paths) {
+    let decryptedData
 
-  // Use the key to decrypt the content
-  const decrypted = JWE.decrypt(data, JWK.importKey(decryptionKey))
-  const jws = decrypted.toString('utf8')
+    if (data) {
+      // Find the correct decryption key
+      const rxServiceKey = new RegExp(`^${config.jwksURI}/`)
+      const decryptionKeyId = data.recipients
+        .map((recipient) => recipient.header.kid)
+        .find((kid) => rxServiceKey.test(kid))
+      const decryptionKey = await keyProvider.getKey(decryptionKeyId)
 
-  // TODO: Verify the signature
-  const [, content] = jws.split('.')
-  const clearText = Buffer.from(content, 'base64').toString('utf8')
+      // Use the key to decrypt the content
+      const decrypted = JWE.decrypt(data, JWK.importKey(decryptionKey))
+      const jws = decrypted.toString('utf8')
 
-  return JSON.parse(clearText)
-}
+      // TODO: Verify the signature
+      const [, content] = jws.split('.')
+      const clearText = Buffer.from(content, 'base64').toString('utf8')
 
-const write = (config, keyProvider, tokens) => async (connectionId, { domain, area, data }) => {
-  // Default domain to clients own
-  domain = domain || config.clientId
+      decryptedData = JSON.parse(clearText)
+    }
 
-  // Get signing key for specific domain and area (right now always use clientKey)
-  const signingKey = JWK.importKey(await keyProvider.getSigningKey(domain, area))
-  const signedData = JWS.sign(JSON.stringify(data), signingKey, { kid: signingKey.kid })
-
-  const encryptor = new JWE.Encrypt(signedData)
-
-  const permissionJWKS = await keyProvider.getWriteKeys(domain, area)
-  const writeKeys = permissionJWKS.keys.map((key) => JWK.importKey(key))
-  for (let key of writeKeys) {
-    encryptor.recipient(key, { kid: key.kid })
+    result.push({ domain, area, data: decryptedData })
   }
 
-  const payload = encryptor.encrypt('general') // Only general serialization allowed for multiple recipients
+  return result
+}
 
-  const token = await tokens.createWriteDataToken(connectionId, domain, area, payload)
+const write = (config, keyProvider, tokens) => async (connectionId, ...paths) => {
+  // Iterate through all paths
+  const encryptedPaths = []
+  for (let { domain, area, data } of paths) {
+    // Default domain to clients own
+    domain = domain || config.clientId
+
+    // Get signing key for specific domain and area (right now always use clientKey)
+    const signingKey = JWK.importKey(await keyProvider.getSigningKey(domain, area))
+    const signedData = JWS.sign(JSON.stringify(data), signingKey, { kid: signingKey.kid })
+
+    const encryptor = new JWE.Encrypt(signedData)
+
+    const permissionJWKS = await keyProvider.getWriteKeys(domain, area)
+    const writeKeys = permissionJWKS.keys.map((key) => JWK.importKey(key))
+    for (let key of writeKeys) {
+      encryptor.recipient(key, { kid: key.kid })
+    }
+
+    encryptedPaths.push({
+      domain,
+      area,
+      data: encryptor.encrypt('general')
+    }) // Only general serialization allowed for multiple recipients
+  }
+
+  const token = await tokens.createWriteDataToken(connectionId, encryptedPaths)
   const result = await tokens.send(`${config.operator}/api`, token)
   return result
 }

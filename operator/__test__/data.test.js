@@ -54,9 +54,11 @@ describe('data', () => {
         sub: '26eb214f-287b-4def-943c-55a6eefa2d91',
         aud: 'https://smoothoperator.com',
         iss: 'https://mycv.work',
-        domain: 'https://mycv.work',
-        area: 'favorite_cats',
-        data: { txt: 'Some huge JWE' },
+        paths: [ {
+          domain: 'https://mycv.work',
+          area: 'favorite_cats',
+          data: { txt: 'Some huge JWE' }
+        } ],
         iat: 1562150432,
         exp: 1562154032
       }
@@ -127,8 +129,10 @@ describe('data', () => {
         sub: 'd82054d3-4115-49a0-ac5c-3325273d53b2',
         aud: 'https://smoothoperator.com',
         iss: 'https://mycv.work',
-        domain: 'https://mycv.work',
-        area: 'favorite_cats',
+        paths: [ {
+          domain: 'https://mycv.work',
+          area: 'favorite_cats'
+        } ],
         iat: 1562323351,
         exp: 1562326951
       }

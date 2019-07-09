@@ -81,12 +81,12 @@ describe('data', () => {
     it('works using area', async () => {
       const decryptedData = await serviceClient.data.read(connectionId, { area })
 
-      expect(decryptedData).toEqual(data)
+      expect(decryptedData).toEqual([{ domain, area, data }])
     })
     it('works using domain and area', async () => {
       const decryptedData = await serviceClient.data.read(connectionId, { domain, area })
 
-      expect(decryptedData).toEqual(data)
+      expect(decryptedData).toEqual([{ domain, area, data }])
     })
   })
 })

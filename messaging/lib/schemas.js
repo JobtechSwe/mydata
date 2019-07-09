@@ -99,7 +99,7 @@ const LAWFUL_BASIS = Joi.string().valid('CONSENT')
 
 const CONTENT_PATH = {
   domain: Joi.string().uri().required(),
-  area: Joi.string().required()
+  area: Joi.string().optional()
 }
 
 const PERMISSION_BASE = {
@@ -225,26 +225,30 @@ const ACCESS_TOKEN = Joi.object({
 // service -> operator
 const DATA_READ_REQUEST = Joi.object({
   ...JWT_DEFAULTS,
-  ...CONTENT_PATH,
   type: 'DATA_READ_REQUEST',
-  sub: Joi.string().uuid({ version: 'uuidv4' }).required() // connection id
+  sub: Joi.string().uuid({ version: 'uuidv4' }).required(), // connection id
+  paths: Joi.array().items(CONTENT_PATH).min(1).optional()
 }).required()
 
 const DATA_READ_RESPONSE = Joi.object({
   ...JWT_DEFAULTS,
-  ...CONTENT_PATH,
   type: 'DATA_READ_RESPONSE',
   sub: Joi.string().uuid({ version: 'uuidv4' }).required(), // connection id
-  data: JWE.optional()
+  paths: Joi.array().items(Joi.object({
+    ...CONTENT_PATH,
+    data: JWE.optional()
+  })).min(1).optional()
 })
 
 // service -> operator
 const DATA_WRITE = Joi.object({
   ...JWT_DEFAULTS,
-  ...CONTENT_PATH,
   type: 'DATA_WRITE',
   sub: Joi.string().uuid({ version: 'uuidv4' }).required(), // connection id
-  data: JWE.required()
+  paths: Joi.array().items(Joi.object({
+    ...CONTENT_PATH,
+    data: JWE.optional()
+  })).min(1).optional()
 }).required()
 
 const deviceSchemas = [ACCOUNT_REGISTRATION, CONNECTION_INIT, CONNECTION, CONNECTION_RESPONSE, LOGIN, LOGIN_RESPONSE]
