@@ -1,6 +1,6 @@
 {
   "name": "@egendata/client",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Client for Egendata Operator",
   "main": "lib/index.js",
   "scripts": {
@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/JobtechSwe/mydata/client#readme",
   "dependencies": {
-    "@egendata/messaging": "file:../messaging",
+    "@egendata/messaging": "0.3.0",
     "@hapi/joi": "^15.0.3",
     "@panva/jose": "^1.0.1",
     "axios": "^0.18.1",
