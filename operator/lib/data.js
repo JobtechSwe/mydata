@@ -20,12 +20,27 @@ async function read ({ payload }, res, next) {
       const { readFile } = get({ pdsProvider, pdsCredentials })
 
       const path = `/data/${encodeURIComponent(connectionId)}/${encodeURIComponent(domain)}/${encodeURIComponent(area)}/data.json`
-      reads.push(
-        readFile(path, 'utf8').then((data) => ({
+      reads.push(readFile(path, 'utf8')
+        .then((data) => ({
           domain,
           area,
           data: data && JSON.parse(data)
         }))
+        .catch((err) => {
+          if (err.code === 'ENOENT') {
+            return { domain, area }
+          } else {
+            return {
+              domain,
+              area,
+              error: {
+                message: err.message,
+                status: err.status,
+                code: err.code
+              }
+            }
+          }
+        })
       )
     }
   }

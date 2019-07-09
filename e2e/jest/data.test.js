@@ -30,7 +30,7 @@ describe('data', () => {
     await serviceClient.connect()
 
     // Get QR code
-    const { url, id } = await serviceClient.initializeAuthentication()
+    const { url } = await serviceClient.initializeAuthentication()
 
     // Send it to phone
     const { connectionRequest } = await phone.handleAuthCode({ code: url })
@@ -85,6 +85,11 @@ describe('data', () => {
     })
     it('works using domain and area', async () => {
       const decryptedData = await serviceClient.data.read(connectionId, { domain, area })
+
+      expect(decryptedData).toEqual([{ domain, area, data }])
+    })
+    it('works using domain only', async () => {
+      const decryptedData = await serviceClient.data.read(connectionId, { domain })
 
       expect(decryptedData).toEqual([{ domain, area, data }])
     })

@@ -205,6 +205,14 @@ describe('data', () => {
 
         expect(pds.readFile).toHaveBeenCalledWith(path, encoding)
       })
+      it('returns undefined if file is missing', async () => {
+        pds.readFile.mockRejectedValue({ code: 'ENOENT' })
+        await read({ header, payload }, res, next)
+
+        expect(res.status).toHaveBeenCalledWith(200)
+        expect(res.set).toHaveBeenCalledWith('Content-Type', 'application/jwt')
+        expect(res.send).toHaveBeenCalledWith(expect.any(String))
+      })
       it('sends a DATA_READ_RESPONSE payload on success', async () => {
         await read({ header, payload }, res, next)
 
@@ -222,6 +230,58 @@ describe('data', () => {
         expect(claimsSet.type).toEqual(expectedType)
         await expect(schemas[expectedType].validate(claimsSet))
           .resolves.not.toThrow()
+      })
+      describe('with area wildcard', () => {
+        beforeEach(() => {
+          delete payload.paths[0].area
+        })
+        it('calls sqlStatements.readPermission with the correct arguments', async () => {
+          await read({ header, payload }, res, next)
+
+          expect(readPermission).toHaveBeenCalledWith({
+            connectionId: 'd82054d3-4115-49a0-ac5c-3325273d53b2',
+            domain: 'https://mycv.work',
+            area: undefined,
+            serviceId: 'https://mycv.work'
+          })
+        })
+        it('gets the correct PDS adapter', async () => {
+          await read({ header, payload }, res, next)
+
+          expect(pdsAdapter.get).toHaveBeenCalledWith({
+            pdsProvider: 'memory',
+            pdsCredentials: 'nope'
+          })
+        })
+        it('reads the correct file', async () => {
+          await read({ header, payload }, res, next)
+
+          const dir =
+            '/data/d82054d3-4115-49a0-ac5c-3325273d53b2/https%3A%2F%2Fmycv.work/favorite_cats'
+          const filename = 'data.json'
+          const path = `${dir}/${filename}`
+          const encoding = 'utf8'
+
+          expect(pds.readFile).toHaveBeenCalledWith(path, encoding)
+        })
+        it('sends a DATA_READ_RESPONSE payload on success', async () => {
+          await read({ header, payload }, res, next)
+
+          expect(res.status).toHaveBeenCalledWith(200)
+          expect(res.set).toHaveBeenCalledWith('Content-Type', 'application/jwt')
+          expect(res.send).toHaveBeenCalledWith(expect.any(String))
+        })
+        it('sends a valid DATA_READ_RESPONSE token on success', async () => {
+          await read({ header, payload }, res, next)
+
+          const [token] = res.send.mock.calls[0]
+          const claimsSet = JWT.decode(token)
+          const expectedType = 'DATA_READ_RESPONSE'
+
+          expect(claimsSet.type).toEqual(expectedType)
+          await expect(schemas[expectedType].validate(claimsSet))
+            .resolves.not.toThrow()
+        })
       })
     })
     describe('without data', () => {

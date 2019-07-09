@@ -162,8 +162,7 @@ function writePermission ({ connectionId, domain, area, serviceId }) {
 }
 
 function readPermission ({ connectionId, domain, area, serviceId }) {
-  return [
-    `
+  const sql = `
     SELECT
       a.pds_provider,
       a.pds_credentials,
@@ -174,17 +173,18 @@ function readPermission ({ connectionId, domain, area, serviceId }) {
       INNER JOIN services as s ON c.service_id = s.service_id
       INNER JOIN accounts as a ON c.account_id = a.account_id
     WHERE c.connection_id = $1
-      AND p."domain" = $2
-      AND p.area = $3
+      AND s.service_id = $2
+      AND p."domain" = $3
+    ${(area ? ' AND p.area = $4' : '')}
       AND p.type = 'READ'
       AND p.approved_at IS NOT NULL
       AND p.rejected IS NULL
       AND p.revoked IS NULL
       AND (p.expires IS NULL OR p.expires > NOW())
-      AND s.service_id = $4
-    `,
-    [connectionId, domain, area, serviceId]
-  ]
+    `
+  const params = [connectionId, serviceId, domain]
+  if (area) { params.push(area) }
+  return [ sql, params ]
 }
 
 module.exports = {

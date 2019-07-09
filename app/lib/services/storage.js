@@ -11,14 +11,20 @@ export const getAccount = async () => {
 }
 
 export const getConnections = () =>
-  AsyncStorage.getItem('connections').then(res => (res ? JSON.parse(res) : []))
+  AsyncStorage.getItem('connections').then(res => (res ? JSON.parse(res) : {}))
 
-export const storeConnection = async ({ serviceId, connectionId }) => {
+export const getConnection = async serviceId => {
+  const connections = await getConnections()
+  return connections[serviceId]
+}
+
+export const storeConnection = async ({ serviceId, ...rest }) => {
   const existingConnections = await getConnections()
+  existingConnections[serviceId] = { serviceId, ...rest }
 
   return AsyncStorage.setItem(
     'connections',
-    JSON.stringify([...existingConnections, { serviceId, connectionId }])
+    JSON.stringify(existingConnections)
   )
 }
 

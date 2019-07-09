@@ -77,7 +77,7 @@ const ACCOUNT_REGISTRATION = Joi.object({
   pds: Joi.object({
     provider: Joi.string().required(),
     access_token: Joi.string()
-  }).required()
+  }).unknown(true).required()
 })
 
 // service -> device
@@ -99,7 +99,7 @@ const LAWFUL_BASIS = Joi.string().valid('CONSENT')
 
 const CONTENT_PATH = {
   domain: Joi.string().uri().required(),
-  area: Joi.string().optional()
+  area: Joi.string().required()
 }
 
 const PERMISSION_BASE = {
@@ -227,7 +227,10 @@ const DATA_READ_REQUEST = Joi.object({
   ...JWT_DEFAULTS,
   type: 'DATA_READ_REQUEST',
   sub: Joi.string().uuid({ version: 'uuidv4' }).required(), // connection id
-  paths: Joi.array().items(CONTENT_PATH).min(1).optional()
+  paths: Joi.array().items(Joi.object({
+    domain: Joi.string().uri().optional(),
+    area: Joi.string().optional()
+  })).min(1).optional()
 }).required()
 
 const DATA_READ_RESPONSE = Joi.object({
@@ -236,7 +239,13 @@ const DATA_READ_RESPONSE = Joi.object({
   sub: Joi.string().uuid({ version: 'uuidv4' }).required(), // connection id
   paths: Joi.array().items(Joi.object({
     ...CONTENT_PATH,
-    data: JWE.optional()
+    data: JWE.optional(),
+    error: Joi.object({
+      message: Joi.string().required(),
+      status: Joi.number().integer().min(400).max(599).optional(),
+      code: Joi.string().optional(),
+      stack: Joi.string().optional()
+    })
   })).min(1).optional()
 })
 

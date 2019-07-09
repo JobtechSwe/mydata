@@ -40,14 +40,13 @@ describe('adapters/postgres', () => {
     })
   })
   describe('#multiple', () => {
-    let queries, empty, results
+    let queries, results
     beforeEach(() => {
       queries = [
         ['INSERT INTO foo(id, val) VALUES($1, $2)', [1, 2]],
         ['INSERT INTO herp(id, val) VALUES($1, $2)', [1, 2]],
         ['SELECT * FROM bar']
       ]
-      empty = { metaData: [], rows: [], rowCount: 0 }
       results = [
         { metaData: [], rows: [], rowCount: 1 },
         { metaData: [], rows: [], rowCount: 2 },
