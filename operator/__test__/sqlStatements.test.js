@@ -120,4 +120,44 @@ describe('sqlStatements', () => {
       ])
     })
   })
+  describe('#readPermission', () => {
+    it('adds correct WHERE clauses and param with area', () => {
+      const connectionId = 'abcd'
+      const domain = 'https://mydomain'
+      const area = 'edumacation'
+      const serviceId = 'https://myservice'
+      const [sql, params] = sqlStatements.readPermission({
+        connectionId,
+        domain,
+        area,
+        serviceId
+      })
+      expect(sql).toEqual(expect.stringMatching(/type = 'READ'/))
+      expect(sql).toEqual(expect.stringMatching(/connection_id = \$1/))
+      expect(sql).toEqual(expect.stringMatching(/service_id = \$2/))
+      expect(sql).toEqual(expect.stringMatching(/"domain" = \$3/))
+      expect(sql).toEqual(expect.stringMatching(/area = \$4/))
+
+      expect(params).toEqual([connectionId, serviceId, domain, area])
+    })
+    it('adds correct WHERE clauses and param without area', () => {
+      const connectionId = 'abcd'
+      const domain = 'https://mydomain'
+      const area = undefined
+      const serviceId = 'https://myservice'
+      const [sql, params] = sqlStatements.readPermission({
+        connectionId,
+        domain,
+        area,
+        serviceId
+      })
+      expect(sql).toEqual(expect.stringMatching(/type = 'READ'/))
+      expect(sql).toEqual(expect.stringMatching(/connection_id = \$1/))
+      expect(sql).toEqual(expect.stringMatching(/service_id = \$2/))
+      expect(sql).toEqual(expect.stringMatching(/"domain" = \$3/))
+      expect(sql).not.toEqual(expect.stringMatching(/area = /))
+
+      expect(params).toEqual([connectionId, serviceId, domain])
+    })
+  })
 })

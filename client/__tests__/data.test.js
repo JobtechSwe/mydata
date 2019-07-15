@@ -1,153 +1,361 @@
-const dataService = require('../lib/data')
-const axios = require('axios')
-const { sign } = require('jsonwebtoken')
-const KeyProvider = require('../lib/keyProvider')
-const { createMemoryStore } = require('../lib/memoryStore')
-const crypto = require('../lib/crypto')
-const { generateKeyPair, base64ToJson } = require('./_helpers')
-jest.mock('axios')
+const { JWE, JWS, JWK } = require('@panva/jose')
+const data = require('../lib/data')
+const { generateKey, toPublicKey } = require('../lib/crypto')
+const { verify } = require('../lib/jwt')
+
+jest.mock('../lib/jwt', () => ({
+  verify: jest.fn().mockName('jwt.verify')
+}))
 
 describe('data', () => {
-  let consentId, domain, consentKeys, accountKey, otherServiceKey
+  let signingKey, accountEncryptionKey, serviceEncryptionKey
   beforeAll(async () => {
-    domain = 'http://cv.work:4000'
-    consentId = '528adc99-e899-422f-a0f2-a95d3a066464'
-    consentKeys = await generateKeyPair({
-      kid: `${domain}/jwks/enc_consent-keys`
-    })
-    accountKey = await generateKeyPair({
-      kid: `mydata://${consentId}/account-key`
-    })
-    otherServiceKey = await generateKeyPair({
-      kid: `https://some-other-service/jwks/enc_some-key`
-    })
+    signingKey = await generateKey('https://mycv.work', { use: 'sig' })
+    accountEncryptionKey = await generateKey('egendata://jwks', { use: 'enc' })
+    serviceEncryptionKey = await generateKey('https://mycv.work/jwks', { use: 'enc' })
   })
 
-  let config, accessToken, keyProvider, area1, area2
-  let read, write
-  beforeEach(async () => {
-    const keyValueStore = createMemoryStore()
-    keyProvider = new KeyProvider({
-      clientKeys: {},
-      keyOptions: {},
-      jwksUrl: `${domain}/jwks`,
-      keyValueStore
-    })
-    config = { operator: 'http://localhost:3000' }
-    accessToken = sign({ data: { consentId } }, 'secret')
+  let config, keyProvider, tokens
+  let connectionId, domain, area, payload
+  let read, write, auth
+  beforeEach(() => {
+    config = {
+      clientId: 'https://mycv.work',
+      jwksURI: 'https://mycv.work/jwks',
+      operator: 'https://smoothoperator.com'
+    }
+    keyProvider = {
+      getSigningKey: jest.fn().mockName('keyProvider.getSigningKey')
+        .mockResolvedValue(signingKey),
+      getWriteKeys: jest.fn().mockName('keyProvider.getWriteKeys')
+        .mockResolvedValue({
+          keys: [
+            toPublicKey(accountEncryptionKey),
+            toPublicKey(serviceEncryptionKey)
+          ]
+        }),
+      getKey: jest.fn().mockName('keyProvider.getKey')
+        .mockResolvedValue(serviceEncryptionKey)
+    }
+    tokens = {
+      createWriteDataToken: jest.fn().mockName('tokens.createWriteDataToken')
+        .mockResolvedValue('write.data.token'),
+      createReadDataToken: jest.fn().mockName('tokens.createReadDataToken')
+        .mockResolvedValue('read.data.token'),
+      send: jest.fn().mockName('tokens.send')
+        .mockResolvedValue({})
+    }
+    const client = { config, keyProvider, tokens }
+    ;({ auth, read, write } = data(client))
 
-    await keyProvider.saveKey(consentKeys)
-    await keyProvider.saveConsentKeyId(consentId, consentKeys.kid)
-    await keyProvider.saveKey({ kid: accountKey.kid, publicKey: accountKey.publicKey })
-    await keyProvider.saveKey({ kid: otherServiceKey.kid, publicKey: otherServiceKey.publicKey })
-
-    area1 = 'education'
-    area2 = 'experience'
-    await keyProvider.saveAccessKeyIds(consentId, domain, area1, [
-      consentKeys.kid, accountKey.kid
-    ])
-    await keyProvider.saveAccessKeyIds(consentId, domain, area2, [
-      consentKeys.kid, accountKey.kid, otherServiceKey.kid
-    ])
-
-    const ds = dataService({ config, keyProvider })
-      .auth(accessToken)
-    read = ds.read
-    write = ds.write
-  })
-
-  describe('#read', () => {
-    it('calls axios.get with correct url and header for root', async () => {
-      axios.get.mockResolvedValue({ data: '' })
-      await read({})
-
-      expect(axios.get).toHaveBeenCalledTimes(1)
-      expect(axios.get).toHaveBeenCalledWith(`http://localhost:3000/api/data/`,
-        { headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' } })
-    })
-    it('calls axios.get with correct url and header for domain', async () => {
-      axios.get.mockResolvedValue({ data: '' })
-      await read({ domain: 'cv.work:4000' })
-
-      expect(axios.get).toHaveBeenCalledTimes(1)
-      expect(axios.get).toHaveBeenCalledWith(`http://localhost:3000/api/data/${encodeURIComponent('cv.work:4000')}`,
-        { headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' } })
-    })
-    it('calls axios.get with correct url and header for domain and area', async () => {
-      axios.get.mockResolvedValue({ data: '' })
-      await read({ domain: 'cv.work:4000', area: 'cv' })
-
-      expect(axios.get).toHaveBeenCalledTimes(1)
-      expect(axios.get).toHaveBeenCalledWith(`http://localhost:3000/api/data/${encodeURIComponent('cv.work:4000')}/${encodeURIComponent('cv')}`,
-        { headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' } })
-    })
-    it('returns empty object for missing data', async () => {
-      axios.get.mockResolvedValue({ data: '' })
-      const result = await read({ domain: 'cv.work:4000', area: 'cv' })
-
-      expect(result).toEqual({})
-    })
-    it('decrypts data', async () => {
-      // Step 1: Use write to encrypt
-      const data = { foo: 'bar' }
-      await write({ domain, area: area1, data })
-      const doc = axios.post.mock.calls[0][1].data
-
-      // Step 2: Return the encrypted document
-      axios.get.mockResolvedValue({ data: { data: { [domain]: { [area1]: doc } } } })
-
-      // Step 3: Profit!
-      const result = await read({ domain: 'cv', area: '/foo' })
-      expect(result).toEqual({ [domain]: { [area1]: data } })
-    })
-    it('returns null for missing data', async () => {
-      // Step 1: Use write to encrypt
-      const data = { foo: 'bar' }
-      await write({ domain, area: area1, data })
-      const doc = axios.post.mock.calls[0][1].data
-
-      // Step 2: Return the encrypted document
-      axios.get.mockResolvedValue({ data: { data: { [domain]: { [area1]: doc, [area2]: null } } } })
-
-      // Step 3: Profit!
-      const result = await read({ domain: 'cv' })
-      expect(result).toEqual({ [domain]: { [area1]: data, [area2]: null } })
-    })
+    connectionId = 'd52da47c-8895-4db8-ae04-7434f21fd118'
+    domain = 'https://somotherdomain.org'
+    area = 'edumacation'
+    payload = ['some', 'stuff']
   })
   describe('#write', () => {
-    it('calls axios.post with correct url and header', async () => {
-      const data = { foo: 'bar' }
-      await write({ domain, area: area1, data })
+    it('creates a token with the correct arguments', async () => {
+      await write(connectionId, { domain, area, data: payload })
 
-      expect(axios.post).toHaveBeenCalledTimes(1)
-      expect(axios.post).toHaveBeenCalledWith(
-        `http://localhost:3000/api/data/${encodeURIComponent(domain)}/${encodeURIComponent(area1)}`,
-        { data: expect.any(String) },
-        { headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' } }
+      expect(tokens.createWriteDataToken).toHaveBeenCalledWith(
+        connectionId, [ { domain, area, data: expect.any(Object) } ]
       )
     })
-    describe('new document', () => {
-      it('generates document keys', async () => {
-        const data = { foo: 'bar' }
-        await write({ domain, area: area1, data })
+    it('creates a token with the correct arguments without domain', async () => {
+      await write(connectionId, { area, data: payload })
 
-        const arg = axios.post.mock.calls[0][1].data
-        const [, keys] = arg.split('\n')
-        expect(base64ToJson(keys)).toEqual({
-          [consentKeys.kid]: expect.any(String),
-          [accountKey.kid]: expect.any(String)
+      expect(tokens.createWriteDataToken).toHaveBeenCalledWith(
+        connectionId, [
+          { domain: config.clientId, area, data: expect.any(Object) }
+        ]
+      )
+    })
+    it('creates a correct token with multiple paths', async () => {
+      const area2 = 'experience'
+      await write(connectionId,
+        { area, data: payload },
+        { area: area2, data: payload })
+
+      expect(tokens.createWriteDataToken).toHaveBeenCalledWith(
+        connectionId, [
+          { domain: config.clientId, area, data: expect.any(Object) },
+          { domain: config.clientId, area: area2, data: expect.any(Object) }
+        ]
+      )
+    })
+    it('posts to operator', async () => {
+      await write(connectionId, { domain, area, data: payload })
+
+      expect(tokens.send).toHaveBeenCalledWith(
+        'https://smoothoperator.com/api',
+        'write.data.token'
+      )
+    })
+  })
+  describe('#read', () => {
+    let data
+    function createJWE (data) {
+      const signed = JWS.sign(JSON.stringify(data), JWK.importKey(signingKey), { kid: signingKey.kid })
+      const encryptor = new JWE.Encrypt(signed)
+      encryptor.recipient(JWK.importKey(toPublicKey(accountEncryptionKey)),
+        { kid: accountEncryptionKey.kid })
+      encryptor.recipient(JWK.importKey(toPublicKey(serviceEncryptionKey)),
+        { kid: serviceEncryptionKey.kid })
+      return encryptor.encrypt('general')
+    }
+    describe('with data', () => {
+      beforeEach(() => {
+        data = ['I love horses']
+        tokens.send.mockResolvedValue('read.response.token')
+        verify.mockImplementation(() => ({
+          payload: {
+            paths: [ { domain, area, data: createJWE(data) } ]
+          }
+        }))
+      })
+      it('creates a token with the correct arguments', async () => {
+        await read(connectionId, { domain, area })
+
+        expect(tokens.createReadDataToken).toHaveBeenCalledWith(
+          connectionId, [ { domain, area } ]
+        )
+      })
+      it('creates a token with the correct arguments without domain', async () => {
+        await read(connectionId, { area })
+
+        expect(tokens.createReadDataToken).toHaveBeenCalledWith(
+          connectionId, [ { domain: config.clientId, area } ]
+        )
+      })
+      it('creates a token with the correct arguments with multiple paths', async () => {
+        await read(connectionId, { area }, { domain, area: 'experience' })
+
+        expect(tokens.createReadDataToken).toHaveBeenCalledWith(
+          connectionId, [
+            { domain: config.clientId, area },
+            { domain, area: 'experience' }
+          ]
+        )
+      })
+      it('posts to operator', async () => {
+        await read(connectionId, { domain, area })
+
+        expect(tokens.send).toHaveBeenCalledWith(
+          'https://smoothoperator.com/api',
+          'read.data.token'
+        )
+      })
+      it('verifies the returned payload', async () => {
+        await read(connectionId, { domain, area })
+
+        expect(verify).toHaveBeenCalledWith('read.response.token')
+      })
+      it('gets the correct decryption key', async () => {
+        await read(connectionId, { domain, area })
+
+        expect(keyProvider.getKey).toHaveBeenCalledWith(serviceEncryptionKey.kid)
+      })
+      it('decrypts, parses and returns the data', async () => {
+        const [decrypted] = await read(connectionId, { domain, area })
+
+        expect(decrypted).toEqual({ domain, area, data })
+      })
+    })
+    describe('without data', () => {
+      beforeEach(() => {
+        tokens.send.mockResolvedValue('read.response.token')
+        verify.mockImplementation(() => ({
+          payload: {
+            paths: [ { domain, area } ]
+          }
+        }))
+      })
+      it('creates a token with the correct arguments', async () => {
+        await read(connectionId, { domain, area })
+
+        expect(tokens.createReadDataToken).toHaveBeenCalledWith(
+          connectionId, [ { domain, area } ]
+        )
+      })
+      it('creates a token with the correct arguments without domain', async () => {
+        await read(connectionId, { area })
+
+        expect(tokens.createReadDataToken).toHaveBeenCalledWith(
+          connectionId, [ { domain: config.clientId, area } ]
+        )
+      })
+      it('posts to operator', async () => {
+        await read(connectionId, { domain, area })
+
+        expect(tokens.send).toHaveBeenCalledWith(
+          'https://smoothoperator.com/api',
+          'read.data.token'
+        )
+      })
+      it('verifies the returned payload', async () => {
+        await read(connectionId, { domain, area })
+
+        expect(verify).toHaveBeenCalledWith('read.response.token')
+      })
+    })
+  })
+  describe('#auth', () => {
+    let accessToken
+    beforeEach(() => {
+      accessToken = 'access.token'
+      verify.mockResolvedValue({ payload: { sub: connectionId } })
+    })
+    describe('#write', () => {
+      it('calls verify to unpack the access token', async () => {
+        await auth(accessToken).write({ domain, area, data: payload })
+
+        expect(verify).toHaveBeenCalledWith(accessToken)
+      })
+      it('creates a token with the correct arguments', async () => {
+        await auth(accessToken).write({ domain, area, data: payload })
+
+        expect(tokens.createWriteDataToken).toHaveBeenCalledWith(
+          connectionId, [ { domain, area, data: expect.any(Object) } ]
+        )
+      })
+      it('creates a token with the correct arguments without domain', async () => {
+        await auth(accessToken).write({ area, data: payload })
+
+        expect(tokens.createWriteDataToken).toHaveBeenCalledWith(
+          connectionId, [ { domain: config.clientId, area, data: expect.any(Object) } ]
+        )
+      })
+      it('posts to operator', async () => {
+        await auth(accessToken).write({ domain, area, data: payload })
+
+        expect(tokens.send).toHaveBeenCalledWith(
+          'https://smoothoperator.com/api',
+          'write.data.token'
+        )
+      })
+    })
+    describe('#read', () => {
+      let data
+      function createJWE (data) {
+        const signed = JWS.sign(JSON.stringify(data), JWK.importKey(signingKey), { kid: signingKey.kid })
+        const encryptor = new JWE.Encrypt(signed)
+        encryptor.recipient(JWK.importKey(toPublicKey(accountEncryptionKey)),
+          { kid: accountEncryptionKey.kid })
+        encryptor.recipient(JWK.importKey(toPublicKey(serviceEncryptionKey)),
+          { kid: serviceEncryptionKey.kid })
+        return encryptor.encrypt('general')
+      }
+      describe('with data', () => {
+        beforeEach(() => {
+          data = ['I love horses']
+          tokens.send.mockResolvedValue('read.response.token')
+          verify.mockImplementation(async (token) => {
+            switch (token) {
+              case 'access.token':
+                return { payload: { sub: connectionId } }
+              case 'read.response.token':
+                return { payload: {
+                  paths: [ { domain, area, data: createJWE(data) } ]
+                } }
+              default:
+                throw new Error('Unmocked token')
+            }
+          })
+        })
+        it('calls verify to unpack the access token', async () => {
+          await auth(accessToken).read({ domain, area })
+
+          expect(verify).toHaveBeenCalledWith(accessToken)
+        })
+        it('creates a token with the correct arguments', async () => {
+          await auth(accessToken).read({ domain, area })
+
+          expect(tokens.createReadDataToken).toHaveBeenCalledWith(
+            connectionId, [ { domain, area } ]
+          )
+        })
+        it('creates a token with the correct arguments without domain', async () => {
+          await auth(accessToken).read({ area })
+
+          expect(tokens.createReadDataToken).toHaveBeenCalledWith(
+            connectionId, [ { domain: config.clientId, area } ]
+          )
+        })
+        it('posts to operator', async () => {
+          await auth(accessToken).read({ domain, area })
+
+          expect(tokens.send).toHaveBeenCalledWith(
+            'https://smoothoperator.com/api',
+            'read.data.token'
+          )
+        })
+        it('verifies the returned payload', async () => {
+          await auth(accessToken).read({ domain, area })
+
+          expect(verify).toHaveBeenCalledWith('read.response.token')
+        })
+        it('gets the correct decryption key', async () => {
+          await auth(accessToken).read({ domain, area })
+
+          expect(keyProvider.getKey).toHaveBeenCalledWith(serviceEncryptionKey.kid)
+        })
+        it('decrypts, parses and returns the data', async () => {
+          const [decrypted] = await auth(accessToken).read({ domain, area })
+
+          expect(decrypted).toEqual({ domain, area, data })
         })
       })
-      it('properly encrypts document', async () => {
-        const data = { foo: 'bar' }
-        await write({ domain, area: area1, data })
+      describe('without data', () => {
+        beforeEach(() => {
+          tokens.send.mockResolvedValue('read.response.token')
+          verify.mockImplementation(async (token) => {
+            switch (token) {
+              case 'access.token':
+                return { payload: { sub: connectionId } }
+              case 'read.response.token':
+                return { payload: { paths: [ { domain, area } ] } }
+              default:
+                throw new Error('Unmocked token')
+            }
+          })
+        })
+        it('calls verify to unpack the access token', async () => {
+          await auth(accessToken).read({ domain, area })
 
-        const arg = axios.post.mock.calls[0][1].data
-        const [cipher, keys] = arg.split('\n')
-        const consentDocumentKey = base64ToJson(keys)[consentKeys.kid]
-        const aesKey = crypto.decryptDocumentKey(consentDocumentKey, consentKeys.privateKey)
-        const doc = crypto.decryptDocument(aesKey, cipher)
-        expect(doc).toEqual(data)
+          expect(verify).toHaveBeenCalledWith(accessToken)
+        })
+        it('creates a token with the correct arguments', async () => {
+          await auth(accessToken).read({ domain, area })
+
+          expect(tokens.createReadDataToken).toHaveBeenCalledWith(
+            connectionId, [ { domain, area } ]
+          )
+        })
+        it('creates a token with the correct arguments without domain', async () => {
+          await auth(accessToken).read({ area })
+
+          expect(tokens.createReadDataToken).toHaveBeenCalledWith(
+            connectionId, [ { domain: config.clientId, area } ]
+          )
+        })
+        it('posts to operator', async () => {
+          await auth(accessToken).read({ domain, area })
+
+          expect(tokens.send).toHaveBeenCalledWith(
+            'https://smoothoperator.com/api',
+            'read.data.token'
+          )
+        })
+        it('verifies the returned payload', async () => {
+          await auth(accessToken).read({ domain, area })
+
+          expect(verify).toHaveBeenCalledWith('read.response.token')
+        })
+        it('returns undefined', async () => {
+          const [decrypted] = await auth(accessToken).read({ domain, area })
+
+          expect(decrypted).toEqual({ domain, area })
+        })
       })
     })
   })

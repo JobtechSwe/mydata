@@ -1,217 +1,97 @@
+const { createClientWithServer } = require('./helpers')
 const phone = require('./helpers/phone')
-const { createClientWithServer } = require('./helpers/index')
-const { clearOperatorDb } = require('./helpers/operatorPostgres')
+const postgres = require('./helpers/operatorPostgres')
 
-describe.skip('Data', () => {
-  let client
-
-  beforeEach(async () => {
-    await phone.createAccount({ firstName: 'John', lastName: 'Doe' })
-
-    // Get client going
-    client = await createClientWithServer()
-    await client.connect()
-  })
-
-  afterEach(async done => {
+describe('data', () => {
+  let serviceClient, connectionId
+  beforeAll(async () => {
+    // Init Operator DB
+    await postgres.createOperatorDb()
     await phone.clearAccount()
-    await clearOperatorDb()
-    client.server.close(done)
-  })
 
-  it('Can read/write data', async done => {
-    const request = {
-      scope: [
+    await phone.createAccount({ firstName: 'Foo', lastName: 'Barsson' })
+
+    // Create a service
+    const serviceConfig = {
+      defaultPermissions: [
         {
-          domain: client.config.clientId,
-          area: 'test-data',
-          description: 'Test data lives a happy life here.',
-          permissions: ['write'],
-          purpose: 'Because I say so.',
-          lawfulBasis: 'CONSENT'
-        }
-      ],
-      expiry: 12352134153
-    }
-
-    // Start listening for event
-    client.events.on('CONSENT_APPROVED', async event => {
-      try {
-        // Read data
-        const initialData = await client.data.auth(event.accessToken).read({
-          domain: client.config.clientId,
-          area: 'test-data'
-        })
-        expect(initialData).toEqual({
-          [client.config.clientId]: {
-            'test-data': null
-          }
-        })
-
-        // Write data
-        await client.data.auth(event.accessToken).write({
-          domain: client.config.clientId,
-          area: 'test-data',
-          data: {
-            age: 64,
-            interests: ['cooking', 'fishing', 'books', 'gardening']
-          }
-        })
-
-        // Read data again
-        const data = await client.data.auth(event.accessToken).read({
-          domain: client.config.clientId,
-          area: 'test-data'
-        })
-
-        expect(data).toEqual({
-          [client.config.clientId]: {
-            'test-data': {
-              age: 64,
-              interests: ['cooking', 'fishing', 'books', 'gardening']
-            }
-          }
-        })
-
-        done()
-      } catch (error) {
-        done(error)
-      }
-    })
-
-    // Do request
-    const { url } = await client.consents.request(request)
-
-    // User gets the request and approves it
-    await phone.getAndApproveConsentRequest(url)
-  })
-
-  it('Can perform simultaneous writes', async done => {
-    const request = {
-      scope: [
-        {
-          domain: client.config.clientId,
-          area: 'test-data-1',
-          description: 'Test data lives a happy life here.',
-          permissions: ['write'],
-          purpose: 'Because I say so.',
-          lawfulBasis: 'CONSENT'
+          area: 'favorite_cats',
+          types: ['WRITE'],
+          description: 'The cats you like the most'
         },
         {
-          domain: client.config.clientId,
-          area: 'test-data-2',
-          description: 'Test data lives a happy life here.',
-          permissions: ['write'],
-          purpose: 'Because I say so.',
-          lawfulBasis: 'CONSENT'
-        },
-        {
-          domain: client.config.clientId,
-          area: 'test-data-3',
-          description: 'Test data lives a happy life here.',
-          permissions: ['write'],
-          purpose: 'Because I say so.',
-          lawfulBasis: 'CONSENT'
+          area: 'favorite_cats',
+          types: ['READ'],
+          purpose: 'To recommend you cats that you\'ll like'
         }
-      ],
-      expiry: 12352134153
+      ]
     }
+    serviceClient = await createClientWithServer(serviceConfig)
+    await serviceClient.connect()
 
-    // Start listening for event
-    client.events.on('CONSENT_APPROVED', async event => {
-      try {
-        // Read data
-        const initialData = await client.data.auth(event.accessToken).read({
-          domain: client.config.clientId,
-          area: 'test-data-1'
-        })
-        expect(initialData).toEqual({
-          [client.config.clientId]: {
-            'test-data-1': null
-          }
-        })
+    // Get QR code
+    const { url } = await serviceClient.initializeAuthentication()
 
-        // Write data
-        await Promise.all([
-          client.data.auth(event.accessToken).write({
-            domain: client.config.clientId,
-            area: 'test-data-1',
-            data: {
-              age: 64,
-              interests: ['cooking', 'fishing', 'books', 'gardening']
-            }
-          }),
-          client.data.auth(event.accessToken).write({
-            domain: client.config.clientId,
-            area: 'test-data-2',
-            data: {
-              age: 64,
-              interests: ['cooking', 'fishing', 'books', 'gardening']
-            }
-          }),
-          client.data.auth(event.accessToken).write({
-            domain: client.config.clientId,
-            area: 'test-data-3',
-            data: {
-              age: 64,
-              interests: ['cooking', 'fishing', 'books', 'gardening']
-            }
-          })
-        ])
+    // Send it to phone
+    const { connectionRequest } = await phone.handleAuthCode({ code: url })
 
-        // Read data again
-        const [data1, data2, data3] = await Promise.all([
-          client.data.auth(event.accessToken).read({
-            domain: client.config.clientId,
-            area: 'test-data-1'
-          }),
-          client.data.auth(event.accessToken).read({
-            domain: client.config.clientId,
-            area: 'test-data-2'
-          }),
-          client.data.auth(event.accessToken).read({
-            domain: client.config.clientId,
-            area: 'test-data-3'
-          })
-        ])
+    // Approve it!
+    let approvalResponse = new Map()
+    connectionRequest.permissions.forEach(p => approvalResponse.set(p.id, true))
+    connectionId = await phone.approveConnection(connectionRequest, approvalResponse)
+  })
 
-        expect(data1).toEqual({
-          [client.config.clientId]: {
-            'test-data-1': {
-              age: 64,
-              interests: ['cooking', 'fishing', 'books', 'gardening']
-            }
-          }
-        })
+  afterAll(async (done) => {
+    await phone.clearAccount()
+    await postgres.clearOperatorDb()
+    serviceClient.server.close(done)
+  })
 
-        expect(data2).toEqual({
-          [client.config.clientId]: {
-            'test-data-2': {
-              age: 64,
-              interests: ['cooking', 'fishing', 'books', 'gardening']
-            }
-          }
-        })
-
-        expect(data3).toEqual({
-          [client.config.clientId]: {
-            'test-data-3': {
-              age: 64,
-              interests: ['cooking', 'fishing', 'books', 'gardening']
-            }
-          }
-        })
-
-        done()
-      } catch (error) {
-        done(error)
-      }
+  describe('#write', () => {
+    let domain, area
+    beforeEach(() => {
+      domain = serviceClient.config.clientId
+      area = 'favorite_cats'
     })
+    it('works using area only', async () => {
+      const data = ['All of them']
 
-    // Do request
-    const { url } = await client.consents.request(request)
+      const writePromise = serviceClient.data.write(connectionId, { area, data })
 
-    // User gets the request and approves it
-    await phone.getAndApproveConsentRequest(url)
+      await expect(writePromise).resolves.not.toThrow()
+    })
+    it('works using domain and area', async () => {
+      const data = ['All of them']
+
+      const writePromise = serviceClient.data.write(connectionId, { domain, area, data })
+
+      await expect(writePromise).resolves.not.toThrow()
+    })
+  })
+
+  describe('#read', () => {
+    let domain, area, data
+    beforeAll(async () => {
+      domain = serviceClient.config.clientId
+      area = 'favorite_cats'
+      data = ['All of them']
+
+      await serviceClient.data.write(connectionId, { area, data })
+    })
+    it('works using area', async () => {
+      const decryptedData = await serviceClient.data.read(connectionId, { area })
+
+      expect(decryptedData).toEqual([{ domain, area, data }])
+    })
+    it('works using domain and area', async () => {
+      const decryptedData = await serviceClient.data.read(connectionId, { domain, area })
+
+      expect(decryptedData).toEqual([{ domain, area, data }])
+    })
+    it('works using domain only', async () => {
+      const decryptedData = await serviceClient.data.read(connectionId, { domain })
+
+      expect(decryptedData).toEqual([{ domain, area, data }])
+    })
   })
 })

@@ -81,8 +81,12 @@ function Login(props) {
               >
                 <ScopeItemWrapper style={{ marginBottom: 24 }}>
                   <H3>Vill du logga in på:</H3>
+                  <Paragraph>{props.existingConnection.displayName}</Paragraph>
                   <Paragraph small>
-                    {props.existingConnection.serviceId}
+                    ({props.existingConnection.serviceId})
+                  </Paragraph>
+                  <Paragraph small>
+                    {props.existingConnection.description}
                   </Paragraph>
                 </ScopeItemWrapper>
               </ScrollViewWrap>
