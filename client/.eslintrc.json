@@ -3,5 +3,8 @@
   "plugins": ["jest"],
   "env": {
     "node": true
+  },
+  "rules": {
+    "arrow-parens": ["error", "always"]
   }
 }

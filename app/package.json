@@ -24,7 +24,7 @@
   ],
   "license": "Apache-2.0",
   "dependencies": {
-    "@egendata/messaging": "file:../messaging/egendata-messaging-0.2.0.tgz",
+    "@egendata/messaging": "0.3.1",
     "@react-native-community/async-storage": "1.4.0",
     "@trackforce/react-native-crypto": "0.0.8",
     "@types/js-base64": "^2.3.1",

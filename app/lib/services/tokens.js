@@ -5,15 +5,15 @@ import Config from 'react-native-config'
 const nowSeconds = () => Math.round(Date.now() / 1000)
 
 export const createAccountRegistration = async (
-  newAccount,
+  { id, pds: { provider, access_token } },
   { publicKey, privateKey }
 ) => {
   return sign(
     {
       type: 'ACCOUNT_REGISTRATION',
       aud: Config.OPERATOR_URL,
-      iss: `mydata://account/${newAccount.id}`,
-      pds: newAccount.pds,
+      iss: `mydata://account/${id}`,
+      pds: { provider, access_token },
     },
     privateKey,
     {

@@ -29,7 +29,7 @@ async function authorize (code) {
   return response.data
 }
 
-function fixUtf8 (fs) {
+function fixReadFile (fs) {
   const _readFile = fs.readFile.bind(fs)
   fs.readFile = (remotePath, options = { encoding: null }, callback) => {
     _readFile(remotePath, options, (err, res) => {
@@ -44,7 +44,13 @@ function fixUtf8 (fs) {
         }
       }
       if (err) {
-        callback(err)
+        const parsed = JSON.parse(err.error)
+        const error = new Error(parsed.error_summary)
+        error.status = err.status
+        if (error.status === 409 && error.message === 'path/not_found/') {
+          error.code = 'ENOENT'
+        }
+        callback(error)
       } else {
         const { encoding } = options
         if (encoding) {
@@ -57,9 +63,9 @@ function fixUtf8 (fs) {
   return fs
 }
 
-function getFs (props) {
-  const fs = dropboxFs({ apiKey: props.apiKey })
-  return fixUtf8(fs)
+function getFs (apiKey) {
+  const fs = dropboxFs({ apiKey })
+  return fixReadFile(fs)
 }
 
 module.exports = {

@@ -21,7 +21,7 @@ const handlers = {
   LOGIN_EVENT: loginEventHandler
 }
 
-module.exports = client => {
+module.exports = (client) => {
   const router = new Router()
 
   router.use(json())

@@ -1,5 +1,5 @@
 import { verify } from './jwt'
-import { getConnections, storeConnection, storeKey } from './storage'
+import { getConnection, storeConnection, storeKey } from './storage'
 import Config from 'react-native-config'
 import axios from 'axios'
 import {
@@ -13,10 +13,7 @@ import { v4 } from 'uuid'
 import { generateKey, toPublicKey } from './crypto'
 
 export const authenticationRequestHandler = async ({ payload }) => {
-  const allConnections = await getConnections()
-  const existingConnection = allConnections.find(
-    x => x.serviceId === payload.iss
-  )
+  const existingConnection = await getConnection(payload.iss)
 
   if (existingConnection) {
     return { existingConnection, sessionId: payload.sid }
@@ -61,8 +58,12 @@ export const approveConnection = async (connectionRequest, approved) => {
 
     await storeConnection({
       serviceId: connectionRequest.iss,
+      displayName: connectionRequest.displayName,
+      description: connectionRequest.description,
+      iconURI: connectionRequest.iconURI,
       connectionId,
     })
+    return connectionId
   } catch (error) {
     console.error(error)
     throw error

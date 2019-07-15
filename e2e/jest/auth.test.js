@@ -12,6 +12,7 @@ describe('Authentication', () => {
     client = await createClientWithServer()
     await client.connect()
   })
+
   beforeEach(async () => {
     await phone.clearStorage()
     await phone.createAccount({ firstName: 'Foo', lastName: 'Barsson' })
