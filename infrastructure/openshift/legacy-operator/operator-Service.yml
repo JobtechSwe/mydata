@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: LEGACY-OPERATOR
+  name: legacy-operator
+spec:
+  ports:
+    - name: http
+      port: 3000
+      protocol: TCP
+      targetPort: 3000
+  selector:
+    app: LEGACY-OPERATOR
+    deploymentconfig: legacy-operator
+  type: ClusterIP
