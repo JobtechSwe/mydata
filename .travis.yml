@@ -4,6 +4,34 @@ env:
 # The jobs section declares jobs available in this build context
 jobs:
   include:
+  - stage: "code-coverage"
+    cache:
+      npm: true
+      directories:
+      - ~/.nvm
+    language: node_js
+    before_install:
+    # Install a newer version of docker-compose than the one provided by Travis
+    - if ! [ -x "$(command -v lerna)" ]; then npm install -g lerna; fi
+    - sudo apt-get install libgconf-2-4
+    install:
+    - npm run install
+    before_script:
+    - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+    - chmod +x ./cc-test-reporter
+    - ./cc-test-reporter before-build
+    script:
+    - npm run test:unit -- -- --coverage
+    after_script:
+    - for f in */; do
+        if [ -d $f ] && [ -d $f/coverage ]; then
+          echo $f;
+          ./cc-test-reporter format-coverage -t lcov -o coverage/coverage.${f//\//-}.json $f/coverage/lcov.info;
+        fi
+      done;
+      ./cc-test-reporter sum-coverage -o coverage/coverage.total.json coverage/coverage.*.json;
+      ./cc-test-reporter upload-coverage -i coverage/coverage.total.json;
+
   # lint and run end-to-end tests
   - stage: "lint-and-test"
     name: "Lint, run end-to-end and integration tests"
@@ -29,24 +57,10 @@ jobs:
     - docker load -i ~/.cache/docker/redis.tar || true
     - docker load -i ~/.cache/docker/postgres.tar || true
     - npm run install
-    before_script:
-    - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-    - chmod +x ./cc-test-reporter
-    - ./cc-test-reporter before-build
     script:
     - npm run lint
-    - npm run test:unit -- -- --coverage
     - npm run test:e2e
     after_script:
-    # See https://github.com/codeclimate/test-reporter/issues/263
-    - for f in */; do
-        if [ -d $f ] && [ -d $f/coverage ]; then
-          echo $f;
-          ./cc-test-reporter format-coverage -t lcov -o coverage/coverage.${f//\//-}.json $f/coverage/lcov.info;
-        fi
-      done;
-      ./cc-test-reporter sum-coverage -o coverage/coverage.total.json coverage/coverage.*.json;
-      ./cc-test-reporter upload-coverage -i coverage/coverage.total.json;
     - docker save node -o ~/.cache/docker/node.tar
     - docker save redis -o ~/.cache/docker/redis.tar
     - docker save postgres -o ~/.cache/docker/postgres.tar
@@ -95,6 +109,8 @@ jobs:
 # Flow control
 # This section defines the order in which stages are run and when to run certain stages
 stages:
+- name: code-coverage
+  if: (branch = master AND type != pull_request) OR tag IS present
 - name: lint-and-test
   if: branch != master
 - name: deliver
