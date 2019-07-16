@@ -8,10 +8,7 @@ const config = {
   operator: process.env.OPERATOR_URL || 'http://localhost:3000',
   jwksPath: '/jwks',
   eventsPath: '/events',
-  clientKeys: {
-    publicKey: process.env.PUBLIC_KEY,
-    privateKey: process.env.PRIVATE_KEY
-  },
+  clientKey: process.env.PRIVATE_KEY,
   defaultPermissions: [
     {
       area: 'baseData',

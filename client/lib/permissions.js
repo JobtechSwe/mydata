@@ -1,13 +1,14 @@
 const { v4 } = require('uuid')
+const { toPublicKey } = require('./crypto')
 
-const createPermissions = async (config, keyProvider) => {
-  return config.defaultPermissions
+const createPermissions = async (shorthandPermissions, clientId, keyProvider) => {
+  return shorthandPermissions
     .reduce(async (permissionsPromise, cp) => {
       const permissions = await permissionsPromise
       for (let type of cp.types) {
         const permission = {
           id: v4(),
-          domain: cp.domain || config.clientId,
+          domain: cp.domain || clientId,
           lawfulBasis: cp.lawfulBasis || 'CONSENT',
           area: cp.area,
           type
@@ -16,7 +17,9 @@ const createPermissions = async (config, keyProvider) => {
           case 'READ':
             permission.purpose = cp.purpose
             try {
-              permission.jwk = await keyProvider.generateTemporaryKey({ use: 'enc' }).then(keyPair => keyPair.publicKey)
+              permission.jwk = await keyProvider
+                .generateTemporaryKey({ use: 'enc' })
+                .then((key) => toPublicKey(key))
             } catch (error) {
               console.error(error)
               throw Error('Could not generate key for permission')

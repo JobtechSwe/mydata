@@ -35,11 +35,8 @@ async function query (sql, params = []) {
 async function multiple (queries) {
   const conn = await connect()
   try {
-    const results = []
-    for (const args of queries) {
-      let result = await conn.query(...args)
-      results.push(result)
-    }
+    const calls = queries.map((args) => conn.query(...args))
+    const results = await Promise.all(calls)
     return results
   } finally {
     await conn.end()

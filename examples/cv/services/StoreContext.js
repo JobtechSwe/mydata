@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useReducer } from 'react'
 import * as storage from './storage'
-import { write } from './data'
+import { read, write } from './data'
 
 const StoreContext = createContext({})
 
@@ -87,7 +87,7 @@ const StoreProvider = ({ ...props }) => {
   }, [])
 
   // Load data
-  /* useEffect(() => {
+  useEffect(() => {
     if (!data.token) { return }
 
     read(data.token)
@@ -97,7 +97,7 @@ const StoreProvider = ({ ...props }) => {
       .catch(error => {
         dispatch({ type: 'ERROR', error: new Error('LOAD_DATA', error) })
       })
-  }, [data.token]) */
+  }, [data.token])
 
   const saveEffect = (area) => useEffect(() => {
     if (!data.token || !data[area]) { return }

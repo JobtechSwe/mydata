@@ -1,6 +1,6 @@
 {
   "name": "@egendata/client",
-  "version": "0.2.0",
+  "version": "0.3.1",
   "description": "Client for Egendata Operator",
   "main": "lib/index.js",
   "scripts": {
@@ -29,16 +29,15 @@
   },
   "homepage": "https://github.com/JobtechSwe/mydata/client#readme",
   "dependencies": {
-    "@egendata/messaging": "file:../messaging",
+    "@egendata/messaging": "0.3.1",
+    "@hapi/joi": "^15.0.3",
     "@panva/jose": "^1.0.1",
     "axios": "^0.18.1",
     "body-parser": "^1.19.0",
     "case": "^1.6.1",
     "express": "^4.16.4",
     "http-errors": "^1.7.1",
-    "@hapi/joi": "^15.0.3",
     "jsonwebtoken": "^8.4.0",
-    "jwks-provider": "^0.1.0",
     "jws": "^3.2.2",
     "moment": "^2.24.0",
     "pem-jwk": "^2.0.0",

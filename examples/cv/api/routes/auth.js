@@ -1,6 +1,5 @@
 const { Router } = require('express')
 const router = Router()
-// const { createDefaultRequest } = require('../services/consents')
 
 module.exports = operator => {
   router.post('/', async (req, res, next) => {
@@ -17,10 +16,10 @@ module.exports = operator => {
   })
 
   router.get('/:id', async (req, res, next) => {
-    const authentication = await operator.getAuthentication(req.params.id)
+    const accessToken = await operator.getAuthentication(req.params.id)
 
-    if (authentication) {
-      res.send({ accessToken: authentication.accessToken })
+    if (accessToken) {
+      res.send({ accessToken })
     } else {
       res.sendStatus(404)
     }

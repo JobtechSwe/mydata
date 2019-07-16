@@ -1,25 +1,28 @@
 const createClient = require('../lib/client')
 const { createMemoryStore } = require('../lib/memoryStore')
 const axios = require('axios')
-const { generateKeyPair } = require('./_helpers')
+const { generateKey } = require('../lib/crypto')
 const { JWT } = require('@panva/jose')
 jest.mock('axios')
 
 describe('client', () => {
-  let config, clientKeys
+  let config, clientKey
 
   beforeEach(async () => {
-    clientKeys = await generateKeyPair()
+    const clientId = 'https://mycv.work'
+    const jwksURI = `${clientId}/jwks`
+    clientKey = await generateKey(jwksURI, { use: 'sig', kid: `${jwksURI}/client_key` })
     config = {
       displayName: 'CV app',
       description: 'A CV app with a description which is at least 10 chars',
-      clientId: 'https://mycv.work',
       operator: 'https://smoothoperator.work',
       jwksPath: '/jwks',
       eventsPath: '/events',
-      clientKeys: clientKeys,
+      iconURI: 'https://mycv.work/favicon.png',
+      clientKey: clientKey,
       keyValueStore: createMemoryStore(),
-      keyOptions: { modulusLength: 1024 }
+      keyOptions: { modulusLength: 1024 },
+      clientId
     }
   })
   afterEach(() => {
@@ -41,16 +44,18 @@ describe('client', () => {
         description,
         clientId,
         operator,
-        clientKeys,
-        keyValueStore
+        clientKey,
+        keyValueStore,
+        iconURI
       } = config
       client = createClient({
         displayName,
         description,
         clientId,
         operator,
-        clientKeys,
-        keyValueStore
+        clientKey,
+        keyValueStore,
+        iconURI
       })
       expect(client.config.jwksPath).toEqual('/jwks')
       expect(client.config.eventsPath).toEqual('/events')

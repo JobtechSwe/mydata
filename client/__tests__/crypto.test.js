@@ -1,120 +1,56 @@
 const crypto = require('../lib/crypto')
-const { generateKeyPair } = require('./_helpers')
 const { schemas } = require('@egendata/messaging')
 
 describe('crypto', () => {
-  let keys = []
-  beforeAll(async () => {
-    keys.push(await generateKeyPair())
-  })
-  describe('#generateJwkPair', () => {
-    const jwksUrl = 'http://localhost:4000/jwks'
-
+  const jwksURI = 'http://localhost:4000/jwks'
+  describe('#generateKey', () => {
     it('generates valid public key', async () => {
-      const keys = await crypto.generateJwkPair(jwksUrl, { kid: 'foo', use: 'enc' }, 1024)
+      const key = await crypto.generateKey(jwksURI, { use: 'enc' }, 1024)
 
-      await schemas.JWK.validate(keys.publicKey)
+      await schemas.JWK.validate(crypto.toPublicKey(key))
     })
     it('generates valid private key', async () => {
-      const keys = await crypto.generateJwkPair(jwksUrl, { kid: 'foo', use: 'enc' }, 1024)
-      await schemas.JWK_PRIVATE.validate(keys.privateKey)
+      const key = await crypto.generateKey(jwksURI, { use: 'enc' }, 1024)
+      await schemas.JWK_PRIVATE.validate(key)
     })
-
     it('throws if use is missing', async () => {
-      return expect(crypto.generateJwkPair('http://localhost:4000/jwks', { kid: 'foo' }, 1024)).rejects.toThrow(Error)
+      return expect(crypto.generateKey('http://localhost:4000/jwks', {}, 1024))
+        .rejects.toThrow(Error)
     })
-
-    it('throws if modulusLength is missing', async () => {
-      return expect(crypto.generateJwkPair('http://localhost:4000/jwks', { kid: 'foo', use: 'enc' })).rejects.toThrow(Error)
-    })
-
     it('correctly names enc key as absolute url', async () => {
-      const { privateKey, publicKey } = await crypto.generateJwkPair(jwksUrl, { use: 'enc' }, 1024)
-      expect(privateKey.kid).toEqual(expect.stringMatching(new RegExp(`^${jwksUrl}/enc_`)))
-      expect(publicKey.kid).toEqual(expect.stringMatching(new RegExp(`^${jwksUrl}/enc_`)))
+      const key = await crypto.generateKey(jwksURI, { use: 'enc' }, 1024)
+      expect(key.kid).toEqual(expect.stringMatching(new RegExp(`^${jwksURI}/`)))
     })
   })
-  describe('#generateDocumentKey', () => {
-    it('returns a 32 byte (256 bit) key', async () => {
-      const key = await crypto.generateDocumentKey()
-      expect(key).toBeInstanceOf(Buffer)
-      expect(key.length).toEqual(32)
+  describe('#importPEM', () => {
+    let pem
+    beforeEach(() => {
+      pem = '-----BEGIN RSA PRIVATE KEY-----\nMIICXgIBAAKBgQDIp5d0w4c8v4Wa/tma1DML3hvtXmsLB6sVFzrHagESn7AR00WB\nT6/hln3/YjXs1OcgQTkbXP41Zz8LaP5QYZ9voywrXD7iuaHfABHolhiW3y9p6fD9\nP6oNDvNKoS6zFOO7rqBHU3vZm5wfAPjeDqwtloTwY983fcgKdcyzTzpOjQIDAQAB\nAoGBALGfGYV1KJvv9jdUbhCO03kn7pTbReqHqTyMSa4I+lYgId5FpXtorQsHCxYt\nPAsgFFELK6A7W5SuhrJ1CNri8Bxzh/7gYyj7njBTsjNfuoiK3cIkZBoTvY9K/OB+\nzinNKibWf3SZv9l1qFkaJvaC/+R5DMLb9RXUiWJbhOHqTThJAkEA5i5IOpmUmDl1\nHkYaf1cHbmCdnuQHI1YTlANAk/QsAdzfExK6tsTgIqSq5qd+Q38xtZJQrTvTT6p7\nJX+WQflunwJBAN8pdOrdr1tr1o8m958uLs33zjLk75ScnL+tqlCFEtZTVZWIXScB\n9YVZff5yYONfkuDK0kw631UMSxSA14vL71MCQQCbb+WWrN+LbEGKkAyUsVBzWQsX\noSSw2A+ghBG318tf9qctWhh8E7bHris6VyEMs3f+BTA1y5CG27kNOXteUfJBAkEA\n2QQDwvLaONlhycxnOdE7iujVCQFBSxASDwTff3Ypn2ti6wu1Kt3o2UjyEaNBPVwQ\nBbK3V5JY5OgTi1jQRA6KKQJAQiTQR1sA2xiUhYwF6K4hnojGW1Ew0ZBLND+APkej\nufcVAF5yh+ACYQPUMrgNwgcHFshCEJ9cpePZMotVy7zSFQ==\n-----END RSA PRIVATE KEY-----\n'
     })
-    it('returns base64', async () => {
-      const key = await crypto.generateDocumentKey('base64')
-      expect(typeof key).toEqual('string')
-      const buf = Buffer.from(key, 'base64')
-      expect(buf).toBeInstanceOf(Buffer)
-      expect(buf.length).toEqual(32)
+    it('creates a valid jwk', () => {
+      const jwk = crypto.importPEM(pem, jwksURI, { use: 'sig' })
+      expect(jwk).toEqual({
+        kid: expect.stringMatching(/^http:\/\/localhost:4000\/jwks\//),
+        kty: 'RSA',
+        use: 'sig',
+        e: 'AQAB',
+        n: expect.any(String),
+        d: expect.any(String),
+        p: expect.any(String),
+        dp: expect.any(String),
+        q: expect.any(String),
+        dq: expect.any(String),
+        qi: expect.any(String)
+      })
     })
-  })
-  describe('#encryptDocumentKey', () => {
-    it('returns a buffer', async () => {
-      const key = await crypto.generateDocumentKey()
-      const encryptedKey = crypto.encryptDocumentKey(key, keys[0].publicKey)
-      expect(encryptedKey).toBeInstanceOf(Buffer)
+    it('throws if jwksURI is missing', () => {
+      expect(() => crypto.importPEM(pem, null, { use: 'sig' })).toThrow()
     })
-    it('accepts a base64 key', async () => {
-      const key = await crypto.generateDocumentKey('base64')
-      const encryptedKey = crypto.encryptDocumentKey(key, keys[0].publicKey)
-      expect(encryptedKey).toBeInstanceOf(Buffer)
+    it('throws if options is missing', () => {
+      expect(() => crypto.importPEM(pem, jwksURI)).toThrow()
     })
-    it('returns base64', async () => {
-      const key = await crypto.generateDocumentKey()
-      const encryptedKey = crypto.encryptDocumentKey(key, keys[0].publicKey, 'base64')
-      expect(typeof encryptedKey).toEqual('string')
-      expect(Buffer.from(encryptedKey, 'base64')).toBeInstanceOf(Buffer)
-    })
-  })
-  describe('#decryptDocumentKey', () => {
-    it('decrypts an encrypted key', async () => {
-      const key = await crypto.generateDocumentKey()
-      const encryptedKey = crypto.encryptDocumentKey(key, keys[0].publicKey)
-      const decryptedKey = crypto.decryptDocumentKey(encryptedKey, keys[0].privateKey)
-      expect(decryptedKey).toEqual(key)
-    })
-    it('accepts base64', async () => {
-      const key = await crypto.generateDocumentKey()
-      const encryptedKey = crypto.encryptDocumentKey(key, keys[0].publicKey, 'base64')
-      const decryptedKey = crypto.decryptDocumentKey(encryptedKey, keys[0].privateKey)
-      expect(decryptedKey).toEqual(key)
-    })
-    it('returns base64', async () => {
-      const key = await crypto.generateDocumentKey()
-      const encryptedKey = crypto.encryptDocumentKey(key, keys[0].publicKey)
-      const decryptedKey = crypto.decryptDocumentKey(encryptedKey, keys[0].privateKey, 'base64')
-      expect(typeof decryptedKey).toEqual('string')
-      expect(Buffer.from(decryptedKey, 'base64')).toBeInstanceOf(Buffer)
-    })
-  })
-  describe('#encryptDocument', () => {
-    it('returns a Buffer', async () => {
-      const key = await crypto.generateDocumentKey()
-      const cipher = await crypto.encryptDocument(key, { foo: 'bar' })
-      expect(cipher).toBeInstanceOf(Buffer)
-    })
-    it('accepts base64', async () => {
-      const key = await crypto.generateDocumentKey('base64')
-      const cipher = await crypto.encryptDocument(key, { foo: 'bar' })
-      expect(cipher).toBeInstanceOf(Buffer)
-    })
-    it('returns base64', async () => {
-      const key = await crypto.generateDocumentKey()
-      const cipher = await crypto.encryptDocument(key, { foo: 'bar' }, 'base64')
-      expect(typeof cipher).toEqual('string')
-      expect(Buffer.from(cipher, 'base64')).toBeInstanceOf(Buffer)
-    })
-  })
-  describe('#decryptDocument', () => {
-    it('decrypts an encrypted document as buffer', async () => {
-      const key = await crypto.generateDocumentKey()
-      const cipher = await crypto.encryptDocument(key, { foo: 'bar' })
-      expect(crypto.decryptDocument(key, cipher)).toEqual({ foo: 'bar' })
-    })
-    it('decrypts an encrypted document as base64', async () => {
-      const key = await crypto.generateDocumentKey()
-      const cipher = await crypto.encryptDocument(key, { foo: 'bar' }, 'base64')
-      expect(crypto.decryptDocument(key, cipher)).toEqual({ foo: 'bar' })
+    it('throws if { use } is missing', () => {
+      expect(() => crypto.importPEM(pem, jwksURI, {})).toThrow()
     })
   })
 })

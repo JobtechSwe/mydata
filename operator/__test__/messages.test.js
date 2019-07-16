@@ -35,10 +35,10 @@ describe('messages', () => {
         expect(accounts.registerAccount).toHaveBeenCalledWith({ header, payload, token }, res, next)
       })
     })
-    describe('DATA_READ', () => {
+    describe('DATA_READ_REQUEST', () => {
       it('calls data.read', async () => {
         const header = {}
-        const payload = { type: 'DATA_READ' }
+        const payload = { type: 'DATA_READ_REQUEST' }
         const token = 'sdhsdjhfgsjhfg'
         await handle({ header, payload, token }, res, next)
         expect(data.read).toHaveBeenCalledWith({ header, payload, token }, res, next)
