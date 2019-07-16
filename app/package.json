@@ -13,7 +13,9 @@
     "lint": "eslint '**/*.js'",
     "e2e:build": "cd __e2e__/ && webpack",
     "e2e:start": "node __e2e__/dist/index.js",
-    "e2e:watch": "npm run e2e:build && nodemon __e2e__/dist/ --watch __e2e__/dist/"
+    "e2e:watch": "npm run e2e:build && nodemon __e2e__/dist/ --watch __e2e__/dist/",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "contributors": [
     "Adam Näslund <adam.naslund@iteam.se>",
@@ -35,7 +37,7 @@
     "jwk-lite": "^0.1.2",
     "jwt-lite": "^1.1.2",
     "react": "16.8.6",
-    "react-native": "^0.59.2",
+    "react-native": "^0.60.0",
     "react-native-camera": "2.2.0",
     "react-native-collapsible": "^1.4.0",
     "react-native-config": "^0.11.7",
@@ -51,7 +53,8 @@
     "react-navigation": "3.9.2",
     "simple-pem2jwk": "^0.2.4",
     "styled-components": "^4.2.0",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "snyk": "^1.193.2"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
@@ -117,5 +120,6 @@
       "eslint --fix",
       "git add"
     ]
-  }
+  },
+  "snyk": true
 }
