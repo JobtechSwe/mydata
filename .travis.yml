@@ -30,17 +30,16 @@ jobs:
     - docker load -i ~/.cache/docker/postgres.tar || true
     - npm run install
     before_script:
-    - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
-      > ./cc-test-reporter
+    - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
     - chmod +x ./cc-test-reporter
-    - './cc-test-reporter before-build'
+    - ./cc-test-reporter before-build
     script:
     - npm run lint
     - npm run test:unit -- -- --coverage
     - npm run test:e2e
     after_script:
     # See https://github.com/codeclimate/test-reporter/issues/263
-    - for f in packages/*; do
+    - for f in */; do
         if [ -d $f ]; then
           echo $f;
           ./cc-test-reporter format-coverage -t lcov -o coverage/coverage.${f//\//-}.json $f/coverage/lcov.info;
