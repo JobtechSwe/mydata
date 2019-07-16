@@ -1,6 +1,8 @@
 # Egendata
 
 [![Build Status](https://travis-ci.com/JobtechSwe/mydata.svg?branch=master)](https://travis-ci.com/JobtechSwe/mydata)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/58e30cd7d55d0c0bed1a/test_coverage)](https://codeclimate.com/github/JobtechSwe/mydata/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/58e30cd7d55d0c0bed1a/maintainability)](https://codeclimate.com/github/JobtechSwe/mydata/maintainability)
 
 ## Bakgrund
 
@@ -10,19 +12,19 @@ MyData är en rörelse som syftar till att individer själva ska ha kontroll på
 
 ### Värna individens rätt till sin data (MyData movement)
 
-Massiva datamängder som samlas i enskilda företag eller myndigheter skapar möjligheter att dessa kan se mönster i människors beteenden och skapa nya produkter och tjänster som skapar ett nytt värde. Datat kan även användas för andra syften, t ex för att övervaka eller påverka opinioner i politiska syften. Att kontrollera många individers data kan innebära en riskabelt stor maktkoncentration. För att "vaccinera oss" mot denna typ av masspåverkan vill vi därför nå en lösning där individens rätt till sin egen data är utgångspunkten och rent konkret flyttar tillbaka makten till individerna att enkelt agera mot maktkoncentration och informationsmonopol. 
+Massiva datamängder som samlas i enskilda företag eller myndigheter skapar möjligheter att dessa kan se mönster i människors beteenden och skapa nya produkter och tjänster som skapar ett nytt värde. Datat kan även användas för andra syften, t ex för att övervaka eller påverka opinioner i politiska syften. Att kontrollera många individers data kan innebära en riskabelt stor maktkoncentration. För att "vaccinera oss" mot denna typ av masspåverkan vill vi därför nå en lösning där individens rätt till sin egen data är utgångspunkten och rent konkret flyttar tillbaka makten till individerna att enkelt agera mot maktkoncentration och informationsmonopol.
 
 ### Samhällsbygge och innovationskraft
 
 Vårt andra mål handlar om att möjliggöra innovationskraft för myndigheter. Att bättre kunna samverka att kunna utveckla lika potenta digitala tjänster som privata startups. Privat och offentligt ska kunna samverka både i utveckling och med gemensam digital infrastruktur/standarder för ökad samhällsnytta. Genom att möjliggöra en “digital byråkrati”, dvs spårbarhet och standardiserad kommunikation kan nya mer transparenta och effektiva former av styrning etableras. På vägen handlar detta om konkurrenskraft för Sverige och EU, men i grunden handlar det framför allt om ökad samhällsnytta för hela mänskligheten. Världen är idag global och strömmar från alla världens hörn. Open Source är en global rörelse och har kraften att förbättra både för små och stora länder och organisationer.
 
-### Främja arbetsmarknaden. 
+### Främja arbetsmarknaden.
 
 Förenkla och höja effektiviteten i karriärarbetet genom att katalysera ekosystemet kring jobtech. Nya och förbättrade tjänster för arbetssökande och arbetsgivare. Fri och effektiv rörlighet över landsgränser, minska kostnaden för arbetsgivare och enklare användarupplevelse för användaren.
 
 ## Metod
 
-Ett innovationsteam är framtaget som består av kompetens både inom programmering, UX, infrastruktur, kryptering/säkerhet och expertis från myndigheten. Innovationsteamet jobbar iterativt och skall uppnå högre och högre ställda mål/milstolpar. Första etappen är t ex att få alla systemkomponenter på plats men med väldigt begränsad funktionalitet. Därefter ökas komplexiteten och till slut finns det ett embryo till produkt som kan utvärderas. 
+Ett innovationsteam är framtaget som består av kompetens både inom programmering, UX, infrastruktur, kryptering/säkerhet och expertis från myndigheten. Innovationsteamet jobbar iterativt och skall uppnå högre och högre ställda mål/milstolpar. Första etappen är t ex att få alla systemkomponenter på plats men med väldigt begränsad funktionalitet. Därefter ökas komplexiteten och till slut finns det ett embryo till produkt som kan utvärderas.
 
 ## Transparens och samarbete
 
@@ -46,7 +48,7 @@ Data lagras krypterat i en s.k. PDS (Personal Data Storage). Just nu är Dropbox
 
 1. Clone this repo
 2. `npm run install`
-3. Add the following to your host file (probably /etc/hosts) 
+3. Add the following to your host file (probably /etc/hosts)
 ```
 127.0.0.1 operator
 127.0.0.1 cv
