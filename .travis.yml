@@ -40,7 +40,7 @@ jobs:
     after_script:
     # See https://github.com/codeclimate/test-reporter/issues/263
     - for f in */; do
-        if [ -d $f ]; then
+        if [ -d $f ] && [ -d $f/coverage ]; then
           echo $f;
           ./cc-test-reporter format-coverage -t lcov -o coverage/coverage.${f//\//-}.json $f/coverage/lcov.info;
         fi
