@@ -29,10 +29,16 @@ jobs:
     - docker load -i ~/.cache/docker/redis.tar || true
     - docker load -i ~/.cache/docker/postgres.tar || true
     - npm run install
+    before_script:
+    - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
+      > ./cc-test-reporter
+    - chmod +x ./cc-test-reporter
+    - './cc-test-reporter before-build'
     script:
     - npm run lint
     - npm run test:e2e
     after_script:
+    - './cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT'
     - docker save node -o ~/.cache/docker/node.tar
     - docker save redis -o ~/.cache/docker/redis.tar
     - docker save postgres -o ~/.cache/docker/postgres.tar
