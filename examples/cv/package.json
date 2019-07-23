@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "node server.js",
     "dev": "nodemon --watch ./api --watch ./components --watch ./pages --watch ./services --watch server.js --watch ../../client/lib",
-    "test": "NODE_ENV=test jest",
+    "test": "NODE_ENV=test jest --color",
     "test:watch": "NODE_ENV=test jest --watchAll",
     "lint": "eslint '**/*.js'"
   },
