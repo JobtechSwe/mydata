@@ -6,7 +6,7 @@
   "scripts": {
     "cypress": "cypress run",
     "cypress:open": "cypress open",
-    "jest": "jest --runInBand --verbose",
+    "jest": "jest --runInBand --verbose --detectOpenHandles",
     "jest:local": "OPERATOR_URL=http://localhost:3000 OPERATOR_PGPORT=5432 jest --runInBand --verbose",
     "jest:local:watch": "OPERATOR_URL=http://localhost:3000 OPERATOR_PGPORT=5432 jest --runInBand --verbose --watchAll",
     "lint": "eslint '**/*.js'"
