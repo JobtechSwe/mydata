@@ -36,8 +36,10 @@ jobs:
   - stage: "lint-and-test"
     name: "Lint, run end-to-end and integration tests"
     cache:
+      bundler: true
       directories:
       - ~/.cache/docker
+      - $HOME/docker
       - ~/.nvm
     language: node_js
     services:
@@ -50,20 +52,25 @@ jobs:
     - chmod +x docker-compose
     - sudo mv docker-compose /usr/local/bin
     - sudo apt-get install libgconf-2-4
+    # Load cached docker images
+    - if [[ -d $HOME/docker ]]; then ls $HOME/docker/*.tar.gz | xargs -I {file} sh -c "zcat {file} | docker load"; fi
     install:
-    - ls -la ~/.cache
-    - ls -la ~/.cache/docker
-    - docker load -i ~/.cache/docker/node.tar || true
-    - docker load -i ~/.cache/docker/redis.tar || true
-    - docker load -i ~/.cache/docker/postgres.tar || true
+    # - docker load -i ~/.cache/docker/node.tar || true
+    # - docker load -i ~/.cache/docker/redis.tar || true
+    # - docker load -i ~/.cache/docker/postgres.tar || true
     - npm ci
     script:
     - npm run test
-    after_script:
-    - docker save node -o ~/.cache/docker/node.tar
-    - docker save redis -o ~/.cache/docker/redis.tar
-    - ls -la ~/.cache/docker
-    - docker save postgres -o ~/.cache/docker/postgres.tar
+    # after_script:
+    # - docker save node -o ~/.cache/docker/node.tar
+    # - docker save redis -o ~/.cache/docker/redis.tar
+    # - ls -la ~/.cache/docker
+    # - docker save postgres -o ~/.cache/docker/postgres.tar
+    before_cache:
+    # Save tagged docker images
+    - >
+      mkdir -p $HOME/docker && docker images -a --filter='dangling=false' --format '{{.Repository}}:{{.Tag}} {{.ID}}'
+      | xargs -n 2 -t sh -c 'test -e $HOME/docker/$1.tar.gz || docker save $0 | gzip -2 > $HOME/docker/$1.tar.gz'
 
   # build and deploy things
   - stage: deliver
