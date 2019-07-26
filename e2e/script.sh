@@ -3,6 +3,7 @@ echo '**** Running script for e2e & integration tests ****'
 export DC_U=$(id -u)
 export DC_G=$(id -g)
 
+EXIT_CODE=0
 cleanup() {
   echo "Killing processes $APP_SERVER_PID, $CV_PID and $OPERATOR_PID"
   kill -9 "$APP_SERVER_PID" "$CV_PID" "$OPERATOR_PID"
@@ -10,7 +11,7 @@ cleanup() {
   sleep 5
   docker-compose down
   echo 'Docker containers are down'
-  exit 0
+  exit "$EXIT_CODE"
 }
 trap cleanup INT TERM
 
