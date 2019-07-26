@@ -15,7 +15,7 @@ jobs:
     - if ! [ -x "$(command -v lerna)" ]; then npm install -g lerna; fi
     - sudo apt-get install libgconf-2-4
     install:
-    - npm run install
+    - npm ci
     before_script:
     - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
     - chmod +x ./cc-test-reporter
@@ -50,16 +50,14 @@ jobs:
     - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
     - chmod +x docker-compose
     - sudo mv docker-compose /usr/local/bin
-    - if ! [ -x "$(command -v lerna)" ]; then npm install -g lerna; fi
     - sudo apt-get install libgconf-2-4
     install:
     - docker load -i ~/.cache/docker/node.tar || true
     - docker load -i ~/.cache/docker/redis.tar || true
     - docker load -i ~/.cache/docker/postgres.tar || true
-    - npm run install
+    - npm ci
     script:
-    - npm run lint
-    - npm run test:e2e
+    - npm run test
     after_script:
     - docker save node -o ~/.cache/docker/node.tar
     - docker save redis -o ~/.cache/docker/redis.tar

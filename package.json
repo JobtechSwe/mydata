@@ -4,9 +4,9 @@
   "scripts": {
     "audit": "lerna exec --parallel -- npm audit",
     "audit:fix": "lerna exec --parallel -- npm audit fix",
-    "clean": "lerna clean",
-    "install": "rm examples/cv/package-lock.json; rm examples/national-registration/package-lock.json; lerna exec -- npm i",
     "lint": "lerna run --parallel lint",
+    "clean": "lerna clean --yes",
+    "postinstall": "lerna exec --parallel -- npm ci",
     "start": "docker-compose -f docker-compose.dev.yml down && docker-compose down && docker-compose up -d && docker-compose -f docker-compose.dev.yml up -d",
     "test": "npm run lint && npm run test:unit && npm run test:e2e",
     "test:e2e": "sh -c 'cd ./e2e && npm run test'",
