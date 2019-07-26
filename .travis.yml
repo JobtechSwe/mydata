@@ -36,7 +36,6 @@ jobs:
   - stage: "lint-and-test"
     name: "Lint, run end-to-end and integration tests"
     cache:
-      npm: true
       directories:
       - ~/.cache/docker
       - ~/.nvm
@@ -52,6 +51,8 @@ jobs:
     - sudo mv docker-compose /usr/local/bin
     - sudo apt-get install libgconf-2-4
     install:
+    - ls -la ~/.cache
+    - ls -la ~/.cache/docker
     - docker load -i ~/.cache/docker/node.tar || true
     - docker load -i ~/.cache/docker/redis.tar || true
     - docker load -i ~/.cache/docker/postgres.tar || true
@@ -61,6 +62,7 @@ jobs:
     after_script:
     - docker save node -o ~/.cache/docker/node.tar
     - docker save redis -o ~/.cache/docker/redis.tar
+    - ls -la ~/.cache/docker
     - docker save postgres -o ~/.cache/docker/postgres.tar
 
   # build and deploy things
