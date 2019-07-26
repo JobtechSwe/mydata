@@ -4,7 +4,7 @@
   "description": "Internal messaging protocol for Egendata client, operator and app",
   "main": "lib/index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --color",
     "test:watch": "jest --watchAll",
     "testAndLint": "npm test && npm run lint",
     "patch-release": "npm run testAndLint && npm version patch && npm publish --access public && git push origin master --follow-tags",

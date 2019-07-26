@@ -15,10 +15,10 @@ cleanup() {
 trap cleanup INT TERM
 
 waitfor() {
-  printf "Waiting for $1 to get ready..."
+  echo "Waiting for $1 to get ready..."
 
   while true; do
-    STATUS_CODE=`curl -sL -w "%{http_code}" -I "$1" -o /dev/null`
+    STATUS_CODE=$(curl -sL -w "%{http_code}" -I "$1" -o /dev/null)
     printf .
     if [ "$STATUS_CODE" = "200" ]; then
       echo
@@ -118,14 +118,14 @@ waitfor http://localhost:3001/health
 waitfor http://localhost:1338/health
 waitfor http://localhost:4001/health
 
-# Run cypress e2e tests for /examples
-echo 'Running cypress e2e tests for /examples'
-CYPRESS_baseUrl=http://localhost:4001 CYPRESS_APP_SERVER_URL=http://localhost:1338 npm run cypress
+# Run e2e tests for /examples
+echo 'Running e2e tests for /examples'
+CYPRESS_baseUrl=http://localhost:4001 CYPRESS_APP_SERVER_URL=http://localhost:1338 npm run test-e2e
 EXIT_CODE=$?
 
-# Run jest integration tests
-echo 'Running jest integration tests'
-OPERATOR_PGPORT=5435 OPERATOR_URL=http://localhost:3001 APP_SERVER_URL=http://localhost:1338 npm run jest
+# Run integration tests
+echo 'Running integration tests'
+OPERATOR_PGPORT=5435 OPERATOR_URL=http://localhost:3001 APP_SERVER_URL=http://localhost:1338 npm run test-integration
 if [ $EXIT_CODE = 0 ]; then
   EXIT_CODE=$?
 fi
