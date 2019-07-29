@@ -4,7 +4,7 @@
   "description": "Client for Egendata Operator",
   "main": "lib/index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --color",
     "test:watch": "jest --watchAll",
     "test:debug": "node --inspect-brk node_modules/jest/bin/jest -c jest.config.js --runInBand",
     "testAndLint": "npm test && npm run lint",

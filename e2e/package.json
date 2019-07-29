@@ -4,11 +4,12 @@
   "description": "End-to-end testing for Egendata",
   "main": "index.js",
   "scripts": {
-    "cypress": "cypress run",
-    "cypress:open": "cypress open",
-    "jest": "jest --runInBand --verbose",
-    "jest:local": "OPERATOR_URL=http://localhost:3000 OPERATOR_PGPORT=5432 jest --runInBand --verbose",
-    "jest:local:watch": "OPERATOR_URL=http://localhost:3000 OPERATOR_PGPORT=5432 jest --runInBand --verbose --watchAll",
+    "test": "./script.sh",
+    "test-e2e": "cypress run",
+    "test-e2e:open": "cypress open",
+    "test-integration": "jest --runInBand --verbose --color",
+    "test-integration:local": "OPERATOR_URL=http://localhost:3000 OPERATOR_PGPORT=5432 jest --runInBand --verbose",
+    "test-integration:local:watch": "OPERATOR_URL=http://localhost:3000 OPERATOR_PGPORT=5432 jest --runInBand --verbose --watchAll",
     "lint": "eslint '**/*.js'"
   },
   "repository": {
