@@ -50,7 +50,6 @@ describe('Authentication', () => {
 
     // Get connections again
     const connectionsAfter = await phone.getConnections()
-    console.log(connectionsAfter) // todo: remove
 
     // After state, expect one new connection in phone
     expect(Object.keys(connectionsAfter).length).toBe(1)
