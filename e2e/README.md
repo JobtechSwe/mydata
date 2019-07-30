@@ -4,9 +4,9 @@ Integration tests using Jest and end-to-end tests using Cypress.
 
 `npm test` sets up a complete environment in docker and runs integration and end-to-end tests in that. This can be a bit slow, but you don't need to have anything running for it to work.
 
-`npm run test-integration` runs only the integration tests using Jest, for this to work you need to have all services running.
+`npm run test-integration` runs only the integration tests using Jest, for this to work you need to have all services running locally, see below.
 
-`npm run test-e2e` runs only the end-to-end tests using Cypress, for this to work you need to have all services running.
+`npm run test-e2e` runs only the end-to-end tests using Cypress, for this to work you need to have all services running locally, see below.
 
 ## Running tests against local environment (i.e. not in docker)
 Useful while developing or debugging because you can easily see console output from the services and reach them with tools such as debuggers.
