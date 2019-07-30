@@ -8,7 +8,6 @@ An example app for managing consents and viewing data
 
 - Install Android Studio
 - Install Watchman `brew install watchman`
-- Install React Native cli `npm install -g react-native-cli`
 
 ### Linux and Android
 
@@ -21,7 +20,6 @@ An example app for managing consents and viewing data
     * Create the file `~/.gradle/gradle.properties` with the line `org.gradle.java.home = /PATH/TO/JDK`
   * Set up the device which will run the app (API Level 26, Android 8.0) https://facebook.github.io/react-native/docs/getting-started.html#preparing-the-android-device
 * (Optionally, if you want it to automatically reload on code change) Install Watchman https://facebook.github.io/watchman/docs/install.html#installing-from-source
-* Install React Native cli `npm install -g react-native-cli`
 
 ## Config
 
@@ -37,7 +35,7 @@ OPERATOR_URL=http://192.168.110.130:3000/api
 - Run
 
 ```bash
-react-native link
+npm run link
 ```
 
 ## Run

@@ -36,7 +36,7 @@ describe('Authentication', () => {
   it('Auth flow for new connection', async () => {
     // Initial state, expect no connections
     const connectionsBefore = await phone.getConnections()
-    expect(connectionsBefore).toEqual([])
+    expect(connectionsBefore).toEqual({})
 
     // Client library provides auth url and session id
     const { url, id } = await client.initializeAuthentication()
@@ -52,9 +52,10 @@ describe('Authentication', () => {
     const connectionsAfter = await phone.getConnections()
 
     // After state, expect one new connection in phone
-    expect(connectionsAfter.length).toBe(1)
-    expect(connectionsAfter[0].connectionId).toMatch(v4Regexp)
-    expect(connectionsAfter[0].serviceId).toContain('http://')
+    expect(Object.keys(connectionsAfter).length).toBe(1)
+    const connectionKey = Object.keys(connectionsAfter)[0]
+    expect(connectionsAfter[connectionKey].connectionId).toMatch(v4Regexp)
+    expect(connectionsAfter[connectionKey].serviceId).toContain('http://')
 
     // After state, expect connection in client for the session id
     const connectionEntryInClient = await client.keyValueStore.load(`authentication|>${id}`)
