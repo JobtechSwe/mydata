@@ -51,6 +51,8 @@ jobs:
     - chmod +x docker-compose
     - sudo mv docker-compose /usr/local/bin
     - sudo apt-get install libgconf-2-4
+    - echo $OPENSHIFT_CERTIFICATE >> /tmp/openshift.crt
+    - cat /tmp/openshift.crt
     install:
     - docker load -i ~/.cache/docker/node.tar || true
     - docker load -i ~/.cache/docker/redis.tar || true
