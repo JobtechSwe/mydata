@@ -49,17 +49,9 @@ Data lagras krypterat i en s.k. PDS (Personal Data Storage). Just nu stöds lagr
 ## Install and develop (english)
 
 1. Clone this repo
-2. `npm run install`
-3. Add the following to your host file (probably /etc/hosts)
-```
-127.0.0.1 operator
-127.0.0.1 cv
-```
-4. `docker-compose up` (will start elasticsearch, kibana, apm-server, redis (x2) and postgres (x2))
-5. Look in each subfolder for instructions on how to start each sub-project
-
-
-If you want to run the app on an actual phone it will of course not use your computer's hosts-file so you will need to use a proxy such as squidman.
+2. `npm ci`
+3. `docker-compose up` will start all databases and other services needed by all the sub-projects
+4. Look in each subfolder for instructions on how to start the sub-projects
 
 **Before pushing/PR:**
 Do `npm test` (this will lint, run unit tests and run e2e/integration tests)
