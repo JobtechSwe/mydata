@@ -51,8 +51,6 @@ jobs:
     - chmod +x docker-compose
     - sudo mv docker-compose /usr/local/bin
     - sudo apt-get install libgconf-2-4
-    - echo $OPENSHIFT_CERTIFICATE >> /tmp/openshift.crt
-    - cat /tmp/openshift.crt
     install:
     - docker load -i ~/.cache/docker/node.tar || true
     - docker load -i ~/.cache/docker/redis.tar || true
@@ -77,6 +75,7 @@ jobs:
     - mkdir -p /opt/openshift
     - wget -qO- https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz | tar xvzf - -C /opt/openshift --strip-components=1
     - export PATH=$PATH:/opt/openshift
+    - echo $OPENSHIFT_CERTIFICATE >> /tmp/openshift.crt
     services:
     # Require docker to be running in the build context
     - docker
@@ -85,22 +84,22 @@ jobs:
     - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
 
     # Authenticate towards OpenShift
-    - oc login $OPENSHIFT_URL --token=$OPENSHIFT_TOKEN --insecure-skip-tls-verify=true
+    - oc login $OPENSHIFT_URL --token=$OPENSHIFT_TOKEN --certificate-authority=/tmp/openshift.crt
 
     # If this is not a tag, build images tagged :latest
     - export PHASE="ci"
     # If this is a tag, build images tagged v<tag> and :latest-tag
-    - if [ ! -z "$TRAVIS_TAG" ]; then export PHASE="test"; fi
+    # - if [ ! -z "$TRAVIS_TAG" ]; then export PHASE="test"; fi
 
-    - bash .deliver-$PHASE.bash app/ jobtechswe/mydata-app
-    - bash .deliver-$PHASE.bash . jobtechswe/mydata-operator operator/Dockerfile
-    - bash .deliver-$PHASE.bash . jobtechswe/mydata-cv examples/cv/Dockerfile
-    - bash .deliver-$PHASE.bash . jobtechswe/mydata-natreg examples/national-registration/Dockerfile
+    # - bash .deliver-$PHASE.bash app/ jobtechswe/mydata-app
+    # - bash .deliver-$PHASE.bash . jobtechswe/mydata-operator operator/Dockerfile
+    # - bash .deliver-$PHASE.bash . jobtechswe/mydata-cv examples/cv/Dockerfile
+    # - bash .deliver-$PHASE.bash . jobtechswe/mydata-natreg examples/national-registration/Dockerfile
 
-    - echo "Redeploying..."
-    - oc rollout latest operator-$PHASE -n mydata
-    - oc rollout latest cv-$PHASE -n mydata
-    - oc rollout latest natreg-$PHASE -n mydata
+    # - echo "Redeploying..."
+    # - oc rollout latest operator-$PHASE -n mydata
+    # - oc rollout latest cv-$PHASE -n mydata
+    # - oc rollout latest natreg-$PHASE -n mydata
     after_script:
     # ...and finally remove cached credentials
     - oc logout
@@ -109,12 +108,13 @@ jobs:
 # Flow control
 # This section defines the order in which stages are run and when to run certain stages
 stages:
-- name: code-coverage
-  if: (branch = master AND type != pull_request) OR tag IS present
-- name: lint-and-test
-  if: branch != master
-- name: deliver
-  if: (branch = master AND type != pull_request) OR tag IS present
+# - name: code-coverage
+#   if: (branch = master AND type != pull_request) OR tag IS present
+# - name: lint-and-test
+#   if: branch != master
+- deliver
+# - name: deliver
+  # if: (branch = master AND type != pull_request) OR tag IS present
 
 notifications:
   email:
