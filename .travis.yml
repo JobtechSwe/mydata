@@ -82,13 +82,13 @@ jobs:
     script:
     # Authenticate towards Docker Hub
     - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
-
+    - cat /tmp/openshift.crt
     # Authenticate towards OpenShift
     - oc login $OPENSHIFT_URL --token=$OPENSHIFT_TOKEN --certificate-authority=/tmp/openshift.crt
 
     # If this is not a tag, build images tagged :latest
-    - export PHASE="ci"
-    # If this is a tag, build images tagged v<tag> and :latest-tag
+    # - export PHASE="ci"
+    # # If this is a tag, build images tagged v<tag> and :latest-tag
     # - if [ ! -z "$TRAVIS_TAG" ]; then export PHASE="test"; fi
 
     # - bash .deliver-$PHASE.bash app/ jobtechswe/mydata-app
@@ -108,10 +108,12 @@ jobs:
 # Flow control
 # This section defines the order in which stages are run and when to run certain stages
 stages:
-# - name: code-coverage
-#   if: (branch = master AND type != pull_request) OR tag IS present
-# - name: lint-and-test
-#   if: branch != master
+- name: code-coverage
+  # if: (branch = master AND type != pull_request) OR tag IS present
+  if: branch = master
+- name: lint-and-test
+  if: branch = master
+  # if: branch != master
 - deliver
 # - name: deliver
   # if: (branch = master AND type != pull_request) OR tag IS present
