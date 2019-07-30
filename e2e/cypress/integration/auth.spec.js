@@ -48,8 +48,10 @@ describe('Auth flow for example/cv', () => {
 
     cy.getConnections()
       .then(res => {
-        expect(res[0].serviceId).to.match(/^http/)
-        expect(res[0].connectionId).to.be.a('string')
+        expect(Object.keys(res).length).to.equal(1)
+        const connectionKey = Object.keys(res)[0]
+        expect(res[connectionKey].serviceId).to.match(/^http/)
+        expect(res[connectionKey].connectionId).to.be.a('string')
       })
 
     cy.url()
@@ -74,8 +76,10 @@ describe('Auth flow for example/cv', () => {
 
     cy.getConnections()
       .then(res => {
-        expect(res[0].serviceId).to.match(/^http/)
-        expect(res[0].connectionId).to.be.a('string')
+        expect(Object.keys(res).length).to.equal(1)
+        const connectionKey = Object.keys(res)[0]
+        expect(res[connectionKey].serviceId).to.match(/^http/)
+        expect(res[connectionKey].connectionId).to.be.a('string')
       })
 
     cy.url()
