@@ -44,6 +44,7 @@ describe('data', () => {
   afterAll(async (done) => {
     await phone.clearAccount()
     await postgres.clearOperatorDb()
+    await serviceClient.config.keyValueStore.removeAll()
     serviceClient.server.close(done)
   })
 
