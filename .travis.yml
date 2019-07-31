@@ -87,7 +87,7 @@ jobs:
 
     # If this is not a tag, build images tagged :latest
     - export PHASE="ci"
-    # # If this is a tag, build images tagged v<tag> and :latest-tag
+    # If this is a tag, build images tagged v<tag> and :latest-tag
     - if [ ! -z "$TRAVIS_TAG" ]; then export PHASE="test"; fi
 
     - bash .deliver-$PHASE.bash app/ jobtechswe/mydata-app
@@ -95,7 +95,7 @@ jobs:
     - bash .deliver-$PHASE.bash . jobtechswe/mydata-cv examples/cv/Dockerfile
     - bash .deliver-$PHASE.bash . jobtechswe/mydata-natreg examples/national-registration/Dockerfile
 
-    # - echo "Redeploying..."
+    - echo "Redeploying..."
     - oc rollout latest operator-$PHASE -n mydata
     - oc rollout latest cv-$PHASE -n mydata
     - oc rollout latest natreg-$PHASE -n mydata
