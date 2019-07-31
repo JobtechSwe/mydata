@@ -82,24 +82,23 @@ jobs:
     script:
     # Authenticate towards Docker Hub
     - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
-    - cat /tmp/openshift.crt
     # Authenticate towards OpenShift
     - oc login $OPENSHIFT_URL --token=$OPENSHIFT_TOKEN --certificate-authority=/tmp/openshift.crt
 
     # If this is not a tag, build images tagged :latest
-    # - export PHASE="ci"
+    - export PHASE="ci"
     # # If this is a tag, build images tagged v<tag> and :latest-tag
-    # - if [ ! -z "$TRAVIS_TAG" ]; then export PHASE="test"; fi
+    - if [ ! -z "$TRAVIS_TAG" ]; then export PHASE="test"; fi
 
-    # - bash .deliver-$PHASE.bash app/ jobtechswe/mydata-app
-    # - bash .deliver-$PHASE.bash . jobtechswe/mydata-operator operator/Dockerfile
-    # - bash .deliver-$PHASE.bash . jobtechswe/mydata-cv examples/cv/Dockerfile
-    # - bash .deliver-$PHASE.bash . jobtechswe/mydata-natreg examples/national-registration/Dockerfile
+    - bash .deliver-$PHASE.bash app/ jobtechswe/mydata-app
+    - bash .deliver-$PHASE.bash . jobtechswe/mydata-operator operator/Dockerfile
+    - bash .deliver-$PHASE.bash . jobtechswe/mydata-cv examples/cv/Dockerfile
+    - bash .deliver-$PHASE.bash . jobtechswe/mydata-natreg examples/national-registration/Dockerfile
 
     # - echo "Redeploying..."
-    # - oc rollout latest operator-$PHASE -n mydata
-    # - oc rollout latest cv-$PHASE -n mydata
-    # - oc rollout latest natreg-$PHASE -n mydata
+    - oc rollout latest operator-$PHASE -n mydata
+    - oc rollout latest cv-$PHASE -n mydata
+    - oc rollout latest natreg-$PHASE -n mydata
     after_script:
     # ...and finally remove cached credentials
     - oc logout
@@ -110,14 +109,11 @@ jobs:
 # This section defines the order in which stages are run and when to run certain stages
 stages:
 - name: code-coverage
-  # if: (branch = master AND type != pull_request) OR tag IS present
-  if: branch = master
+  if: (branch = master AND type != pull_request) OR tag IS present
 - name: lint-and-test
-  if: branch = master
-  # if: branch != master
-- deliver
-# - name: deliver
-  # if: (branch = master AND type != pull_request) OR tag IS present
+  if: branch != master
+- name: deliver
+  if: (branch = master AND type != pull_request) OR tag IS present
 
 notifications:
   email:
