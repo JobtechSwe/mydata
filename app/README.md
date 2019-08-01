@@ -29,8 +29,7 @@ An example app for managing consents and viewing data
 DROPBOX_KEY=tsw50ay5z1j0k0k
 OPERATOR_URL=http://192.168.110.130:3000/api
 ```
-
-(or whatever adress you are running the operator on)
+or whatever is the adress of the operator you want to use. Note that *OPERATOR_URL must be reachable from the emulator or physical device that will run the app*. The iOS emulator shares networking with the computer so if you are running it locally "localhost" should work for it; the Android emulator does not share networking like that, so "localhost" will not work there. The external IP of your computer should always work.
 
 - Run
 
