@@ -29,7 +29,7 @@
   "homepage": "https://github.com/JobtechSwe/mydata#readme",
   "devDependencies": {
     "axios": "^0.18.1",
-    "cypress": "^3.3.1",
+    "cypress": "^3.4.1",
     "eslint": "^5.16.0",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-cypress": "^2.2.0",
