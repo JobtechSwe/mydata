@@ -1,4 +1,4 @@
-package com.egendata;
+package se.egendata;
 
 import com.facebook.react.ReactActivity;
 

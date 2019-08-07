@@ -1,16 +1,8 @@
-package com.egendata;
+package se.egendata;
 
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.trackforce.crypto.RCTAesPackage;
-import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
-import org.reactnative.camera.RNCameraPackage;
-import net.rhogan.rnsecurerandom.RNSecureRandomPackage;
-import com.horcrux.svg.SvgPackage;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
