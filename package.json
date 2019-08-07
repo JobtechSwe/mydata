@@ -2,8 +2,8 @@
   "name": "Egendata",
   "description": "MyData är en rörelse som syftar till att individer själva ska ha kontroll på data om sig själv. Egendata är en implementation av MyData-principer. Målet är att se vad detta skapar för potentiella möjligheter, med avstamp i den svenska arbetsmarknaden.",
   "scripts": {
-    "audit": "lerna exec --parallel -- npm audit",
-    "audit:fix": "lerna exec --parallel -- npm audit fix",
+    "audit": "lerna exec --parallel --no-bail -- npm audit",
+    "audit:fix": "lerna exec --parallel --no-bail -- npm audit fix",
     "lint": "lerna run --parallel lint",
     "clean": "lerna clean --yes",
     "postinstall": "lerna exec --parallel -- npm ci",

@@ -13,7 +13,6 @@ jobs:
     before_install:
     # Install a newer version of docker-compose than the one provided by Travis
     - if ! [ -x "$(command -v lerna)" ]; then npm install -g lerna; fi
-    - sudo apt-get install libgconf-2-4
     install:
     - npm ci
     before_script:
@@ -39,6 +38,7 @@ jobs:
       npm: true
       directories:
       - ~/.cache/docker
+      - ~/.cache/Cypress
       - ~/.nvm
     language: node_js
     services:
@@ -50,7 +50,7 @@ jobs:
     - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
     - chmod +x docker-compose
     - sudo mv docker-compose /usr/local/bin
-    - sudo apt-get install libgconf-2-4
+    - sudo apt-get install libgconf-2-4 # cypress needs this
     install:
     - docker load -i ~/.cache/docker/node.tar || true
     - docker load -i ~/.cache/docker/redis.tar || true
