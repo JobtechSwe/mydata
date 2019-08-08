@@ -24,7 +24,7 @@ const ModalWrapper = styled(View)`
 `
 
 const ConsentHeader = styled(View)`
-  background-color: ${({ currentTheme }) => currentTheme.colors.white};
+  background-color: ${({ theme }) => theme.colors.white};
   padding: 24px 36px;
 `
 
