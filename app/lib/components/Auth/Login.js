@@ -60,11 +60,7 @@ function Login(props) {
     case 'question':
       return (
         <Wrap>
-          <StyledModal
-            animationType="fade"
-            isVisible={true}
-            backdropOpacity={0.6}
-          >
+          <StyledModal animationType="fade" isVisible backdropOpacity={0.6}>
             <ModalWrapper>
               <ConsentHeader>
                 <H3 style={{ margin: 0 }}>Inloggningsförfrågan</H3>
@@ -97,10 +93,7 @@ function Login(props) {
                 }}
               >
                 <AcceptConsentButton onPress={approve}>Ja</AcceptConsentButton>
-                <Separator
-                  vertical={true}
-                  style={{ marginBottom: 0, marginTop: 0 }}
-                />
+                <Separator vertical style={{ marginBottom: 0, marginTop: 0 }} />
                 <DenyConsentButton onPress={reject}>Nej</DenyConsentButton>
               </ConsentButtonWrap>
             </ModalWrapper>
@@ -128,10 +121,7 @@ function Login(props) {
                 <AcceptConsentButton onPress={acceptSituation}>
                   Ok
                 </AcceptConsentButton>
-                <Separator
-                  vertical={true}
-                  style={{ marginBottom: 0, marginTop: 0 }}
-                />
+                <Separator vertical style={{ marginBottom: 0, marginTop: 0 }} />
                 <DenyConsentButton onPress={reject}>Nej</DenyConsentButton>
               </ConsentButtonWrap>
             </ModalWrapper>

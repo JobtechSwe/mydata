@@ -13,7 +13,11 @@ describe('elements/Button', () => {
   it('should call onClick-handler', () => {
     const handleClick = jest.fn()
 
-    const { getByText } = render(<MockedProvider><PrimaryButton onPress={handleClick}>PrimaryButton</PrimaryButton></MockedProvider>)
+    const { getByText } = render(
+      <MockedProvider>
+        <PrimaryButton onPress={handleClick}>PrimaryButton</PrimaryButton>
+      </MockedProvider>
+    )
 
     fireEvent.press(getByText(/primarybutton/i))
 

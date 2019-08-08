@@ -158,7 +158,7 @@ const ConsentModal = ({
               />
             ))}
 
-            {/*external.map(({ scope }) => (
+            {/* external.map(({ scope }) => (
               <View key={scope.displayName}>
                 <Separator style={{ marginBottom: 0, marginTop: 0 }} />
                 <ConsentHeaderExternal>
@@ -172,7 +172,7 @@ const ConsentModal = ({
                   <ScopeItem key={scope.area} scope={scope} />
                 ))}
               </View>
-            ))*/}
+            )) */}
           </ScrollViewWrap>
           <ConsentButtonWrap>
             <AcceptConsentButton onPress={handleApprovePermissions}>

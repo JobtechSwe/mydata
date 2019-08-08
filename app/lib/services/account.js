@@ -10,12 +10,15 @@ export async function save(account) {
     if (account.id) {
       throw Error('An account already exist on this phone')
     }
-
-    account = { ...account, id: v4() }
     const privateKey = await generateKey({ use: 'sig' })
     const publicKey = toPublicKey(privateKey)
     await storeKey(privateKey)
-    account.kid = privateKey.kid
+
+    account = {
+      ...account,
+      kid: privateKey.kid,
+      id: v4(),
+    }
 
     await storeAccount(account)
 
