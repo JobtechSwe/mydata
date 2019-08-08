@@ -25,5 +25,7 @@ module.exports = {
     'react/prop-types': 'off',
     semi: ['error', 'never'],
     'no-console': ['error', { allow: ['warn', 'error', 'info'] }],
+    'space-before-function-paren': [2, { anonymous: 'always', named: 'never' }],
+    'react-native/no-inline-styles': [0],
   },
 }

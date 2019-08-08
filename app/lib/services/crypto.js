@@ -5,7 +5,7 @@ export function toBase64Url(base64) {
   return base64
     .replace(/\+/g, '-')
     .replace(/\//g, '_')
-    .replace(/=/g, '')
+    .replace(/[=]/g, '')
 }
 
 export async function generateKeys(modulusLength = 2048) {

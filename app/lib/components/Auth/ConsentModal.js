@@ -24,7 +24,7 @@ const ModalWrapper = styled(View)`
 `
 
 const ConsentHeader = styled(View)`
-  background-color: ${({ theme }) => theme.colors.white};
+  background-color: ${({ currentTheme }) => currentTheme.colors.white};
   padding: 24px 36px;
   flex-direction: row;
   align-self: stretch;
@@ -158,7 +158,7 @@ const ConsentModal = ({
               />
             ))}
 
-            {/*external.map(({ scope }) => (
+            {/* external.map(({ scope }) => (
               <View key={scope.displayName}>
                 <Separator style={{ marginBottom: 0, marginTop: 0 }} />
                 <ConsentHeaderExternal>
@@ -172,7 +172,7 @@ const ConsentModal = ({
                   <ScopeItem key={scope.area} scope={scope} />
                 ))}
               </View>
-            ))*/}
+            )) */}
           </ScrollViewWrap>
           <ConsentButtonWrap>
             <AcceptConsentButton onPress={handleApprovePermissions}>
