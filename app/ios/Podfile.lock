@@ -93,6 +93,8 @@ PODS:
   - React-RCTWebSocket (0.60.4):
     - React-Core (= 0.60.4)
     - React-fishhook (= 0.60.4)
+  - ReactNativePermissions (1.2.0):
+    - React
   - RNCAsyncStorage (1.4.0):
     - React
   - RNDeviceInfo (1.4.1):
@@ -128,6 +130,7 @@ DEPENDENCIES:
   - React-RCTText (from `../node_modules/react-native/Libraries/Text`)
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-RCTWebSocket (from `../node_modules/react-native/Libraries/WebSocket`)
+  - ReactNativePermissions (from `../node_modules/react-native-permissions`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
@@ -187,6 +190,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/Vibration"
   React-RCTWebSocket:
     :path: "../node_modules/react-native/Libraries/WebSocket"
+  ReactNativePermissions:
+    :path: "../node_modules/react-native-permissions"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-community/async-storage"
   RNDeviceInfo:
@@ -224,12 +229,13 @@ SPEC CHECKSUMS:
   React-RCTText: e0f224898b13af9aa036ea7cb3d438daa68c1044
   React-RCTVibration: 0bea40cd51bd089bd591a8f74c86e91fdf2666c5
   React-RCTWebSocket: 163873f4cdd5f1058a9483443404fc3801581cb6
+  ReactNativePermissions: f0aec11433d43d45953c678b6982921d83ad94c8
   RNCAsyncStorage: b82dc6e5b39a625d70e3b3492bff75c0de94ba71
   RNDeviceInfo: 09539e6465e406dd5bfc96ecea15587ceb833146
   RNGestureHandler: b65d391f4f570178d657b99a16ec99d09b8656b0
   RNSVG: 6fec2b50e65b4a01ba54155e8e546e0a1eeb16f4
   yoga: c2c050f6ae6e222534760cc82f559b89214b67e2
 
-PODFILE CHECKSUM: 08b076f3e9135d606feef0989ee7a26802052237
+PODFILE CHECKSUM: 1e8a9cc6dbdb82ee4463f3dce8d26c0af28e9566
 
 COCOAPODS: 1.6.1
