@@ -57,13 +57,13 @@ PODS:
     - React-cxxreact (= 0.60.4)
     - React-jsi (= 0.60.4)
   - React-jsinspector (0.60.4)
-  - react-native-camera (3.1.0):
+  - react-native-camera (3.1.1):
     - React
-    - react-native-camera/RCT (= 3.1.0)
-    - react-native-camera/RN (= 3.1.0)
-  - react-native-camera/RCT (3.1.0):
+    - react-native-camera/RCT (= 3.1.1)
+    - react-native-camera/RN (= 3.1.1)
+  - react-native-camera/RCT (3.1.1):
     - React
-  - react-native-camera/RN (3.1.0):
+  - react-native-camera/RN (3.1.1):
     - React
   - react-native-config (0.11.7):
     - React
@@ -97,11 +97,11 @@ PODS:
     - React
   - RNCAsyncStorage (1.6.1):
     - React
-  - RNDeviceInfo (1.4.1):
+  - RNDeviceInfo (2.3.2):
     - React
-  - RNGestureHandler (1.1.0):
+  - RNGestureHandler (1.3.0):
     - React
-  - RNSVG (9.2.4):
+  - RNSVG (9.6.2):
     - React
   - yoga (0.60.4.React)
 
@@ -216,7 +216,7 @@ SPEC CHECKSUMS:
   React-jsi: 21d3153b1153fbf6510a92b6b11e33e725cb7432
   React-jsiexecutor: 7549641e48bafae7bfee3f3ea19bf4901639c5de
   React-jsinspector: 73f24a02fa684ed6a2b828ba116874a2191ded88
-  react-native-camera: 64fe4afe4cc99b36704668c2d8ce6e7bf8826b37
+  react-native-camera: 9bf6e0cdce0d7dc059d9836eb381d96f58f83d83
   react-native-config: 55548054279d92e0e4566ea15a8b9b81028ec342
   react-native-crypto: 18bfd75e08300f92548993f85bba3d8a9af93a6b
   React-RCTActionSheet: 9f71d7ae3e8fb10e08d162cbf14c621349dbfab3
@@ -231,9 +231,9 @@ SPEC CHECKSUMS:
   React-RCTWebSocket: 163873f4cdd5f1058a9483443404fc3801581cb6
   ReactNativePermissions: f0aec11433d43d45953c678b6982921d83ad94c8
   RNCAsyncStorage: 621bad7a889b5bf1583a52547f2dcd3a4d1ff15e
-  RNDeviceInfo: 09539e6465e406dd5bfc96ecea15587ceb833146
-  RNGestureHandler: b65d391f4f570178d657b99a16ec99d09b8656b0
-  RNSVG: 6fec2b50e65b4a01ba54155e8e546e0a1eeb16f4
+  RNDeviceInfo: bdc3e922b2ed0f086e9d9ab534e61bc316f08576
+  RNGestureHandler: 5329a942fce3d41c68b84c2c2276ce06a696d8b0
+  RNSVG: ff9b094e39dd4a437ebe17d1c7ceed286e75f426
   yoga: c2c050f6ae6e222534760cc82f559b89214b67e2
 
 PODFILE CHECKSUM: 1e8a9cc6dbdb82ee4463f3dce8d26c0af28e9566
