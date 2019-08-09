@@ -48,7 +48,7 @@
     "react-native-svg": "9.6.2",
     "react-native-svg-icon": "0.8.1",
     "react-native-svg-uri": "1.2.3",
-    "react-navigation": "3.9.2",
+    "react-navigation": "3.11.1",
     "simple-pem2jwk": "0.2.4",
     "styled-components": "4.2.0",
     "uuid": "3.3.2"
