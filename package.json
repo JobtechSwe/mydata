@@ -17,7 +17,7 @@
     "version:major": "lerna version major"
   },
   "devDependencies": {
-    "lerna": "^3.14.1",
+    "lerna": "^3.16.4",
     "plist": "git+https://github.com/mishoo/node-plist.git"
   },
   "repository": {
