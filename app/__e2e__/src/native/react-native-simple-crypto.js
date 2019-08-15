@@ -72,5 +72,5 @@ const SHA = {
 
 export default {
   RSA,
-  SHA
+  SHA,
 }
