@@ -11,7 +11,7 @@ module.exports = {
         __dirname,
         'src/native/react-native-config'
       ),
-      'react-native-simple-crypto': resolve(
+      '@egendata/react-native-simple-crypto': resolve(
         __dirname,
         'src/native/react-native-simple-crypto'
       ),
