@@ -1,6 +1,6 @@
 {
   "name": "@egendata/messaging",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Internal messaging protocol for Egendata client, operator and app",
   "main": "lib/index.js",
   "scripts": {

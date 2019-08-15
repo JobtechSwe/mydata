@@ -1,11 +1,13 @@
 import {
   createSign,
   createVerify,
+  createHash,
   generateKeyPair,
-  privateEncrypt,
+  publicEncrypt,
+  privateDecrypt,
 } from 'crypto'
 
-export const RSA = {
+const RSA = {
   generateKeys: jest.fn(modulusLength => {
     return new Promise((resolve, reject) => {
       generateKeyPair(
@@ -25,23 +27,50 @@ export const RSA = {
       )
     })
   }),
-  sign: jest.fn((data, privateKey) => {
+  sign: jest.fn((data, privateKey, hash) => {
     return Promise.resolve(
-      createSign('RSA-SHA512')
+      createSign(hash)
         .update(data)
         .sign(privateKey, 'base64')
     )
   }),
-  verify: jest.fn((data, secretToVerify, key) => {
+  verify: jest.fn((secretToVerify, data, key, hash) => {
     return Promise.resolve(
-      createVerify('RSA-SHA512')
+      createVerify(hash)
         .update(secretToVerify)
         .verify(key, data, 'base64')
     )
   }),
   encrypt: jest.fn((data, key) => {
     return Promise.resolve(
-      privateEncrypt(key, Buffer.from(data)).toString('base64')
+      publicEncrypt(key, Buffer.from(data)).toString('base64')
     )
   }),
+  decrypt: jest.fn((rsaEncryptedMessage, key) => {
+    return Promise.resolve(
+      privateDecrypt(key, Buffer.from(rsaEncryptedMessage)).toString('utf8')
+    )
+  }),
+}
+
+const SHA = {
+  sha256: jest.fn(text => {
+    return Promise.resolve(
+      createHash('SHA256')
+        .update(text)
+        .digest('base64')
+    )
+  }),
+  sha512: jest.fn(text => {
+    return Promise.resolve(
+      createHash('SHA512')
+        .update(text)
+        .digest('base64')
+    )
+  }),
+}
+
+export default {
+  RSA,
+  SHA,
 }

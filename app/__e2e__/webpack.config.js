@@ -11,9 +11,9 @@ module.exports = {
         __dirname,
         'src/native/react-native-config'
       ),
-      '@trackforce/react-native-crypto': resolve(
+      'react-native-simple-crypto': resolve(
         __dirname,
-        'src/native/react-native-crypto'
+        'src/native/react-native-simple-crypto'
       ),
       '@react-native-community/async-storage': resolve(
         __dirname,

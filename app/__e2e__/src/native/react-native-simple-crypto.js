@@ -7,7 +7,7 @@ import {
   privateDecrypt,
 } from 'crypto'
 
-export const Rsa = {
+const RSA = {
   generateKeys: modulusLength => {
     return new Promise((resolve, reject) => {
       generateKeyPair(
@@ -53,7 +53,7 @@ export const Rsa = {
   },
 }
 
-export const Sha = {
+const SHA = {
   sha256: text => {
     return Promise.resolve(
       createHash('SHA256')
@@ -68,4 +68,9 @@ export const Sha = {
         .digest('base64')
     )
   },
+}
+
+export default {
+  RSA,
+  SHA,
 }

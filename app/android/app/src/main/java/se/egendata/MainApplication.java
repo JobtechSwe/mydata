@@ -12,7 +12,7 @@ import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import com.trackforce.crypto.RCTAesPackage;
+import com.pedrouid.crypto.RCTCryptoPackage;
 import org.reactnative.camera.RNCameraPackage;
 
 import java.util.Arrays;
@@ -30,7 +30,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
-        new RCTAesPackage(),
+        new RCTCryptoPackage(),
         new AsyncStoragePackage(),
         new SvgPackage(),
         new RNDeviceInfo(),
