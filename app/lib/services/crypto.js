@@ -1,7 +1,5 @@
-import RNSC from 'react-native-simple-crypto'
+import { RSA, SHA } from '@egendata/react-native-simple-crypto'
 import pem2jwk from 'simple-pem2jwk'
-
-const { RSA, SHA } = RNSC
 
 export function toBase64Url(base64) {
   return base64

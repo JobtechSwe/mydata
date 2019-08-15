@@ -67,7 +67,7 @@ PODS:
     - React
   - react-native-config (0.11.7):
     - React
-  - react-native-simple-crypto (0.2.7):
+  - react-native-simple-crypto (1.0.1):
     - React
   - React-RCTActionSheet (0.60.4):
     - React-Core (= 0.60.4)
@@ -119,7 +119,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-config (from `../node_modules/react-native-config`)
-  - react-native-simple-crypto (from `../node_modules/react-native-simple-crypto`)
+  - "react-native-simple-crypto (from `../node_modules/@egendata/react-native-simple-crypto`)"
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
@@ -169,7 +169,7 @@ EXTERNAL SOURCES:
   react-native-config:
     :path: "../node_modules/react-native-config"
   react-native-simple-crypto:
-    :path: "../node_modules/react-native-simple-crypto"
+    :path: "../node_modules/@egendata/react-native-simple-crypto"
   React-RCTActionSheet:
     :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
@@ -218,7 +218,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 73f24a02fa684ed6a2b828ba116874a2191ded88
   react-native-camera: 9bf6e0cdce0d7dc059d9836eb381d96f58f83d83
   react-native-config: 55548054279d92e0e4566ea15a8b9b81028ec342
-  react-native-simple-crypto: 0e9c1959a1762279a23d5ec23c29ef3667079ad5
+  react-native-simple-crypto: 6b26e68962fe23c49eee2cfa266fc5efa435cb7f
   React-RCTActionSheet: 9f71d7ae3e8fb10e08d162cbf14c621349dbfab3
   React-RCTAnimation: 981d8c95b0e30918a9832ccac32af83562a27fae
   React-RCTBlob: 21e73d1020a302a75fed30dbaee9f15287b80baa
