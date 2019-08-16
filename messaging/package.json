@@ -1,10 +1,10 @@
 {
   "name": "@egendata/messaging",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Internal messaging protocol for Egendata client, operator and app",
   "main": "lib/index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --color",
     "test:watch": "jest --watchAll",
     "testAndLint": "npm test && npm run lint",
     "patch-release": "npm run testAndLint && npm version patch && npm publish --access public && git push origin master --follow-tags",
@@ -43,7 +43,7 @@
     "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
-    "jest": "^23.6.0"
+    "jest": "^24.8.0"
   },
   "jest": {
     "testEnvironment": "node",

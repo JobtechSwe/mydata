@@ -7,7 +7,7 @@ import {
   privateDecrypt,
 } from 'crypto'
 
-export const Rsa = {
+export const RSA = {
   generateKeys: jest.fn(modulusLength => {
     return new Promise((resolve, reject) => {
       generateKeyPair(
@@ -53,7 +53,7 @@ export const Rsa = {
   }),
 }
 
-export const Sha = {
+export const SHA = {
   sha256: jest.fn(text => {
     return Promise.resolve(
       createHash('SHA256')

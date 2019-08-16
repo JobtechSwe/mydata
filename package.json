@@ -2,22 +2,22 @@
   "name": "Egendata",
   "description": "MyData är en rörelse som syftar till att individer själva ska ha kontroll på data om sig själv. Egendata är en implementation av MyData-principer. Målet är att se vad detta skapar för potentiella möjligheter, med avstamp i den svenska arbetsmarknaden.",
   "scripts": {
-    "audit": "lerna exec --parallel -- npm audit",
-    "audit:fix": "lerna exec --parallel -- npm audit fix",
-    "clean": "lerna clean",
-    "install": "rm examples/cv/package-lock.json; rm examples/national-registration/package-lock.json; lerna exec -- npm i",
-    "lint": "lerna exec --parallel -- npm run lint",
+    "audit": "lerna exec --parallel --no-bail -- npm audit",
+    "audit:fix": "lerna exec --parallel --no-bail -- npm audit fix",
+    "lint": "lerna run --parallel lint",
+    "clean": "lerna clean --yes",
+    "postinstall": "lerna exec --parallel -- npm ci",
     "start": "docker-compose -f docker-compose.dev.yml down && docker-compose down && docker-compose up -d && docker-compose -f docker-compose.dev.yml up -d",
     "test": "npm run lint && npm run test:unit && npm run test:e2e",
-    "test:e2e": "sh -c 'cd ./e2e && ./script.sh'",
-    "test:unit": "lerna exec --parallel -- npm test",
+    "test:e2e": "sh -c 'cd ./e2e && npm run test'",
+    "test:unit": "lerna run --parallel --no-bail --ignore egendata-e2e test",
     "update": "lerna exec --parallel -- npm update",
     "version:patch": "lerna version patch",
     "version:minor": "lerna version minor",
     "version:major": "lerna version major"
   },
   "devDependencies": {
-    "lerna": "^3.14.1",
+    "lerna": "^3.16.4",
     "plist": "git+https://github.com/mishoo/node-plist.git"
   },
   "repository": {
