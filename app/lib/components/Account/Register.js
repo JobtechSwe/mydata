@@ -18,14 +18,14 @@ const Register = ({ onSubmit }) => {
       <H1>Egendata</H1>
       <Input
         name="firstName"
-        onChangeText={firstName => setFirstName(firstName)}
+        onChangeText={newVal => setFirstName(newVal)}
         placeholder="Förnamn"
         style={{ marginTop: 64 }}
         value={firstName}
       />
       <Input
         name="lastName"
-        onChangeText={lastName => setLastName(lastName)}
+        onChangeText={newVal => setLastName(newVal)}
         placeholder="Efternamn"
         value={lastName}
       />

@@ -2,7 +2,7 @@ import { Linking } from 'react-native'
 import Config from 'react-native-config'
 import EventEmitter from 'eventemitter3'
 
-function processQueryString (qs) {
+function processQueryString(qs) {
   return unescape(qs)
     .split('&')
     .map(kv => kv.split('='))
@@ -10,13 +10,13 @@ function processQueryString (qs) {
 }
 
 class DropboxConnector extends EventEmitter {
-  constructor () {
+  constructor() {
     super()
     this.connect = this.connect.bind(this)
     this.handleUrl = this.handleUrl.bind(this)
   }
 
-  async connect () {
+  async connect() {
     Linking.addEventListener('url', this.handleUrl)
 
     const url = `https://api.dropbox.com/oauth2/authorize?response_type=token&client_id=${Config.DROPBOX_KEY}&redirect_uri=mydata://callback/dropbox`
@@ -24,7 +24,7 @@ class DropboxConnector extends EventEmitter {
     return this
   }
 
-  async handleUrl (event) {
+  async handleUrl(event) {
     Linking.removeEventListener('url', this.handleUrl)
 
     const [, queryString] = event.url.match(/#(.*)/)

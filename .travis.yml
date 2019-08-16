@@ -13,7 +13,6 @@ jobs:
     before_install:
     # Install a newer version of docker-compose than the one provided by Travis
     - if ! [ -x "$(command -v lerna)" ]; then npm install -g lerna; fi
-    - sudo apt-get install libgconf-2-4
     install:
     - npm ci
     before_script:
@@ -39,6 +38,7 @@ jobs:
       npm: true
       directories:
       - ~/.cache/docker
+      - ~/.cache/Cypress
       - ~/.nvm
     language: node_js
     services:
@@ -50,7 +50,7 @@ jobs:
     - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
     - chmod +x docker-compose
     - sudo mv docker-compose /usr/local/bin
-    - sudo apt-get install libgconf-2-4
+    - sudo apt-get install libgconf-2-4 # cypress needs this
     install:
     - docker load -i ~/.cache/docker/node.tar || true
     - docker load -i ~/.cache/docker/redis.tar || true
@@ -75,15 +75,15 @@ jobs:
     - mkdir -p /opt/openshift
     - wget -qO- https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz | tar xvzf - -C /opt/openshift --strip-components=1
     - export PATH=$PATH:/opt/openshift
+    - echo $OPENSHIFT_CERT | base64 --decode > /tmp/openshift.crt
     services:
     # Require docker to be running in the build context
     - docker
     script:
     # Authenticate towards Docker Hub
     - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
-
     # Authenticate towards OpenShift
-    - oc login $OPENSHIFT_URL --token=$OPENSHIFT_TOKEN --insecure-skip-tls-verify=true
+    - oc login $OPENSHIFT_URL --token=$OPENSHIFT_TOKEN --certificate-authority=/tmp/openshift.crt
 
     # If this is not a tag, build images tagged :latest
     - export PHASE="ci"
@@ -103,6 +103,7 @@ jobs:
     # ...and finally remove cached credentials
     - oc logout
     - docker logout
+    - rm /tmp/openshift.crt
 
 # Flow control
 # This section defines the order in which stages are run and when to run certain stages

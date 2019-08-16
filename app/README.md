@@ -8,7 +8,6 @@ An example app for managing consents and viewing data
 
 - Install Android Studio
 - Install Watchman `brew install watchman`
-- Install React Native cli `npm install -g react-native-cli`
 
 ### Linux and Android
 
@@ -21,7 +20,6 @@ An example app for managing consents and viewing data
     * Create the file `~/.gradle/gradle.properties` with the line `org.gradle.java.home = /PATH/TO/JDK`
   * Set up the device which will run the app (API Level 26, Android 8.0) https://facebook.github.io/react-native/docs/getting-started.html#preparing-the-android-device
 * (Optionally, if you want it to automatically reload on code change) Install Watchman https://facebook.github.io/watchman/docs/install.html#installing-from-source
-* Install React Native cli `npm install -g react-native-cli`
 
 ## Config
 
@@ -31,27 +29,62 @@ An example app for managing consents and viewing data
 DROPBOX_KEY=tsw50ay5z1j0k0k
 OPERATOR_URL=http://192.168.110.130:3000/api
 ```
-
-(or whatever adress you are running the operator on)
+or whatever is the adress of the operator you want to use. Note that *OPERATOR_URL must be reachable from the emulator or physical device that will run the app*. The iOS emulator shares networking with the computer so if you are running it locally "localhost" should work for it; the Android emulator does not share networking like that, so "localhost" will not work there. The external IP of your computer should always work.
 
 - Run
 
 ```bash
-react-native link
+npm run link
 ```
 
 ## Run
 
-For Android:
+### Android
 
-* Start the device that will run the app from Android Studio. Virtual devices are under Tools->AVD Manager (if you do not see `AVD Manager`, go to `Help` and use `Find action`)
+- Start the device that will run the app from Android Studio. Virtual devices are under Tools->AVD Manager (if you do not see `AVD Manager`, go to `Help` and use `Find action`)
+- Run
 
-Run apps:
+  ```bash
+  npm run android
+  ```
 
-```bash
-npm run ios
-npm run android
-```
+### iOS
+
+- Update Cocoapods if version < 1.7.5 (check with `pod --version`)
+
+  ```bash
+  sudo gem install cocoapods
+  ```
+
+- Install pods (if native dependencies have changed)
+
+  ```bash
+  cd ios && pod install && cd ..
+  ```
+
+- Run
+
+  ```bash
+  npm run ios
+  ```
+
+- If build fails
+
+  ```bash
+  rm -rf ios/build
+  rm -rf ios/Pods
+  cd ios && pod install && cd ..
+  npm run ios
+  ```
+
+- If build fails with some version of `Failed to find a suitable device for the type SimDeviceType`
+
+  ```bash
+  sudo killall -9 com.apple.CoreSimulator.CoreSimulatorService
+  npm run ios
+  ```
+
+### Common
 
 If the app doesn't open automatically go into apps and find MyData
 
