@@ -18,6 +18,11 @@ const createMemoryStore = () => {
       clearTimeout(timeouts.get(key))
       return store.delete(key)
     },
+    removeAll: async function () {
+      for (const [key] of timeouts.entries()) {
+        await this.remove(key)
+      }
+    },
     isMemoryStore: true
   }
 }

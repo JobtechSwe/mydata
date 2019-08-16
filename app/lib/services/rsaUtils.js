@@ -1,12 +1,12 @@
 import { Buffer } from 'buffer'
 
-export function certToPEM (cert) {
+export function certToPEM(cert) {
   cert = cert.match(/.{1,64}/g).join('\n')
   cert = `-----BEGIN CERTIFICATE-----\n${cert}\n-----END CERTIFICATE-----\n`
   return cert
 }
 
-function prepadSigned (hexStr) {
+function prepadSigned(hexStr) {
   const msb = hexStr[0]
   if (msb < '0' || msb > '7') {
     return `00${hexStr}`
@@ -14,7 +14,7 @@ function prepadSigned (hexStr) {
   return hexStr
 }
 
-function toHex (number) {
+function toHex(number) {
   const nstr = number.toString(16)
   if (nstr.length % 2) {
     return `0${nstr}`
@@ -22,7 +22,7 @@ function toHex (number) {
   return nstr
 }
 
-function encodeLengthHex (n) {
+function encodeLengthHex(n) {
   if (n <= 127) {
     return toHex(n)
   }
@@ -34,7 +34,7 @@ function encodeLengthHex (n) {
 /*
  * Source: http://stackoverflow.com/questions/18835132/xml-to-pem-in-node-js
  */
-export function rsaPublicKeyToPEM (modulusB64, exponentB64) {
+export function rsaPublicKeyToPEM(modulusB64, exponentB64) {
   const modulus = Buffer.from(modulusB64, 'base64')
   const exponent = Buffer.from(exponentB64, 'base64')
   const modulusHex = prepadSigned(modulus.toString('hex'))
@@ -44,13 +44,19 @@ export function rsaPublicKeyToPEM (modulusB64, exponentB64) {
 
   const encodedModlen = encodeLengthHex(modlen)
   const encodedExplen = encodeLengthHex(explen)
-  const encodedPubkey = '30' +
-    encodeLengthHex(modlen + explen + encodedModlen.length / 2 + encodedExplen.length / 2 + 2) +
-    '02' + encodedModlen + modulusHex +
-    '02' + encodedExplen + exponentHex
+  const encodedPubkey =
+    '30' +
+    encodeLengthHex(
+      modlen + explen + encodedModlen.length / 2 + encodedExplen.length / 2 + 2
+    ) +
+    '02' +
+    encodedModlen +
+    modulusHex +
+    '02' +
+    encodedExplen +
+    exponentHex
 
-  const der = Buffer.from(encodedPubkey, 'hex')
-    .toString('base64')
+  const der = Buffer.from(encodedPubkey, 'hex').toString('base64')
 
   let pem = '-----BEGIN RSA PUBLIC KEY-----\n'
   pem += `${der.match(/.{1,64}/g).join('\n')}`

@@ -5,6 +5,7 @@ import Config from 'react-native-config'
 const nowSeconds = () => Math.round(Date.now() / 1000)
 
 export const createAccountRegistration = async (
+  // eslint-disable-next-line camelcase
   { id, pds: { provider, access_token } },
   { publicKey, privateKey }
 ) => {

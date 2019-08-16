@@ -36,28 +36,22 @@ Genom att visualisera och praktiskt visa upp hur ägande av sin egen data skulle
 
 Projektet är indelat i flera delsystem:
 
-- [mydata-app](https://github.com/JobtechSwe/mydata/tree/master/phone-app) : En app där individen hanterar sin data
-- [mydata-operator](https://github.com/JobtechSwe/mydata/tree/master/operator) : En teknisk operatör som givet ett godkännande från individen hanterar kommunikationen mellan individen, hens data och en extern tjänst
-- [mydata-client](https://github.com/JobtechSwe/mydata/tree/master/client) : Ett npm-paket som används av tjänster för att kommunicera med `operator`. Hjälper till med signering, kryptering m.m.
+- [Egendata-app](https://github.com/JobtechSwe/mydata/tree/master/app) : är en app för telefonen där individen hanterar delningen av sin data
+- [Egendata-operator](https://github.com/JobtechSwe/mydata/tree/master/operator) : är en teknisk knytpunkt som givet ett godkännande från individen hanterar kommunikationen mellan individen, hens data och tjänsterna som vill använda datan
+- [Egendata-client](https://github.com/JobtechSwe/mydata/tree/master/client) : är ett [npm-paket](https://www.npmjs.com/package/@egendata/client) som används av tjänster för att kommunicera med `operator`. Det gör signering, kryptering, validering och skickande av meddelanden och data.
+- [Egendata-cv](https://github.com/JobtechSwe/mydata/tree/master/examples/cv) är en exempeltjänst som läser/skriver till individens Egendata-utrymme (efter att ha fått behörighet att göra det). Denna representerar en vanlig tjänst som hanterar persondata.
+- [Egendata-national-registration](https://github.com/JobtechSwe/mydata/tree/master/examples/national-registration) är en exempeltjänst som enbart skriver till individens Egendata-utrymme (efter att ha fått behörighet att göra det). Denna representerar en tjänst som intygar något om användaren, i detta fall att användaren är en specifik (fiktiv) person.
+- [messaging](https://github.com/JobtechSwe/mydata/tree/master/messaging) : är ett [npm-paket](https://www.npmjs.com/package/@egendata/messaging) för internt bruk med funktioner som är delade mellan `client`, `operator`, `app` och `e2e`. Det innehåller till exempel funktioner för att validera formatet på meddelanden och för att hantera kryptografiska tokens.
+- [e2e](https://github.com/JobtechSwe/mydata/tree/master/e2e) : innehåller end-to-end- samt integrationstester för projektet.
 
-[mydata-cv](https://github.com/JobtechSwe/mydata/tree/master/example) är en exempeltjänst som läser/skriver till individens mydata efter att ha fått behörighet att göra det (`Data Source` och `Data Sink`)
-
-Data lagras krypterat i en s.k. PDS (Personal Data Storage). Just nu är Dropbox enda PDS som stöds, men det kommer utökas inom kort.
+Data lagras krypterat i en s.k. PDS (Personal Data Storage). Just nu stöds lagring av data i användarens dropbox och (för enkel testning) i minnet hos operatorn.
 
 ## Install and develop (english)
 
 1. Clone this repo
-2. `npm run install`
-3. Add the following to your host file (probably /etc/hosts)
-```
-127.0.0.1 operator
-127.0.0.1 cv
-```
-4. `docker-compose up` (will start elasticsearch, kibana, apm-server, redis (x2) and postgres (x2))
-5. Look in each subfolder for instructions on how to start each sub-project
-
-
-If you want to run the app on an actual phone it will of course not use your computer's hosts-file so you will need to use a proxy such as squidman.
+2. `npm ci`
+3. `docker-compose up` will start all databases and other services needed by all the sub-projects
+4. Look in each subfolder for instructions on how to start the sub-projects
 
 **Before pushing/PR:**
 Do `npm test` (this will lint, run unit tests and run e2e/integration tests)

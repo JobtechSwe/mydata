@@ -39,7 +39,7 @@ const JWS = Joi.string()
 
 const JOSE_HEADER = Joi.object({
   alg: Joi.string().valid(algs).required(),
-  kid: Joi.string().uri(),
+  kid: Joi.string(),
   jwk: JWK
 }).required()
 
@@ -47,7 +47,7 @@ const JWE_RECIPIENT = Joi.object({
   encrypted_key: Joi.string().required(),
   header: Joi.object({
     alg: Joi.string().valid('RSA1_5', 'RSA-OAEP').required(),
-    kid: Joi.string().uri(),
+    kid: Joi.string(),
     jwk: JWK
   }).or('kid', 'jwk')
 }).required()
@@ -129,7 +129,7 @@ const READ_PERMISSION = Joi.object({
   ...PERMISSION_BASE,
   type: Joi.string().valid('READ').required(),
   purpose: Joi.string().required(),
-  kid: Joi.string().uri().required() // the key of the service which is allowed to READ
+  kid: Joi.string().required() // the key of the service which is allowed to READ
 })
 const WRITE_PERMISSION = {
   ...PERMISSION_BASE,

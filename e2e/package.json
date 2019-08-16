@@ -4,11 +4,12 @@
   "description": "End-to-end testing for Egendata",
   "main": "index.js",
   "scripts": {
-    "cypress": "cypress run",
-    "cypress:open": "cypress open",
-    "jest": "jest --runInBand --verbose",
-    "jest:local": "OPERATOR_URL=http://localhost:3000 OPERATOR_PGPORT=5432 jest --runInBand --verbose",
-    "jest:local:watch": "OPERATOR_URL=http://localhost:3000 OPERATOR_PGPORT=5432 jest --runInBand --verbose --watchAll",
+    "test": "./script.sh",
+    "test-e2e": "cypress run",
+    "test-e2e:open": "cypress open",
+    "test-integration": "jest --runInBand --verbose --color",
+    "test-integration:local": "OPERATOR_URL=http://localhost:3000 OPERATOR_PGPORT=5432 jest --runInBand --verbose",
+    "test-integration:local:watch": "OPERATOR_URL=http://localhost:3000 OPERATOR_PGPORT=5432 jest --runInBand --verbose --watchAll",
     "lint": "eslint '**/*.js'"
   },
   "repository": {
@@ -28,7 +29,7 @@
   "homepage": "https://github.com/JobtechSwe/mydata#readme",
   "devDependencies": {
     "axios": "^0.18.1",
-    "cypress": "^3.3.1",
+    "cypress": "^3.4.1",
     "eslint": "^5.16.0",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-cypress": "^2.2.0",

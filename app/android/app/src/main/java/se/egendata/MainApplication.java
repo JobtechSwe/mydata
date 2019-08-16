@@ -3,18 +3,17 @@ package com.egendata;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.trackforce.crypto.RCTAesPackage;
-import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
-import org.reactnative.camera.RNCameraPackage;
-import net.rhogan.rnsecurerandom.RNSecureRandomPackage;
-import com.horcrux.svg.SvgPackage;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.horcrux.svg.SvgPackage;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+import com.pedrouid.crypto.RCTCryptoPackage;
+import org.reactnative.camera.RNCameraPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,9 +30,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
-        new RCTAesPackage(),
+        new RCTCryptoPackage(),
         new AsyncStoragePackage(),
-        new RNSecureRandomPackage(),
         new SvgPackage(),
         new RNDeviceInfo(),
         new RNGestureHandlerPackage(),

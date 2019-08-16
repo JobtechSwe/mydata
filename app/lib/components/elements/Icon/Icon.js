@@ -59,9 +59,4 @@ const getNavbarIcon = (name, active) => {
 
 export const NavbarIcon = ({ name, active }) => getNavbarIcon(name, active)
 
-export const Icon = props => (
-  <SvgIcon
-    {...props}
-    svgs={icons}
-  />
-)
+export const Icon = props => <SvgIcon {...props} svgs={icons} />
