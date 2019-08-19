@@ -1,5 +1,9 @@
 # Egendata-cv
 
+## Prerequisites
+
+- [App](https://github.com/JobtechSwe/mydata/blob/master/app/README.md) and then set the `CLIENT_ID` in the configuration file
+
 A Data Source/Data Sink offering a searchable CV
 
 ## Configuration
@@ -14,7 +18,9 @@ NODE_ENV=development
 PORT=4000
 
 CLIENT_ID=http://192.168.1.42:4000
-OPERATOR_URL=http://192.168.1.42:3000
+
+# If you want to run your own operator, read https://github.com/JobtechSwe/mydata/blob/master/operator/README.md
+OPERATOR_URL=https://operator-ci.dev.services.jtech.se
 
 # APM_SERVER is optional, apm will not be used if APM_SERVER is not set
 APM_SERVER=http://localhost:8200
@@ -30,7 +36,23 @@ PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----\nMIICXgIBAAKBgQDIp5d0w4c8v4Wa/tma1D
 - `OPERATOR_URL` is the URL where this service can reach the operator (with protocol, http/https)
 - `APM_SERVER` and `APM_TOKEN` is so that this service can reach [APM](https://www.npmjs.com/package/elastic-apm-node) for logging requests and errors
 
-Good luck.
+Then bring dependencies up by running:
+
+```bash
+docker-compose up
+```
+
+Then make sure you run the required NODE version:
+
+```bash
+nvm use
+```
+
+Then you can run the example:
+
+```bash
+npm start
+```
 
 ## Attributions
 

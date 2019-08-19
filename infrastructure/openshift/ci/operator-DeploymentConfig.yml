@@ -53,6 +53,16 @@ spec:
               secretKeyRef:
                 name: apm
                 key: token
+          - name: PUBLIC_KEY
+            valueFrom:
+              secretKeyRef:
+                name: ci-operator-keys
+                key: PUBLIC_KEY
+          - name: PRIVATE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: ci-operator-keys
+                key: PRIVATE_KEY
           image: jobtechswe/mydata-operator:latest
           imagePullPolicy: Always
           name: operator-ci
