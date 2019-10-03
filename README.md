@@ -1,3 +1,6 @@
+# This project has moved to https://github.com/egendata/
+
+
 # Egendata
 
 [![Build Status](https://travis-ci.com/JobtechSwe/mydata.svg?branch=master)](https://travis-ci.com/JobtechSwe/mydata)
